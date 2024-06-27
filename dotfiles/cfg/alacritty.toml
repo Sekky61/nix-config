@@ -1,0 +1,52 @@
+# https://github.com/alacritty/alacritty/issues/6999
+
+[keyboard]
+bindings = [
+  # https://github.com/alacritty/alacritty/issues/2607#issuecomment-1915854357
+  { key = "N", mods = "Control|Shift", action = "CreateNewWindow" }
+]
+
+[window]
+opacity = 0.9
+
+[[hints.enabled]]
+command = "xdg-open" # On Linux/BSD
+# command = "open" # On macOS
+# command = { program = "cmd", args = [ "/c", "start", "" ] } # On Windows
+hyperlinks = true
+post_processing = true
+persist = false
+mouse.enabled = true
+binding = { key = "U", mods = "Control|Shift" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[font]
+size = 7.0
+# normal      = { family = "UbuntuMono Nerd Font", style = "Regular" }
+# bold        = { family = "UbuntuMono Nerd Font", style = "Bold" }
+# italic      = { family = "UbuntuMono Nerd Font", style = "Italic" }
+# bold_italic = { family = "UbuntuMono Nerd Font", style = "Bold Italic" }
+
+[colors.bright]
+black = "0x4c4c4c"
+blue = "0xb3deef"
+cyan = "0x73cef4"
+green = "0xc9d05c"
+magenta = "0xd3b987"
+red = "0xf43753"
+white = "0xfeffff"
+yellow = "0xffc24b"
+
+[colors.normal]
+black = "0x282828"
+blue = "0xb3deef"
+cyan = "0x73cef4"
+green = "0xc9d05c"
+magenta = "0xd3b987"
+red = "0xf43753"
+white = "0xeeeeee"
+yellow = "0xffc24b"
+
+[colors.primary]
+background = "0x282828"
+foreground = "0xeeeeee"

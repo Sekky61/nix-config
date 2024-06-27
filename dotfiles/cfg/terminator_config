@@ -1,0 +1,30 @@
+[global_config]
+[keybindings]
+[profiles]
+  [[default]]
+    background_color = "#282828"
+    background_darkness = 0.9
+    background_type = transparent
+    cursor_color = "#aaaaaa"
+    font = RobotoMono NF 10
+    foreground_color = "#eeeeee"
+    show_titlebar = False
+    palette = "#282828:#f43753:#c9d05c:#ffc24b:#b3deef:#d3b987:#73cef4:#eeeeee:#4c4c4c:#f43753:#c9d05c:#ffc24b:#b3deef:#d3b987:#73cef4:#feffff"
+    login_shell = True
+    use_custom_command = True
+    custom_command = nu
+    use_system_font = False
+  [[bash]]
+    cursor_color = "#aaaaaa"
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+      size = 820, 870
+      position = 80:150
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+      profile = default
+[plugins]

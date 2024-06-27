@@ -2,4 +2,4 @@
 # But you're not copy/pasting, are you?
 .PHONY: update
 update:
-	home-manager switch --flake .#michal
+	home-manager switch --flake .#michal@michalyoga

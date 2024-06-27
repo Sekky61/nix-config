@@ -1,0 +1,62 @@
+{
+    "git.confirmSync": false,
+    "git.autofetch": true, // Replaces the default `cargo check` command with `cargo clippy` on Rust file save
+    "editor.formatOnSave": true, // General VSCode setting to allow a formatter, in this case rustfmt, to format text on save
+    "[rust]": { // Tells VSCode to defer to rust-analyzer's formatter (rustfmt) for rust code
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+    "editor.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.suggest.preview": true,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: WebKit, ColumnLimit: 100 }",
+    "C_Cpp.default.cppStandard": "c++17",
+    "files.exclude": {
+        "**/.git": false
+    },
+    "terminal.integrated.fontFamily": "RobotoMono Nerd Font Mono",
+    "window.titleBarStyle": "custom",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "workbench.colorTheme": "Dark+ Material",
+    "editor.stickyScroll.enabled": true,
+    // fixes terminal split bug, try to remove later
+    "terminal.integrated.splitCwd": "initial",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "C_Cpp.vcFormat.indent.preprocessor": "oneLeft",
+    "css.lint.unknownAtRules": "ignore",
+    "css.lint.unknownProperties": "ignore",
+    "editor.inlineSuggest.enabled": true,
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": true,
+        "markdown": true,
+        "scminput": false,
+        "yaml": false,
+        "haskell": false
+    },
+    "rust-analyzer.inlayHints.lifetimeElisionHints.enable": "skip_trivial",
+    "rust-analyzer.checkOnSave": false,
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "C_Cpp.inlayHints.autoDeclarationTypes.enabled": true,
+    "C_Cpp.intelliSenseCacheSize": 1000,
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "zig.formattingProvider": "zls",
+    "zig.initialSetupDone": true,
+    "zig.zls.path": "zls",
+    "zig.path": "zig",
+    "github.copilot.editor.enableAutoCompletions": true
+}

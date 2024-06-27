@@ -1,0 +1,10 @@
+[credential]
+	helper = store
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[user]
+	name = Michal Majer
+	email = misa@majer.cz
+[core]
+	editor = nvim
+	autocrlf = input

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# returns 0 if host is up and reachable, 1 if host is down
+
+usage ()
+{
+    echo "usage:"
+    echo "  $0"
+    echo "or"
+    echo "  $0 HOST"
+}
+
+host="rpi"
+
+if [[ $# -eq 1 ]]; then
+    host="$1"
+elif [[ $# -gt 1 ]]; then
+    echo "Illegal number of argument"
+    usage
+    exit 1
+fi
+
+# assumes port 22
+poke () {
+    if (exec 2>/dev/null 4>/dev/tcp/"$hostname"/22); then
+        echo "port is open"
+    else
+        echo "unable to connect"
+    fi
+}
+
+# Check if the server is running via SSH
+ssh-ping -c 1 ${host} && exit 0
+ssh-ping -c 1 ${host}-wifi && exit 0
+ssh-ping -c 1 ${host}-zerotier && exit 0
+
+# If none of the SSH commands were successful, exit with an error code
+exit 1

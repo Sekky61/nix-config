@@ -68,7 +68,7 @@
 
     clang_18
     gnumake
-    
+
   ];
 
   # basic configuration of git, please change to your own
@@ -88,7 +88,7 @@
   programs.neovim = {
     enable = true;
   };
-  xdg.configFile."nvim/init.lua".source = "../dotfiles/nvim/init.lua";
+  xdg.configFile."nvim/init.lua".source = ../dotfiles/nvim/init.lua;
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator
   programs.alacritty = {

@@ -1,0 +1,14 @@
+# xrandr --output DP-2 --mode 1920x1080 --output DP-4 --mode 1920x1080 --same-as DP-2
+
+# omen laptop setup
+
+if [[ "$(xrandr | awk "/^DP-4/ { print \$2 }")" == "connected" ]]; then
+   xrandr --output DP-4 --mode 1920x1080 --same-as DP-2
+fi
+
+if [[ "$(xrandr | awk "/^HDMI-0/ { print \$2 }")" == "connected" ]]; then
+   xrandr --output HDMI-0 --mode 1920x1080 --rate 165 --same-as DP-2
+fi
+
+# run ssh-agent if not already running
+[ -n "$SSH_AUTH_SOCK" ] || eval `ssh-agent`
