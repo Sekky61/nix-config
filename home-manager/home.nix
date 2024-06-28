@@ -69,6 +69,7 @@
     clang_18
     gnumake
 
+    nodejs_20 # Includes npm
   ];
 
   # basic configuration of git, please change to your own

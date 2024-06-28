@@ -773,7 +773,7 @@ vim.keymap.set('i', '<C-right>', '<Plug>(copilot-accept-word)', { remap = false,
 vim.api.nvim_set_hl(0, 'CopilotSuggestion', {
   fg = '#A9BA9D',
   ctermfg = 8,
-  force = true
+  -- force = true -- not in 0.9.5 ??
 })
 
 require("nvim-lightbulb").setup({
