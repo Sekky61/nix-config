@@ -73,7 +73,7 @@ theme.border_marked = theme.bg_accent
 theme.menu_height = dpi(15)
 theme.menu_width  = dpi(100)
 
-theme.wallpaper = "/home/majer/.config/awesome/theme/untroll-wp.png"
+theme.wallpaper = "~/.config/awesome/theme/untroll-wp.png"
 theme.icon_theme = nil
 
 -- Generate Awesome icon:

@@ -631,7 +631,7 @@ local zls_dev_path = '../zig-out/bin/zls'
 if file_exists_in_project(zls_dev_path ) then
     lsp_cmd = {zls_dev_path, '--enable-debug-log', '--config-path', './zls.json'}
 else
-    lsp_cmd = {'/home/majer/.zvm/bin/zls'}
+    lsp_cmd = {'~/.zvm/bin/zls'}
 end
 
 -- vim.notify('Using LSP: ' .. lsp_cmd)
@@ -644,7 +644,7 @@ require('lspconfig').zls.setup {
   filetypes = { 'zig' },
   settings = {
      zls = {
-      zig_exe_path = '/home/majer/.zvm/bin/zig',
+      zig_exe_path = '~/.zvm/bin/zig',
     }
   }
 }

@@ -27,14 +27,14 @@ window {
     background-color:   @bg0;
 
     location:       center;
-    width:          540;
+    width:          32em;
     border-radius:  8;
 }
 
 inputbar {
     font:       "Montserrat 18";
-    padding:    12px;
-    spacing:    12px;
+    padding:    1em;
+    spacing:    1em;
     children:   [ icon-search, entry ];
 }
 
@@ -56,13 +56,13 @@ entry {
 }
 
 message {
-    border:             2px 0 0;
+    border:             0.4em 0 0;
     border-color:       @bg1;
     background-color:   @bg1;
 }
 
 textbox {
-    padding:    8px 24px;
+    padding:    0.6em 2em;
 }
 
 listview {
@@ -75,8 +75,8 @@ listview {
 }
 
 element {
-    padding:            8px 24px;
-    spacing:            16px;
+    padding:            0.6em 2em;
+    spacing:            1.3em;
     background-color:   transparent;
 }
 
@@ -90,7 +90,7 @@ element selected normal, element selected active {
 }
 
 element-icon {
-    size:   1em;
+    size:   1.2em;
 }
 
 element-text {

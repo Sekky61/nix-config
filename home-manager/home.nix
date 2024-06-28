@@ -63,8 +63,11 @@
     which
     tree
     acpi # battery
+    rofi # window switcher
+    dunst # notifications
 
     nix-output-monitor
+    cantarell-fonts
 
     btop
     strace
@@ -72,6 +75,7 @@
 
     google-chrome
     alacritty
+    spotify
 
     clang_18
     gnumake

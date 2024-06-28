@@ -4,9 +4,9 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 #set resolution and refresh rate
-if [ -x "$(command -v xrandr)" ]; then
-  xrandr -s 2560x1080 -r 100
-fi
+# if [ -x "$(command -v xrandr)" ]; then
+#   xrandr -s 2560x1080 -r 100
+# fi
 
 #start notification daemon
 if [ -x "$(command -v dunst)" ]; then

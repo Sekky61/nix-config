@@ -41,9 +41,9 @@ local M = {}
 -- Default modkey.
 modkey = "Mod4"
 
-rofi_theme_path="/home/majer/.config/awesome/theme/spotlight-dark.rasi"
+rofi_theme_path="~/.config/awesome/theme/spotlight-dark.rasi"
 function launcher()
-    awful.util.spawn("rofi -modi drun -show drun -show-icons -width 22 -no-click-to-exit -theme " .. rofi_theme_path, false)
+    awful.util.spawn("rofi -modi drun -show drun -show-icons -dpi 150 -no-click-to-exit -theme " .. rofi_theme_path, false)
 end
 
 function exit_menu()
@@ -108,7 +108,7 @@ M.globalkeys = gears.table.join(
               {description = "decrease master width factor", group = "layout"}),
     -- turn on hotspot
     -- problem with path, must be absolute
-    awful.key({ "Control", "Mod1"  }, "h",     function () awful.util.spawn('/home/majer/dotfiles/workflows/hotspot') end,
+    awful.key({ "Control", "Mod1"  }, "h",     function () awful.util.spawn('~/Documents/nix-config/dotfiles/workflows/hotspot') end,
               {description = "Turn on hotspot", group = "Misc"}),
     -- Swap window
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(1) end,
