@@ -62,7 +62,7 @@ else
     mymainmenu = awful.menu({
         items = {
                   menu_awesome,
-                  { "Debian", debian.menu.Debian_menu.Debian },
+                  -- { "Debian", debian.menu.Debian_menu.Debian }, -- not working in nixos
                   menu_terminal,
                 }
     })

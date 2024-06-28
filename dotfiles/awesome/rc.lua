@@ -2,6 +2,8 @@
 
 -- docs: https://awesomewm.org/apidoc
 
+naughty = require('naughty')  -- if not yet loaded
+
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
@@ -9,12 +11,12 @@ require("awful.autofocus")
 
 require("awful.hotkeys_popup.keys")
 
-
 -- Theme handling library
 local beautiful = require("beautiful")
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 local theme_path = string.format("~/.config/awesome/theme/theme.lua")
+naughty.notify({text=theme_path})
 beautiful.init(theme_path)
 
 -- Widget and layout library
@@ -23,14 +25,23 @@ local wibox = require("wibox")
 -- Notification library
 local menubar = require("menubar")
 
+naughty.notify({text='before'})
+
 local wibar = require("widgets.wibar")
+naughty.notify({text='before2'})
 local json = require("util.json")
+naughty.notify({text='before3'})
 local keys = require("keys")
+naughty.notify({text='before4'})
+
+naughty.notify({text='before'})
 
 -- Notify with dunst
 function notify(title, description)
     awful.spawn("notify-send \"" .. title .. "\" \"" .. description .."\"")
 end
+
+naughty.notify({text='before'})
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -38,6 +49,8 @@ end
 if awesome.startup_errors then
     awful.spawn("notify-send \"Oops, there were errors during startup!\" \"" .. awesome.startup_errors .."\"")
 end
+
+naughty.notify({text='after'})
 
 -- Handle runtime errors after startup
 do

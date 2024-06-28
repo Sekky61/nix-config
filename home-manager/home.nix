@@ -62,6 +62,7 @@
     file
     which
     tree
+    acpi # battery
 
     nix-output-monitor
 
@@ -122,6 +123,11 @@
     TERMINAL = "alacritty";
   };
 
+  home.file."awesome" = {
+      source = ../dotfiles/awesome;
+      target = "./.config/awesome";
+      recursive = true;
+    };
   
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
