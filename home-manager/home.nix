@@ -14,6 +14,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./bash.nix
   ];
 
   nixpkgs = {
@@ -53,6 +54,10 @@
     eza
     fzf
     nmap
+    bat
+    zoxide
+    eza
+    thefuck
 
     file
     which
@@ -65,6 +70,7 @@
     lsof
 
     google-chrome
+    alacritty
 
     clang_18
     gnumake
@@ -94,16 +100,8 @@
   # alacritty - a cross-platform, GPU-accelerated terminal emulator
   programs.alacritty = {
     enable = true;
-    # custom settings
-    settings = {
-      env.TERM = "xterm-256color";
-      font = {
-        size = 12;
-        draw_bold_text_with_bright_colors = true;
-      };
-      scrolling.multiplier = 5;
-      selection.save_to_clipboard = true;
-    };
+    # custom settings from TOML
+    settings = builtins.fromTOML (builtins.readFile ../dotfiles/cfg/alacritty.toml);
   };
 
   programs.starship = {
@@ -115,6 +113,13 @@
       gcloud.disabled = true;
       line_break.disabled = true;
     };
+  };
+
+  # Environment
+  systemd.user.sessionVariables = {
+    EDITOR = "nvim";
+    BROWSER = "google-chrome";
+    TERMINAL = "alacritty";
   };
 
   
