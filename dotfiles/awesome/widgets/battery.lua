@@ -7,18 +7,18 @@ local battery = wibox.widget {
     widget = wibox.widget.textbox
 }
 
-local status_icon = {
-    {99, " ", " "},
-    {90, " ", " "},
-    {80, " ", " "},
-    {70, " ", " "},
-    {60, " ", " "},
-    {50, " ", " "},
-    {40, " ", " "},
-    {30, " ", " "},
-    {20, " ", " "},
-    {10, " ", " "},
-    { 0, " ", " "},
+local status_icon = { -- https://www.nerdfonts.com/cheat-sheet
+    {99, "󰁹  ", "󰂅  "},
+    {90, "󰂂  ", "󰂋  "},
+    {80, "󰂁  ", "󰂊  "},
+    {70, "󰂀  ", "󰢞  "},
+    {60, "󰁿  ", "󰂉  "},
+    {50, "󰁾  ", "󰢝  "},
+    {40, "󰁽  ", "󰂈  "},
+    {30, "󰁼  ", "󰂇  "},
+    {20, "󰁻  ", "󰂆  "},
+    {10, "󰁺  ", "󰢜  "},
+    { 0, "󱃍  ", "󰢟  "},
 }
 
 awesome.connect_signal("status::battery", function(capacity, charging)
