@@ -13,7 +13,7 @@
     dpi = 180; # has effect on font (chrome, vscode) but not rofi, that has to be set in lua
     upscaleDefaultCursor = true;
     displayManager = {    
-        sddm.enable = true;    
+        lightdm.enable = true;    
         defaultSession = "none+awesome";  
     };    
     windowManager.awesome = {

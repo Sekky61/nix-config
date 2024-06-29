@@ -40,5 +40,5 @@ run() {
   fi
 }
 
-run google-chrome
+run google-chrome-stable
 run spotify
