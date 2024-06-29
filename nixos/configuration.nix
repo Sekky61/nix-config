@@ -113,17 +113,17 @@
   # $ nix search wget
   nix.settings.experimental-features = ["nix-command" "flakes"];
   environment.systemPackages = with pkgs; [
-	git
-	vim
-	wget
-	curl  
-  libsecret
-  gnome.seahorse
-  brightnessctl # brightness control
-        
-	vscode
+    git
+    vim
+    wget
+    curl  
+    libsecret
+    gnome.seahorse
+    brightnessctl # brightness control
+    xorg.xinit
+          
+    vscode
   ];
-
 
   environment.variables.EDITOR = "vim";
 

@@ -29,7 +29,7 @@ local mytaglist = require("widgets.taglist")
 -- local mytasklist = require("widgets.tasklist")
 local mysystray = require("widgets.systray")
 local mymemory = require("widgets.memory")
-local myrpi = require("widgets.rpi_up")
+--local myrpi = require("widgets.rpi_up")
 local myhourclock = require("widgets.hourclock")
 local mydateclock = require("widgets.dateclock")
 local spotify_widget = require("widgets.spotify.spotify")
@@ -152,7 +152,7 @@ function wibar.get(s)
                     spacing = 5,
                     spotify_widget(),
                     mymemory,
-                    myrpi,
+                    --myrpi,
                     mysystray,
                 }
             }
