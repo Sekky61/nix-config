@@ -9,23 +9,25 @@ bindings = [
 [window]
 opacity = 0.9
 
-[[hints.enabled]]
-command = "xdg-open" # On Linux/BSD
-# command = "open" # On macOS
-# command = { program = "cmd", args = [ "/c", "start", "" ] } # On Windows
-hyperlinks = true
-post_processing = true
-persist = false
-mouse.enabled = true
-binding = { key = "U", mods = "Control|Shift" }
-regex = "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+# This is the default
+#
+# [[hints.enabled]]
+# command = "xdg-open" # On Linux/BSD
+# # command = "open" # On macOS
+# # command = { program = "cmd", args = [ "/c", "start", "" ] } # On Windows
+# hyperlinks = true
+# post_processing = true
+# persist = false
+# mouse.enabled = true
+# binding = { key = "U", mods = "Control|Shift" }
+# regex = "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
 
 [font]
 size = 7.0
-# normal      = { family = "UbuntuMono Nerd Font", style = "Regular" }
-# bold        = { family = "UbuntuMono Nerd Font", style = "Bold" }
-# italic      = { family = "UbuntuMono Nerd Font", style = "Italic" }
-# bold_italic = { family = "UbuntuMono Nerd Font", style = "Bold Italic" }
+normal      = { family = "RobotoMono Nerd Font", style = "Regular" }
+bold        = { family = "RobotoMono Nerd Font", style = "Bold" }
+italic      = { family = "RobotoMono Nerd Font", style = "Italic" }
+bold_italic = { family = "RobotoMono Nerd Font", style = "Bold Italic" }
 
 [colors.bright]
 black = "0x4c4c4c"

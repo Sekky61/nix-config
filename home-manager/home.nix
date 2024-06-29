@@ -68,7 +68,8 @@
     libnotify # notify-send
 
     nix-output-monitor
-    cantarell-fonts
+    (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "RobotoMono" ]; })
+    cantarell-fonts # awesomewm font
 
     btop
     strace
@@ -84,6 +85,8 @@
 
     nodejs_20 # Includes npm
   ];
+
+  fonts.fontconfig.enable = true; # https://discourse.nixos.org/t/how-can-i-install-some-not-all-nerdfonts/43863/2
 
   # basic configuration of git, please change to your own
   programs.git = {

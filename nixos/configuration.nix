@@ -95,6 +95,8 @@
   services.gnome.gnome-keyring = {
     enable = true;
   };
+  programs.seahorse.enable = true; # enable the graphical frontend
+  security.pam.services.gdm.enableGnomeKeyring = true; # load gnome-keyring at startup
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -114,8 +116,8 @@
 	vim
 	wget
 	curl  
-#  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+  libsecret
+  gnome.seahorse
         
 	vscode
   ];

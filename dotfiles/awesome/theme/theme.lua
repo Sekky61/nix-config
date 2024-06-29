@@ -7,7 +7,7 @@ local dpi = xresources.apply_dpi
 local theme = {}
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), "default")
 
-theme.font          = "Cantarell Bold 10"
+theme.font          = "Cantarell Bold 9"
 
 theme.debug_red     = "#FF0000"
 theme.bg_normal     = "#30323DBF"
