@@ -86,7 +86,7 @@
   users.users.michal = {
     isNormalUser = true;
     description = "michal";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" ]; # video is for brightness control
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -119,6 +119,7 @@
 	curl  
   libsecret
   gnome.seahorse
+  brightnessctl # brightness control
         
 	vscode
   ];

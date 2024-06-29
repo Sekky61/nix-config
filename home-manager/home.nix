@@ -58,6 +58,7 @@
     zoxide
     eza
     thefuck
+    htop
 
     file
     which
@@ -66,9 +67,8 @@
     rofi # window switcher
     dunst # notifications
     libnotify # notify-send
-    #playerctl # sound
-    #alsa-utils # sound
-    #pulseaudioFull # sound
+    playerctl # play, pause
+    xdotool # debug media keys
 
     nix-output-monitor
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "RobotoMono" ]; })
