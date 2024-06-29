@@ -82,6 +82,7 @@
     alacritty
     spotify
     spotifyd
+    shutter
 
     clang_18
     gnumake
