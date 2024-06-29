@@ -218,7 +218,7 @@ local function worker(user_args)
 	local refresh_rate = args.refresh_rate or 1
 	local step = args.step or 5
 	local card = args.card or 1
-	local device = args.device or "pulse"
+	local device = args.device or "default" --"pulse"
 	local mixctrl = args.mixctrl or "Master"
 	local value_type = args.value_type or "-M"
 	local toggle_cmd = args.toggle_cmd or nil

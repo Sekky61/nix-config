@@ -136,8 +136,8 @@ function wibar.get(s)
             widget = wibox.container.margin,
             -- left = 5,
             -- right = 5,
-            top = 8,
-            bottom = 8,
+            top = 12,
+            bottom = 12,
             taglist
         },
         { -- Right widgets

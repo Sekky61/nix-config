@@ -60,6 +60,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
+  sound.enable = true; # remember sound state on restart
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {

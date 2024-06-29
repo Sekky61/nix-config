@@ -66,6 +66,9 @@
     rofi # window switcher
     dunst # notifications
     libnotify # notify-send
+    #playerctl # sound
+    #alsa-utils # sound
+    #pulseaudioFull # sound
 
     nix-output-monitor
     (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "RobotoMono" ]; })

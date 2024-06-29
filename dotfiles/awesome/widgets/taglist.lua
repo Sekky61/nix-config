@@ -45,7 +45,7 @@ function taglist.get(s)
             },
             id = 'background_role',
             widget = wibox.container.background,
-            forced_width = 20,
+            forced_width = 26,
         },
         buttons = taglist_buttons
     }
