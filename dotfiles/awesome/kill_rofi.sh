@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ROFI_TEXT="exit"
 typeset -A menu
-rofi_theme_path="$HOME/.config/awesome/theme/spotlight-dark.rasi"
+rofi_theme_path="~/.config/awesome/theme/spotlight-dark.rasi"
 menu=(
-    ["lock"]="i3lock -i /home/majer/dotfiles/awesome/theme/untroll-wp.png"
+    ["lock"]="i3lock -i ~/dotfiles/awesome/theme/untroll-wp.png"
     ["shutdown"]="shutdown -h 0"
     ["suspend"]="systemctl suspend"
 )

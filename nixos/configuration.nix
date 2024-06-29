@@ -99,6 +99,8 @@
 
   programs.kdeconnect.enable = true;
 
+  programs.gnome-terminal.enable = true; # for spawning terminal
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   nix.settings.experimental-features = ["nix-command" "flakes"];

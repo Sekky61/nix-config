@@ -59,7 +59,7 @@ end
 os.setlocale(os.getenv("LANG"))
 
 -- This is used later as the default terminal and editor to run.
-terminal = "x-terminal-emulator"
+terminal = "alacritty"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 current_tag = nil

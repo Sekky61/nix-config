@@ -65,6 +65,7 @@
     acpi # battery
     rofi # window switcher
     dunst # notifications
+    libnotify # notify-send
 
     nix-output-monitor
     cantarell-fonts
@@ -76,6 +77,7 @@
     google-chrome
     alacritty
     spotify
+    spotifyd
 
     clang_18
     gnumake

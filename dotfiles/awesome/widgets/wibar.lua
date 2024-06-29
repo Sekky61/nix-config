@@ -8,7 +8,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local dpi = xresources.apply_dpi
 
 -- local widget_padding = 8
-local wibar_height = 28
+local wibar_height = 20
 
 -- notification style
 -- prevent the icon size from being too big

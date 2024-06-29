@@ -4,6 +4,7 @@
     programs.bash = {
       enable = true;
       enableCompletion = true;
+      bashrcExtra = builtins.readFile ../dotfiles/cfg/.bash_aliases;
       initExtra = builtins.readFile ../dotfiles/cfg/interactive.sh;
       shellAliases = {
         l = "eza";
