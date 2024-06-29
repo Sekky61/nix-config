@@ -91,6 +91,11 @@
     ];
   };
 
+  #keyring
+  services.gnome.gnome-keyring = {
+    enable = true;
+  };
+
   # Install firefox.
   programs.firefox.enable = true;
 
