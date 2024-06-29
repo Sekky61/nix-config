@@ -125,7 +125,7 @@
   # Environment
   systemd.user.sessionVariables = {
     EDITOR = "nvim";
-    BROWSER = "google-chrome";
+    BROWSER = "google-chrome-stable";
     TERMINAL = "alacritty";
   };
 

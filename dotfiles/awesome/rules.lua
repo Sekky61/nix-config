@@ -101,6 +101,7 @@ M = {
 	}, properties = { screen = 1, tag = "3" } },
 
 	-- Capital G matters even though xprop says WM_CLASS(STRING) = "google-chrome", "Google-chrome"
+	-- find class using `xprop WM_CLASS` and clicking on a window
 	{ rule = { class = "Google-chrome" }, properties = { screen = 1, tag = "1" } },
 	{ rule = {class = "Code"}, properties = {screen = 1, tag = "2"} },
 	{ rule = { class = "Spotify" }, properties = {screen = 1, tag = "3"} },
