@@ -14,6 +14,15 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  services.xserver.videoDrivers = [ "amdgpu" ];
+  hardware.opengl = {
+      # Mesa
+      enable = true;
+
+      # Vulkan
+      driSupport = true;
+  };
 
   networking.hostName = "michalyoga"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -121,6 +130,7 @@
     gnome.seahorse
     brightnessctl # brightness control
     xorg.xinit
+    vulkan-tools
           
     vscode
   ];

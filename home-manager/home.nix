@@ -59,6 +59,8 @@
     eza
     thefuck
     htop
+    powertop
+    rnote
 
     file
     which

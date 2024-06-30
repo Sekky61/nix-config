@@ -32,9 +32,10 @@ local mymemory = require("widgets.memory")
 --local myrpi = require("widgets.rpi_up")
 local myhourclock = require("widgets.hourclock")
 local mydateclock = require("widgets.dateclock")
-local spotify_widget = require("widgets.spotify.spotify")
+--local spotify_widget = require("widgets.spotify.spotify")
 local battery = require("widgets.battery")
 local volume_widget = require('widgets.volume.volume')
+--local playerctl_widget = require("widgets.playerctl.playerctl")
 
 local wibar = {}
 
@@ -150,7 +151,12 @@ function wibar.get(s)
                     widget = wibox.container.place,
                     layout = wibox.layout.fixed.horizontal,
                     spacing = 5,
-                    spotify_widget(),
+                    -- spotify_widget({
+                    --     timeout = 5, 
+                    -- }),
+                    -- playerctl_widget {
+                    --     timeout = 3,
+                    -- },
                     mymemory,
                     --myrpi,
                     mysystray,
