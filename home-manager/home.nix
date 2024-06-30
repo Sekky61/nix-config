@@ -79,6 +79,7 @@
     btop
     strace
     lsof
+    gnupg1
 
     google-chrome
     krusader
@@ -96,6 +97,8 @@
     nodejs_20 # Includes npm
   ];
 
+  services.picom.enable = true; # Transparency
+
   fonts.fontconfig.enable = true; # https://discourse.nixos.org/t/how-can-i-install-some-not-all-nerdfonts/43863/2
 
   # basic configuration of git, please change to your own
@@ -103,6 +106,10 @@
     enable = true;
     userName = "Michal Majer";
     userEmail = "misa@majer.cz";
+    signing = {
+      key = "98046E0FF8F55548";
+      signByDefault = true;
+    };
   };
 
 
