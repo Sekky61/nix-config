@@ -88,6 +88,11 @@
   # bluetooth
   hardware.bluetooth.enable = true;
 
+  # usb
+  services.devmon.enable = true;
+  services.gvfs.enable = true; 
+  services.udisks2.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -101,11 +106,35 @@
     ];
   };
 
+  users.users.git = {
+    isSystemUser = true;
+    group = "git";
+    home = "/var/lib/git-server";
+    createHome = true;
+    shell = "${pkgs.git}/bin/git-shell";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkCgOhmEum22iwht2rfJxWnbNCVbd0gWOPXdYHO1vPU michal"
+    ];
+  };
+
+  users.groups.git = {};
+
+  services.openssh = {
+    enable = true;
+    extraConfig = ''
+      Match user git
+        AllowTcpForwarding no
+        AllowAgentForwarding no
+        PasswordAuthentication no
+        PermitTTY no
+        X11Forwarding no
+    '';
+  };
+
   #keyring
   services.gnome.gnome-keyring = {
     enable = true;
   };
-  programs.seahorse.enable = true; # enable the graphical frontend
   security.pam.services.gdm.enableGnomeKeyring = true; # load gnome-keyring at startup
 
   # Install firefox.
@@ -127,7 +156,6 @@
     wget
     curl  
     libsecret
-    gnome.seahorse
     brightnessctl # brightness control
     xorg.xinit
     vulkan-tools

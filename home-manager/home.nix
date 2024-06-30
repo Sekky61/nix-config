@@ -81,10 +81,14 @@
     lsof
 
     google-chrome
+    krusader
     alacritty
     spotify
     spotifyd
     shutter
+    git-credential-oauth
+    xdg-utils # simething with git
+    usbutils
 
     clang_18
     gnumake
@@ -100,6 +104,7 @@
     userName = "Michal Majer";
     userEmail = "misa@majer.cz";
   };
+
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
