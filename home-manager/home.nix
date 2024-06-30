@@ -80,6 +80,7 @@
     strace
     lsof
     gnupg1
+    pinentry-tty
 
     google-chrome
     krusader
@@ -106,9 +107,12 @@
     enable = true;
     userName = "Michal Majer";
     userEmail = "misa@majer.cz";
-    signing = {
-      key = "98046E0FF8F55548";
-      signByDefault = true;
+    extraConfig = {
+      # Sign all commits using ssh key
+      commit.gpgsign = true;
+      gpg.format = "ssh";
+      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
+      user.signingkey = "~/.ssh/id_rsa.pub";
     };
   };
 
