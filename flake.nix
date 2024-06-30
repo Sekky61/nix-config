@@ -6,8 +6,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -23,9 +25,15 @@
     nixosConfigurations = {
       # FIXME replace with your hostname
       michalyoga = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
+        specialArgs = {
+          username = "michal";
+          hostName = "michalyoga";
+        } // inputs;
         # > Our main nixos configuration file <
-        modules = [./nixos/configuration.nix];
+        modules = [
+          ./nixos/configuration.nix
+          #./modules/virt
+        ];
       };
     };
 

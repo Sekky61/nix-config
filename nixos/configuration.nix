@@ -135,6 +135,18 @@
     vscode
   ];
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
+
+   virtualisation.virtualbox.host.enable = true;
+   virtualisation.virtualbox.host.enableExtensionPack = true; # usb passthrough
+   virtualisation.virtualbox.guest.draganddrop = true;
+   users.extraGroups.vboxusers.members = [ "michal" ];
+
   environment.variables.EDITOR = "vim";
 
   # Some programs need SUID wrappers, can be configured further or are

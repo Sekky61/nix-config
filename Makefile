@@ -10,5 +10,5 @@ system:
 
 .PHONY: clean
 clean:
-	nix-collect-garbage -d
+	nix-collect-garbage  --delete-old
 
