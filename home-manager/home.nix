@@ -116,6 +116,12 @@
     };
   };
 
+  xsession = {
+    enable = true;
+    initExtra = lib.strings.concatStringsSep "\n" [
+       "xinput set-prop 11 \"libinput Accel Speed\" 0.19"
+    ];
+  };
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
