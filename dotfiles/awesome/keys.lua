@@ -116,6 +116,10 @@ M.globalkeys = gears.table.join(
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx(-1) end,
               {description = "swap with previous client by index", group = "client"}),
 
+    -- move window to another screen
+    awful.key({ modkey }, "o", function () awful.client.movetoscreen () end,
+        {description = "move window to another screen", group = "layout"}),
+
     -- Next layout
     awful.key({ modkey,           }, "Tab", function () awful.layout.inc(1) end,
               {description = "select next", group = "layout"}),

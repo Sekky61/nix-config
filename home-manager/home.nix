@@ -91,6 +91,7 @@
     git-credential-oauth
     xdg-utils # simething with git
     usbutils
+    autorandr # display detect
 
     clang_18
     gnumake
@@ -161,10 +162,16 @@
   };
 
   home.file."awesome" = {
-      source = ../dotfiles/awesome;
-      target = "./.config/awesome";
-      recursive = true;
-    };
+    source = ../dotfiles/awesome;
+    target = "./.config/awesome";
+    recursive = true;
+  };
+
+  home.file."autorandr" = {
+    source = ../dotfiles/autorandr;
+    target = "./.config/autorandr";
+    recursive = true;
+  };
   
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
