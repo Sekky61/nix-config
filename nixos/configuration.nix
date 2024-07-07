@@ -25,7 +25,7 @@
   };
 
   # laptop lid
-  boot.kernelParams = [ "button.lid_init_state=open" ];
+  services.logind.lidSwitch = "suspend"; # also hibernate, poweroff, ...
 
   networking.hostName = "michalyoga"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -36,6 +36,11 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  # wifi
+  networking.wireless.enable = true;
+  networking.wireless.userControlled.enable = true;
+
+  services.power-profiles-daemon.enable = true; # Power management
 
   # Set your time zone.
   time.timeZone = "Europe/Prague";
@@ -162,6 +167,8 @@
     brightnessctl # brightness control
     xorg.xinit
     vulkan-tools
+    wpa_supplicant_gui # wifi gui
+    xclip
           
     vscode
   ];

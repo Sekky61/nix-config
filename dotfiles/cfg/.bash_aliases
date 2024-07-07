@@ -5,5 +5,3 @@ export PATH=$PATH:~/Documents/nix-config/dotfiles/workflows:~/dotfiles/workflows
 
 alias google-chrome=google-chrome-stable
 
-alias redock="autorandr -c"
-

@@ -429,7 +429,7 @@ vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { des
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = {'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -451,12 +451,12 @@ require('nvim-treesitter.configs').setup {
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
+        ['vap'] = '@parameter.outer',
+        ['vip'] = '@parameter.inner',
+        ['vaf'] = '@function.outer',
+        ['vif'] = '@function.inner',
+        ['vac'] = '@class.outer',
+        ['vic'] = '@class.inner',
       },
     },
     move = {
