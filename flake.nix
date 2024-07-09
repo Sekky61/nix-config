@@ -16,7 +16,7 @@
     impurity.url = "github:outfoxxed/impurity.nix";
     thorium.url = "github:end-4/nix-thorium";
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       # inputs.nixpkgs.follows = "hyprland";

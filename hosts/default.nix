@@ -33,7 +33,7 @@ in
         # configuration.nix, but is done on the topmost level for your convenience
         {
           networking.hostName = "CirnOS";
-          _module.args = { username = "end"; };
+          _module.args = { username = "michal"; };
         }
       ]
       ++ homes; # imports the home-manager related configurations

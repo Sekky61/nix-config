@@ -1,6 +1,6 @@
 let
-  username = "end";
-  homeDirectory = "/home/end";
+  username = "michal";
+  homeDirectory = "/home/michal";
 in
 { pkgs, impurity, ... }: {
   imports = [
@@ -17,8 +17,9 @@ in
     ./mimelist.nix
     ./packages.nix
     # ./starship.nix
-    ./sway.nix
+    #./sway.nix
     ./theme.nix
+    ./git.nix
   ];
 
   home = {

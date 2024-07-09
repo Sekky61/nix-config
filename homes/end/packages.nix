@@ -68,6 +68,16 @@
       wl-clipboard
       wf-recorder
 
+      # michal
+      ripgrep
+      bat
+      zoxide
+      xorg.xev
+      google-chrome
+      alacritty
+      spotify
+      vim
+
       # langs
       nodejs
       gjs
@@ -80,5 +90,9 @@
       # very important stuff
       # uwuify
     ];
+  };
+
+  programs.neovim = {
+    enable = true;
   };
 }

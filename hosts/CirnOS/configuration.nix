@@ -131,6 +131,7 @@
   users = {
     defaultUserShell = pkgs.zsh;
     users.${username} = {
+      # home = "/home/${username}";
       isNormalUser = true;
       shell = pkgs.zsh;
       extraGroups = [ "networkmanager" "wheel" "video" "input" "uinput" "libvirtd" ];
@@ -146,7 +147,7 @@
   # bluetooth
   hardware.bluetooth = {
     enable = true;
-    powerOnBoot = false;
+    powerOnBoot = true;
   };
 
   # Boot
@@ -183,5 +184,5 @@
     # '';
   };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }
