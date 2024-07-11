@@ -17,7 +17,7 @@ export const keybindList = [[
         "icon": "overview_key",
         "name": "Workspaces: management",
         "binds": [
-            { "keys": ["", "Alt", "+", "#"], "action": "Move window to workspace #" },
+            { "keys": ["", "Ctrl", "+", "#"], "action": "Move window to workspace #" },
             { "keys": ["", "Alt", "+", "S"], "action": "Move window to special workspace" },
             { "keys": ["", "Alt", "+", "PageUp"], "action": "Move window to workspace on the left" },
             { "keys": ["", "Alt", "+", "PageDown"], "action": "Move window to workspace on the right" }
@@ -36,7 +36,9 @@ export const keybindList = [[
             { "keys": ["", "+", "Mmb"], "action": "Move window" },
             { "keys": ["", "+", "Rmb"], "action": "Resize window" },
             { "keys": ["", "+", "F"], "action": "Fullscreen" },
-            { "keys": ["", "Alt", "+", "F"], "action": "Fake fullscreen" }
+            { "keys": ["", "+", "Z"], "action": "Move window with mouse" },
+            { "keys": ["", "Alt", "+", "F"], "action": "Fake fullscreen" },
+            { "keys": ["", "Alt", "+", "Space"], "action": "Toggle floating" }
         ],
         "appeartick": 1
     }
@@ -52,6 +54,7 @@ export const keybindList = [[
             { "keys": ["", "+", "N"], "action": "Toggle system sidebar" },
             { "keys": ["", "+", "B", "OR", "", "+", "O"], "action": "Toggle utilities sidebar" },
             { "keys": ["", "+", "K"], "action": "Toggle virtual keyboard" },
+            { "keys": ["", "+", "M"], "action": "Toggle media player" },
             { "keys": ["Ctrl", "Alt", "+", "Del"], "action": "Power/Session menu" },
 
             { "keys": ["Esc"], "action": "Exit a window" },
@@ -71,9 +74,9 @@ export const keybindList = [[
         "icon": "construction",
         "name": "Utilities",
         "binds": [
-            { "keys": ["PrtSc"], "action": "Screenshot  >>  clipboard" },
-            { "keys": ["", "Shift", "+", "S"], "action": "Screen snip  >>  clipboard" },
-            { "keys": ["", "Shift", "+", "T"], "action": "Image to text  >>  clipboard" },
+            // { "keys": ["PrtSc"], "action": "Screenshot  >>  clipboard" },
+            { "keys": ["", "Shift", "Alt", "+", "S"], "action": "Screen snip  >>  edit" },
+            { "keys": ["", "Shift", "Ctrl", "+", "S"], "action": "Image to text  >>  clipboard" },
             { "keys": ["", "Shift", "+", "C"], "action": "Color picker" },
             { "keys": ["", "Alt", "+", "R"], "action": "Record region" },
             { "keys": ["Ctrl", "Alt", "+", "R"], "action": "Record region with sound" },
@@ -102,9 +105,8 @@ export const keybindList = [[
         "name": "Apps",
         "binds": [
             { "keys": ["", "+", "T"], "action": "Launch terminal: foot" },
-            { "keys": ["", "+", "W"], "action": "Launch browser: Firefox" },
+            { "keys": ["", "+", "W"], "action": "Launch browser: Chrome" },
             { "keys": ["", "+", "C"], "action": "Launch editor: vscode" },
-            { "keys": ["", "+", "X"], "action": "Launch editor: GNOME Text Editor" },
             { "keys": ["", "+", "I"], "action": "Launch settings: GNOME Control center" }
         ],
         "appeartick": 3
@@ -115,6 +117,16 @@ export const keybindList = [[
         "binds": [
             { "keys": ["", "+", "V"], "action": "Clipboard history  >>  clipboard" },
             { "keys": ["", "+", "."], "action": "Emoji picker  >>  clipboard" },
+        ],
+        "appeartick": 3
+    },
+    {
+        "icon": "keyboard",
+        "name": "Misc",
+        "binds": [
+            { "keys": ["", "Ctrl", "+", "V"], "action": "Sound io controls" },
+            { "keys": ["", "+", "."], "action": "Emoji picker  >>  clipboard" },
+            { "keys": ["", "Ctrl", "+", "R"], "action": "Reload GUI" },
         ],
         "appeartick": 3
     },

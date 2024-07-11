@@ -81,7 +81,6 @@
 
   # dconf
   programs = {
-    zsh.enable = true;
     dconf.enable = true;
     steam = {
       enable = true;
@@ -106,7 +105,7 @@
     localBinInPath = true;
     systemPackages = with pkgs; [
       curl
-      zsh
+      bash
       fish
       git
       gh
@@ -129,11 +128,11 @@
   '';
   # user
   users = {
-    defaultUserShell = pkgs.zsh;
+    defaultUserShell = pkgs.bash;
     users.${username} = {
       # home = "/home/${username}";
       isNormalUser = true;
-      shell = pkgs.zsh;
+      shell = pkgs.bash;
       extraGroups = [ "networkmanager" "wheel" "video" "input" "uinput" "libvirtd" ];
     };
   };

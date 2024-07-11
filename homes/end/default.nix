@@ -20,6 +20,7 @@ in
     #./sway.nix
     ./theme.nix
     ./git.nix
+    ./bash.nix
   ];
 
   home = {

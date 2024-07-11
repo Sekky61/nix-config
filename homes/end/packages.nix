@@ -11,7 +11,6 @@
       (mpv.override { scripts = [ mpvScripts.mpris ]; })
       d-spy
       dolphin
-      figma-linux
       kolourpaint
       github-desktop
       gnome.nautilus
@@ -52,6 +51,7 @@
       brightnessctl
       cliphist
       fuzzel
+      bemoji # emoji picker
       grim
       hyprpicker
       tesseract
@@ -69,6 +69,7 @@
       wf-recorder
 
       # michal
+      xwayland # apps that do not work with wayland like spotify rn
       ripgrep
       bat
       zoxide
@@ -76,7 +77,15 @@
       google-chrome
       alacritty
       spotify
+      spotifyd
       vim
+      htop
+      powertop
+      rnote
+
+      # Small tools Michal
+      exif # read metadata of pictures
+      file
 
       # langs
       nodejs
@@ -87,6 +96,8 @@
       gcc
       typescript
       eslint
+      lua
+      zig
       # very important stuff
       # uwuify
     ];

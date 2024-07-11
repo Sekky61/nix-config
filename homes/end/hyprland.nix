@@ -16,6 +16,7 @@ in
   home.packages = with pkgs; [
     launcher
     adoptopenjdk-jre-bin
+    nwg-displays # gui for monitors, wayland
   ];
 
   xdg.desktopEntries."org.gnome.Settings" = {
@@ -38,7 +39,6 @@ in
     enable = true;
     settings = {
       env = [
-        "GTK_IM_MODULE, fcitx"
         "QT_IM_MODULE, fcitx"
         "XMODIFIERS, @im=fcitx"
         "QT_QPA_PLATFORM, wayland"
@@ -46,7 +46,11 @@ in
         "QT_STYLE_OVERRIDE,kvantum"
         "WLR_NO_HARDWARE_CURSORS, 1"
       ];
-      monitor = [ ",preferred,auto,1" ];
+      monitor = [ 
+          "eDP-1,2880x1800@90.0,0x0,1.5"
+          "HDMI-A-1,1920x1080@165.0,1920x0,1.0"
+          ",preferred,auto,1"
+      ];
       "exec-once" = [
         "ags"
         "swww kill; swww init"
@@ -59,10 +63,10 @@ in
         "hyprctl setcursor Bibata-Modern-Classic 24"
       ];
       general = {
-        gaps_in = 4;
-        gaps_out = 5;
+        gaps_in = 3;
+        gaps_out = 4;
         gaps_workspaces = 50;
-        border_size = 1;
+        border_size = 2;
         layout = "dwindle";
         resize_on_border = true;
         "col.active_border" = "rgba(471868FF)";
@@ -102,7 +106,7 @@ in
         follow_mouse = 1;
       };
       decoration = {
-        rounding = 20;
+        rounding = 12;
 
         blur = {
           enabled = true;
@@ -175,16 +179,15 @@ in
         in [
           "Super, C, exec, code --password-store=gnome"
           "Super, T, exec, foot --override shell=fish"
+          "Super, Return, exec, alacritty"
           "Super, E, exec, nautilus --new-window"
           "Super+Alt, E, exec, thunar"
-          "Super, W, exec, firefox"
-          "Control+Super, W, exec, thorium-browser --ozone-platform-hint=wayland --gtk-version=4 --ignore-gpu-blocklist --enable-features=TouchpadOverscrollHistoryNavigation"
-          "Super, X, exec, gnome-text-editor --new-window"
-          "Super+Shift, W, exec, wps"
+          "Super, W, exec, google-chrome"
+          "Super+Shift, W, exec, wps" # todo idk
           ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
           "Control+Super, V, exec, pavucontrol"
           "Control+Shift, Escape, exec, gnome-system-monitor"
-          "Super, Period, exec, pkill fuzzel || ~/.local/bin/fuzzel-emoji"
+          "Super, Period, exec, bemoji"
           "Super, Q, killactive, "
           "Super+Alt, Space, togglefloating, "
           "Shift+Super+Alt, Q, exec, hyprctl kill"
@@ -195,7 +198,7 @@ in
           ''
           ''
             Super+Shift, S, exec, grim -g "${SLURP_COMMAND}" - | wl-copy
-          ''
+          '' # todo closes window
           "Super+Alt, R, exec, ~/.config/ags/scripts/record-script.sh"
           "Control+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
           "Super+Shift+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
@@ -206,7 +209,7 @@ in
           ''
           "Super, L, exec, swaylock"
           "Super+Shift, L, exec, swaylock"
-          "Control+Super, Slash, exec, pkill anyrun || anyrun"
+          "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
           "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
           "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
           "Super, Tab, exec, ags -t 'overview'"
@@ -310,8 +313,8 @@ in
         ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         ",XF86MonBrightnessUp, exec, ags run-js 'brightness.screen_value += 0.05;indicator.popup(1);'"
         ",XF86MonBrightnessDown, exec, ags run-js 'brightness.screen_value -= 0.05;indicator.popup(1);'"
-        # ",XF86AudioRaiseVolume, exec, ags run-js 'indicator.popup(1);'"
-        # ",XF86AudioLowerVolume, exec, ags run-js 'indicator.popup(1);'"
+        ",XF86AudioRaiseVolume, exec, ags run-js 'indicator.popup(1);'"
+        ",XF86AudioLowerVolume, exec, ags run-js 'indicator.popup(1);'"
         ",XF86MonBrightnessUp, exec, ags run-js 'indicator.popup(1);'"
         ",XF86MonBrightnessDown, exec, ags run-js 'indicator.popup(1);'"
         "Alt, I, exec, ydotool key 103:1 103:0 "
