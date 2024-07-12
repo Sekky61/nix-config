@@ -69,6 +69,7 @@ const UtilButton = ({ name, icon, onClicked }) => Button({
     label: `${icon}`,
 })
 
+// Buttons like color picker, virtual keyboard and rotate screen
 const Utilities = () => Box({
     hpack: 'center',
     className: 'spacing-h-5 txt-onSurfaceVariant',
@@ -89,6 +90,16 @@ const Utilities = () => Box({
                 App.toggleWindow('osk');
             }
         }),
+        UtilButton({
+            name: 'Rotate screen', icon: 'screen_rotation', onClicked: async () => {
+                const outputName = 'eDP-1';
+                const state = await Utils.execAsync(`wlr-randr --output ${outputName}`);
+                const currentTransform = state.match(/Transform: (\w+)/)[1];
+                console.log(currentTransform);
+                const newTransform = currentTransform === 'normal' ? '180' : 'normal';
+                Utils.execAsync(`wlr-randr --output ${outputName} --transform ${newTransform}`);
+            }
+        })
     ]
 })
 

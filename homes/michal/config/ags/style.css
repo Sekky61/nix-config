@@ -602,7 +602,7 @@ popover {
   min-height: 2.727rem; }
 
 .bar-bg {
-  background-color: #110d0d;
+  background-color: black;
   min-height: 2.727rem; }
 
 .bar-sidespace {
@@ -781,14 +781,14 @@ popover {
   min-height: 1.705rem; }
 
 .corner {
-  background-color: #110d0d;
-  border-radius: 1.705rem;
-  -gtk-outline-radius: 1.705rem; }
+  background-color: black;
+  border-radius: 0.818rem;
+  -gtk-outline-radius: 0.818rem; }
 
 .corner-black {
   background-color: black;
-  border-radius: 1.705rem;
-  -gtk-outline-radius: 1.705rem; }
+  border-radius: 0.818rem;
+  -gtk-outline-radius: 0.818rem; }
 
 .bar-topdesc {
   margin-top: -0.136rem;

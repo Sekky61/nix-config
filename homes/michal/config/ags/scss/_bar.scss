@@ -15,7 +15,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .bar-bg {
-    background-color: $t_background;
+    background-color: black; // for that OLED black. used to be $t_background;
     min-height: 2.727rem;
 }
 
@@ -231,13 +231,13 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .corner {
-    background-color: $t_background;
-    @include large-rounding;
+    background-color: black; // Used to be: $t_background;
+    @include small-rounding; // used for corners in top bar
 }
 
 .corner-black {
     background-color: $black; // Hard code: fake screen corner
-    @include large-rounding;
+    @include small-rounding;
 }
 
 .bar-topdesc {

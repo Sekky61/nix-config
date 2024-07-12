@@ -17,6 +17,7 @@ in
     launcher
     adoptopenjdk-jre-bin
     nwg-displays # gui for monitors, wayland
+    wlr-randr # for rotate command
   ];
 
   xdg.desktopEntries."org.gnome.Settings" = {
@@ -62,7 +63,7 @@ in
         "wl-paste --type image --watch cliphist store"
         "hyprctl setcursor Bibata-Modern-Classic 24"
         "kdeconnect-indicator"
-        "[workspace 1 silent] google-chrome"
+        "[workspace 1 silent] google-chrome-stable"
       ];
       general = {
         gaps_in = 3;
@@ -108,7 +109,7 @@ in
         follow_mouse = 1;
       };
       decoration = {
-        rounding = 12;
+        rounding = 10;
 
         blur = {
           enabled = true;

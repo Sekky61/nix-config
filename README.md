@@ -13,6 +13,13 @@ git clone https://github.com/end-4/CirnOS.git && cd CirnOS
 IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake . --impure
 ```
 
+## AGS notes
+
+[Very useful docs](https://aylur.github.io/ags-docs/)
+
+- class `corner-black` makes fake rounded screen
+- class `corner` controls rounding of the top bar
+
 ## TODO
 
 - alacritty clone shortcut
