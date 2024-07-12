@@ -1,5 +1,5 @@
 .dock-bg {
-    @include large-rounding;
+    @include small-rounding;
     @include elevation2;
     background-color: $t_background;
     padding: 0.682rem;

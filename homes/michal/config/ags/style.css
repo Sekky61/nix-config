@@ -984,8 +984,8 @@ popover {
   background-color: #3e3230; }
 
 .dock-bg {
-  border-radius: 1.705rem;
-  -gtk-outline-radius: 1.705rem;
+  border-radius: 0.818rem;
+  -gtk-outline-radius: 0.818rem;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.45);
   margin: 0.476rem;
   background-color: #110d0d;

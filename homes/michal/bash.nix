@@ -4,8 +4,8 @@
     programs.bash = {
       enable = true;
       enableCompletion = true;
-      bashrcExtra = builtins.readFile ./.config/.bash_aliases;
-      initExtra = builtins.readFile ./.config/interactive.sh;
+      bashrcExtra = builtins.readFile ./config/.bash_aliases;
+      initExtra = builtins.readFile ./config/interactive.sh;
       shellAliases = {
         l = "eza";
         ls = "eza --color=auto";
