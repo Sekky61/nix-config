@@ -61,6 +61,8 @@ in
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "hyprctl setcursor Bibata-Modern-Classic 24"
+        "kdeconnect-indicator"
+        "[workspace 1 silent] google-chrome"
       ];
       general = {
         gaps_in = 3;
@@ -89,7 +91,7 @@ in
       binds = { scroll_event_delay = 0; };
       input = {
         # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
-        kb_layout = "us,cs";
+        kb_layout = "us,cz";
         kb_options = grp:win_space_toggle;
         numlock_by_default = true;
         repeat_delay = 250;

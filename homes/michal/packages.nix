@@ -81,6 +81,7 @@
       vim
       htop
       powertop
+      hwinfo
       rnote
 
       # Small tools Michal
@@ -106,4 +107,6 @@
   programs.neovim = {
     enable = true;
   };
+
+
 }

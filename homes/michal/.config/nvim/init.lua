@@ -400,6 +400,10 @@ require('telescope').setup {
     find_files = {
       hidden = true,
       no_ignore = false
+    },
+    grep_string = {
+      hidden = true,
+      no_ignore = false
     }
   }
 }

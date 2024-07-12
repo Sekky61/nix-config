@@ -99,6 +99,7 @@
         # here, NOT in environment.systemPackages
       ];
     };
+    kdeconnect.enable = true;
   };
   # packages
   environment = {

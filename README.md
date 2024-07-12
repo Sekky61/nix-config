@@ -13,3 +13,7 @@ git clone https://github.com/end-4/CirnOS.git && cd CirnOS
 IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake . --impure
 ```
 
+## TODO
+
+- alacritty clone shortcut
+
