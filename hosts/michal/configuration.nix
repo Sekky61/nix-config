@@ -140,7 +140,7 @@
 
   # network
   networking = {
-    hostName = "CirnOS";
+    hostName = "michalyoga";
     networkmanager.enable = true;
   };
 

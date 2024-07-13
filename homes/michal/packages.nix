@@ -13,7 +13,7 @@
       dolphin
       kolourpaint
       github-desktop
-      gnome.nautilus
+      nautilus
       icon-library
       dconf-editor
       qt5.qtimageformats

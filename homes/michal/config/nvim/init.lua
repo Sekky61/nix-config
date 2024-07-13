@@ -881,7 +881,7 @@ vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix
 -- Toggle nvimtree
 vim.keymap.set("n", "<leader>tt", ":NvimTreeToggle<CR>", { desc = "Toggle nvimtree" })
 -- toggle history tree
-vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = "Toggle undotree" })
 
 -- half page up and down with zz
 vim.api.nvim_set_keymap('n', '<C-u>', '<C-u>zz', { noremap = true, silent = true })

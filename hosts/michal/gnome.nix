@@ -30,20 +30,19 @@
         gnome-tour
         gnome-connections
         snapshot
+        cheese # webcam tool
+        evince # document viewer
+        totem # video player
+        yelp # Help view
       ])
       ++ (with pkgs.gnome; [
-        cheese # webcam tool
         gnome-music
         epiphany # web browser
-        geary # email reader
-        evince # document viewer
         # gnome-characters
-        totem # video player
         tali # poker game
         iagno # go game
         hitori # sudoku game
         atomix # puzzle game
-        yelp # Help view
         gnome-contacts
         gnome-initial-setup
         gnome-shell-extensions
