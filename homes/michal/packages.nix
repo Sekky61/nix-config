@@ -77,7 +77,6 @@
       google-chrome
       alacritty
       spotify
-      spotifyd
       vim
       htop
       powertop

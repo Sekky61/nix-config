@@ -19,6 +19,7 @@ IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --fl
 
 - class `corner-black` makes fake rounded screen
 - class `corner` controls rounding of the top bar
+- Media widget: left click to show detailed controls, middle click to play/pause, right click to next track
 
 ## TODO
 

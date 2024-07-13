@@ -127,7 +127,7 @@ const BarBattery = () => Box({
                 className: 'bar-batt',
                 homogeneous: true,
                 children: [
-                    MaterialIcon('settings_heart', 'small'),
+                    MaterialIcon('battery_full', 'small'),
                 ],
                 setup: (self) => self.hook(Battery, box => {
                     box.toggleClassName('bar-batt-low', Battery.percent <= BATTERY_LOW);
@@ -155,6 +155,7 @@ const BatteryModule = () => Stack({
     transitionDuration: 150,
     children: {
         'laptop': Box({
+            // This is shown on laptop
             className: 'spacing-h-5', children: [
                 BarGroup({ child: Utilities() }),
                 BarGroup({ child: BarBattery() }),
@@ -218,6 +219,7 @@ const BatteryModule = () => Stack({
         }),
     },
     setup: (stack) => Utils.timeout(10, () => {
+        // If a battery exists, we are on a laptop
         if (!Battery.available) stack.shown = 'desktop';
         else stack.shown = 'laptop';
     })

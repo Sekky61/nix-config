@@ -185,7 +185,7 @@ in
           "Super, Return, exec, alacritty"
           "Super, E, exec, nautilus --new-window"
           "Super+Alt, E, exec, thunar"
-          "Super, W, exec, google-chrome"
+          "Super, W, exec, google-chrome-stable"
           "Super+Shift, W, exec, wps" # todo idk
           ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
           "Control+Super, V, exec, pavucontrol"

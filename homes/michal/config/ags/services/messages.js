@@ -31,7 +31,7 @@ export async function firstRunWelcome() {
 
 const BATTERY_WARN_LEVELS = [20, 15, 5];
 const BATTERY_WARN_TITLES = ["Low battery", "Very low battery", 'Critical Battery']
-const BATTERY_WARN_BODIES = ["Plug in the charger", "You there?", 'PLUG THE CHARGER ALREADY']
+const BATTERY_WARN_BODIES = ["Plug in the charger", "You there?", 'PLUG THE CHARGER ALREADY 😩']
 var batteryWarned = false;
 async function batteryMessage() {
     const perc = Battery.percent;
