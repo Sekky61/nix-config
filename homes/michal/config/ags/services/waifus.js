@@ -113,16 +113,19 @@ class WaifuService extends Service {
         // Note: body isn't included since passing directly to url is more reliable
         const options = { 
             method: 'GET',
-            headers: this._headers[this._mode],
+            // headers: this._headers[this._mode],
         };
         var status = 0;
-        Utils.fetch(`${this._endpoints[this._mode]}?${paramString}`, options)
+        const url = `${this._endpoints[this._mode]}?${paramString}`;
+        console.log('fetch w', url);
+        Utils.fetch(url, options)
             .then(result => {
                 status = result.status;
                 return result.text();
             })
             .then((dataString) => { // Store interesting stuff and emit
                 const parsedData = JSON.parse(dataString);
+                console.log(parsedData);
                 if (!parsedData.images) this._responses.push({
                     status: status,
                     signature: -1,

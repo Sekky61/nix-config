@@ -81,6 +81,7 @@
 
   # dconf
   programs = {
+    wireshark.enable = true; # sets the group and whatnot
     dconf.enable = true;
     steam = {
       enable = true;
@@ -134,7 +135,10 @@
       # home = "/home/${username}";
       isNormalUser = true;
       shell = pkgs.bash;
-      extraGroups = [ "networkmanager" "wheel" "video" "input" "uinput" "libvirtd" ];
+      extraGroups = [ 
+        "networkmanager" "wheel" "video" "input" "uinput" "libvirtd"
+        "wireshark"
+      ];
     };
   };
 

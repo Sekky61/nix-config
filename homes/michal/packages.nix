@@ -82,6 +82,9 @@
       hwinfo
       rnote
       obs-studio
+      # dev tools
+      insomnia
+      wireshark
 
       # Small tools Michal
       exif # read metadata of pictures
@@ -106,6 +109,7 @@
   programs.neovim = {
     enable = true;
   };
+
 
 
 }
