@@ -5,7 +5,7 @@
       CHARGE_THRESHOLD = "80";
     in
     {
-      enable = true;
+      enable = false; # Does not work on my laptop
       description = "Set the battery charge threshold";
       startLimitBurst = 0;
       after = [ "multi-user.target" ];

@@ -75,13 +75,13 @@
       zoxide
       xorg.xev
       google-chrome
-      alacritty
       spotify
       vim
       htop
       powertop
       hwinfo
       rnote
+      obs-studio
 
       # Small tools Michal
       exif # read metadata of pictures
