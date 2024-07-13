@@ -56,6 +56,7 @@ export const Bar = async (monitor = 0) => {
 }
 
 export const BarCornerTopleft = (id = '') => Widget.Window({
+    monitor: id,
     name: `barcornertl${id}`,
     layer: 'top',
     anchor: ['top', 'left'],
@@ -65,6 +66,7 @@ export const BarCornerTopleft = (id = '') => Widget.Window({
     setup: enableClickthrough,
 });
 export const BarCornerTopright = (id = '') => Widget.Window({
+    monitor: id,
     name: `barcornertr${id}`,
     layer: 'top',
     anchor: ['top', 'right'],
