@@ -10,9 +10,11 @@ import { contentStack } from './sideleft.js';
 // APIs
 import ChatGPT from '../../services/chatgpt.js';
 import Gemini from '../../services/gemini.js';
+import Ollama from '../../services/ollama.js';
 import { geminiView, geminiCommands, sendMessage as geminiSendMessage, geminiTabIcon } from './apis/gemini.js';
 import { chatGPTView, chatGPTCommands, sendMessage as chatGPTSendMessage, chatGPTTabIcon } from './apis/chatgpt.js';
 import { waifuView, waifuCommands, sendMessage as waifuSendMessage, waifuTabIcon } from './apis/waifu.js';
+import { localView, localCommands, sendMessage as localSendMessage, localTabIcon } from './apis/local.js';
 import { enableClickthrough } from '../../lib/roundedcorner.js';
 const TextView = Widget.subclass(Gtk.TextView, "AgsTextView");
 
@@ -34,6 +36,14 @@ const APIS = [
         commandBar: chatGPTCommands,
         tabIcon: chatGPTTabIcon,
         placeholderText: 'Message ChatGPT...',
+    },
+    {
+        name: 'Local',
+        sendCommand: localSendMessage,
+        contentWidget: localView,
+        commandBar: localCommands,
+        tabIcon: localTabIcon,
+        placeholderText: 'Ask away...',
     },
     {
         name: 'Waifus',

@@ -38,6 +38,7 @@
       ++ (with pkgs.gnome; [
         gnome-music
         epiphany # web browser
+        seahorse # wallet gui manager
         # gnome-characters
         tali # poker game
         iagno # go game

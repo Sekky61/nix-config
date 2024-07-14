@@ -33,6 +33,7 @@
   # };
 
   services = {
+    pcscd.enable = true; # necessary? for gnupg
     envfs.enable = true;
     greetd = {
       enable = true;
@@ -81,6 +82,12 @@
 
   # dconf
   programs = {
+    gnupg = { # ssh passwords
+      agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
+    };
     wireshark.enable = true; # sets the group and whatnot
     dconf.enable = true;
     steam = {
