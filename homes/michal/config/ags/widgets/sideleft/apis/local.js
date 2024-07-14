@@ -19,14 +19,14 @@ const MODEL_NAME = `Ollama`;
 export const localTabIcon = Icon({
     hpack: 'center',
     className: 'sidebar-chat-apiswitcher-icon',
-    icon: `google-gemini-symbolic`,
+    icon: `ollama-symbolic`,
 })
 
 const LocalInfo = () => {
     const localLogo = Icon({
         hpack: 'center',
         className: 'sidebar-chat-welcome-logo',
-        icon: `google-gemini-symbolic`,
+        icon: `ollama-symbolic`,
     });
     return Box({
         vertical: true,
@@ -37,7 +37,7 @@ const LocalInfo = () => {
                 className: 'txt txt-title-small sidebar-chat-welcome-txt',
                 wrap: true,
                 justify: Gtk.Justification.CENTER,
-                label: 'Assistant (Gemini Pro)',
+                label: 'Ollama models',
             }),
             Box({
                 className: 'spacing-h-5',
@@ -47,13 +47,7 @@ const LocalInfo = () => {
                         className: 'txt-smallie txt-subtext',
                         wrap: true,
                         justify: Gtk.Justification.CENTER,
-                        label: 'Powered by Google',
-                    }),
-                    Button({
-                        className: 'txt-subtext txt-norm icon-material',
-                        label: 'info',
-                        tooltipText: 'Uses gemini-pro.\nNot affiliated, endorsed, or sponsored by Google.',
-                        setup: setupCursorHoverInfo,
+                        label: 'Local models ftw!',
                     }),
                 ]
             }),
@@ -80,7 +74,7 @@ export const LocalSettings = () => MarginRevealer({
                 hpack: 'center',
                 icon: 'casino',
                 name: 'Randomness',
-                desc: 'Gemini\'s temperature value.\n  Precise = 0\n  Balanced = 0.5\n  Creative = 1',
+                desc: 'Temperature value.\n  Precise = 0\n  Balanced = 0.5\n  Creative = 1',
                 options: [
                     { value: 0.00, name: 'Precise', },
                     { value: 0.50, name: 'Balanced', },
@@ -112,32 +106,6 @@ export const LocalSettings = () => MarginRevealer({
     })
 });
 
-// export const GoogleAiInstructions = () => Box({
-//     homogeneous: true,
-//     children: [Revealer({
-//         transition: 'slide_down',
-//         transitionDuration: 150,
-//         setup: (self) => self
-//             .hook(Ollama, (self, hasKey) => {
-//                 self.revealChild = (Ollama.key.length == 0);
-//             }, 'hasKey')
-//         ,
-//         child: Button({
-//             child: Label({
-//                 useMarkup: true,
-//                 wrap: true,
-//                 className: 'txt sidebar-chat-welcome-txt',
-//                 justify: Gtk.Justification.CENTER,
-//                 label: 'A Google AI API key is required\nYou can grab one <u>here</u>, then enter it below'
-//             }),
-//             setup: setupCursorHover,
-//             onClicked: () => {
-//                 Utils.execAsync(['bash', '-c', `xdg-open https://makersuite.google.com/app/apikey &`]);
-//             }
-//         })
-//     })]
-// });
-
 const localWelcome = Box({
     vexpand: true,
     homogeneous: true,
@@ -147,7 +115,6 @@ const localWelcome = Box({
         vertical: true,
         children: [
             LocalInfo(),
-            //GoogleAiInstructions(),
             LocalSettings(),
         ]
     })
@@ -160,7 +127,7 @@ export const chatContent = Box({
         .hook(Ollama, (box, id) => {
             const message = Ollama.messages[id];
             if (!message) return;
-            box.add(ChatMessage(message, MODEL_NAME))
+            box.add(ChatMessage(message, Ollama.modelName))
         }, 'newMsg')
     ,
 });
@@ -222,45 +189,27 @@ export const localCommands = Box({
 export const sendMessage = (text) => {
     // Check if text or API key is empty
     if (text.length == 0) return;
-    // if (Ollama.key.length == 0) {
-    //     Ollama.key = text;
-    //     chatContent.add(SystemMessage(`Key saved to\n\`${Ollama.keyPath}\``, 'API Key', geminiView));
-    //     text = '';
-    //     return;
-    // }
     // Commands
-    // if (text.startsWith('/')) {
-    //     if (text.startsWith('/clear')) clearChat();
-    //     else if (text.startsWith('/model')) chatContent.add(SystemMessage(`Currently using \`${Ollama.modelName}\``, '/model', localView))
-    //     else if (text.startsWith('/prompt')) {
-    //         const firstSpaceIndex = text.indexOf(' ');
-    //         const prompt = text.slice(firstSpaceIndex + 1);
-    //         if (firstSpaceIndex == -1 || prompt.length < 1) {
-    //             chatContent.add(SystemMessage(`Usage: \`/prompt MESSAGE\``, '/prompt', localView))
-    //         }
-    //         else {
-    //             Ollama.addMessage('user', prompt)
-    //         }
-    //     }
-    //     else if (text.startsWith('/key')) {
-    //         const parts = text.split(' ');
-    //         if (parts.length == 1) chatContent.add(SystemMessage(
-    //             `Key stored in:\n\`${Ollama.keyPath}\`\nTo update this key, type \`/key YOUR_API_KEY\``,
-    //             '/key',
-    //             localView));
-    //         else {
-    //             Ollama.key = parts[1];
-    //             chatContent.add(SystemMessage(`Updated API Key at\n\`${Ollama.keyPath}\``, '/key', localView));
-    //         }
-    //     }
-    //     else if (text.startsWith('/test'))
-    //         chatContent.add(SystemMessage(markdownTest, `Markdown test`, localView));
-    //     else
-    //         chatContent.add(SystemMessage(`Invalid command.`, 'Error', localView))
-    // }
-    // else {
-    console.log('sending msg', text);
-    Ollama.send(text);
-    // }
+    if (!text.startsWith('/')) {
+        Ollama.send(text);
+        return;
+    }
+
+    if (text.startsWith('/clear')) clearChat();
+    else if (text.startsWith('/model')) chatContent.add(SystemMessage(`Currently using \`${Ollama.modelName}\``, '/model', localView))
+    else if (text.startsWith('/prompt')) {
+        const firstSpaceIndex = text.indexOf(' ');
+        const prompt = text.slice(firstSpaceIndex + 1);
+        if (firstSpaceIndex == -1 || prompt.length < 1) {
+            chatContent.add(SystemMessage(`Usage: \`/prompt MESSAGE\``, '/prompt', localView))
+        }
+        else {
+            Ollama.addMessage('user', prompt)
+        }
+    }
+    else if (text.startsWith('/test'))
+        chatContent.add(SystemMessage(markdownTest, `Markdown test`, localView));
+    else
+        chatContent.add(SystemMessage(`Invalid command.`, 'Error', localView))
 }
 
