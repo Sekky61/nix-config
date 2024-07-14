@@ -289,7 +289,6 @@ const waifuContent = Box({
             box.attribute.map.set(id, newImageBlock);
         }, 'newResponse')
         .hook(WaifuService, (box, id) => {
-            console.log('box id', box, id);
             if (id === undefined) return;
             const data = WaifuService.responses[id];
             if (!data) return;

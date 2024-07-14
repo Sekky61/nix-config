@@ -307,8 +307,44 @@ require('lazy').setup({
   {
     -- git
     "https://tpope.io/vim/fugitive.git"
-  }
+  },
+  {
+    'nvim-telescope/telescope-ui-select.nvim'
+  },
+  -- Custom Parameters (with defaults)
+  {
+      "David-Kunz/gen.nvim",
+      opts = {
+          model = "deepseek-coder-v2", -- The default model to use.
+          host = "localhost", -- The host running the Ollama service.
+          port = "11434", -- The port on which the Ollama service is listening.
+          quit_map = "q", -- set keymap for close the response window
+          retry_map = "<c-r>", -- set keymap to re-send the current prompt
+          init = function(options) pcall(io.popen, "ollama serve > /dev/null 2>&1 &") end,
+          -- Function to initialize Ollama
+          command = function(options)
+              local body = {model = options.model, stream = true}
+              return "curl --silent --no-buffer -X POST http://" .. options.host .. ":" .. options.port .. "/api/chat -d $body"
+          end,
+          -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
+          -- This can also be a command string.
+          -- The executed command must return a JSON object with { response, context }
+          -- (context property is optional).
+          -- list_models = '<omitted lua function>', -- Retrieves a list of model names
+          display_mode = "float", -- The display mode. Can be "float" or "split" or "horizontal-split".
+          show_prompt = false, -- Shows the prompt submitted to Ollama.
+          show_model = true, -- Displays which model you are using at the beginning of your chat session.
+          no_auto_close = false, -- Never closes the window automatically.
+          debug = true-- Prints errors and the command which is run.
+      }
+  },
 }, {})
+
+require('gen').prompts['Fix_Code'] = {
+  prompt = "Fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
+  replace = true,
+  extract = "```$filetype\n(.-)```"
+}
 
 require("toggleterm").setup {
   open_mapping = [[<c-\>]],
@@ -405,11 +441,34 @@ require('telescope').setup {
       hidden = true,
       no_ignore = false
     }
+  },
+  extensions = {
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown {
+        -- even more opts
+      }
+
+      -- pseudo code / specification for writing custom displays, like the one
+      -- for "codeactions"
+      -- specific_opts = {
+      --   [kind] = {
+      --     make_indexed = function(items) -> indexed_items, width,
+      --     make_displayer = function(widths) -> displayer
+      --     make_display = function(displayer) -> function(e)
+      --     make_ordinal = function(e) -> string
+      --   },
+      --   -- for example to disable the custom builtin "codeactions" display
+      --      do the following
+      --   codeactions = false,
+      -- }
+    }
   }
 }
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+-- To get ui-select loaded and working with telescope, you need to call
+require("telescope").load_extension("ui-select")
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -897,3 +956,6 @@ vim.keymap.set('n', 'Q', '<Nop>')
 vim.api.nvim_set_keymap("n", "<leader>gc", ":Git commit -m \"", {noremap=false})
 vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", {noremap=false})
 
+-- LLM
+vim.keymap.set({ 'n', 'v' }, '<leader>]', ':Gen<CR>')
+vim.keymap.set('v', '<leader>]', ':Gen Enhance_Grammar_Spelling<CR>')

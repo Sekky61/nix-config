@@ -39,7 +39,7 @@ function replaceapidom(URL) {
     }
     return URL;
 }
-const CHAT_MODELS = ["gemini-pro"]
+const CHAT_MODELS = ["gemini-pro", "gemini-1.5-flash-latest"];
 const ONE_CYCLE_COUNT = 3;
 
 class GeminiMessage extends Service {
@@ -138,7 +138,7 @@ class GeminiService extends Service {
     _cycleModels = true;
     _requestCount = 0;
     _temperature = 0.9;
-    _modelIndex = 0;
+    _modelIndex = 1;
     _key = '';
     _decoder = new TextDecoder();
 
@@ -147,7 +147,6 @@ class GeminiService extends Service {
 
         if (fileExists(expandTilde(KEY_FILE_LOCATION))) this._key = Utils.readFile(expandTilde(KEY_FILE_LOCATION)).trim();
         else this.emit('hasKey', false);
-        console.log('got key');
 
         if (this._assistantPrompt) this._messages = [...initMessages];
         else this._messages = [];
@@ -200,11 +199,9 @@ class GeminiService extends Service {
         stream.read_line_async(
             0, null,
             (stream, res) => {
-                console.log('stream bit');
                 try {
                     const [bytes] = stream.read_line_finish(res);
                     const line = this._decoder.decode(bytes);
-                    console.log('bytes', line);
 
                     if (line == '[{') { // beginning of response
                         aiResponse._rawData += '{';
@@ -254,20 +251,15 @@ class GeminiService extends Service {
         const session = new Soup.Session();
         const message = new Soup.Message({
             method: 'POST',
-            // uri: GLib.Uri.parse(replaceapidom("https://user1720902225430.requestly.tech/a"), GLib.UriFlags.NONE),
-            uri: GLib.Uri.parse(replaceapidom(`https://generativelanguage.googleapis.com/v1/models/${this.modelName}:streamGenerateContent?key=${this._key}`), GLib.UriFlags.NONE),
+            uri: GLib.Uri.parse(replaceapidom(`https://generativelanguage.googleapis.com/v1beta/models/${this.modelName}:streamGenerateContent?key=${this._key}`), GLib.UriFlags.NONE),
         });
         const bytes = new GLib.Bytes(JSON.stringify(body));
         const length = bytes.toArray().length;
-        console.log('send bytes', bytes);
-        console.log('x', length);
         message.get_request_headers().append('Content-Type', `application/json`);
         message.get_request_headers().set_encoding(Soup.Encoding.CONTENT_LENGTH);
         message.set_request_body_from_bytes('application/json', bytes);
-        console.log(message);
 
         session.send_async(message, GLib.DEFAULT_PRIORITY, null, (_, result) => {
-            console.log('got response', result);
             const stream = session.send_finish(result);
             this.readResponse(new Gio.DataInputStream({
                 close_base_stream: true,

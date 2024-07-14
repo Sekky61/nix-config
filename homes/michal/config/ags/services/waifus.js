@@ -117,7 +117,6 @@ class WaifuService extends Service {
         };
         var status = 0;
         const url = `${this._endpoints[this._mode]}?${paramString}`;
-        console.log('fetch w', url);
         Utils.fetch(url, options)
             .then(result => {
                 status = result.status;
@@ -125,7 +124,6 @@ class WaifuService extends Service {
             })
             .then((dataString) => { // Store interesting stuff and emit
                 const parsedData = JSON.parse(dataString);
-                console.log(parsedData);
                 if (!parsedData.images) this._responses.push({
                     status: status,
                     signature: -1,
