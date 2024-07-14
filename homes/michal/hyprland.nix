@@ -57,7 +57,7 @@ in
         "swww kill; swww init"
         "fcitx5"
         ''
-          swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' before-sleep 'swaylock -f'
+          swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' timeout 900 'hyprctl dispatch dpms off' resume 'sleep 3; hyprctl dispatch dpms on' before-sleep 'swaylock -f'
         ''
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
