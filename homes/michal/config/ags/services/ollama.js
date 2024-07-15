@@ -39,6 +39,19 @@ function replaceapidom(URL) {
     return URL;
 }
 
+function parseOllamaList(text) {
+    const lines = text.trim().split('\n').slice(1); // Ignore the header line
+    return lines.map(line => {
+        const parts = line.split(/\s{2,}|\t/); // Split by two or more spaces or tabs
+        return {
+            name: parts[0].trim(),
+            id: parts[1].trim(),
+            size: parts[2].trim(),
+            modified: parts[3].trim()
+        };
+    });
+}
+
 class OllamaMessage extends Service {
     static {
         Service.register(this,
@@ -57,6 +70,9 @@ class OllamaMessage extends Service {
     _thinking = false;
     _done = false;
 
+    /**
+     * Can run after sending the message
+     */
     constructor(role, content, thinking = false, done = false) {
         super();
         this._role = role;
@@ -110,6 +126,7 @@ class OllamaService extends Service {
             'clear': [],
             'newMsg': ['int'],
             'hasKey': ['boolean'],
+            'modelsLoaded': []
         });
     }
 
@@ -122,7 +139,7 @@ class OllamaService extends Service {
     _modelIndex = 0;
     // _key = '';
     _decoder = new TextDecoder('utf-8', { fatal: false });
-    _modelNames = ['llama3'];
+    _availableModels = [];
 
     url = GLib.Uri.parse(replaceapidom('http://localhost:11434/api/chat'), GLib.UriFlags.NONE);
 
@@ -135,10 +152,33 @@ class OllamaService extends Service {
         if (this._assistantPrompt) this._messages = [...initMessages];
         else this._messages = [];
 
+        this.loadAvailableModels();
         this.emit('initialized');
     }
 
-    get modelName() { return this._modelNames[this._modelIndex] }
+    async loadAvailableModels() {
+        try {
+            const text = await Utils.execAsync('ollama list');
+            const models =  parseOllamaList(text);
+            this.availableModels = models;
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    get availableModels() { return this._availableModels }
+    set availableModels(models) { 
+        this._availableModels = models;
+        this.notify('modelsLoaded');
+        this.emit('changed');
+    }
+
+    get activeModel() { return this.availableModels[this._modelIndex]; }
+
+    get modelIndex() { return this._modelIndex; }
+    set modelIndex(value) { this._modelIndex = value; }
+
+    get modelName() { return this._availableModels[this._modelIndex].name; }
 
     // get keyPath() { return KEY_FILE_LOCATION }
     // get key() { return this._key }

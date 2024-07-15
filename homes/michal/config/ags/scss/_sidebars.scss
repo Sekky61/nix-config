@@ -857,3 +857,18 @@ $waifu_image_overlay_transparency: 0.7;
 .sidebar-waifu-image-action:active {
     background-color: rgba(60, 60, 60, $waifu_image_overlay_transparency);
 }
+
+// Ollama / local
+
+.model-dropdown {
+    background-color: $secondaryContainer;
+    color: $onSecondaryContainer;
+    caret-color: $onSecondaryContainer;
+    border-radius: 999px;
+    font-size: 1.3rem;
+    padding: 0.341rem 1.364rem;
+    margin: 0.477rem;
+    box-shadow: 2px 2px 4px rgba(22, 22, 22, 0.5);
+    min-height: 2.727rem;
+
+}

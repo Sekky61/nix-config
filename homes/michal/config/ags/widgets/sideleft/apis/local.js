@@ -1,4 +1,4 @@
-const { Gtk } = imports.gi;
+const { Gtk, GObject } = imports.gi;
 import App from 'resource:///com/github/Aylur/ags/app.js';
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import * as Utils from 'resource:///com/github/Aylur/ags/utils.js';
@@ -55,6 +55,52 @@ const LocalInfo = () => {
     });
 }
 
+const modelNames = [
+    'llama3',
+    'code-wizard-2'
+];
+
+const ModelPicker = () => {
+    // Source: https://stackoverflow.com/questions/21568268/how-to-use-the-gtk-combobox-in-gjs
+    let model = new Gtk.ListStore();
+    model.set_column_types([GObject.TYPE_STRING, GObject.TYPE_STRING]);
+
+    let cbox = new Gtk.ComboBox({
+        model: model,
+    });
+    let renderer = new Gtk.CellRendererText();
+    cbox.pack_start(renderer, true);
+    cbox.add_attribute(renderer, 'text', 1);
+
+    cbox.set_active(0); // set value
+
+    cbox.connect('changed', function(entry) {
+        let [success, iter] = cbox.get_active_iter();
+        if (!success)
+        return;
+        let index = model.get_value(iter, 0); // get value
+        console.log('picked', index);
+        Ollama.modelIndex = index;
+    });
+
+    const button = Box({
+        className: 'model-dropdown',
+        child: cbox,
+        hpack: 'center',
+        setup: (self) => self
+        .hook(Ollama, (box, id) => {
+            const models = Ollama.availableModels;
+            models.forEach((modelObj, i) => {
+                model.set(model.append(), [0, 1], [i, modelObj.name]);
+            });
+            cbox.set_active(0); // set value
+        }, 'modelsLoaded')
+
+    });
+    return button;
+};
+
+
 export const LocalSettings = () => MarginRevealer({
     transition: 'slide_down',
     revealChild: true,
@@ -86,22 +132,23 @@ export const LocalSettings = () => MarginRevealer({
                 },
             }),
             ConfigGap({ vertical: true, size: 10 }), // Note: size can only be 5, 10, or 15 
-            Box({
-                vertical: true,
-                hpack: 'fill',
-                className: 'sidebar-chat-settings-toggles',
-                children: [
-                    ConfigToggle({
-                        icon: 'model_training',
-                        name: 'Enhancements',
-                        desc: 'Tells Gemini:\n- It\'s a Linux sidebar assistant\n- Be brief and use bullet points',
-                        initValue: Ollama.assistantPrompt,
-                        onChange: (self, newValue) => {
-                            Ollama.assistantPrompt = newValue;
-                        },
-                    }),
-                ]
-            })
+            ModelPicker(),
+            // Box({
+            //     vertical: true,
+            //     hpack: 'fill',
+            //     className: 'sidebar-chat-settings-toggles',
+            //     children: [
+            //         ConfigToggle({
+            //             icon: 'model_training',
+            //             name: 'Enhancements',
+            //             desc: 'Tells Gemini:\n- It\'s a Linux sidebar assistant\n- Be brief and use bullet points',
+            //             initValue: Ollama.assistantPrompt,
+            //             onChange: (self, newValue) => {
+            //                 Ollama.assistantPrompt = newValue;
+            //             },
+            //         }),
+            //     ]
+            // })
         ]
     })
 });
