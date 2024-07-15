@@ -126,8 +126,9 @@ class OllamaService extends Service {
             'clear': [],
             'newMsg': ['int'],
             'hasKey': ['boolean'],
-            'modelsLoaded': []
-        });
+            'modelsLoaded': ['boolean']
+        },
+        );
     }
 
     // Use initial messages
@@ -169,8 +170,7 @@ class OllamaService extends Service {
     get availableModels() { return this._availableModels }
     set availableModels(models) { 
         this._availableModels = models;
-        this.notify('modelsLoaded');
-        this.emit('changed');
+        this.emit('modelsLoaded', true);
     }
 
     get activeModel() { return this.availableModels[this._modelIndex]; }
@@ -296,5 +296,7 @@ class OllamaService extends Service {
     }
 }
 
-export default new OllamaService();
+const service = new OllamaService();
+
+export default service;
 

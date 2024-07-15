@@ -13,9 +13,6 @@ import { ConfigToggle, ConfigSegmentedSelection, ConfigGap } from '../../../lib/
 import { markdownTest } from '../../../lib/md2pango.js';
 import { MarginRevealer } from '../../../lib/advancedwidgets.js';
 
-// Gtk.IconTheme.get_default().append_search_path(`${App.configDir}/assets`);
-const MODEL_NAME = `Ollama`;
-
 export const localTabIcon = Icon({
     hpack: 'center',
     className: 'sidebar-chat-apiswitcher-icon',
@@ -55,11 +52,6 @@ const LocalInfo = () => {
     });
 }
 
-const modelNames = [
-    'llama3',
-    'code-wizard-2'
-];
-
 const ModelPicker = () => {
     // Source: https://stackoverflow.com/questions/21568268/how-to-use-the-gtk-combobox-in-gjs
     let model = new Gtk.ListStore();
@@ -72,7 +64,7 @@ const ModelPicker = () => {
     cbox.pack_start(renderer, true);
     cbox.add_attribute(renderer, 'text', 1);
 
-    cbox.set_active(0); // set value
+    // cbox.set_active(0); // set value
 
     cbox.connect('changed', function(entry) {
         let [success, iter] = cbox.get_active_iter();
@@ -83,19 +75,31 @@ const ModelPicker = () => {
         Ollama.modelIndex = index;
     });
 
-    const button = Box({
+    const button =  Box({
         className: 'model-dropdown',
-        child: cbox,
+        child: Widget.CenterBox({
+            startWidget: cbox,
+            endWidget: Box({
+                hpack: 'center',
+                className: 'sidebar-chat-apiswitcher-icon',
+                homogeneous: true,
+                children: [
+                    MaterialIcon('keyboard_arrow_down', 'norm'),
+                ]
+            })
+        }),
         hpack: 'center',
         setup: (self) => self
-        .hook(Ollama, (box, id) => {
-            const models = Ollama.availableModels;
-            models.forEach((modelObj, i) => {
-                model.set(model.append(), [0, 1], [i, modelObj.name]);
-            });
-            cbox.set_active(0); // set value
-        }, 'modelsLoaded')
-
+            .hook(Ollama, (box, legit) => {
+                if(!legit) return; // gets run at startup
+                console.log('event loaded', box, legit);
+                const models = Ollama.availableModels;
+                models.forEach((modelObj, i) => {
+                    console.log('adding', modelObj, i);
+                    model.set(model.append(), [0, 1], [i, modelObj.name]);
+                });
+                cbox.set_active(0); // set value
+            }, 'modelsLoaded')
     });
     return button;
 };
