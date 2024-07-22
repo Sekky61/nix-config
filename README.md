@@ -18,9 +18,10 @@ Incomplete list of changes:
 - Please be advised that this flake includes my hardware configuration
 - So this configuration likely won't work on your device... idk
 ```bash
-git clone https://github.com/end-4/CirnOS.git && cd CirnOS
-IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake . --impure
+git clone https://github.com/Sekky61/nix-config && cd nix-config
+IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
 ```
+Or run `./update.sh`.
 
 ## Development and editing
 
