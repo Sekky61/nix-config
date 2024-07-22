@@ -80,7 +80,7 @@
       htop
       powertop
       hwinfo
-      rnote
+      rnote # drawing app for stylus
       obs-studio
       # dev tools
       insomnia
