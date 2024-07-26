@@ -48,7 +48,7 @@ export const keybindList = [[
         "icon": "widgets",
         "name": "Widgets (AGS)",
         "binds": [
-            { "keys": ["", "OR", "", "+", "Tab"], "action": "Toggle overview/launcher" },
+            { "keys": ["", "+", "Space", "OR", "", "+", "Tab"], "action": "Toggle overview/launcher" },
             { "keys": ["Ctrl", "", "+", "R"], "action": "Restart AGS" },
             { "keys": ["", "+", "/"], "action": "Toggle this cheatsheet" },
             { "keys": ["", "+", "N"], "action": "Toggle system sidebar" },
@@ -115,6 +115,7 @@ export const keybindList = [[
         "icon": "keyboard",
         "name": "Typing",
         "binds": [
+            { "keys": ["Ctrl", "+", "Space"], "action": "Toggle language" },
             { "keys": ["", "+", "V"], "action": "Clipboard history  >>  clipboard" },
             { "keys": ["", "+", "."], "action": "Emoji picker  >>  clipboard" },
         ],

@@ -93,7 +93,7 @@ in
       input = {
         # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
         kb_layout = "us,cz";
-        kb_options = grp:win_space_toggle;
+        # kb_options = grp:win_space_toggle;
         numlock_by_default = true;
         repeat_delay = 250;
         repeat_rate = 35;
@@ -180,6 +180,7 @@ in
       bind =
         let SLURP_COMMAND = "$(slurp -d -c eedcf5BB -b 4f425644 -s 00000000)";
         in [
+          "Super, Space, exec, ags -t 'overview'" # Launcher
           "Super, C, exec, code --password-store=gnome"
           "Super, T, exec, foot --override shell=fish"
           "Super, Return, exec, alacritty"
@@ -329,7 +330,7 @@ in
         "Control+Super, R, exec, killall ags .ags-wrapped ydotool; ags &"
         "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
       ];
-      bindir = [ "Super, Super_L, exec, ags -t 'overview'" ];
+      # bindir = [ "Super, Super_L, exec, ags -t 'overview'" ]; # Launcher
       binde = [
         "Super, Minus, splitratio, -0.1"
         "Super, Equal, splitratio, 0.1"

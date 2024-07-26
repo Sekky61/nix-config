@@ -27,6 +27,8 @@ Or run `./update.sh`.
 
 ### AGS notes
 
+Press `Super + /` to open the list of keybindings.
+
 [Very useful docs](https://aylur.github.io/ags-docs/). Also look at [GJS docs](https://gjs.guide/).
 
 - class `corner-black` makes fake rounded screen

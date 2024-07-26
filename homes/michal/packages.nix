@@ -82,6 +82,7 @@
       hwinfo
       rnote # drawing app for stylus
       obs-studio
+      ytdownloader
       # dev tools
       insomnia
       wireshark

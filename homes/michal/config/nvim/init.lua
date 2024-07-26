@@ -603,7 +603,7 @@ function MyFormat()
 end
 
 -- Enable the following language servers
---  Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
+-- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local servers = {
   efm = {},
 
@@ -618,6 +618,7 @@ local servers = {
   rust_analyzer = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   cssls = { filetypes = { 'css', 'scss', 'less', 'stylus' } },
+  astro = {},
 
   lua_ls = {
     Lua = {
