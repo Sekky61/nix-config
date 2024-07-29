@@ -21,6 +21,7 @@
       url = "github:hyprwm/hyprland-plugins";
       # inputs.nixpkgs.follows = "hyprland";
     };
+    iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
     ags.url = "github:Aylur/ags";
     flake-parts = {

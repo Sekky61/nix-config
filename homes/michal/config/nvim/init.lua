@@ -627,6 +627,7 @@ local servers = {
     },
   },
   nil_ls = {}, -- nix
+  gopls = {}
 }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers

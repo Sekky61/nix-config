@@ -22,6 +22,7 @@ in
     ./git.nix
     ./bash.nix
     ./alacritty.nix
+    ./java.nix
   ];
 
   home = {

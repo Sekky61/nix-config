@@ -59,14 +59,13 @@
       pavucontrol
       playerctl
       swappy
-      swaylock-effects
-      swayidle
       slurp
       swww
       wayshot
       wlsunset
       wl-clipboard
       wf-recorder
+      iio-sensor-proxy # pc sensors
 
       # michal
       xwayland # apps that do not work with wayland like spotify rn
@@ -102,6 +101,8 @@
       eslint
       lua
       zig
+      gnumake
+      alejandra # nix formatter
       # very important stuff
       # uwuify
     ];

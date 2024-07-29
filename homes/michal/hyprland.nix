@@ -15,9 +15,10 @@ in
 {
   home.packages = with pkgs; [
     launcher
-    adoptopenjdk-jre-bin
     nwg-displays # gui for monitors, wayland
     wlr-randr # for rotate command
+    hyprlock # lock screen
+    hypridle # auto lock
   ];
 
   xdg.desktopEntries."org.gnome.Settings" = {
@@ -29,11 +30,92 @@ in
     terminal = false;
   };
 
-  programs = {
-    swaylock = {
-      enable = true;
-      package = pkgs.swaylock-effects;
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        grace = 5;
+        hide_cursor = true;
+      };
+
+      background = [
+        {
+          path = "~/Pictures/wave.png";
+          blur_passes = 2;
+          blur_size = 6;
+        }
+      ];
+
+      input-field = [
+        {
+          size = "250, 60";
+          outer_color = "rgb(#000000)";
+          # inner_color = "rgb(${hexToRgb colours.bgDark})";
+          font_color = "rgb(#7dc4e4)";
+          placeholder_text = "";
+        }
+      ];
+
+      label = [
+        {
+          text = "Macaroni and cheese balls";
+          color = "rgba(#cad3f5, 1.0)";
+          font_family = "Gabarito";
+          font_size = 64;
+          text_align = "center";
+          halign = "center";
+          valign = "center";
+          position = "0, 160";
+        }
+        {
+          text = "$TIME";
+          color = "rgba(#b8c0e0, 1.0)";
+          font_family = "Gabarito";
+          font_size = 32;
+          text_align = "center";
+          halign = "center";
+          valign = "center";
+          position = "0, 75";
+        }
+      ];
     };
+  };
+
+  services.hypridle = {
+    enable = true;
+    settings = {
+  general = {
+    lock_cmd = "pidof hyprlock || hyprlock";             # avoid starting multiple hyprlock instances.
+    before_sleep_cmd = "loginctl lock-session";          # lock before suspend.
+    after_sleep_cmd = "hyprctl dispatch dpms on";        # to avoid having to press a key twice to turn on the display.
+  };
+
+  listener = [
+    {
+      timeout = 150;                                     # 2.5min.
+      on-timeout = "brightnessctl -s set 10";            # set monitor backlight to minimum, avoid 0 on OLED monitor.
+      on-resume = "brightnessctl -r";                    # monitor backlight restore.
+    }
+    {
+      timeout = 150;                                     # 2.5min.
+      on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0";  # turn off keyboard backlight.
+      on-resume = "brightnessctl -rd rgb:kbd_backlight";          # turn on keyboard backlight.
+    }
+    {
+      timeout = 300;                                     # 5min
+      on-timeout = "loginctl lock-session";              # lock screen when timeout has passed
+    }
+    {
+      timeout = 330;                                     # 5.5min
+      on-timeout = "hyprctl dispatch dpms off";          # screen off when timeout has passed
+      on-resume = "hyprctl dispatch dpms on";            # screen on when activity is detected after timeout has fired.
+    }
+    {
+      timeout = 1800;                                    # 30min
+      on-timeout = "systemctl suspend";                  # suspend pc
+    }
+  ];
+};
   };
 
   wayland.windowManager.hyprland = {
@@ -56,9 +138,11 @@ in
         "ags"
         "swww kill; swww init"
         "fcitx5"
-        ''
-          swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' timeout 900 'hyprctl dispatch dpms off' resume 'sleep 3; hyprctl dispatch dpms on' before-sleep 'swaylock -f'
-        ''
+        # ''
+        #   swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' timeout 900 'hyprctl dispatch dpms off' resume 'sleep 3; hyprctl dispatch dpms on' before-sleep 'swaylock -f'
+        # ''
+        "hypridle"
+        "iio-hyprland"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "hyprctl setcursor Bibata-Modern-Classic 24"
@@ -211,8 +295,8 @@ in
           ''
             Control+Super+Shift,S,exec,grim -g "${SLURP_COMMAND}" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"
           ''
-          "Super, L, exec, swaylock"
-          "Super+Shift, L, exec, swaylock"
+          "Super, L, exec, hyprlock"
+          "Super+Shift, L, exec, hyprlock"
           "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
           "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
           "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
@@ -354,7 +438,6 @@ in
         "noanim, selection"
         "noanim, overview"
         "noanim, anyrun"
-        "blur, swaylock"
         "blur, eww"
         "ignorealpha 0.8, eww"
         "noanim, noanim"

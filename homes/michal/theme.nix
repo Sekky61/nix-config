@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 let
   gtk-theme = "adw-gtk3-dark";
 
@@ -61,6 +61,7 @@ in
     sessionVariables = {
       XCURSOR_THEME = cursor-theme;
       XCURSOR_SIZE = "24";
+      GTK_IM_MODULE = lib.mkForce "";
     };
     pointerCursor = {
       package = cursor-package;

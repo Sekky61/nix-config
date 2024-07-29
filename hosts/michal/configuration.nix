@@ -1,4 +1,4 @@
-{ pkgs, username, config, ... }: {
+{ inputs, pkgs, username, config, ... }: {
   # nix
   documentation.nixos.enable = false; # .desktop
   nixpkgs.config.allowUnfree = true;
@@ -80,7 +80,7 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
-    pam.services.swaylock = { };
+    # pam.services.swaylock = { };
     # pam.services.swaylock-effects = {};
   };
 
@@ -117,6 +117,7 @@
   environment = {
     localBinInPath = true;
     systemPackages = with pkgs; [
+      inputs.iio-hyprland.packages.${pkgs.system}.default
       curl
       bash
       fish
@@ -164,6 +165,8 @@
     enable = true;
     powerOnBoot = true;
   };
+
+  hardware.sensor.iio.enable = true;
 
   # Boot
   boot = {
