@@ -1,5 +1,9 @@
-{ pkgs, inputs, lib, ... }:
-let
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
   gtk-theme = "adw-gtk3-dark";
 
   moreWaita = pkgs.stdenv.mkDerivation {
@@ -11,7 +15,7 @@ let
     '';
   };
 
-  nerdfonts = (pkgs.nerdfonts.override {
+  nerdfonts = pkgs.nerdfonts.override {
     fonts = [
       "Ubuntu"
       "UbuntuMono"
@@ -22,20 +26,21 @@ let
       "Mononoki"
       "SpaceMono"
     ];
-  });
-  google-fonts = (pkgs.google-fonts.override {
+  };
+  google-fonts = pkgs.google-fonts.override {
     fonts = [
       # Sans
-      "Gabarito" "Lexend"
+      "Gabarito"
+      "Lexend"
       # Serif
-      "Chakra Petch" "Crimson Text"
+      "Chakra Petch"
+      "Crimson Text"
     ];
-  });
+  };
 
   cursor-theme = "Bibata-Modern-Classic";
   cursor-package = pkgs.bibata-cursors;
-in
-{
+in {
   home = {
     packages = with pkgs; [
       # themes

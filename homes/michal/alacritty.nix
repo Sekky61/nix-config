@@ -1,6 +1,10 @@
-{ inputs, pkgs, ... }: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   home.packages = with pkgs; [
-    alacritty 
+    alacritty
   ];
 
   programs.alacritty = {
@@ -8,7 +12,11 @@
     settings = {
       keyboard.bindings = [
         # Clone window with the same CWD
-        { key = "N"; mods = "Control|Shift"; action = "CreateNewWindow"; }
+        {
+          key = "N";
+          mods = "Control|Shift";
+          action = "CreateNewWindow";
+        }
       ];
       window.opacity = 0.9;
     };

@@ -1,5 +1,4 @@
-{ self, ... }:
-let
+{self, ...}: let
   inherit (self) inputs;
   inherit (inputs) nixpkgs home-manager;
 
@@ -14,15 +13,14 @@ let
     hm
   ];
   impurity = inputs.impurity;
-in
-{
+in {
   "michal" = nixpkgs.lib.nixosSystem {
-    specialArgs = { inherit inputs; };
+    specialArgs = {inherit inputs;};
     modules =
       [
         {
           # Impurity
-          imports = [ impurity.nixosModules.impurity ];
+          imports = [impurity.nixosModules.impurity];
           impurity.configRoot = self;
           impurity.enable = true;
         }
@@ -33,19 +31,23 @@ in
         # configuration.nix, but is done on the topmost level for your convenience
         {
           networking.hostName = "michalyoga";
-          _module.args = { username = "michal"; };
+          _module.args = {username = "michal";};
         }
       ]
       ++ homes; # imports the home-manager related configurations
   };
-  "michal-impure" = self.nixosConfigurations."michal".extendModules { modules = [{ impurity.enable = true; }]; };
+  "michal-impure" = self.nixosConfigurations."michal".extendModules {modules = [{impurity.enable = true;}];};
   desktopIso = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ({ pkgs, modulesPath, ... }: {
-            imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
-            environment.systemPackages = [ pkgs.neovim ];
-          })
-        ];
-      };
+    system = "x86_64-linux";
+    modules = [
+      ({
+        pkgs,
+        modulesPath,
+        ...
+      }: {
+        imports = [(modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")];
+        environment.systemPackages = [pkgs.neovim];
+      })
+    ];
+  };
 }

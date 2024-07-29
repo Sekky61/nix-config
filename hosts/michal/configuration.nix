@@ -1,4 +1,10 @@
-{ inputs, pkgs, username, config, ... }: {
+{
+  inputs,
+  pkgs,
+  username,
+  config,
+  ...
+}: {
   # nix
   documentation.nixos.enable = false; # .desktop
   nixpkgs.config.allowUnfree = true;
@@ -31,7 +37,7 @@
   # virtualisation = {
   #   libvirtd.enable = true;
   # };
-  users.extraGroups.vboxusers.members = [ "michal" ];
+  users.extraGroups.vboxusers.members = ["michal"];
   virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true; # probably not necessary
   virtualisation.virtualbox.guest.draganddrop = true;
@@ -64,9 +70,9 @@
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
       description = "polkit-gnome-authentication-agent-1";
-      wantedBy = [ "graphical-session.target" ];
-      wants = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
@@ -86,7 +92,8 @@
 
   # dconf
   programs = {
-    gnupg = { # ssh passwords
+    gnupg = {
+      # ssh passwords
       agent = {
         enable = true;
         enableSSHSupport = true;
@@ -101,7 +108,7 @@
     };
     firefox = {
       enable = true;
-      nativeMessagingHosts.packages = [ pkgs.plasma5Packages.plasma-browser-integration ];
+      nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
     };
     # Run dynamically linked stuff
     nix-ld = {
@@ -147,8 +154,13 @@
       # home = "/home/${username}";
       isNormalUser = true;
       shell = pkgs.bash;
-      extraGroups = [ 
-        "networkmanager" "wheel" "video" "input" "uinput" "libvirtd"
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "video"
+        "input"
+        "uinput"
+        "libvirtd"
         "wireshark"
       ];
     };
@@ -171,7 +183,7 @@
   # Boot
   boot = {
     tmp.cleanOnBoot = true;
-    supportedFilesystems = [ "btrfs" "ext4" "fat32" "ntfs" ];
+    supportedFilesystems = ["btrfs" "ext4" "fat32" "ntfs"];
     loader = {
       grub = {
         enable = true;

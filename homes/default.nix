@@ -1,4 +1,9 @@
-{ self, impurity, inputs, ... }: {
+{
+  self,
+  impurity,
+  inputs,
+  ...
+}: {
   home-manager = {
     # tell home-manager to be as verbose as possible
     verbose = true;
@@ -31,4 +36,3 @@
     };
   };
 }
-

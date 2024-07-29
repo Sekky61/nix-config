@@ -1,5 +1,4 @@
-{ lib, ... }:
-let
+{lib, ...}: let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
@@ -9,14 +8,13 @@ let
     left = "";
     right = "";
   };
-in
-{
+in {
   programs.git = {
     enable = true;
     userName = "Michal Majer";
     userEmail = "misa@majer.cz";
     extraConfig = {
-    credential.helper = "cache --timeout=3600";
+      credential.helper = "cache --timeout=3600";
       # Sign all commits using ssh key
       commit.gpgsign = true;
       gpg.format = "ssh";
