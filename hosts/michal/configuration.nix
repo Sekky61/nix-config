@@ -92,6 +92,40 @@
 
   # dconf
   programs = {
+    ssh = {
+      extraConfig = ''
+    Host rpi
+        HostName 192.168.0.200
+        User majerpi
+        IdentityFile ~/.ssh/id_rsa
+
+    Host rpi-wifi
+        HostName 192.168.0.201
+        User majerpi
+        IdentityFile ~/.ssh/id_rsa
+
+    Host rpi-zerotier
+        HostName 10.242.204.103
+        User majerpi
+        IdentityFile ~/.ssh/id_rsa
+
+    Host sc-nas.fit.vutbr.cz
+        HostName sc-nas.fit.vutbr.cz
+        User xmajer21
+        IdentityFile ~/.ssh/id_ed25519
+        ForwardAgent yes
+
+    Host sc-gpu1
+        HostName sc-gpu1.fit.vutbr.cz
+        User xmajer21
+        ForwardAgent yes
+
+    Host riscvsim-droplet
+        HostName 164.92.130.132
+        User riscvsim
+        IdentityFile ~/.ssh/id_rsa
+  '';
+    };
     gnupg = {
       # ssh passwords
       agent = {

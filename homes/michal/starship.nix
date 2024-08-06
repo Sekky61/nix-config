@@ -49,6 +49,10 @@ in {
         map_symbol = true;
         disabled = false;
       };
+      git_state = {
+        format = "[\($state( $progress_current of $progress_total)\)]($style) ";
+        cherry_pick = "[🍒 PICKING](bold red)";
+      };
       cmd_duration = {
         min_time = 1000;
         format = "[$duration ](fg:yellow)";
@@ -62,22 +66,23 @@ in {
         format = "[$symbol ](yellow dimmed)";
       };
       directory = {
-        format = " [${pad.left}](fg:bright-black)[$path](bg:bright-black fg:white)[${pad.right}](fg:bright-black)";
+        format = " [${pad.left}](fg:cyan)[$path](bg:cyan bold fg:black)[${pad.right}](fg:cyan)";
         truncation_length = 6;
         truncation_symbol = "~/󰇘/";
       };
-      # directory.substitutions = {
-      #   "Documents" = "󰈙 ";
-      #   "Downloads" = " ";
-      #   "Music" = " ";
-      #   "Pictures" = " ";
-      #   "Videos" = " ";
-      #   "Projects" = "󱌢 ";
-      #   "School" = "󰑴 ";
-      #   "GitHub" = "";
-      #   ".config" = " ";
-      #   "Vault" = "󱉽 ";
-      # };
+      directory.substitutions = {
+        "Documents" = "󰈙 ";
+        "Downloads" = " ";
+        "Music" = " ";
+        "Pictures" = " ";
+        "Videos" = " ";
+        "Projects" = "󱌢 ";
+        "School" = "󰑴 ";
+        ".config" = " ";
+        "Vault" = "󱉽 ";
+        "hyprland" = "  ";
+        "GitHub" = "  ";
+      };
       git_branch = {
         symbol = "";
         style = "";

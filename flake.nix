@@ -27,6 +27,9 @@
     };
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
+    aagl.url = "github:ezKEa/aagl-gtk-on-nix/release-24.05";
+    aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
+
     ags.url = "github:Aylur/ags";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";

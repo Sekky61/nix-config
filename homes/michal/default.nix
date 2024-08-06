@@ -9,7 +9,7 @@ in
   }: {
     imports = [
       # Cachix
-      # ./cachix.nix
+      ./cachix.nix
       ## Dotfiles (manual)
       ./dotfiles.nix
       # Stuff
@@ -20,7 +20,7 @@ in
       ./hyprland.nix
       ./mimelist.nix
       ./packages.nix
-      # ./starship.nix
+      ./starship.nix
       #./sway.nix
       ./theme.nix
       ./git.nix

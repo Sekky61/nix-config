@@ -39,10 +39,10 @@
       glib
       foot
       kitty
-      starship
       showmethekey
       vscode
       ydotool
+      nmap
 
       # theming tools
       gradience
@@ -67,6 +67,8 @@
       wl-clipboard
       wf-recorder
       iio-sensor-proxy # pc sensors
+      libinput # wayland input settings
+      libinput-gestures
 
       # michal
       xwayland # apps that do not work with wayland like spotify rn
@@ -83,6 +85,9 @@
       rnote # drawing app for stylus
       obs-studio
       ytdownloader
+      wineWowPackages.waylandFull
+      winetricks
+      lutris
       # dev tools
       insomnia
       wireshark
