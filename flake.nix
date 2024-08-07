@@ -1,5 +1,5 @@
 {
-  description = "end_4's NixOS flake";
+  description = "Michal's NixOS flake";
 
   outputs = {
     self,
