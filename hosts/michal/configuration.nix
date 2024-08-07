@@ -40,7 +40,7 @@
   users.extraGroups.vboxusers.members = ["michal"];
   virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true; # probably not necessary
-  virtualisation.virtualbox.guest.draganddrop = true;
+  virtualisation.virtualbox.guest.dragAndDrop = true;
 
   services = {
     pcscd.enable = true; # necessary? for gnupg
@@ -167,7 +167,7 @@
       # home-manager
       wget
       nixpkgs-fmt
-      nixfmt
+      nixfmt-classic
     ];
   };
 

@@ -5,15 +5,12 @@
 }: {
   home = {
     sessionVariables = {
-      BROWSER = "firefox";
+      BROWSER = "google-chrome";
     };
 
-    file."firefox-gnome-theme" = {
-      target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
-      source = inputs.firefox-gnome-theme;
-    };
     packages = with pkgs; [
       libsForQt5.plasma-browser-integration
+      google-chrome
     ];
   };
 

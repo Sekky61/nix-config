@@ -19,7 +19,6 @@
       bibata-cursors
       rubik
       lexend
-      gnome.nautilus-python
       twitter-color-emoji
     ];
 
@@ -37,8 +36,6 @@
       ])
       ++ (with pkgs.gnome; [
         gnome-music
-        epiphany # web browser
-        seahorse # wallet gui manager
         # gnome-characters
         tali # poker game
         iagno # go game

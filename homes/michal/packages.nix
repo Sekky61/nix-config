@@ -2,10 +2,10 @@
   home = {
     packages = with pkgs;
     with nodePackages_latest;
-    with gnome;
     with libsForQt5; [
       i3 # gaming
       sway
+      nautilus-python
 
       # gui
       blueberry
@@ -76,7 +76,6 @@
       bat
       zoxide
       xorg.xev
-      google-chrome
       spotify
       vim
       htop
