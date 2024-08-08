@@ -18,7 +18,6 @@ in {
   home.packages = with pkgs; [
     launcher
     nwg-displays # gui for monitors, wayland
-    wlr-randr # for rotate command
     hyprlock # lock screen
     hypridle # auto lock
   ];

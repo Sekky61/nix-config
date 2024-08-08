@@ -8,6 +8,7 @@ import Battery from 'resource:///com/github/Aylur/ags/service/battery.js';
 import { MaterialIcon } from '../../lib/materialicon.js';
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { WWO_CODE, WEATHER_SYMBOL, NIGHT_WEATHER_SYMBOL } from '../../data/weather.js';
+import { parsePowerProfiles } from "../../lib/parsers.js";
 
 const BATTERY_LOW = 20;
 const WEATHER_CACHE_FOLDER = `${GLib.get_user_cache_dir()}/ags/weather`;
@@ -91,13 +92,16 @@ const Utilities = () => Box({
             }
         }),
         UtilButton({
-            name: 'Rotate screen', icon: 'screen_rotation', onClicked: async () => {
-                const outputName = 'eDP-1';
-                const state = await Utils.execAsync(`wlr-randr --output ${outputName}`);
-                const currentTransform = state.match(/Transform: (\w+)/)[1];
-                console.log(currentTransform);
-                const newTransform = currentTransform === 'normal' ? '180' : 'normal';
-                Utils.execAsync(`wlr-randr --output ${outputName} --transform ${newTransform}`);
+            name: 'Change power profile', icon: 'local_fire_department', onClicked: async () => {
+                const profilesOutput = await Utils.execAsync(`powerprofilesctl list`).catch(print);
+                const { activeIndex, profiles } = parsePowerProfiles(profilesOutput);
+                const nextProfile = profiles[(activeIndex + 1) % profiles.length];
+                await Utils.execAsync(`powerprofilesctl set ${nextProfile}`).catch(print);
+                await Utils.notify({
+                    summary: 'Power profile changed',
+                    body: 'Power profile changed to ' + nextProfile,
+                    iconName: 'local_fire_department',
+                })
             }
         })
     ]
