@@ -1,3 +1,5 @@
+// Indicators for network, bluetooth, notifications, and keyboard layout
+
 import App from 'resource:///com/github/Aylur/ags/app.js';
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
 import * as Utils from 'resource:///com/github/Aylur/ags/utils.js';
@@ -6,6 +8,7 @@ import { MaterialIcon } from './materialicon.js';
 import Bluetooth from 'resource:///com/github/Aylur/ags/service/bluetooth.js';
 import Network from 'resource:///com/github/Aylur/ags/service/network.js';
 import Notifications from 'resource:///com/github/Aylur/ags/service/notifications.js';
+const hyprland = await Service.import('hyprland');
 import { languages } from '../data/languages.js';
 
 // A guessing func to try to support langs not listed in data/languages.js
@@ -83,7 +86,6 @@ export const BluetoothIndicator = () => Widget.Stack({
         })
     ,
 });
-
 
 const NetworkWiredIndicator = () => Widget.Stack({
     transition: 'slide_up_down',
@@ -163,7 +165,6 @@ export const NetworkIndicator = () => Widget.Stack({
 
 const HyprlandXkbKeyboardLayout = async ({ useFlag } = {}) => {
     try {
-        const Hyprland = (await import('resource:///com/github/Aylur/ags/service/hyprland.js')).default;
         var initLangs = [];
         var languageStackArray = [];
         var currentKeyboard;
@@ -199,29 +200,32 @@ const HyprlandXkbKeyboardLayout = async ({ useFlag } = {}) => {
             transition: 'slide_left',
             revealChild: languageStackArray.length > 1,
         });
+
+        // The visual objects, one of which is shown at a time
         const widgetKids = {
             ...languageStackArray.reduce((obj, lang) => {
                 return { ...obj, ...lang };
             }, {}),
             'undef': Widget.Label({ label: '?' }),
         }
+
         const widgetContent = Widget.Stack({
             transition: 'slide_up_down',
             children: widgetKids,
-            setup: (self) => self.hook(Hyprland, (stack, kbName, layoutName) => {
-                if (!kbName) {
-                    return;
-                }
-                var lang = languages.find(lang => layoutName.includes(lang.name));
-                if (lang) {
-                    widgetContent.shown = lang.layout;
-                }
-                else { // Attempt to support langs not listed
-                    lang = languageStackArray.find(lang => isLanguageMatch(lang[0], layoutName));
-                    if (!lang) stack.shown = 'undef';
-                    else stack.shown = lang[0];
-                }
-            }, 'keyboard-layout'),
+            setup: (self) => self
+                .hook(hyprland, (stack, kbName, layoutName) => {
+                    if (!kbName) {
+                        return;
+                    }
+                    var lang = languages.find(lang => layoutName.includes(lang.name));
+                    if (lang) {
+                        widgetContent.shown = lang.layout;
+                    } else { // Attempt to support langs not listed
+                        lang = languageStackArray.find(lang => isLanguageMatch(lang[0], layoutName));
+                        if (!lang) stack.shown = 'undef';
+                        else stack.shown = lang[0];
+                    }
+                }, 'keyboard-layout')
         });
         widgetRevealer.child = widgetContent;
         return widgetRevealer;
@@ -232,7 +236,7 @@ const HyprlandXkbKeyboardLayout = async ({ useFlag } = {}) => {
 
 const OptionalKeyboardLayout = async () => {
     try {
-        return await HyprlandXkbKeyboardLayout({ useFlag: false });
+        return await HyprlandXkbKeyboardLayout({ useFlag: true });
     } catch {
         return null;
     }
@@ -251,3 +255,4 @@ export const StatusIcons = (props = {}) => Widget.Box({
         ]
     })
 });
+

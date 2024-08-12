@@ -10,6 +10,16 @@ export const languages = [
         flag: '🇺🇸'
     },
     {
+        layout: 'en',
+        name: 'English (UK)',
+        flag: '🇺🇸'
+    },
+    {
+        layout: 'cz',
+        name: 'Czech',
+        flag: '🇨🇿',
+    },
+    {
         layout: 'ru',
         name: 'Russian',
         flag: '🇷🇺',

@@ -123,8 +123,6 @@ in {
     enable = true;
     settings = {
       env = [
-        "QT_IM_MODULE, fcitx"
-        "XMODIFIERS, @im=fcitx"
         "QT_QPA_PLATFORM, wayland"
         "QT_QPA_PLATFORMTHEME, qt5ct"
         "QT_STYLE_OVERRIDE,kvantum"
@@ -138,7 +136,6 @@ in {
       "exec-once" = [
         "ags"
         "swww kill; swww init"
-        "fcitx5"
         # ''
         #   swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' timeout 900 'hyprctl dispatch dpms off' resume 'sleep 3; hyprctl dispatch dpms on' before-sleep 'swaylock -f'
         # ''
