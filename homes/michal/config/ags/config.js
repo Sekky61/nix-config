@@ -36,13 +36,13 @@ applyStyle();
 const Windows = () => [
     // forMonitors(DesktopBackground),
     // Dock(),
-    Overview(),
+    Overview(),     // The search box and desktops miniatures
     forMonitors(Indicator),
     Cheatsheet(),
     SideLeft(),
     SideRight(),
-    Osk(),
-    Session(),
+    Osk(),          // On-screen keyboard
+    Session(),      // The poweroff, restart buttons
     // forMonitors(Bar),
     // forMonitors(BarCornerTopleft),
     // forMonitors(BarCornerTopright),

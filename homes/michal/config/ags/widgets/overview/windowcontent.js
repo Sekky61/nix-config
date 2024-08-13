@@ -44,6 +44,7 @@ const OptionalOverview = async () => {
     }
 };
 
+// The desktop miniatures
 const overviewContent = await OptionalOverview();
 
 export const SearchAndWindows = () => {

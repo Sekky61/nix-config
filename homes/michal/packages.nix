@@ -9,7 +9,6 @@
 
       # gui
       blueberry
-      (mpv.override {scripts = [mpvScripts.mpris];})
       d-spy
       dolphin
       kolourpaint
@@ -77,6 +76,7 @@
       zoxide
       xorg.xev
       spotify
+      unrar
       vim
       htop
       powertop
@@ -107,6 +107,7 @@
       lua
       zig
       gnumake
+      cmake
       alejandra # nix formatter
       # very important stuff
       # uwuify
