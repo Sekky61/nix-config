@@ -18,7 +18,7 @@
 
     # move existing files to the .old suffix rather than failing
     # with a very long error message about it
-    backupFileExtension = "old";
+    backupFileExtension = "hm-backup";
 
     # extra specialArgs passed to Home Manager
     # for reference, the config argument in nixos can be accessed

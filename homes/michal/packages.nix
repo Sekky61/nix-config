@@ -8,17 +8,15 @@
       nautilus-python
 
       # gui
-      blueberry
+      blueberry # Bluetooth gui
       d-spy
-      dolphin
       kolourpaint
-      github-desktop
       nautilus
       icon-library
       dconf-editor
       qt5.qtimageformats
       vlc
-      yad
+      yad # Dialogs
 
       # tools
       bat
@@ -29,7 +27,7 @@
       socat
       jq
       gojq
-      acpi
+      acpi # battery info
       ffmpeg
       libnotify
       killall
@@ -38,7 +36,7 @@
       glib
       foot
       kitty
-      showmethekey
+      showmethekey # show pressed keys
       vscode
       ydotool
       nmap
