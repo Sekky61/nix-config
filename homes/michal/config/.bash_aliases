@@ -5,3 +5,7 @@ export PATH=$PATH:~/Documents/nix-config/dotfiles/workflows:~/dotfiles/workflows
 
 alias google-chrome=google-chrome-stable
 
+export ZVM_INSTALL="$HOME/.zvm/self"
+export PATH="$PATH:$HOME/.zvm/bin"
+export PATH="$PATH:$ZVM_INSTALL/"
+

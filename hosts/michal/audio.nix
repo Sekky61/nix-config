@@ -1,11 +1,15 @@
 {
   # Audio
   hardware.pulseaudio.enable = false;
+  hardware.alsa.enablePersistence = true;
   services.pipewire = {
     enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
+		audio.enable = true;
+		jack.enable = true;
+		pulse.enable = true;
+		alsa = {
+			enable = true;
+			support32Bit = true;
+		};
   };
 }

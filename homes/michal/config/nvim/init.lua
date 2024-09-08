@@ -75,7 +75,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -100,23 +100,24 @@ require('lazy').setup({
         vim.keymap.set('n', '[c', require('gitsigns').prev_hunk,
           { buffer = bufnr, desc = 'Go to Previous [C]hange' })
         vim.keymap.set('n', ']c', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next [C]hange' })
-        vim.keymap.set('n', '<leader>pc', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [C]hange' })
+        vim.keymap.set('n', '<leader>pc', require('gitsigns').preview_hunk,
+          { buffer = bufnr, desc = '[P]review [C]hange' })
         vim.keymap.set('n', '<leader>tB', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle [B]lame' })
-        map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>', 'Stage hunk')
-        map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>', 'Reset hunk')
+        map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', 'Stage hunk')
+        map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', 'Reset hunk')
         map('n', '<leader>hS', gs.stage_buffer, 'Stage buffer')
         map('n', '<leader>ha', gs.stage_hunk, 'Stage hunk')
         map('n', '<leader>hu', gs.undo_stage_hunk, 'Undo stage hunk')
         map('n', '<leader>hR', gs.reset_buffer, 'Reset buffer')
         map('n', '<leader>hp', gs.preview_hunk, 'Preview hunk')
-        map('n', '<leader>hb', function() gs.blame_line{full=true} end, 'Blame line')
+        map('n', '<leader>hb', function() gs.blame_line { full = true } end, 'Blame line')
         map('n', '<leader>hd', gs.diffthis, 'Diff hunk')
         map('n', '<leader>hD', function() gs.diffthis('~') end)
       end,
     },
   },
 
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
 
   {
     -- Set lualine as statusline
@@ -142,7 +143,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',   opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -269,30 +270,30 @@ require('lazy').setup({
   },
   -- Custom Parameters (with defaults)
   {
-      "David-Kunz/gen.nvim",
-      opts = {
-          model = "deepseek-coder-v2", -- The default model to use.
-          host = "localhost", -- The host running the Ollama service.
-          port = "11434", -- The port on which the Ollama service is listening.
-          quit_map = "q", -- set keymap for close the response window
-          retry_map = "<c-r>", -- set keymap to re-send the current prompt
-          init = function(options) pcall(io.popen, "ollama serve > /dev/null 2>&1 &") end,
-          -- Function to initialize Ollama
-          command = function(options)
-              local body = {model = options.model, stream = true}
-              return "curl --silent --no-buffer -X POST http://" .. options.host .. ":" .. options.port .. "/api/chat -d $body"
-          end,
-          -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-          -- This can also be a command string.
-          -- The executed command must return a JSON object with { response, context }
-          -- (context property is optional).
-          -- list_models = '<omitted lua function>', -- Retrieves a list of model names
-          display_mode = "float", -- The display mode. Can be "float" or "split" or "horizontal-split".
-          show_prompt = false, -- Shows the prompt submitted to Ollama.
-          show_model = true, -- Displays which model you are using at the beginning of your chat session.
-          no_auto_close = false, -- Never closes the window automatically.
-          debug = true-- Prints errors and the command which is run.
-      }
+    "David-Kunz/gen.nvim",
+    opts = {
+      model = "deepseek-coder-v2",     -- The default model to use.
+      host = "localhost",              -- The host running the Ollama service.
+      port = "11434",                  -- The port on which the Ollama service is listening.
+      quit_map = "q",                  -- set keymap for close the response window
+      retry_map = "<c-r>",             -- set keymap to re-send the current prompt
+      init = function(options) pcall(io.popen, "ollama serve > /dev/null 2>&1 &") end,
+      -- Function to initialize Ollama
+      command = function(options)
+        local body = { model = options.model, stream = true }
+        return "curl --silent --no-buffer -X POST http://" .. options.host .. ":" .. options.port .. "/api/chat -d $body"
+      end,
+      -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
+      -- This can also be a command string.
+      -- The executed command must return a JSON object with { response, context }
+      -- (context property is optional).
+      -- list_models = '<omitted lua function>', -- Retrieves a list of model names
+      display_mode = "float",     -- The display mode. Can be "float" or "split" or "horizontal-split".
+      show_prompt = false,        -- Shows the prompt submitted to Ollama.
+      show_model = true,          -- Displays which model you are using at the beginning of your chat session.
+      no_auto_close = false,      -- Never closes the window automatically.
+      debug = true                -- Prints errors and the command which is run.
+    }
   },
 
   -- nvim config and lua dev
@@ -307,8 +308,8 @@ require('lazy').setup({
       },
     },
   },
-  { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
-  { -- optional completion source for require statements and module annotations
+  { "Bilal2453/luvit-meta",   lazy = true }, -- optional `vim.uv` typings
+  {                                        -- optional completion source for require statements and module annotations
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
       opts.sources = opts.sources or {}
@@ -318,6 +319,130 @@ require('lazy').setup({
       })
     end,
   },
+
+  {
+    'yacineMTB/dingllm.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local system_prompt =
+      'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
+      local helpful_prompt = 'You are a helpful assistant. What I have sent are my notes so far.'
+      local dingllm = require 'dingllm'
+
+
+      local function handle_open_router_spec_data(data_stream)
+        local success, json = pcall(vim.json.decode, data_stream)
+        if success then
+          if json.choices and json.choices[1] and json.choices[1].text then
+            local content = json.choices[1].text
+            if content then
+              dingllm.write_string_at_cursor(content)
+            end
+          end
+        else
+          print("non json " .. data_stream)
+        end
+      end
+
+      local function custom_make_openai_spec_curl_args(opts, prompt)
+        local url = opts.url
+        local api_key = opts.api_key_name and os.getenv(opts.api_key_name)
+        local data = {
+          prompt = prompt,
+          model = opts.model,
+          temperature = 0.7,
+          stream = true,
+        }
+        local args = { '-N', '-X', 'POST', '-H', 'Content-Type: application/json', '-d', vim.json.encode(data) }
+        if api_key then
+          table.insert(args, '-H')
+          table.insert(args, 'Authorization: Bearer ' .. api_key)
+        end
+        table.insert(args, url)
+        return args
+      end
+
+
+      local function llama_405b_base()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://openrouter.ai/api/v1/chat/completions',
+          model = 'meta-llama/llama-3.1-405b',
+          api_key_name = 'OPEN_ROUTER_API_KEY',
+          max_tokens = '128',
+          replace = false,
+        }, custom_make_openai_spec_curl_args, handle_open_router_spec_data)
+      end
+
+      local function groq_replace()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.groq.com/openai/v1/chat/completions',
+          model = 'llama-3.1-70b-versatile',
+          api_key_name = 'GROQ_API_KEY',
+          system_prompt = system_prompt,
+          replace = true,
+        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
+      end
+
+      local function groq_help()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.groq.com/openai/v1/chat/completions',
+          model = 'llama-3.1-70b-versatile',
+          api_key_name = 'GROQ_API_KEY',
+          system_prompt = helpful_prompt,
+          replace = false,
+        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
+      end
+
+      local function llama405b_replace()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.lambdalabs.com/v1/chat/completions',
+          model = 'hermes-3-llama-3.1-405b-fp8',
+          api_key_name = 'LAMBDA_API_KEY',
+          system_prompt = system_prompt,
+          replace = true,
+        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
+      end
+
+      local function llama405b_help()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.lambdalabs.com/v1/chat/completions',
+          model = 'hermes-3-llama-3.1-405b-fp8',
+          api_key_name = 'LAMBDA_API_KEY',
+          system_prompt = helpful_prompt,
+          replace = false,
+        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
+      end
+
+      local function anthropic_help()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.anthropic.com/v1/messages',
+          model = 'claude-3-5-sonnet-20240620',
+          api_key_name = 'ANTHROPIC_API_KEY',
+          system_prompt = helpful_prompt,
+          replace = false,
+        }, dingllm.make_anthropic_spec_curl_args, dingllm.handle_anthropic_spec_data)
+      end
+
+      local function anthropic_replace()
+        dingllm.invoke_llm_and_stream_into_editor({
+          url = 'https://api.anthropic.com/v1/messages',
+          model = 'claude-3-5-sonnet-20240620',
+          api_key_name = 'ANTHROPIC_API_KEY',
+          system_prompt = system_prompt,
+          replace = true,
+        }, dingllm.make_anthropic_spec_curl_args, dingllm.handle_anthropic_spec_data)
+      end
+
+      vim.keymap.set({ 'n', 'v' }, '<leader>lk', groq_replace, { desc = 'llm groq' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>K', groq_help, { desc = 'llm groq_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>L', llama405b_help, { desc = 'llm llama405b_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>l', llama405b_replace, { desc = 'llm llama405b_replace' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>I', anthropic_help, { desc = 'llm anthropic_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>i', anthropic_replace, { desc = 'llm anthropic' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>o', llama_405b_base, { desc = 'llama base' })
+    end,
+  },
+
 }, {})
 
 require('gen').prompts['Fix_Code'] = {
@@ -478,7 +603,7 @@ vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { des
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = {'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -656,25 +781,25 @@ local lsp_cmd
 
 -- Function to check if a file exists relative to the project directory
 local function file_exists_in_project(filename)
-    local project_root = vim.fn.getcwd()
-    local file_path = project_root .. '/' .. filename
-    local file = io.open(file_path, 'r')
-    if file then
-        file:close()
-        return true
-    else
-        return false
-    end
+  local project_root = vim.fn.getcwd()
+  local file_path = project_root .. '/' .. filename
+  local file = io.open(file_path, 'r')
+  if file then
+    file:close()
+    return true
+  else
+    return false
+  end
 end
 
 -- Check if a custom path exists relative to the project, otherwise fallback to 'zls'
 -- To update: zvm i -D=zls master
 -- It is OS dependent right now
 local zls_dev_path = '../zig-out/bin/zls'
-if file_exists_in_project(zls_dev_path ) then
-    lsp_cmd = {zls_dev_path, '--enable-debug-log', '--config-path', './zls.json'}
+if file_exists_in_project(zls_dev_path) then
+  lsp_cmd = { zls_dev_path, '--enable-debug-log', '--config-path', './zls.json' }
 else
-    lsp_cmd = {'~/.zvm/bin/zls'}
+  lsp_cmd = { '~/.zvm/bin/zls' }
 end
 
 -- vim.notify('Using LSP: ' .. lsp_cmd)
@@ -686,7 +811,7 @@ require('lspconfig').zls.setup {
   capabilities = capabilities,
   filetypes = { 'zig' },
   settings = {
-     zls = {
+    zls = {
       zig_exe_path = '~/.zvm/bin/zig',
     }
   }
@@ -781,24 +906,24 @@ cmp.setup {
   },
 }
 
-  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' }
-    }
-  })
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
 
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    }),
-    matching = { disallow_symbol_nonprefix_matching = false }
-  })
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
@@ -919,8 +1044,8 @@ vim.keymap.set('x', '<leader>p', '"_dP')
 vim.keymap.set('n', 'Q', '<Nop>')
 
 -- Git
-vim.api.nvim_set_keymap("n", "<leader>gc", ":Git commit -m \"", {noremap=false})
-vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", {noremap=false})
+vim.api.nvim_set_keymap("n", "<leader>gc", ":Git commit -m \"", { noremap = false })
+vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { noremap = false })
 
 -- LLM
 vim.keymap.set({ 'n', 'v' }, '<leader>]', ':Gen<CR>')

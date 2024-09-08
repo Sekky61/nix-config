@@ -163,6 +163,8 @@
       fish
       git
       gh
+      qemu
+      quickemu
       # home-manager
       wget
       nixpkgs-fmt
