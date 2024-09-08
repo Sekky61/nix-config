@@ -20,3 +20,9 @@ c_test () {
 
 eval "$(zoxide init bash)"
 eval "$(starship init bash)"
+
+# Source API keys if the file exists
+if [ -f ~/.secrets.sh ]; then
+  source ~/.secrets.sh
+fi
+

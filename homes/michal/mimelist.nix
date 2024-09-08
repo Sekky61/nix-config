@@ -1,5 +1,5 @@
 let
-  browser = "google-chrome-stable";
+  browser = "google-chrome.desktop";
   editor = "code.desktop";
   file-manager = "org.gnome.Nautilus.desktop";
   image-viewer = "org.gnome.Loupe.desktop";
