@@ -16,6 +16,7 @@
         la = "eza -a";
         ll = "eza -lah";
         cat = "bat";
+        gitlog = "git log --graph --oneline --decorate";
       };
     };
   };

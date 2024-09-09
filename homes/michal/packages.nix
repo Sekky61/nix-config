@@ -40,6 +40,7 @@
       vscode
       ydotool
       nmap
+      openssl_3_3
 
       # theming tools
       gradience
