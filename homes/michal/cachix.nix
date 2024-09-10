@@ -1,6 +1,5 @@
 # idk got this from matostitos
 {pkgs, ...}: {
-
   home.packages = with pkgs; [
     cachix
   ];

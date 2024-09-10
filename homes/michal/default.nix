@@ -2,10 +2,7 @@ let
   username = "michal";
   homeDirectory = "/home/michal";
 in
-  {
-    pkgs,
-    ...
-  }: {
+  {pkgs, ...}: {
     imports = [
       # Cachix
       ./cachix.nix
