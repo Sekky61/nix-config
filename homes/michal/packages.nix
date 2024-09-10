@@ -41,6 +41,7 @@
       ydotool
       nmap
       openssl_3_3
+      lsof
 
       # theming tools
       gradience

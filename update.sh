@@ -30,7 +30,7 @@ run_update_command() {
     sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
 }
 
-# FUnction to remove old generations and remove garbage
+# Function to remove old generations and remove garbage
 run_cleanup_command() {
     echo "Removing old generations and garbage"
     nix-env --delete-generations 14d
@@ -49,6 +49,9 @@ case "$1" in
         ;;
     "update")
         run_update_command
+        ;;
+    "cleanup")
+        run_cleanup_command
         ;;
     *)
         echo "Error: Unknown command '$1'"

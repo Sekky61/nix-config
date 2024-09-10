@@ -4,7 +4,6 @@ let
 in
   {
     pkgs,
-    impurity,
     ...
   }: {
     imports = [

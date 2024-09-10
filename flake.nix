@@ -3,7 +3,6 @@
 
   outputs = {
     self,
-    impurity,
     ...
   }: {
     # editing flake.nix triggers certain utilities such as direnv
@@ -18,7 +17,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impurity.url = "github:outfoxxed/impurity.nix";
-    thorium.url = "github:end-4/nix-thorium";
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprland-plugins = {
@@ -27,24 +25,12 @@
     };
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
-    aagl.url = "github:ezKEa/aagl-gtk-on-nix/release-24.05";
-    aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
-
     ags.url = "github:Aylur/ags";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    gross = {
-      url = "github:fufexan/gross";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-    matugen = {
-      url = "github:/InioX/Matugen";
-      # ref = "refs/tags/matugen-v0.10.0"
-    };
-    more-waita = {
+    more-waita = { # Icons
       url = "github:somepaulo/MoreWaita";
       flake = false;
     };
