@@ -777,42 +777,19 @@ mason_lspconfig.setup_handlers {
   end
 }
 
-local lsp_cmd
-
--- Function to check if a file exists relative to the project directory
-local function file_exists_in_project(filename)
-  local project_root = vim.fn.getcwd()
-  local file_path = project_root .. '/' .. filename
-  local file = io.open(file_path, 'r')
-  if file then
-    file:close()
-    return true
-  else
-    return false
-  end
-end
-
--- Check if a custom path exists relative to the project, otherwise fallback to 'zls'
 -- To update: zvm i -D=zls master
 -- It is OS dependent right now
-local zls_dev_path = '../zig-out/bin/zls'
-if file_exists_in_project(zls_dev_path) then
-  lsp_cmd = { zls_dev_path, '--enable-debug-log', '--config-path', './zls.json' }
-else
-  lsp_cmd = { '~/.zvm/bin/zls' }
-end
-
--- vim.notify('Using LSP: ' .. lsp_cmd)
-
--- LSP config with dynamic cmd
 require('lspconfig').zls.setup {
-  cmd = lsp_cmd,
+  cmd = { 'zls' },
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'zig' },
   settings = {
     zls = {
       zig_exe_path = '~/.zvm/bin/zig',
+      warn_style = true,
+      enable_autofix = true,
+      highlight_global_var_declarations = true,
     }
   }
 }

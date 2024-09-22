@@ -1,2 +1,5 @@
 result
 nixos.qcow2
+# These keep changing
+_music*.scss
+

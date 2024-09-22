@@ -42,6 +42,7 @@
   users.extraGroups.vboxusers.members = ["michal"];
 
   services = {
+    spice-vdagentd.enable = true; # protocol for sharing clipboard with VMs
     pcscd.enable = true; # necessary? for gnupg
     envfs.enable = true;
     greetd = {
@@ -57,12 +58,6 @@
     xserver = {
       enable = true;
       displayManager.startx.enable = true;
-      desktopManager.gnome = {
-        enable = true;
-        extraGSettingsOverridePackages = [
-          pkgs.nautilus-open-any-terminal
-        ];
-      };
     };
   };
 
