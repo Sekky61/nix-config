@@ -58,6 +58,12 @@
     xserver = {
       enable = true;
       displayManager.startx.enable = true;
+      desktopManager.gnome = {
+        enable = true;
+        extraGSettingsOverridePackages = [
+          pkgs.nautilus-open-any-terminal
+        ];
+      };
     };
   };
 
