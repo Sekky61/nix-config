@@ -43,6 +43,7 @@
       nmap
       openssl_3_3
       lsof
+      lazygit
 
       # theming tools
       gradience
