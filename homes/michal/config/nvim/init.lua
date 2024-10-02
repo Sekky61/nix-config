@@ -112,7 +112,7 @@ require('lazy').setup({
         map('n', '<leader>hp', gs.preview_hunk, 'Preview hunk')
         map('n', '<leader>hb', function() gs.blame_line { full = true } end, 'Blame line')
         map('n', '<leader>hd', gs.diffthis, 'Diff hunk')
-        map('n', '<leader>hD', function() gs.diffthis('~') end)
+        map('n', '<!-- <leader> -->hD', function() gs.diffthis('~') end)
       end,
     },
   },
@@ -141,9 +141,6 @@ require('lazy').setup({
     main = "ibl",
     opts = {}
   },
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',   opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -217,6 +214,8 @@ require('lazy').setup({
     end,
   },
   {
+    -- https://github.com/numToStr/Comment.nvim
+    -- gc{motion}, gcc, gbc
     'numToStr/Comment.nvim',
     opts = {
       -- add any options here
@@ -224,18 +223,47 @@ require('lazy').setup({
     lazy = false,
   },
   {
+    -- Ctrl+y and comma (,)
     'mattn/emmet-vim',
   },
-  { 'kosayoda/nvim-lightbulb' },
+  'kosayoda/nvim-lightbulb',
   'rmagatti/auto-session',
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    }
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
   },
 
   -- efm language server
@@ -258,45 +286,13 @@ require('lazy').setup({
     'hrsh7th/cmp-cmdline',
   },
   {
-    -- comment toggle
-    "terrortylor/nvim-comment"
-  },
-  {
     -- git
     "https://tpope.io/vim/fugitive.git"
   },
   {
+    -- use telescope for all selections
     'nvim-telescope/telescope-ui-select.nvim'
   },
-  -- Custom Parameters (with defaults)
-  {
-    "David-Kunz/gen.nvim",
-    opts = {
-      model = "deepseek-coder-v2",     -- The default model to use.
-      host = "localhost",              -- The host running the Ollama service.
-      port = "11434",                  -- The port on which the Ollama service is listening.
-      quit_map = "q",                  -- set keymap for close the response window
-      retry_map = "<c-r>",             -- set keymap to re-send the current prompt
-      init = function(options) pcall(io.popen, "ollama serve > /dev/null 2>&1 &") end,
-      -- Function to initialize Ollama
-      command = function(options)
-        local body = { model = options.model, stream = true }
-        return "curl --silent --no-buffer -X POST http://" .. options.host .. ":" .. options.port .. "/api/chat -d $body"
-      end,
-      -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-      -- This can also be a command string.
-      -- The executed command must return a JSON object with { response, context }
-      -- (context property is optional).
-      -- list_models = '<omitted lua function>', -- Retrieves a list of model names
-      display_mode = "float",     -- The display mode. Can be "float" or "split" or "horizontal-split".
-      show_prompt = false,        -- Shows the prompt submitted to Ollama.
-      show_model = true,          -- Displays which model you are using at the beginning of your chat session.
-      no_auto_close = false,      -- Never closes the window automatically.
-      debug = true                -- Prints errors and the command which is run.
-    }
-  },
-
-  -- nvim config and lua dev
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -308,8 +304,8 @@ require('lazy').setup({
       },
     },
   },
-  { "Bilal2453/luvit-meta",   lazy = true }, -- optional `vim.uv` typings
-  {                                        -- optional completion source for require statements and module annotations
+  { "Bilal2453/luvit-meta",    lazy = true }, -- optional `vim.uv` typings
+  {                                          -- optional completion source for require statements and module annotations
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
       opts.sources = opts.sources or {}
@@ -434,27 +430,36 @@ require('lazy').setup({
       end
 
       vim.keymap.set({ 'n', 'v' }, '<leader>lk', groq_replace, { desc = 'llm groq' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>K', groq_help, { desc = 'llm groq_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>L', llama405b_help, { desc = 'llm llama405b_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>l', llama405b_replace, { desc = 'llm llama405b_replace' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>I', anthropic_help, { desc = 'llm anthropic_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>i', anthropic_replace, { desc = 'llm anthropic' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>o', llama_405b_base, { desc = 'llama base' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>lK', groq_help, { desc = 'llm groq_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>lL', llama405b_help, { desc = 'llm llama405b_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>ll', llama405b_replace, { desc = 'llm llama405b_replace' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>lI', anthropic_help, { desc = 'llm anthropic_help' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>li', anthropic_replace, { desc = 'llm anthropic' })
+      vim.keymap.set({ 'n', 'v' }, '<leader>lo', llama_405b_base, { desc = 'llama base' })
     end,
   },
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
+  }
 
 }, {})
-
-require('gen').prompts['Fix_Code'] = {
-  prompt = "Fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
-  replace = true,
-  extract = "```$filetype\n(.-)```"
-}
-
-require("toggleterm").setup {
-  open_mapping = [[<c-\>]],
-  direction = 'float',
-}
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -625,7 +630,7 @@ require('nvim-treesitter.configs').setup {
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-        ['vap'] = '@parameter.outer',
+        ['vap'] = '@paramet`er.outer',
         ['vip'] = '@parameter.inner',
         ['vaf'] = '@function.outer',
         ['vif'] = '@function.inner',
@@ -637,19 +642,19 @@ require('nvim-treesitter.configs').setup {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
       goto_next_start = {
-        [']m'] = '@function.outer',
+        [']f'] = '@function.outer',
         [']]'] = '@class.outer',
       },
       goto_next_end = {
-        [']M'] = '@function.outer',
+        [']F'] = '@function.outer',
         [']['] = '@class.outer',
       },
       goto_previous_start = {
-        ['[m'] = '@function.outer',
+        ['[f'] = '@function.outer',
         ['[['] = '@class.outer',
       },
       goto_previous_end = {
-        ['[M'] = '@function.outer',
+        ['[F'] = '@function.outer',
         ['[]'] = '@class.outer',
       },
     },
@@ -669,7 +674,7 @@ require('nvim-treesitter.configs').setup {
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' }) -- use <leader>xx instead
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
@@ -925,12 +930,6 @@ require("nvim-lightbulb").setup({
   autocmd = { enabled = true }
 })
 
-require('nvim_comment').setup({
-  comment_empty = true,
-  create_mappings = true,
-  operator_mapping = "<leader>c"
-})
-
 -- indent-blankline
 vim.opt.list = true
 vim.opt.listchars:append "space:⋅"
@@ -979,6 +978,11 @@ require 'treesitter-context'.setup {
   on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 }
 
+require("toggleterm").setup {
+  open_mapping = [[<c-\>]],
+  direction = 'float',
+}
+
 --theme
 vim.cmd.colorscheme "catppuccin-frappe"
 
@@ -1000,11 +1004,6 @@ vim.api.nvim_set_keymap('n', '<A-Down>', ':m+<CR>==', { noremap = true, silent =
 vim.api.nvim_set_keymap('i', '<A-Down>', '<Esc>:m+<CR>==gi', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', '<A-Down>', ':m\'>+<CR>gv=gv', { noremap = true, silent = true })
 
--- trouble.nvim - diagnostics
--- https://github.com/folke/trouble.nvim?tab=readme-ov-file#-usage
-vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end, { desc = "Toggle diagnostics" })
-vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end, { desc = "Toggle quickfix" })
-
 -- Toggle nvimtree
 vim.keymap.set("n", "<leader>tt", ":NvimTreeToggle<CR>", { desc = "Toggle nvimtree" })
 -- toggle history tree
@@ -1024,6 +1023,3 @@ vim.keymap.set('n', 'Q', '<Nop>')
 vim.api.nvim_set_keymap("n", "<leader>gc", ":Git commit -m \"", { noremap = false })
 vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { noremap = false })
 
--- LLM
-vim.keymap.set({ 'n', 'v' }, '<leader>]', ':Gen<CR>')
-vim.keymap.set('v', '<leader>]', ':Gen Enhance_Grammar_Spelling<CR>')
