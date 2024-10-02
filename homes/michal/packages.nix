@@ -21,6 +21,7 @@
       # tools
       bat
       eza
+      gh # github cli
       fd
       ripgrep
       fzf
