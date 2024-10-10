@@ -22,7 +22,7 @@
     };
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
-    ags.url = "github:Aylur/ags";
+    ags.url = "github:Aylur/ags/aaef50bb2c80ef4b4a359329d72669a95e7c4796";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";

@@ -15,6 +15,7 @@ in
       ./dconf.nix
       ./hyprland.nix
       ./mimelist.nix
+      ./obs.nix
       ./packages.nix
       ./starship.nix
       #./sway.nix

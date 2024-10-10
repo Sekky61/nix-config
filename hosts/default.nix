@@ -36,8 +36,11 @@ in {
       ]
       ++ homes; # imports the home-manager related configurations
   };
+
   "michal-impure" = self.nixosConfigurations."michal".extendModules {modules = [{impurity.enable = true;}];};
+
   desktopIso = nixpkgs.lib.nixosSystem {
+    specialArgs = {inherit inputs;};
     system = "x86_64-linux";
     modules = [
       ({

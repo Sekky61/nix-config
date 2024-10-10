@@ -28,6 +28,7 @@
       socat
       jq
       gojq
+      blender-hip
       acpi # battery info
       ffmpeg
       libnotify
@@ -44,6 +45,7 @@
       openssl_3_3
       lsof
       lazygit
+      nixos-generators
 
       # theming tools
       gradience
@@ -84,7 +86,6 @@
       powertop
       hwinfo
       rnote # drawing app for stylus
-      obs-studio
       ytdownloader
       wineWowPackages.waylandFull
       winetricks
