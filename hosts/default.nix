@@ -1,4 +1,4 @@
-{self, ...}: let
+{self, ...} @ attrs: let
   inherit (self) inputs;
   inherit (inputs) nixpkgs home-manager;
 
@@ -12,32 +12,29 @@
     homeDir
     hm
   ];
-  impurity = inputs.impurity;
 in {
-  "michal" = nixpkgs.lib.nixosSystem {
-    specialArgs = {inherit inputs;};
+  michal = nixpkgs.lib.nixosSystem {
+    specialArgs = {
+      username = "michal";
+      hostname = "nix-yoga";
+      inherit inputs;
+    };
     modules =
       [
         {
           # Impurity
-          imports = [impurity.nixosModules.impurity];
+          imports = [inputs.impurity.nixosModules.impurity];
           impurity.configRoot = self;
           impurity.enable = true;
         }
 
-        ./michal # this imports your entire host configuration in one swoop
-
-        # this part is basically the same as putting configuration in your
-        # configuration.nix, but is done on the topmost level for your convenience
-        {
-          networking.hostName = "michalyoga";
-          _module.args = {username = "michal";};
-        }
+        ./host
       ]
       ++ homes; # imports the home-manager related configurations
   };
 
-  "michal-impure" = self.nixosConfigurations."michal".extendModules {modules = [{impurity.enable = true;}];};
+  # https://github.com/outfoxxed/impurity.nix
+  michal-impure = self.nixosConfigurations.michal.extendModules {modules = [{impurity.enable = true;}];};
 
   desktopIso = nixpkgs.lib.nixosSystem {
     specialArgs = {inherit inputs;};

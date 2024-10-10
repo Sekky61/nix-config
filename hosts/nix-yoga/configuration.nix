@@ -205,7 +205,6 @@
 
   # network
   networking = {
-    hostName = "michalyoga";
     networkmanager.enable = true;
   };
 

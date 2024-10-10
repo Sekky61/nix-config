@@ -1,11 +1,11 @@
 {
   description = "Michal's NixOS flake";
 
-  outputs = {self, ...}: {
+  outputs = attrs: {
     # editing flake.nix triggers certain utilities such as direnv
     # to reload - editing host configurations do not require a direnv
     # reload, so lets move hosts out of the way
-    nixosConfigurations = import ./hosts {inherit self;};
+    nixosConfigurations = import ./hosts attrs;
   };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
