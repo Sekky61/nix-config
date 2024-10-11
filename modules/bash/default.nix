@@ -8,7 +8,7 @@
 
     # Here defined aliases are available for all users
     programs.bash = {
-      enableCompletion = true;
+      completion.enable = true;
       shellInit = builtins.readFile ./.bash_aliases;
       interactiveShellInit = builtins.readFile ./interactive.sh;
       shellAliases = {
