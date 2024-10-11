@@ -5,6 +5,8 @@
   config,
   ...
 }: {
+
+
   # nix
   documentation.nixos.enable = false; # .desktop
   nixpkgs.config.allowUnfree = true;

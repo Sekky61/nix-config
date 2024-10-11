@@ -4,6 +4,11 @@
   inputs,
   ...
 }: {
+
+  imports = [
+    inputs.home-manager.nixosModules.home-manager
+  ];
+
   home-manager = {
     # tell home-manager to be as verbose as possible
     verbose = true;
