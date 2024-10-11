@@ -17,6 +17,7 @@
         ../homes  # Imports based on username
         ./host    # Imports based on hostname
         ../modules/alacritty.nix
+        ../modules/bash
       ];
   };
 

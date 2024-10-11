@@ -17,11 +17,9 @@ in
       ./mimelist.nix
       ./obs.nix
       ./packages.nix
-      ./starship.nix
       #./sway.nix
       ./theme.nix
       ./git.nix
-      ./bash.nix
       ./java.nix
     ];
 
