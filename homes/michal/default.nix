@@ -22,7 +22,6 @@ in
       ./theme.nix
       ./git.nix
       ./bash.nix
-      ./alacritty.nix
       ./java.nix
     ];
 

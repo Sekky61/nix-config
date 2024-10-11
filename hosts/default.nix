@@ -14,8 +14,9 @@
           impurity.enable = true;
         }
 
-        ../homes
-        ./host
+        ../homes  # Imports based on username
+        ./host    # Imports based on hostname
+        ../modules/alacritty.nix
       ];
   };
 
