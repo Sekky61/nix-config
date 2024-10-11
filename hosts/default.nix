@@ -18,6 +18,7 @@
         ./host    # Imports based on hostname
         ../modules/alacritty.nix
         ../modules/bash
+        ../modules/fonts.nix
       ];
   };
 
