@@ -116,8 +116,4 @@
       # uwuify
     ];
   };
-
-  programs.neovim = {
-    enable = true;
-  };
 }

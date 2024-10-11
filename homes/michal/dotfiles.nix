@@ -14,6 +14,5 @@
     "foot".source = link ./config/foot;
     "fuzzel".source = link ./config/fuzzel;
     "mpv".source = link ./config/mpv;
-    "nvim/init.lua".source = link ./config/nvim/init.lua;
   };
 }

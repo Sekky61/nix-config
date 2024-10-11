@@ -1,10 +1,13 @@
-{ pkgs, username, ... }:
 {
+  pkgs,
+  username,
+  ...
+}: {
   imports = [
     ./alacritty.nix
-    ./fonts
+    ./fonts.nix
     ./nvim
-    ./starship.nix
+    ./bash
   ];
 
   # ---- Home Configuration ----

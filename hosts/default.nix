@@ -1,25 +1,28 @@
-{self, nixpkgs, ...} @ inputs: {
+{
+  self,
+  nixpkgs,
+  ...
+} @ inputs: {
   michal = nixpkgs.lib.nixosSystem {
     specialArgs = {
       username = "michal";
       hostname = "nix-yoga";
       inherit inputs;
     };
-    modules =
-      [
-        {
-          # Impurity
-          imports = [inputs.impurity.nixosModules.impurity];
-          impurity.configRoot = self;
-          impurity.enable = true;
-        }
+    modules = [
+      {
+        # Impurity
+        imports = [inputs.impurity.nixosModules.impurity];
+        impurity.configRoot = self;
+        impurity.enable = true;
+      }
 
-        ../homes  # Imports based on username
-        ./host    # Imports based on hostname
-        ../modules
-        ../modules/alacritty.nix
-        ../modules/fonts.nix
-      ];
+      ../homes # Imports based on username
+      ./host # Imports based on hostname
+      ../modules
+      ../modules/alacritty.nix
+      ../modules/fonts.nix
+    ];
   };
 
   # https://github.com/outfoxxed/impurity.nix
