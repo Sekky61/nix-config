@@ -190,6 +190,7 @@
       # home = "/home/${username}";
       isNormalUser = true;
       shell = pkgs.bash;
+      initialPassword = "password";
       extraGroups = [
         "networkmanager"
         "wheel"

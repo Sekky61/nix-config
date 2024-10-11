@@ -21,6 +21,7 @@
     alejandra # nix formatter
 
     # tools
+    git
     bat
     eza
     gh # github cli

@@ -7,6 +7,7 @@ usage() {
     echo "  (no argument) : Update system"
     echo "  desktopiso    : Build desktop ISO"
     echo "  update        : Update software versions and rewrite lock file"
+    echo "  cleanup       : Remove old generations and garbage"
 }
 
 # Function to run the default command
@@ -21,6 +22,8 @@ run_desktopiso_command() {
     sudo --preserve-env=IMPURITY_PATH nix build .#nixosConfigurations.desktopIso.config.system.build.isoImage --impure
     echo "ISO built at result/iso/"
 }
+
+# IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nix build  .#nixosConfigurations.michal.config.system.build.vm --impure
 
 # Function to run the update command
 run_update_command() {

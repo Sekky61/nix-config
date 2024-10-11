@@ -14,10 +14,8 @@
       Type = "oneshot";
       Restart = "on-failure";
       ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/echo ${CHARGE_THRESHOLD} > /sys/class/power_supply/BATT/charge_control_end_threshold'";
-      # ...
     };
     wantedBy = ["multi-user.target"];
-    # ...
   };
 
   # nvidia
@@ -26,28 +24,4 @@
     #driSupport = true;
     #driSupport32Bit = true;
   };
-
-  # services.xserver.videoDrivers = [ "nvidia" ];
-
-  # hardware.nvidia = {
-  #   prime = {
-  #     offload = {
-  #       enable = true;
-  #       enableOffloadCmd = true;
-  #     };
-  #     nvidiaBusId = "PCI:3:0:0";
-  #     amdgpuBusId = "PCI:5:0:0";
-  #   };
-
-  #   modesetting.enable = true;
-
-  #   powerManagement = {
-  #     enable = true;
-  #     finegrained = true;
-  #   };
-
-  #   open = false;
-  #   nvidiaSettings = false; # gui app
-  #   package = config.boot.kernelPackages.nvidiaPackages.latest;
-  # };
 }
