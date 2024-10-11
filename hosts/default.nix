@@ -22,6 +22,8 @@
       ../modules
       ../modules/alacritty.nix
       ../modules/fonts.nix
+      ../modules/user-packages.nix
+      ../modules/dev.nix
     ];
   };
 

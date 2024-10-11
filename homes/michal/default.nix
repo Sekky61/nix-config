@@ -18,7 +18,6 @@ in {
     ./hyprland.nix
     ./mimelist.nix
     ./obs.nix
-    ./packages.nix
     #./sway.nix
     ./theme.nix
     ./git.nix
