@@ -1,8 +1,8 @@
+{pkgs, username, ...}:
 let
-  username = "michal";
-  homeDirectory = "/home/michal";
+  homeDirectory = "/home/${username}";
 in
-  {pkgs, ...}: {
+  {
     imports = [
       # Cachix
       ./cachix.nix

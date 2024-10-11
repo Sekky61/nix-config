@@ -2,6 +2,7 @@
   self,
   impurity,
   inputs,
+  username,
   ...
 }: {
 
@@ -29,15 +30,10 @@
     # for reference, the config argument in nixos can be accessed
     # in home-manager through osConfig without us passing it
     extraSpecialArgs = {
-      inherit inputs self impurity;
+      inherit inputs self impurity username;
     };
 
-    # per-user Home Manager configuration
-    users = {
-      # name of the user = directory
-      # more users can be added this way
-      # as long as their home directories exist
-      michal = ./michal;
-    };
+    # username specified in the nixosSystem
+    users.${username} = ./${username};
   };
 }
