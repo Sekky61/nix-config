@@ -1,6 +1,7 @@
 {
   self,
   nixpkgs,
+  raspberry-pi-nix,
   ...
 } @ inputs: {
   michal = nixpkgs.lib.nixosSystem {
@@ -20,8 +21,8 @@
       ../homes # Imports based on username
       ./host # Imports based on hostname
       ../modules
-      ../modules/alacritty.nix
-      ../modules/fonts.nix
+      ../modules/ssh.nix
+      ../modules/terminal-gui.nix
       ../modules/user-packages.nix
       ../modules/dev.nix
     ];
@@ -29,6 +30,27 @@
 
   # https://github.com/outfoxxed/impurity.nix
   michal-impure = self.nixosConfigurations.michal.extendModules {modules = [{impurity.enable = true;}];};
+
+  rpi = nixpkgs.lib.nixosSystem {
+    specialArgs = {
+      username = "pi";
+      hostname = "nixpi";
+      inherit inputs;
+    };
+    system = "aarch64-linux";
+    modules = [
+      {
+        # Impurity
+        imports = [inputs.impurity.nixosModules.impurity];
+        impurity.configRoot = self;
+        impurity.enable = true;
+      }
+      raspberry-pi-nix.nixosModules.raspberry-pi
+      ./rpi.nix
+      ../modules
+      ../homes # Imports based on username
+    ];
+  };
 
   desktopIso = nixpkgs.lib.nixosSystem {
     specialArgs = {inherit inputs;};

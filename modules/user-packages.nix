@@ -62,6 +62,9 @@
     ytdownloader
     exif # read metadata of pictures
     file
+    libguestfs # mount virtual fs
+    parted # partitions
+    caligula # TUI for disk imaging
 
     # troubleshooting
     showmethekey # show pressed keys

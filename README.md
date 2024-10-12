@@ -41,3 +41,6 @@ Press `Super + /` to open the list of keybindings.
 
 - 
 
+### Notes 
+
+Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`

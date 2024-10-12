@@ -32,6 +32,8 @@
     ];
   };
 
+  nix.settings.trusted-users = [ "@wheel" ];
+
   # virtualisation
   # programs.virt-manager.enable = true;
   virtualisation = {
@@ -216,6 +218,10 @@
   };
 
   hardware.sensor.iio.enable = true;
+
+  # cross-compilation
+  boot.binfmt.emulatedSystems = ["i686-linux" "aarch64-linux"];
+  nix.settings.extra-platforms = config.boot.binfmt.emulatedSystems;
 
   # Boot
   boot = {

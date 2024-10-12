@@ -40,5 +40,6 @@
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
   };
 }

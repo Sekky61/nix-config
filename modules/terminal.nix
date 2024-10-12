@@ -3,35 +3,32 @@
   username,
   ...
 }: {
+  # This is the base to have at every vm, server or pc
   imports = [
-    ./alacritty.nix
-    ./fonts.nix
     ./nvim
     ./bash
   ];
 
-  # ---- Home Configuration ----
-  home-manager.users.${username} = {
-    programs.git.enable = true;
-  };
-
   # ---- System Configuration ----
   programs = {
     htop.enable = true;
-    mtr.enable = true;
+    mtr.enable = true; # todo
   };
 
   environment.systemPackages = with pkgs; [
-    brightnessctl
+    git
     btop
     gh
-    playerctl
     ripgrep
     unzip
     zoxide
-
-    # todo review
-    vhs
-    mods
+    bat
+    eza
+    fd
+    fzf
+    socat
+    jq
+    gojq
+    lazygit
   ];
 }

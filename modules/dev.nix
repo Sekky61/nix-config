@@ -22,25 +22,13 @@
 
     # tools
     git
-    bat
-    eza
-    gh # github cli
-    fd
-    ripgrep
-    fzf
-    socat
-    jq
-    gojq
     ffmpeg
     vscode
-    lazygit
     nixos-generators
     insomnia
     wireshark
 
     # deps
     glib
-
-    # todo take a look at it
   ];
 }
