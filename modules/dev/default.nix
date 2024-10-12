@@ -3,6 +3,11 @@
   username,
   ...
 }: {
+
+  imports = [
+    ./direnv.nix
+  ];
+
   # packages for development
   environment.systemPackages = with pkgs; [
     # langs

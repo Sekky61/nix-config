@@ -16,6 +16,7 @@
       cat = "bat";
 
       gitlog = "git log --graph --oneline --decorate";
+      initenvrc = "echo \"use flake\" >> .envrc && direnv allow";
     };
   };
 }

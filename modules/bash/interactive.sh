@@ -20,6 +20,10 @@ c_test () {
 
 eval "$(zoxide init bash)"
 
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
+fi
+
 # Source API keys if the file exists
 if [ -f ~/.secrets.sh ]; then
   source ~/.secrets.sh

@@ -24,7 +24,7 @@
       ../modules/ssh.nix
       ../modules/terminal-gui.nix
       ../modules/user-packages.nix
-      ../modules/dev.nix
+      ../modules/dev
     ];
   };
 
