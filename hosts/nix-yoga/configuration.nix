@@ -32,7 +32,7 @@
     ];
   };
 
-  nix.settings.trusted-users = [ "@wheel" ];
+  nix.settings.trusted-users = ["@wheel"];
 
   # virtualisation
   # programs.virt-manager.enable = true;

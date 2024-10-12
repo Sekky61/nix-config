@@ -1,13 +1,28 @@
-{lib, ...}: let
+{
+  lib,
+  hostname,
+  ...
+}: let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
   };
-  os = icon: fg: "[${icon} ](fg:${fg})";
+  os = icon: fg: "[${icon} ](fg:${osColor fg})";
   pad = {
     left = "";
     right = "";
   };
+
+  # username and hostname based color
+  host_colors = {
+    nix-yoga = "green";
+    nixpi = "red";
+  };
+
+  osColor = fallback:
+    if builtins.hasAttr hostname host_colors
+    then host_colors.${hostname}
+    else fallback;
 in {
   programs.starship = {
     enable = true;
@@ -54,7 +69,7 @@ in {
         cherry_pick = "[🍒 PICKING](bold red)";
       };
       cmd_duration = {
-        min_time = 1000;
+        min_time = 300;
         format = "[$duration ](fg:yellow)";
       };
       nix_shell = {
@@ -97,7 +112,7 @@ in {
         Debian = os "" "red)";
         EndeavourOS = os "" "purple";
         Fedora = os "" "blue";
-        NixOS = os "" "blue";
+        NixOS = os "" hostname;
         openSUSE = os "" "green";
         SUSE = os "" "green";
         Ubuntu = os "" "bright-purple";

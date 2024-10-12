@@ -9,7 +9,7 @@
   # bcm2712 for rpi 5
   # See the docs at:
   # https://www.raspberrypi.com/documentation/computers/linux_kernel.html#native-build-configuration
-  
+
   environment.systemPackages = with pkgs; [
     vim
     wget
@@ -20,7 +20,7 @@
   # WiFi
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [ pkgs.wireless-regdb ];
+    firmware = [pkgs.wireless-regdb];
   };
 
   users.users.${username} = {
@@ -33,10 +33,10 @@
   };
   users.groups.pi = {};
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "@wheel" ];
-  
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = ["@wheel"];
+
+  networking.firewall.allowedTCPPorts = [22 80 443];
 
   services.openssh = {
     enable = true;
@@ -47,7 +47,7 @@
   };
 
   raspberry-pi-nix.board = "bcm2711";
-  time.timeZone = "America/New_York";
+  time.timeZone = "Europe/Prague";
   users.users.root.initialPassword = "root";
   networking = {
     hostName = hostname;
@@ -59,7 +59,7 @@
 
     # Enabling WIFI
     wireless.enable = true;
-    wireless.interfaces = [ "wlan0" ];
+    wireless.interfaces = ["wlan0"];
   };
   hardware = {
     bluetooth.enable = true;
@@ -78,6 +78,6 @@
       };
     };
   };
-  
+
   system.stateVersion = "24.11";
 }

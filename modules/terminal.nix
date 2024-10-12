@@ -30,5 +30,9 @@
     jq
     gojq
     lazygit
+    ethtool # network controls
+    traceroute
+
+    fancy-motd
   ];
 }
