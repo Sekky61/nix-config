@@ -1,10 +1,11 @@
-{
-  pkgs,
-  username,
-  ...
-}: let
+{ pkgs
+, username
+, ...
+}:
+let
   homeDirectory = "/home/${username}";
-in {
+in
+{
   imports = [
     # Cachix
     ./cachix.nix
@@ -41,7 +42,7 @@ in {
   gtk = {
     font = {
       name = "Rubik";
-      package = pkgs.google-fonts.override {fonts = ["Rubik"];};
+      package = pkgs.google-fonts.override { fonts = [ "Rubik" ]; };
       size = 11;
     };
     gtk3 = {

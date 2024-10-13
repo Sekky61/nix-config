@@ -1,4 +1,4 @@
-{username, ...}: {
+{ username, ... }: {
   # different from home-manager.users
   users.users.${username} = {
     openssh.authorizedKeys.keys = [
@@ -15,7 +15,7 @@
     knownHosts = {
       nixpi-wifi = {
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBimO7J9WOplF/P1YLgWfx5IFy9nGY+sBfn7xoAdY5hZ root@nixpi";
-        extraHostNames = ["nixpi"];
+        extraHostNames = [ "nixpi" ];
       };
     };
   };

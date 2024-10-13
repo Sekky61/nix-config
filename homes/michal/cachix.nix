@@ -1,5 +1,5 @@
 # idk got this from matostitos
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     cachix
   ];

@@ -1,8 +1,7 @@
-{
-  self,
-  nixpkgs,
-  raspberry-pi-nix,
-  ...
+{ self
+, nixpkgs
+, raspberry-pi-nix
+, ...
 } @ inputs: {
   michal = nixpkgs.lib.nixosSystem {
     specialArgs = {
@@ -13,7 +12,7 @@
     modules = [
       {
         # Impurity
-        imports = [inputs.impurity.nixosModules.impurity];
+        imports = [ inputs.impurity.nixosModules.impurity ];
         impurity.configRoot = self;
         impurity.enable = true;
       }
@@ -29,7 +28,7 @@
   };
 
   # https://github.com/outfoxxed/impurity.nix
-  michal-impure = self.nixosConfigurations.michal.extendModules {modules = [{impurity.enable = true;}];};
+  michal-impure = self.nixosConfigurations.michal.extendModules { modules = [{ impurity.enable = true; }]; };
 
   rpi = nixpkgs.lib.nixosSystem {
     specialArgs = {
@@ -41,7 +40,7 @@
     modules = [
       {
         # Impurity
-        imports = [inputs.impurity.nixosModules.impurity];
+        imports = [ inputs.impurity.nixosModules.impurity ];
         impurity.configRoot = self;
         impurity.enable = true;
       }
@@ -53,16 +52,15 @@
   };
 
   desktopIso = nixpkgs.lib.nixosSystem {
-    specialArgs = {inherit inputs;};
+    specialArgs = { inherit inputs; };
     system = "x86_64-linux";
     modules = [
-      ({
-        pkgs,
-        modulesPath,
-        ...
-      }: {
-        imports = [(modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")];
-        environment.systemPackages = [pkgs.neovim];
+      ({ pkgs
+       , modulesPath
+       , ...
+       }: {
+        imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+        environment.systemPackages = [ pkgs.neovim ];
       })
     ];
   };

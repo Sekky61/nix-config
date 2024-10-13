@@ -1,7 +1,6 @@
-{
-  pkgs,
-  username,
-  ...
+{ pkgs
+, username
+, ...
 }: {
   services.tailscale = {
     enable = true;

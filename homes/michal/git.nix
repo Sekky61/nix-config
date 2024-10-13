@@ -1,4 +1,5 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
@@ -8,7 +9,8 @@
     left = "";
     right = "";
   };
-in {
+in
+{
   programs.git = {
     enable = true;
     userName = "Michal Majer";

@@ -1,7 +1,6 @@
-{
-  pkgs,
-  username,
-  ...
+{ pkgs
+, username
+, ...
 }: {
   # packages for daily needs
   environment.systemPackages = with pkgs; [

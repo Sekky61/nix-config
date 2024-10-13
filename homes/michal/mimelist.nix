@@ -5,7 +5,8 @@ let
   image-viewer = "org.gnome.Loupe.desktop";
   image-editor = "org.kde.kolourpaint";
   torrent = "transmission-gtk.desktop";
-in {
+in
+{
   xdg.mimeApps = rec {
     enable = true;
     associations.added = defaultApplications;

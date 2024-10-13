@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  username,
-  hostname,
-  ...
+{ pkgs
+, lib
+, username
+, hostname
+, ...
 }: {
   # bcm2711 for rpi 3, 3+, 4, zero 2 w
   # bcm2712 for rpi 5
@@ -20,7 +19,7 @@
   # WiFi
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [pkgs.wireless-regdb];
+    firmware = [ pkgs.wireless-regdb ];
   };
 
   users.users.${username} = {
@@ -31,12 +30,12 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkCgOhmEum22iwht2rfJxWnbNCVbd0gWOPXdYHO1vPU majer"
     ];
   };
-  users.groups.pi = {};
+  users.groups.pi = { };
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.trusted-users = ["@wheel"];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "@wheel" ];
 
-  networking.firewall.allowedTCPPorts = [22 80 443];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
   services.openssh = {
     enable = true;
@@ -59,7 +58,7 @@
 
     # Enabling WIFI
     wireless.enable = true;
-    wireless.interfaces = ["wlan0"];
+    wireless.interfaces = [ "wlan0" ];
   };
   hardware = {
     bluetooth.enable = true;

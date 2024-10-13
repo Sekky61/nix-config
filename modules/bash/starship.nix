@@ -1,8 +1,8 @@
-{
-  lib,
-  hostname,
-  ...
-}: let
+{ lib
+, hostname
+, ...
+}:
+let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol ](${color})";
@@ -23,7 +23,8 @@
     if builtins.hasAttr hostname host_colors
     then host_colors.${hostname}
     else fallback;
-in {
+in
+{
   programs.starship = {
     enable = true;
     settings = {
@@ -52,7 +53,7 @@ in {
         format = "  ";
       };
       continuation_prompt = "∙  ┆ ";
-      line_break = {disabled = false;};
+      line_break = { disabled = false; };
       status = {
         symbol = "✗";
         not_found_symbol = "󰍉 Not Found";

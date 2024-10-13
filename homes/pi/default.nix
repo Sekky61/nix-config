@@ -1,10 +1,11 @@
-{
-  pkgs,
-  username,
-  ...
-}: let
+{ pkgs
+, username
+, ...
+}:
+let
   homeDirectory = "/home/${username}";
-in {
+in
+{
   programs = {
     home-manager.enable = true;
   };

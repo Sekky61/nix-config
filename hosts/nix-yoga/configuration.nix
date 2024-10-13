@@ -1,9 +1,8 @@
-{
-  inputs,
-  pkgs,
-  username,
-  config,
-  ...
+{ inputs
+, pkgs
+, username
+, config
+, ...
 }: {
   # nix
   documentation.nixos.enable = false; # .desktop
@@ -32,7 +31,7 @@
     ];
   };
 
-  nix.settings.trusted-users = ["@wheel"];
+  nix.settings.trusted-users = [ "@wheel" ];
 
   # virtualisation
   # programs.virt-manager.enable = true;
@@ -41,7 +40,7 @@
     virtualbox.host.enable = true;
     virtualbox.guest.dragAndDrop = true;
   };
-  users.extraGroups.vboxusers.members = ["michal"];
+  users.extraGroups.vboxusers.members = [ "michal" ];
 
   services = {
     spice-vdagentd.enable = true; # protocol for sharing clipboard with VMs
@@ -72,9 +71,9 @@
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {
       description = "polkit-gnome-authentication-agent-1";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
@@ -144,7 +143,7 @@
     };
     firefox = {
       enable = true;
-      nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
+      nativeMessagingHosts.packages = [ pkgs.plasma5Packages.plasma-browser-integration ];
     };
     # Run dynamically linked stuff
     nix-ld = {
@@ -220,13 +219,13 @@
   hardware.sensor.iio.enable = true;
 
   # cross-compilation
-  boot.binfmt.emulatedSystems = ["i686-linux" "aarch64-linux"];
+  boot.binfmt.emulatedSystems = [ "i686-linux" "aarch64-linux" ];
   nix.settings.extra-platforms = config.boot.binfmt.emulatedSystems;
 
   # Boot
   boot = {
     tmp.cleanOnBoot = true;
-    supportedFilesystems = ["btrfs" "ext4" "fat32" "ntfs"];
+    supportedFilesystems = [ "btrfs" "ext4" "fat32" "ntfs" ];
     loader = {
       grub = {
         enable = true;

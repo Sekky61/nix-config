@@ -1,9 +1,8 @@
-{
-  self,
-  impurity,
-  inputs,
-  username,
-  ...
+{ self
+, impurity
+, inputs
+, username
+, ...
 }: {
   imports = [
     inputs.home-manager.nixosModules.home-manager

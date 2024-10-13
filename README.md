@@ -1,6 +1,6 @@
 # Nix Config
 
-Based (heavily) on [CirnOS](https://github.com/end-4/CirnOS), go and give it a star!
+Based (heavily) on [ CirnOS ] (https://github.com/end-4/CirnOS), go and give it a star!
 
 See [the docs](https://end-4.github.io/dots-hyprland-wiki/en/i-i/02usage/) for the original dotfiles.
 
@@ -39,7 +39,7 @@ Press `Super + /` to open the list of keybindings.
 
 ### TODO
 
-- 
+-
 
 ### Notes 
 

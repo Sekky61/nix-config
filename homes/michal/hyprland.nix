@@ -1,8 +1,8 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: let
+{ inputs
+, pkgs
+, ...
+}:
+let
   hyprland = inputs.hyprland.packages.${pkgs.system}.hyprland;
   plugins = inputs.hyprland-plugins.packages.${pkgs.system};
 
@@ -14,7 +14,8 @@
 
     exec ${hyprland}/bin/Hyprland
   '';
-in {
+in
+{
   home.packages = with pkgs; [
     launcher
     nwg-displays # gui for monitors, wayland
@@ -27,7 +28,7 @@ in {
     comment = "Gnome Control Center";
     icon = "org.gnome.Settings";
     exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome.gnome-control-center}/bin/gnome-control-center";
-    categories = ["X-Preferences"];
+    categories = [ "X-Preferences" ];
     terminal = false;
   };
 
@@ -171,7 +172,7 @@ in {
         workspace_swipe_direction_lock_threshold = 10;
         workspace_swipe_create_new = true;
       };
-      binds = {scroll_event_delay = 0;};
+      binds = { scroll_event_delay = 0; };
       input = {
         sensitivity = 0.3; # -1 to 1
         # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
@@ -260,121 +261,123 @@ in {
         # damage_tracking = 0;
         # damage_blink = true;
       };
-      bind = let
-        SLURP_COMMAND = "$(slurp -d -c eedcf5BB -b 4f425644 -s 00000000)";
-      in [
-        "Super, Space, exec, ags -t 'overview'" # Launcher
-        "Super, C, exec, code --password-store=gnome"
-        "Super, T, exec, foot --override shell=fish"
-        "Super, Return, exec, alacritty"
-        "Super, E, exec, nautilus --new-window"
-        "Super+Alt, E, exec, thunar"
-        "Super, W, exec, google-chrome-stable"
-        "Super+Shift, W, exec, wps" # todo idk
-        ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
-        "Control+Super, V, exec, pavucontrol"
-        "Control+Shift, Escape, exec, gnome-system-monitor"
-        "Super, Period, exec, bemoji"
-        "Super, Q, killactive, "
-        "Super+Alt, Space, togglefloating, "
-        "Shift+Super+Alt, Q, exec, hyprctl kill"
-        "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell"
-        "Control+Shift+Alt+Super, Delete, exec, systemctl poweroff"
-        ''
-          Super+Shift+Alt, S, exec, grim -g "${SLURP_COMMAND}" - | swappy -f -
-        ''
-        ''
-          Super+Shift, S, exec, grim -g "${SLURP_COMMAND}" - | wl-copy
-        '' # todo closes window
-        "Super+Alt, R, exec, ~/.config/ags/scripts/record-script.sh"
-        "Control+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
-        "Super+Shift+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
-        "Super+Shift, C, exec, hyprpicker -a"
-        "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
-        ''
-          Control+Super+Shift,S,exec,grim -g "${SLURP_COMMAND}" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"
-        ''
-        "Super, L, exec, hyprlock"
-        "Super+Shift, L, exec, hyprlock"
-        "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
-        "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
-        "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
-        "Super, Tab, exec, ags -t 'overview'"
-        "Super, Slash, exec, ags -t 'cheatsheet'"
-        "Super, B, exec, ags -t 'sideleft'"
-        "Super, A, exec, ags -t 'sideleft'"
-        "Super, O, exec, ags -t 'sideleft'"
-        "Super, N, exec, ags -t 'sideright'"
-        "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
-        "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'"
-        "Super, K, exec, ags -t 'osk'"
-        "Control+Alt, Delete, exec, ags -t 'session'"
-        "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
-        "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
-        "Super+Shift, left, movewindow, l"
-        "Super+Shift, right, movewindow, r"
-        "Super+Shift, up, movewindow, u"
-        "Super+Shift, down, movewindow, d"
-        "Super, left, movefocus, l"
-        "Super, right, movefocus, r"
-        "Super, up, movefocus, u"
-        "Super, down, movefocus, d"
-        "Super, BracketLeft, movefocus, l"
-        "Super, BracketRight, movefocus, r"
-        "Control+Super, right, workspace, +1"
-        "Control+Super, left, workspace, -1"
-        "Control+Super, BracketLeft, workspace, -1"
-        "Control+Super, BracketRight, workspace, +1"
-        "Control+Super, up, workspace, -5"
-        "Control+Super, down, workspace, +5"
-        "Super, Page_Down, workspace, +1"
-        "Super, Page_Up, workspace, -1"
-        "Control+Super, Page_Down, workspace, +1"
-        "Control+Super, Page_Up, workspace, -1"
-        "Super+Alt, Page_Down, movetoworkspace, +1"
-        "Super+Alt, Page_Up, movetoworkspace, -1"
-        "Super+Shift, Page_Down, movetoworkspace, +1"
-        "Super+Shift, Page_Up, movetoworkspace, -1"
-        "Control+Super+Shift, Right, movetoworkspace, +1"
-        "Control+Super+Shift, Left, movetoworkspace, -1"
-        "Super+Shift, mouse_down, movetoworkspace, -1"
-        "Super+Shift, mouse_up, movetoworkspace, +1"
-        "Super+Alt, mouse_down, movetoworkspace, -1"
-        "Super+Alt, mouse_up, movetoworkspace, +1"
-        "Super, F, fullscreen, 0"
-        "Super, D, fullscreen, 1"
-        "Super_Alt, F, fullscreenstate, -1 2"
-        "Super, 1, workspace, 1"
-        "Super, 2, workspace, 2"
-        "Super, 3, workspace, 3"
-        "Super, 4, workspace, 4"
-        "Super, 5, workspace, 5"
-        "Super, 6, workspace, 6"
-        "Super, 7, workspace, 7"
-        "Super, 8, workspace, 8"
-        "Super, 9, workspace, 9"
-        "Super, 0, workspace, 10"
-        "Super, S, togglespecialworkspace,"
-        "Control+Super, S, togglespecialworkspace,"
-        "Alt, Tab, cyclenext"
-        "Alt, Tab, bringactivetotop,"
-        "Super+Shift, 1, movetoworkspacesilent, 1"
-        "Super+Shift, 2, movetoworkspacesilent, 2"
-        "Super+Shift, 3, movetoworkspacesilent, 3"
-        "Super+Shift, 4, movetoworkspacesilent, 4"
-        "Super+Shift, 5, movetoworkspacesilent, 5"
-        "Super+Shift, 6, movetoworkspacesilent, 6"
-        "Super+Shift, 7, movetoworkspacesilent, 7"
-        "Super+Shift, 8, movetoworkspacesilent, 8"
-        "Super+Shift, 9, movetoworkspacesilent, 9"
-        "Super+Shift, 0, movetoworkspacesilent, 10"
-        "Control+Shift+Super, Up, movetoworkspacesilent, special"
-        "Super+Shift, S, movetoworkspacesilent, special"
-        "Super, mouse_up, workspace, +1"
-        "Super, mouse_down, workspace, -1"
-        "Control+Super, mouse_up, workspace, +1"
-        "bind = Control+Super, mouse_down, workspace, -1"
-      ];
+      bind =
+        let
+          SLURP_COMMAND = "$(slurp -d -c eedcf5BB -b 4f425644 -s 00000000)";
+        in
+        [
+          "Super, Space, exec, ags -t 'overview'" # Launcher
+          "Super, C, exec, code --password-store=gnome"
+          "Super, T, exec, foot --override shell=fish"
+          "Super, Return, exec, alacritty"
+          "Super, E, exec, nautilus --new-window"
+          "Super+Alt, E, exec, thunar"
+          "Super, W, exec, google-chrome-stable"
+          "Super+Shift, W, exec, wps" # todo idk
+          ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
+          "Control+Super, V, exec, pavucontrol"
+          "Control+Shift, Escape, exec, gnome-system-monitor"
+          "Super, Period, exec, bemoji"
+          "Super, Q, killactive, "
+          "Super+Alt, Space, togglefloating, "
+          "Shift+Super+Alt, Q, exec, hyprctl kill"
+          "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell"
+          "Control+Shift+Alt+Super, Delete, exec, systemctl poweroff"
+          ''
+            Super+Shift+Alt, S, exec, grim -g "${SLURP_COMMAND}" - | swappy -f -
+          ''
+          ''
+            Super+Shift, S, exec, grim -g "${SLURP_COMMAND}" - | wl-copy
+          '' # todo closes window
+          "Super+Alt, R, exec, ~/.config/ags/scripts/record-script.sh"
+          "Control+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
+          "Super+Shift+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
+          "Super+Shift, C, exec, hyprpicker -a"
+          "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
+          ''
+            Control+Super+Shift,S,exec,grim -g "${SLURP_COMMAND}" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"
+          ''
+          "Super, L, exec, hyprlock"
+          "Super+Shift, L, exec, hyprlock"
+          "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
+          "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
+          "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
+          "Super, Tab, exec, ags -t 'overview'"
+          "Super, Slash, exec, ags -t 'cheatsheet'"
+          "Super, B, exec, ags -t 'sideleft'"
+          "Super, A, exec, ags -t 'sideleft'"
+          "Super, O, exec, ags -t 'sideleft'"
+          "Super, N, exec, ags -t 'sideright'"
+          "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
+          "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'"
+          "Super, K, exec, ags -t 'osk'"
+          "Control+Alt, Delete, exec, ags -t 'session'"
+          "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
+          "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
+          "Super+Shift, left, movewindow, l"
+          "Super+Shift, right, movewindow, r"
+          "Super+Shift, up, movewindow, u"
+          "Super+Shift, down, movewindow, d"
+          "Super, left, movefocus, l"
+          "Super, right, movefocus, r"
+          "Super, up, movefocus, u"
+          "Super, down, movefocus, d"
+          "Super, BracketLeft, movefocus, l"
+          "Super, BracketRight, movefocus, r"
+          "Control+Super, right, workspace, +1"
+          "Control+Super, left, workspace, -1"
+          "Control+Super, BracketLeft, workspace, -1"
+          "Control+Super, BracketRight, workspace, +1"
+          "Control+Super, up, workspace, -5"
+          "Control+Super, down, workspace, +5"
+          "Super, Page_Down, workspace, +1"
+          "Super, Page_Up, workspace, -1"
+          "Control+Super, Page_Down, workspace, +1"
+          "Control+Super, Page_Up, workspace, -1"
+          "Super+Alt, Page_Down, movetoworkspace, +1"
+          "Super+Alt, Page_Up, movetoworkspace, -1"
+          "Super+Shift, Page_Down, movetoworkspace, +1"
+          "Super+Shift, Page_Up, movetoworkspace, -1"
+          "Control+Super+Shift, Right, movetoworkspace, +1"
+          "Control+Super+Shift, Left, movetoworkspace, -1"
+          "Super+Shift, mouse_down, movetoworkspace, -1"
+          "Super+Shift, mouse_up, movetoworkspace, +1"
+          "Super+Alt, mouse_down, movetoworkspace, -1"
+          "Super+Alt, mouse_up, movetoworkspace, +1"
+          "Super, F, fullscreen, 0"
+          "Super, D, fullscreen, 1"
+          "Super_Alt, F, fullscreenstate, -1 2"
+          "Super, 1, workspace, 1"
+          "Super, 2, workspace, 2"
+          "Super, 3, workspace, 3"
+          "Super, 4, workspace, 4"
+          "Super, 5, workspace, 5"
+          "Super, 6, workspace, 6"
+          "Super, 7, workspace, 7"
+          "Super, 8, workspace, 8"
+          "Super, 9, workspace, 9"
+          "Super, 0, workspace, 10"
+          "Super, S, togglespecialworkspace,"
+          "Control+Super, S, togglespecialworkspace,"
+          "Alt, Tab, cyclenext"
+          "Alt, Tab, bringactivetotop,"
+          "Super+Shift, 1, movetoworkspacesilent, 1"
+          "Super+Shift, 2, movetoworkspacesilent, 2"
+          "Super+Shift, 3, movetoworkspacesilent, 3"
+          "Super+Shift, 4, movetoworkspacesilent, 4"
+          "Super+Shift, 5, movetoworkspacesilent, 5"
+          "Super+Shift, 6, movetoworkspacesilent, 6"
+          "Super+Shift, 7, movetoworkspacesilent, 7"
+          "Super+Shift, 8, movetoworkspacesilent, 8"
+          "Super+Shift, 9, movetoworkspacesilent, 9"
+          "Super+Shift, 0, movetoworkspacesilent, 10"
+          "Control+Shift+Super, Up, movetoworkspacesilent, special"
+          "Super+Shift, S, movetoworkspacesilent, special"
+          "Super, mouse_up, workspace, +1"
+          "Super, mouse_down, workspace, -1"
+          "Control+Super, mouse_up, workspace, +1"
+          "bind = Control+Super, mouse_down, workspace, -1"
+        ];
       bindm = [
         "Super, mouse:272, movewindow"
         "Super, mouse:273, resizewindow"
@@ -431,7 +434,7 @@ in {
         "float,title:^(Save As)(.*)$"
         "float,title:^(Library)(.*)$ "
       ];
-      windowrulev2 = ["tile,class:(wpsoffice)"];
+      windowrulev2 = [ "tile,class:(wpsoffice)" ];
       layerrule = [
         "xray 1, .*"
         "noanim, selection"
