@@ -735,7 +735,6 @@ end
 -- Enable the following language servers
 -- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local servers = {
-  efm = {},
 
   clangd = {},
   pyright = {},

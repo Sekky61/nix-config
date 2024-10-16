@@ -23,5 +23,8 @@ in
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       user.signingkey = "~/.ssh/id_rsa.pub";
     };
+    ignores = [
+      ".direnv"
+      ];
   };
 }
