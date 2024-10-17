@@ -104,7 +104,7 @@ in
           on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
         }
         {
-          timeout = 300; # 5min
+          timeout = 900; # 15min
           on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
         }
         {
