@@ -41,27 +41,19 @@
     let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import inputs.nixpkgs { inherit system; });
-    in
-    {
+      nixpkgsFor =
+        forAllSystems (system: import inputs.nixpkgs { inherit system; });
+    in {
       # editing flake.nix triggers certain utilities such as direnv
       # to reload - editing host configurations do not require a direnv
       # reload, so lets move hosts out of the way
       nixosConfigurations = import ./hosts inputs;
 
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
-        {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixfmt
-              statix
-            ];
-          };
-        }
-      );
+      devShells = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system};
+        in {
+          default =
+            pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix ]; };
+        });
     };
 }

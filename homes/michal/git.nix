@@ -13,7 +13,7 @@ in
 {
   programs.git = {
     enable = true;
-    userName = "Michal Majer";
+    userName = "Sekky61";
     userEmail = "misa@majer.cz";
     extraConfig = {
       credential.helper = "cache --timeout=3600";
