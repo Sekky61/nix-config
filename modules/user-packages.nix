@@ -28,9 +28,9 @@
 
     # hyprland
     brightnessctl
-    cliphist
+    cliphist    # clipboard history
     fuzzel
-    bemoji # emoji picker
+    bemoji      # emoji picker
     grim
     hyprpicker
     tesseract

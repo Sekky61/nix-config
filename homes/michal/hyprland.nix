@@ -135,28 +135,33 @@ in
         ",preferred,auto,1"
       ];
       "exec-once" = [
+        # system tray
         "ags"
+        # wallpaper
         "swww kill; swww init"
-        # ''
-        #   swayidle -w timeout 300 'swaylock -f' timeout 450 'pidof java || systemctl suspend' timeout 900 'hyprctl dispatch dpms off' resume 'sleep 3; hyprctl dispatch dpms on' before-sleep 'swaylock -f'
-        # ''
+        # go to sleep after inactivity
         "hypridle"
+        # hw sensors (screen rotation)
         "iio-hyprland"
+        # paste history
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        # cursor
         "hyprctl setcursor Bibata-Modern-Classic 24"
+        # kdeconnect
         "kdeconnect-indicator"
+        # launch Chrome
         "[workspace 1 silent] google-chrome-stable"
       ];
       general = {
-        gaps_in = 3;
-        gaps_out = 4;
+        gaps_in = 2;
+        gaps_out = 3;
         gaps_workspaces = 50;
-        border_size = 2;
         layout = "dwindle";
-        resize_on_border = true;
-        "col.active_border" = "rgba(471868FF)";
-        "col.inactive_border" = "rgba(4f4256CC)";
+        resize_on_border = true; # click and drag on border to resize
+        border_size = 1;
+        "col.active_border" = "rgba(38bdf8ee)";
+        "col.inactive_border" = "rgba(0369a1cc)";
       };
       dwindle = {
         preserve_split = true;
@@ -165,7 +170,7 @@ in
       gestures = {
         workspace_swipe = true;
         workspace_swipe_distance = 700;
-        workspace_swipe_fingers = 4;
+        workspace_swipe_fingers = 3;
         workspace_swipe_cancel_ratio = 0.2;
         workspace_swipe_min_speed_to_force = 5;
         workspace_swipe_direction_lock = true;
@@ -174,7 +179,7 @@ in
       };
       binds = { scroll_event_delay = 0; };
       input = {
-        sensitivity = 0.3; # -1 to 1
+        sensitivity = 0.2; # -1 to 1
         # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
         kb_layout = "us,cz";
         kb_options = grp:alt_shift_toggle;
@@ -189,11 +194,11 @@ in
           scroll_factor = 0.5;
         };
 
-        # special_fallthrough = true   # only in new hyprland versions. but they're hella fucked
+        special_fallthrough = true;   # only in new hyprland versions. but they're hella fucked
         follow_mouse = 1;
       };
       decoration = {
-        rounding = 10;
+        rounding = 8;
 
         blur = {
           enabled = true;
@@ -207,7 +212,7 @@ in
           contrast = 1;
         };
         # Shadow
-        drop_shadow = false;
+        drop_shadow = true;
         shadow_ignore_window = true;
         shadow_range = 20;
         shadow_offset = "0 2";
@@ -250,11 +255,14 @@ in
         focus_on_activate = true;
         animate_manual_resizes = false;
         animate_mouse_windowdragging = false;
-        enable_swallow = false;
+        enable_swallow = true;
         swallow_regex = "(foot|kitty|allacritty|Alacritty)";
 
         disable_hyprland_logo = true;
         new_window_takes_over_fullscreen = 2;
+      };
+      xwayland = {
+        force_zero_scaling = true;
       };
       debug = {
         # overlay = true;
