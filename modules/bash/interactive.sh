@@ -29,6 +29,5 @@ if [ -f ~/.secrets.sh ]; then
   source ~/.secrets.sh
 fi
 
-
 motd
 

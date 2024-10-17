@@ -291,9 +291,9 @@ in
           ''
             Super+Shift, S, exec, grim -g "${SLURP_COMMAND}" - | wl-copy
           '' # todo closes window
-          "Super+Alt, R, exec, ~/.config/ags/scripts/record-script.sh"
-          "Control+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen"
-          "Super+Shift+Alt, R, exec, ~/.config/ags/scripts/record-script.sh --fullscreen-sound"
+          "Super+Alt, R, exec, record"
+          "Control+Alt, R, exec, record --fullscreen"
+          "Super+Shift+Alt, R, exec, record --fullscreen-sound"
           "Super+Shift, C, exec, hyprpicker -a"
           "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
           ''
