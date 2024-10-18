@@ -15,7 +15,6 @@ in
     # Stuff
     ./ags.nix
     ./anyrun.nix
-    ./browser.nix
     ./dconf.nix
     ./hyprland.nix
     ./mimelist.nix

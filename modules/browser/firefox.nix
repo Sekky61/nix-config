@@ -4,17 +4,6 @@
   ...
 }:
 {
-  home = {
-    sessionVariables = {
-      BROWSER = "google-chrome";
-    };
-
-    packages = with pkgs; [
-      libsForQt5.plasma-browser-integration
-      google-chrome
-    ];
-  };
-
   programs.firefox = {
     enable = true;
     profiles.default = {
