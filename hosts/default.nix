@@ -20,10 +20,11 @@
       ../homes # Imports based on username
       ./host # Imports based on hostname
       ../modules
+      ../modules/dev
       ../modules/packages
+      ../modules/gui-packages
       ../modules/ssh.nix
       ../modules/terminal-gui.nix
-      ../modules/dev
       ../modules/browser/chrome.nix
     ];
   };

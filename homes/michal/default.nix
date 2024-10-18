@@ -17,7 +17,6 @@ in
     ./dconf.nix
     ./hyprland.nix
     ./mimelist.nix
-    ./obs.nix
     ./theme.nix
     ./git.nix
     ./java.nix
