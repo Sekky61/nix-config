@@ -1,8 +1,11 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home = {
-    packages = with pkgs;
+    packages =
+      with pkgs;
       with nodePackages_latest;
-      with libsForQt5; [
+      with libsForQt5;
+      [
         i3 # gaming
         sway
         nautilus-python

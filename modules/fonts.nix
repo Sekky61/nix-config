@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   fonts = {
     packages = with pkgs; [
       jetbrains-mono
@@ -8,7 +9,12 @@
       noto-fonts-cjk
       noto-fonts-emoji
       roboto
-      (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+      (nerdfonts.override {
+        fonts = [
+          "FiraCode"
+          "DroidSansMono"
+        ];
+      })
     ];
     fontconfig.defaultFonts = {
       serif = [

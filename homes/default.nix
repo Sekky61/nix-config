@@ -1,9 +1,11 @@
-{ self
-, impurity
-, inputs
-, username
-, ...
-}: {
+{
+  self,
+  impurity,
+  inputs,
+  username,
+  ...
+}:
+{
   imports = [
     inputs.home-manager.nixosModules.home-manager
   ];
@@ -28,7 +30,12 @@
     # for reference, the config argument in nixos can be accessed
     # in home-manager through osConfig without us passing it
     extraSpecialArgs = {
-      inherit inputs self impurity username;
+      inherit
+        inputs
+        self
+        impurity
+        username
+        ;
     };
 
     # username specified in the nixosSystem

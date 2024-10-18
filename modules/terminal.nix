@@ -1,7 +1,9 @@
-{ pkgs
-, username
-, ...
-}: {
+{
+  pkgs,
+  username,
+  ...
+}:
+{
   # This is the base to have at every vm, server or pc
   imports = [
     ./nvim

@@ -20,9 +20,9 @@
       ../homes # Imports based on username
       ./host # Imports based on hostname
       ../modules
+      ../modules/packages
       ../modules/ssh.nix
       ../modules/terminal-gui.nix
-      ../modules/user-packages.nix
       ../modules/dev
     ];
   };

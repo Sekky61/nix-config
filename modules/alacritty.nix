@@ -1,7 +1,9 @@
-{ pkgs
-, username
-, ...
-}: {
+{
+  pkgs,
+  username,
+  ...
+}:
+{
   environment.systemPackages = with pkgs; [
     alacritty
     # other system-wide packages...

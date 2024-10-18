@@ -55,5 +55,9 @@
           default =
             pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix ]; };
         });
+
+      formatter = forAllSystems (system:
+        let pkgs = nixpkgsFor.${system};
+        in pkgs.nixfmt-rfc-style );
     };
 }

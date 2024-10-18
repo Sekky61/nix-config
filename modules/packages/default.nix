@@ -1,7 +1,14 @@
-{ pkgs
-, username
-, ...
-}: {
+{
+  pkgs,
+  username,
+  ...
+}:
+{
+
+  inputs = [
+    ./yazi.nix
+  ];
+
   # packages for daily needs
   environment.systemPackages = with pkgs; [
     # gui
@@ -28,9 +35,9 @@
 
     # hyprland
     brightnessctl
-    cliphist    # clipboard history
+    cliphist # clipboard history
     fuzzel
-    bemoji      # emoji picker
+    bemoji # emoji picker
     grim
     hyprpicker
     tesseract

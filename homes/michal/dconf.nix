@@ -1,8 +1,14 @@
 { lib, ... }:
-with lib.hm.gvariant; {
+with lib.hm.gvariant;
+{
   dconf.settings = {
     "org/gnome/desktop/input-sources" = {
-      sources = [ (mkTuple [ "xkb" "en" ]) ];
+      sources = [
+        (mkTuple [
+          "xkb"
+          "en"
+        ])
+      ];
       xkb-options = [ "terminate:ctrl_alt_bksp" ];
     };
 
@@ -76,7 +82,9 @@ with lib.hm.gvariant; {
     };
 
     "org/gnome/settings-daemon/plugins/media-keys" = {
-      custom-keybindings = [ "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/" ];
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+      ];
       mic-mute = [ "AudioMicMute" ];
       next = [ "AudioNext" ];
       play = [ "AudioPlay" ];

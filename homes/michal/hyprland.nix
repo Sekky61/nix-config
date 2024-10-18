@@ -1,6 +1,7 @@
-{ inputs
-, pkgs
-, ...
+{
+  inputs,
+  pkgs,
+  ...
 }:
 let
   hyprland = inputs.hyprland.packages.${pkgs.system}.hyprland;
@@ -177,12 +178,14 @@ in
         workspace_swipe_direction_lock_threshold = 10;
         workspace_swipe_create_new = true;
       };
-      binds = { scroll_event_delay = 0; };
+      binds = {
+        scroll_event_delay = 0;
+      };
       input = {
         sensitivity = 0.2; # -1 to 1
         # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
         kb_layout = "us,cz";
-        kb_options = grp:alt_shift_toggle;
+        kb_options = "grp:alt_shift_toggle";
         numlock_by_default = true;
         repeat_delay = 250;
         repeat_rate = 35;
@@ -194,7 +197,7 @@ in
           scroll_factor = 0.5;
         };
 
-        special_fallthrough = true;   # only in new hyprland versions. but they're hella fucked
+        special_fallthrough = true; # only in new hyprland versions. but they're hella fucked
         follow_mouse = 1;
       };
       decoration = {
@@ -276,7 +279,6 @@ in
         [
           "Super, Space, exec, ags -t 'overview'" # Launcher
           "Super, C, exec, code --password-store=gnome"
-          "Super, T, exec, foot --override shell=fish"
           "Super, Return, exec, alacritty"
           "Super, E, exec, nautilus --new-window"
           "Super+Alt, E, exec, thunar"
@@ -397,10 +399,8 @@ in
         ",XF86AudioMute, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
         "Super+Shift,M, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
         ",Print,exec,grim - | wl-copy"
-        ''
-          Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
-        ''
-          ,XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
+        ''Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
+        '',XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
         "Super+Shift, B, exec, playerctl previous"
         "Super+Shift, P, exec, playerctl play-pause"
         ",XF86AudioPlay, exec, playerctl play-pause"

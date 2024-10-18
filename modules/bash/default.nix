@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   imports = [
     ./starship.nix
     ./scripts.nix
@@ -15,7 +16,7 @@
       la = "eza -a";
       ll = "eza -lah";
       cat = "bat";
-      google-chrome="google-chrome-stable";
+      google-chrome = "google-chrome-stable";
 
       gitlog = "git log --graph --oneline --decorate";
       initenvrc = "echo \"use flake\" >> .envrc && direnv allow";

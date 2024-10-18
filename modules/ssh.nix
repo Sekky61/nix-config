@@ -1,4 +1,5 @@
-{ username, ... }: {
+{ username, ... }:
+{
   # different from home-manager.users
   users.users.${username} = {
     openssh.authorizedKeys.keys = [

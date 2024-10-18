@@ -1,7 +1,8 @@
-{ pkgs
-, inputs
-, lib
-, ...
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
 }:
 let
   gtk-theme = "adw-gtk3-dark";

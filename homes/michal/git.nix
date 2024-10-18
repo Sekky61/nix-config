@@ -25,6 +25,6 @@ in
     };
     ignores = [
       ".direnv"
-      ];
+    ];
   };
 }

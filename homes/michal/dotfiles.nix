@@ -1,9 +1,11 @@
-{ config
-, impurity
-, inputs
-, pkgs
-, ...
-}: {
+{
+  config,
+  impurity,
+  inputs,
+  pkgs,
+  ...
+}:
+{
   xdg.configFile =
     let
       link = impurity.link;
