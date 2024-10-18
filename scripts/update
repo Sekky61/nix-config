@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# First, commands are defined as functions
+# Then, command is selected and run
+
 # Function to display usage information
 usage() {
     echo "Usage: $0 [command]"
@@ -67,29 +70,40 @@ run_cleanup_command() {
 
 export IMPURITY_PATH=$(pwd)
 
-# Main script logic
-case "$1" in
-    "")
-        run_default_command
-        ;;
-    "desktopiso")
-        run_desktopiso_command
-        ;;
-    "update")
-        run_update_command
-        ;;
-    "cleanup")
-        run_cleanup_command
-        ;;
-    "pi-img")
-        run_rpi_command
-        ;;
-    "pi-deploy")
-        run_pi_deploy
-        ;;
-    *)
-        echo "Error: Unknown command '$1'"
-        usage
-        exit 1
-        ;;
-esac
+# check if it matches a command
+declare -A commands=(
+    ["default"]="run_default_command"
+    ["desktopiso"]="run_desktopiso_command"
+    ["update"]="run_update_command"
+    ["cleanup"]="run_cleanup_command"
+    ["pi-img"]="run_rpi_command"
+    ["pi-deploy"]="run_pi_deploy"
+    ["help"]="usage"
+)
+
+# set the key (default) if no argument
+command=${1:-default}
+
+# if no command matches, print error and exit
+command_function=${commands[$command]}
+if [ -z "$command_function" ]; then
+    echo "Error: Unknown command '$command'"
+    usage
+    exit 1
+fi
+
+# If help, print and exit
+if [ "$1" == "help" ]; then
+    usage
+    exit 0
+fi
+
+# Else, ask for sudo
+if [ "$1" != "help" ]; then
+    sudo echo "Running as root"
+fi
+
+# run the command
+echo "Running command '$command': '$command_function'"
+$command_function
+

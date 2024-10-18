@@ -8,8 +8,6 @@ let
 in
 {
   imports = [
-    # Cachix
-    ./cachix.nix
     ## Dotfiles (manual)
     ./dotfiles.nix
     # Stuff
