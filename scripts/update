@@ -15,7 +15,7 @@ usage() {
 # Function to run the default command
 run_default_command() {
     echo "Running default command"
-    sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
+    sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake ".#michal" --impure --log-format internal-json -v |& nom --json
 }
 
 # Function to run the desktop ISO command
