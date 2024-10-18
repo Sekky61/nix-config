@@ -7,6 +7,9 @@
 
   imports = [
     ./obs.nix
+    ./fonts.nix
+    ./terminal-gui.nix
+    ./alacritty.nix
   ];
 
   # packages for daily needs

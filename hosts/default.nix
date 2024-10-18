@@ -24,7 +24,6 @@
       ../modules/packages
       ../modules/gui-packages
       ../modules/ssh.nix
-      ../modules/terminal-gui.nix
       ../modules/browser/chrome.nix
     ];
   };
