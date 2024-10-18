@@ -7,6 +7,7 @@
 
   imports = [
     ./yazi.nix
+    ./anyrun.nix
   ];
 
   # packages for daily needs

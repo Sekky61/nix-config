@@ -14,7 +14,6 @@ in
     ./dotfiles.nix
     # Stuff
     ./ags.nix
-    ./anyrun.nix
     ./dconf.nix
     ./hyprland.nix
     ./mimelist.nix
