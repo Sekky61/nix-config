@@ -5,7 +5,7 @@
 }:
 {
 
-  inputs = [
+  imports = [
     ./yazi.nix
   ];
 

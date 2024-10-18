@@ -1,10 +1,14 @@
 { pkgs, username, ... }:
 {
 
+  environment.systemPackages = with pkgs; [
+    ueberzugpp
+  ];
+
   programs = {
     yazi = {
       enable = true;
-      settings = {
+      settings.yazi = {
         manager = {
           layout = [
             1

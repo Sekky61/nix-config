@@ -258,7 +258,8 @@ in
         focus_on_activate = true;
         animate_manual_resizes = false;
         animate_mouse_windowdragging = false;
-        enable_swallow = true;
+        # Swallowing: replacing graphical window with the spawining terminal
+        enable_swallow = false;
         swallow_regex = "(foot|kitty|allacritty|Alacritty)";
 
         disable_hyprland_logo = true;
@@ -281,6 +282,7 @@ in
           "Super, C, exec, code --password-store=gnome"
           "Super, Return, exec, alacritty"
           "Super, E, exec, nautilus --new-window"
+          "Super+Alt, E, exec, alacritty -e yazi"
           "Super+Alt, E, exec, thunar"
           "Super, W, exec, google-chrome-stable"
           "Super+Shift, W, exec, wps" # todo idk
