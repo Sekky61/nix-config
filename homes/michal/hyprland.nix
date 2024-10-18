@@ -292,7 +292,7 @@ in
           "Super, Period, exec, bemoji"
           "Super, Q, killactive, "
           "Super+Alt, Space, togglefloating, "
-          "Shift+Super+Alt, Q, exec, hyprctl kill"
+          "Shift+Super+Alt, Q, exec, hyprctl kill" # select a window to kill
           "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell"
           "Control+Shift+Alt+Super, Delete, exec, systemctl poweroff"
           # screenshot crop and edit
@@ -307,7 +307,7 @@ in
           "Control+Alt, R, exec, record --fullscreen"
           "Super+Shift+Alt, R, exec, record --fullscreen-sound"
           "Super+Shift, C, exec, hyprpicker -a"
-          "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
+          "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy" # clipboard history
           ''
             Control+Super+Shift,S,exec,grim -g "${SLURP_COMMAND}" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"
           ''
@@ -318,14 +318,15 @@ in
           "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
           "Super, Tab, exec, ags -t 'overview'"
           "Super, Slash, exec, ags -t 'cheatsheet'"
+          # Open side menu
           "Super, B, exec, ags -t 'sideleft'"
           "Super, A, exec, ags -t 'sideleft'"
           "Super, O, exec, ags -t 'sideleft'"
           "Super, N, exec, ags -t 'sideright'"
           "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
-          "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'"
-          "Super, K, exec, ags -t 'osk'"
-          "Control+Alt, Delete, exec, ags -t 'session'"
+          "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
+          "Super, K, exec, ags -t 'osk'" # virtual keyboard
+          "Control+Alt, Delete, exec, ags -t 'session'" # session menu (logout, restart, shutdown)
           "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
           "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
           "Super+Shift, left, movewindow, l"
@@ -358,8 +359,8 @@ in
           "Super+Shift, mouse_up, movetoworkspace, +1"
           "Super+Alt, mouse_down, movetoworkspace, -1"
           "Super+Alt, mouse_up, movetoworkspace, +1"
-          "Super, F, fullscreen, 0"
-          "Super, D, fullscreen, 1"
+          "Super, F, fullscreen, 0" # full screen without topbar
+          "Super, D, fullscreen, 1" # full screen
           "Super_Alt, F, fullscreenstate, -1 2"
           "Super, 1, workspace, 1"
           "Super, 2, workspace, 2"
@@ -393,9 +394,9 @@ in
           "bind = Control+Super, mouse_down, workspace, -1"
         ];
       bindm = [
-        "Super, mouse:272, movewindow"
-        "Super, mouse:273, resizewindow"
-        "Super, Z, movewindow"
+        "Super, mouse:272, movewindow"   # left click to move window
+          "Super, Z, movewindow"
+        "Super, mouse:273, resizewindow" # right click to resize window
       ];
       bindl = [
         ",XF86AudioMute, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
