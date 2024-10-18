@@ -12,6 +12,8 @@ Incomplete list of changes:
 - neovim
 - small utilities like zoxide
 
+Usage: run `./scripts/update` to update the system.
+
 ## Installation
 
 ### Installing the whole system
@@ -21,7 +23,6 @@ Incomplete list of changes:
 git clone https://github.com/Sekky61/nix-config && cd nix-config
 IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
 ```
-Or run `./update.sh`.
 
 ## Development and editing
 
