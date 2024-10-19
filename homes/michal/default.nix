@@ -13,7 +13,6 @@ in
     # Stuff
     ./ags.nix
     ./dconf.nix
-    ./hyprland.nix
     ./mimelist.nix
     ./theme.nix
     ./git.nix

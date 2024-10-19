@@ -39,7 +39,7 @@
     # hyprland
     brightnessctl
     cliphist # clipboard history
-    fuzzel   # app picker
+    fuzzel # app picker
     bemoji # emoji picker
     grim
     hyprpicker
