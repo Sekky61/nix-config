@@ -19,6 +19,7 @@
 
       ../homes # Imports based on username
       ./host # Imports based on hostname
+      ../assets
       ../modules
       ../modules/dev
       ../modules/packages

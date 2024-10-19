@@ -43,7 +43,7 @@ in
 
       background = [
         {
-          path = "~/Pictures/wave.png";
+          path = "~/.config/wallpapers/wave.png";
           blur_passes = 2;
           blur_size = 6;
         }

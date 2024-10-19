@@ -14,6 +14,8 @@ Incomplete list of changes:
 
 Usage: run `./scripts/update` to update the system.
 
+To change wallpaper, run script using `Control+Super+T`.
+
 ## Installation
 
 ### Installing the whole system
