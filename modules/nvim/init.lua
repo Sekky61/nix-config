@@ -746,7 +746,8 @@ local servers = {
   -- pyright = {},
   rust_analyzer = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  cssls = { filetypes = { 'css', 'scss', 'less', 'stylus' } },
+  cssls = { filetypes = { 'scss', 'less', 'stylus', 'css' } },
+  biome = {},
   astro = {},
 
   lua_ls = {
@@ -798,12 +799,9 @@ require('lspconfig').zls.setup {
   }
 }
 
-local biome = require('efmls-configs.formatters.biome')
+local bashate = require('efmls-configs.linters.bashate')
 local languages = {
-  typescript = { biome },
-  javascript = { biome },
-  typescriptreact = { biome },
-  javascriptreact = { biome },
+  bash = { bashate },
 }
 
 local lsp_fmt_group = vim.api.nvim_create_augroup('LspFormattingGroup', {})
@@ -986,7 +984,7 @@ require("toggleterm").setup {
 vim.cmd.colorscheme "catppuccin-frappe"
 
 -- jump to the context
-vim.keymap.set("n", "[c", function()
+vim.keymap.set("n", "[k", function()
   require("treesitter-context").go_to_context(vim.v.count1)
 end, { silent = true, desc = "Jump to previous context" })
 

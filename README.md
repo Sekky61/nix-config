@@ -10,7 +10,7 @@ Incomplete list of changes:
 - bash
 - alacritty
 - neovim
-- small utilities like zoxide
+- small utilities like zoxide, yazi
 
 Usage: run `./scripts/update` to update the system.
 
@@ -40,10 +40,7 @@ Press `Super + /` to open the list of keybindings.
 - To debug, I just kill the ags with `ags -q` and then launch it in a shell: `ags`
 - HTTP requests like Gemini use `libsoup`.
 
-### TODO
-
--
-
 ### Notes 
 
 Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
+
