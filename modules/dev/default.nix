@@ -7,6 +7,7 @@
 
   imports = [
     ./direnv.nix
+    ./debugger.nix
   ];
 
   # packages for development
