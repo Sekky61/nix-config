@@ -97,9 +97,9 @@ require('lazy').setup({
           vim.keymap.set(mode, l, r, opts)
         end
 
-        vim.keymap.set('n', '[c', require('gitsigns').prev_hunk,
+        vim.keymap.set('n', '[h', require('gitsigns').prev_hunk,
           { buffer = bufnr, desc = 'Go to Previous [C]hange' })
-        vim.keymap.set('n', ']c', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next [C]hange' })
+        vim.keymap.set('n', ']h', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next [C]hange' })
         vim.keymap.set('n', '<leader>pc', require('gitsigns').preview_hunk,
           { buffer = bufnr, desc = '[P]review [C]hange' })
         vim.keymap.set('n', '<leader>tB', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle [B]lame' })
@@ -672,9 +672,10 @@ vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { des
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim' },
+  sync_install = false,
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true },
@@ -688,17 +689,27 @@ require('nvim-treesitter.configs').setup {
     },
   },
   textobjects = {
+    -- peek definition with treesitter
+    lsp_interop = {
+      enable = true,
+      border = 'none',
+      floating_preview_opts = {},
+      peek_definition_code = {
+        ["<leader>df"] = "@function.outer",
+        ["<leader>dF"] = "@class.outer",
+      },
+    },
     select = {
       enable = true,
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-        ['vap'] = '@paramet`er.outer',
-        ['vip'] = '@parameter.inner',
-        ['vaf'] = '@function.outer',
-        ['vif'] = '@function.inner',
-        ['vac'] = '@class.outer',
-        ['vic'] = '@class.inner',
+        ['ap'] = '@parameter.outer',
+        ['ip'] = '@parameter.inner',
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner',
       },
     },
     move = {
@@ -707,6 +718,10 @@ require('nvim-treesitter.configs').setup {
       goto_next_start = {
         [']f'] = '@function.outer',
         [']]'] = '@class.outer',
+        ["]o"] = "@loop.*",
+        ["]c"] = "@conditional.outer",
+        ["]b"] = "@block.outer",
+        ["]s"] = "@statement.outer",
       },
       goto_next_end = {
         [']F'] = '@function.outer',
@@ -715,6 +730,10 @@ require('nvim-treesitter.configs').setup {
       goto_previous_start = {
         ['[f'] = '@function.outer',
         ['[['] = '@class.outer',
+        ["[o"] = "@loop.*",
+        ["[c"] = "@conditional.outer",
+        ["[b"] = "@block.outer",
+        ["[s"] = "@statement.outer",
       },
       goto_previous_end = {
         ['[F'] = '@function.outer',
@@ -732,6 +751,25 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+
+-- Make treesitter motions repeatable with ; and ,
+local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+
+-- Repeat movement with ; and ,
+-- ensure ; goes forward and , goes backward regardless of the last direction
+vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+
+-- vim way: ; goes to the direction you were moving.
+-- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+-- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+
+-- Optionally, make builtin f, F, t, T also repeatable with ; and ,
+vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
+vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
+
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
