@@ -174,7 +174,19 @@ require('lazy').setup({
   { 'akinsho/toggleterm.nvim', version = "*", config = true },
 
   {
-    'github/copilot.vim'
+    "zbirenbaum/copilot-cmp",
+    event = "InsertEnter",
+    config = function() require("copilot_cmp").setup() end,
+    dependencies = {
+      "zbirenbaum/copilot.lua",
+      cmd = "Copilot",
+      config = function()
+        require("copilot").setup({
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+        })
+      end,
+    },
   },
   {
     "nvim-tree/nvim-tree.lua",
@@ -208,10 +220,6 @@ require('lazy').setup({
       -- add any options here
     },
     lazy = false,
-  },
-  {
-    -- Ctrl+y and comma (,)
-    'mattn/emmet-vim',
   },
   'kosayoda/nvim-lightbulb',
   'rmagatti/auto-session',
@@ -658,7 +666,7 @@ vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { des
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 
+  ensure_installed = {
     'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim',
     'json', 'yaml', 'toml', 'css', 'tsx', 'csv', 'diff', 'dockerfile', 'bash', 'markdown', 'nix'
   },
@@ -852,6 +860,9 @@ local servers = {
   tsserver = {},
   biome = {},
   astro = {},
+  emmet_ls = {
+    filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
+  },
 
   lua_ls = {
     Lua = {
@@ -953,7 +964,13 @@ cmp.setup {
     end,
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-n>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        cmp.complete()
+      end
+    end,
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-y>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Insert,
@@ -981,6 +998,7 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
+    { name = "copilot" },
   },
 }
 
@@ -1001,7 +1019,7 @@ luasnip.add_snippets("all", {
     t({ "/**", " * Author: Sekky61", " * Date: " }), f(get_date, {}),
     t({ "", " * File: " }), f(function(_, snip) return snip.env.TM_FILENAME end, {}),
     t({ "", " * Description: " }), i(1),
-    t({ "", " */"}),
+    t({ "", " */" }),
   })
 })
 
