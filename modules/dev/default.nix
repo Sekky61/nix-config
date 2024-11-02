@@ -8,6 +8,7 @@
   imports = [
     ./direnv.nix
     ./debugger.nix
+    ./docker.nix
   ];
 
   # packages for development
@@ -34,6 +35,7 @@
     nixos-generators
     insomnia
     wireshark
+    act # github actions locally
 
     # deps
     glib

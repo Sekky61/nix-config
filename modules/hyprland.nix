@@ -40,7 +40,7 @@ in
       enable = true;
       settings = {
         general = {
-          grace = 5;
+          grace = 10;
           hide_cursor = true;
         };
 
@@ -103,7 +103,7 @@ in
             on-resume = "brightnessctl -r"; # monitor backlight restore.
           }
           {
-            timeout = 150; # 2.5min.
+            timeout = 155; # 2.5min.
             on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
             on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
           }
@@ -134,9 +134,9 @@ in
           "WLR_NO_HARDWARE_CURSORS, 1"
         ];
         monitor = [
-          "eDP-1,2880x1800@90.0,0x0,1.5"
-          "HDMI-A-1,1920x1080@165.0,1920x0,1"
-          ",preferred,auto,1"
+          "desc:Samsung Display Corp. 0x4193,2880x1800@90.0,0x0,1.5" # Yoga laptop screen
+          "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444,1920x1080@165.0,1920x0,1" # desk monitor
+          ",preferred,auto,1" # auto
         ];
         "exec-once" = [
           # system tray

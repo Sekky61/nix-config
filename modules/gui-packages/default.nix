@@ -32,6 +32,8 @@
     winetricks
     lutris
 
+    discord
+
     # theming tools
     gradience
     gnome-tweaks

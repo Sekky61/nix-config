@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# log out of hyprland
+hyprctl dispatch exit
+

@@ -171,6 +171,10 @@
       wget
       nixpkgs-fmt
       nixfmt-classic
+
+
+
+      maven
     ];
   };
 
