@@ -305,7 +305,7 @@ require('lazy').setup({
     },
   },
   { "Bilal2453/luvit-meta",    lazy = true }, -- optional `vim.uv` typings
-  {                                          -- optional completion source for require statements and module annotations
+  {                                           -- optional completion source for require statements and module annotations
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
       opts.sources = opts.sources or {}
@@ -457,7 +457,64 @@ require('lazy').setup({
     keys = {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     }
-  }
+  },
+  -- DAP
+  {
+    -- Source: https://github.com/tjdevries/config.nvim/blob/master/lua/custom/plugins/dap.lua
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "leoluz/nvim-dap-go",
+      "rcarriga/nvim-dap-ui",
+      "theHamsta/nvim-dap-virtual-text",
+      "nvim-neotest/nvim-nio",
+      "williamboman/mason.nvim",
+    },
+    config = function()
+      local dap = require "dap"
+      local ui = require "dapui"
+
+      require("dapui").setup()
+      require("dap-go").setup()
+
+      require("nvim-dap-virtual-text").setup {}
+
+      vim.keymap.set("n", "<leader>bb", dap.toggle_breakpoint, { desc = "Toggle [B]reakpoint" })
+      vim.keymap.set("n", "<leader>bp", dap.run_to_cursor, { desc = "Run to [P]osition" })
+
+      -- Eval var under cursor
+      vim.keymap.set("n", "<space>be", function()
+        require("dapui").eval(nil, { enter = true })
+      end, { desc = "[E]val under cursor" })
+
+      vim.keymap.set("n", "<leader>bc", dap.continue, { desc = "[C]ontinue" })
+      vim.keymap.set("n", "<C-L>", dap.step_into, { desc = "[F2] Step into" })
+      vim.keymap.set("n", "<C-J>", dap.step_over, { desc = "[F3] Step over" })
+      vim.keymap.set("n", "<C-H>", dap.step_out, { desc = "[F4] Step out" })
+      vim.keymap.set("n", "<C-K>", dap.step_back, { desc = "[F5] Step back" })
+      vim.keymap.set("n", "<leader>br", dap.restart, { desc = "[R]estart" })
+      vim.keymap.set("n", "<leader>bt", dap.terminate, { desc = "[T]erminate" })
+      vim.keymap.set("n", "<leader>bl", dap.list_breakpoints, { desc = "[L]ist breakpoints" })
+      vim.keymap.set("n", "<leader>bg", dap.repl.open, { desc = "[G]et REPL" })
+      vim.keymap.set("n", "<leader>bn", function()
+        dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+      end, { desc = "[N]ew breakpoint with condition" })
+
+      dap.listeners.before.attach.dapui_config = function()
+        ui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        ui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        ui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        ui.close()
+      end
+    end,
+  },
+  "jay-babu/mason-nvim-dap.nvim",
+  "williamboman/mason.nvim",
 
 }, {})
 
@@ -732,21 +789,32 @@ function MyFormat()
   }
 end
 
+-- DAP
+
+require("mason").setup()
+require("mason-nvim-dap").setup({
+  -- launguages, not adapter names
+  -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
+  ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg"},
+  handlers = {}, -- The defaults
+})
+
 -- Enable the following language servers
 -- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local servers = {
 
   clangd = {},
   pyright = {},
-  tailwindcss = {},
-  jsonls = {},
-  tsserver = {},
-  custom_elements_ls = {},
-  -- gopls = {},
-  -- pyright = {},
   rust_analyzer = {},
+  jsonls = {},
+  nil_ls = {}, -- nix
+  gopls = {},
+
   html = { filetypes = { 'html', 'twig', 'hbs' } },
+  custom_elements_ls = {},
   cssls = { filetypes = { 'scss', 'less', 'stylus', 'css' } },
+  tailwindcss = {},
+  tsserver = {},
   biome = {},
   astro = {},
 
@@ -756,8 +824,7 @@ local servers = {
       telemetry = { enable = false },
     },
   },
-  nil_ls = {}, -- nix
-  gopls = {}
+
 }
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -1019,4 +1086,3 @@ vim.keymap.set('n', 'Q', '<Nop>')
 -- Git
 vim.api.nvim_set_keymap("n", "<leader>gc", ":Git commit -m \"", { noremap = false })
 vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { noremap = false })
-
