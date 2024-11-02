@@ -305,17 +305,6 @@ require('lazy').setup({
     },
   },
   { "Bilal2453/luvit-meta",    lazy = true }, -- optional `vim.uv` typings
-  {                                           -- optional completion source for require statements and module annotations
-    "hrsh7th/nvim-cmp",
-    opts = function(_, opts)
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, {
-        name = "lazydev",
-        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-      })
-    end,
-  },
-
   {
     'yacineMTB/dingllm.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -487,10 +476,11 @@ require('lazy').setup({
       end, { desc = "[E]val under cursor" })
 
       vim.keymap.set("n", "<leader>bc", dap.continue, { desc = "[C]ontinue" })
-      vim.keymap.set("n", "<C-L>", dap.step_into, { desc = "[F2] Step into" })
-      vim.keymap.set("n", "<C-J>", dap.step_over, { desc = "[F3] Step over" })
-      vim.keymap.set("n", "<C-H>", dap.step_out, { desc = "[F4] Step out" })
-      vim.keymap.set("n", "<C-K>", dap.step_back, { desc = "[F5] Step back" })
+      -- A is ALT
+      vim.keymap.set("n", "<S-l>", dap.step_into, { desc = "[F2] Step into" })
+      vim.keymap.set("n", "<S-j>", dap.step_over, { desc = "[F3] Step over" })
+      vim.keymap.set("n", "<S-h>", dap.step_out, { desc = "[F4] Step out" })
+      vim.keymap.set("n", "<S-k>", dap.step_back, { desc = "[F5] Step back" })
       vim.keymap.set("n", "<leader>br", dap.restart, { desc = "[R]estart" })
       vim.keymap.set("n", "<leader>bt", dap.terminate, { desc = "[T]erminate" })
       vim.keymap.set("n", "<leader>bl", dap.list_breakpoints, { desc = "[L]ist breakpoints" })
@@ -510,6 +500,22 @@ require('lazy').setup({
       end
       dap.listeners.before.event_exited.dapui_config = function()
         ui.close()
+      end
+
+      local js_based_languages = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' }
+      for _, language in ipairs(js_based_languages) do
+        dap.configurations[language] = {
+          -- ...
+          {
+            name = 'Next.js: debug server-side',
+            type = 'node2',
+            request = 'attach',
+            port = 9231,
+            skipFiles = { '<node_internals>/**', 'node_modules/**' },
+            cwd = '${workspaceFolder}',
+          },
+          -- ...
+        }
       end
     end,
   },
@@ -761,7 +767,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
@@ -795,7 +801,8 @@ require("mason").setup()
 require("mason-nvim-dap").setup({
   -- launguages, not adapter names
   -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
-  ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg"},
+  ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg", "node2" },
+  automatic_installation = true,
   handlers = {}, -- The defaults
 })
 
@@ -920,26 +927,21 @@ cmp.setup {
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-s>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
+    ['<C-y>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Insert,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-k>'] = cmp.mapping(function(fallback)
+      if luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       else
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
+    ['<C-j>'] = cmp.mapping(function(fallback)
+      if luasnip.locally_jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
@@ -949,6 +951,8 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'path' },
   },
 }
 
@@ -974,13 +978,6 @@ cmp.setup.cmdline(':', {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-local function SuggestOneCharacter()
-  local suggestion = vim.fn['copilot#Accept']("")
-  local bar = vim.fn['copilot#TextQueuedForInsertion']()
-  return bar:sub(1, 1)
-end
-
-vim.keymap.set('i', '<C-l>', SuggestOneCharacter, { expr = true, remap = false, desc = 'Copilot accept a character.' })
 vim.keymap.set('i', '<C-right>', '<Plug>(copilot-accept-word)', { remap = false, desc = 'Copilot accept a word.' })
 
 -- set the color of the copilot suggestion
