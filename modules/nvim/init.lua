@@ -956,6 +956,27 @@ cmp.setup {
   },
 }
 
+-- custom snippets
+local s = luasnip.snippet
+local i = luasnip.insert_node
+local t = luasnip.text_node
+local f = luasnip.function_node
+local fmt = require("luasnip.extras.fmt").fmt
+
+function get_date()
+  return os.date("%Y-%m-%d")
+end
+
+-- Signature snippet
+luasnip.add_snippets("all", {
+  s("sign", {
+    t({ "/**", " * Author: Sekky61", " * Date: " }), f(get_date, {}),
+    t({ "", " * File: " }), f(function(_, snip) return snip.env.TM_FILENAME end, {}),
+    t({ "", " * Description: " }), i(1),
+    t({ "", " */"}),
+  })
+})
+
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
