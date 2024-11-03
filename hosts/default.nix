@@ -45,12 +45,15 @@
         # Impurity
         imports = [ inputs.impurity.nixosModules.impurity ];
         impurity.configRoot = self;
-        impurity.enable = true;
+        # impurity.enable = true;
       }
       raspberry-pi-nix.nixosModules.raspberry-pi
       ./rpi.nix
       ../modules
       ../homes # Imports based on username
+
+      # Services
+      ../services/homepage.nix
     ];
   };
 

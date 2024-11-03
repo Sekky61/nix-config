@@ -7,7 +7,7 @@
   environment.systemPackages = with pkgs; [
     dive # for exploring docker images layers
   ];
-  
+
   # virtualisation
   virtualisation = {
     docker.enable = true;

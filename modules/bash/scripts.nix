@@ -1,6 +1,7 @@
-{ username, impurity, ... }:
+{ username, impurity, ... }@args:
 let
-  link = impurity.link;
+  # TODO: extract into utils
+  link = if builtins.hasAttr "impurity" args then args.impurity.link else x: x;
 in
 {
 

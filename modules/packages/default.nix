@@ -27,6 +27,7 @@
     libguestfs # mount virtual fs
     parted # partitions
     caligula # TUI for disk imaging
+    dig
 
     # troubleshooting
     hwinfo
