@@ -489,6 +489,7 @@ require('lazy').setup({
       vim.keymap.set("n", "<leader>bt", dap.terminate, { desc = "[T]erminate" })
       vim.keymap.set("n", "<leader>bl", dap.list_breakpoints, { desc = "[L]ist breakpoints" })
       vim.keymap.set("n", "<leader>bg", dap.repl.open, { desc = "[G]et REPL" })
+      vim.keymap.set("n", "<leader>bp", dap.pause, { desc = "[P]ause thread" })
       vim.keymap.set("n", "<leader>bn", function()
         dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
       end, { desc = "[N]ew breakpoint with condition" })
@@ -521,6 +522,36 @@ require('lazy').setup({
           -- ...
         }
       end
+
+      local make_lldb_config = function (language)
+        return {
+          {
+            type = 'codelldb',
+            name = 'Launch ' .. language .. ' program by path',
+            request = 'launch',
+            program = '${command:pickFile}',
+            cwd = '${workspaceFolder}',
+            stopOnEntry = false,
+            args = {},
+            runInTerminal = false,
+          },
+
+          {
+            type = 'codelldb',
+            name = 'Attach to ' .. language .. ' program',
+            request = 'attach',
+            pid = "${command:pickProcess}",
+            port = 7000,
+          }
+
+        }
+      end
+      local lldb_langs = { 'c', 'cpp', 'rust', 'zig', 'go' }
+
+      for _, lang in ipairs(lldb_langs) do
+        dap.configurations[lang] = make_lldb_config(lang)
+      end
+
     end,
   },
   "jay-babu/mason-nvim-dap.nvim",
@@ -646,6 +677,8 @@ require('telescope').setup {
     }
   }
 }
+local processes_picker = require('telescope-processes')
+vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
