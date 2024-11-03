@@ -71,6 +71,15 @@ require('lazy').setup({
 
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
+
+      -- Adds words from buffer to completion list
+      'hrsh7th/cmp-buffer',
+
+      -- cmdline
+      'hrsh7th/cmp-cmdline',
+
+      -- Spelling
+      'f3fora/cmp-spell'
     },
   },
 
@@ -568,6 +577,11 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- spell checking requires
+-- z= or <leader>s= for suggestions
+vim.opt.spell = true
+vim.opt.spelllang = { "en_us" }
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -658,6 +672,9 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').git_status, { desc = '[S]earch [S]tatus' })
+vim.keymap.set('n', '<leader>sc', require('telescope.builtin').commands, { desc = '[S]earch [C]ommands' })
+vim.keymap.set('n', '<leader>s=', require('telescope.builtin').spell_suggest, { desc = '[S]earch Spelling' })
+vim.keymap.set('n', '<leader>sm', require('telescope.builtin').builtin, { desc = '[S]earch [M]enu' })
 
 -- see treesitter symbols
 vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { desc = '[S]earch [V]ariables (Symbols)' })
@@ -795,7 +812,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+  vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = '[G]oto [D]efinition' }) -- jumps directly if only one is found
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
@@ -840,6 +857,13 @@ require("mason-nvim-dap").setup({
   ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg", "node2" },
   automatic_installation = true,
   handlers = {}, -- The defaults
+  adapters = {
+    codelldb = {
+      type = 'server',
+      host = '127.0.0.1',
+      port = 13000 -- 💀 Use the port printed out or specified with `--port`
+    },
+  },
 })
 
 -- Enable the following language servers
@@ -999,6 +1023,16 @@ cmp.setup {
     { name = 'buffer' },
     { name = 'path' },
     { name = "copilot" },
+    {
+      name = "spell",
+      option = {
+        keep_all_entries = false,
+        enable_in_context = function()
+          return require('cmp.config.context').in_treesitter_capture('spell')
+        end,
+        preselect_correct_word = true,
+      },
+    },
   },
 }
 
@@ -1027,7 +1061,8 @@ luasnip.add_snippets("all", {
 cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
-    { name = 'buffer' }
+    { name = 'buffer' },
+    { name = 'path' }
   }
 })
 
