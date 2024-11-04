@@ -4,6 +4,15 @@
   services.homepage-dashboard = {
     enable = true;
     listenPort = 1270; # Almost home
+
+    environmentFile = config.sops.templates.homepage-env-file.path;
+
+    # Client-side
+    customJS = ''
+      // Log the entire environment (debug)
+      console.log(process.env);
+    '';
+
     settings = {
       title = "The Homepage";
       startUrl = "http://nixpi:1270";
@@ -118,6 +127,8 @@
               href = "https://login.tailscale.com/admin/machines";
               widget = {
                 type = "tailscale";
+                deviceid = "{{HOMEPAGE_VAR_NIXPI_TAILSCALE_ID}}";
+                key = "{{HOMEPAGE_VAR_NIXPI_TAILSCALE_API_KEY}}";
               };
             };
           }

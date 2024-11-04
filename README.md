@@ -46,7 +46,10 @@ Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
 
 ## Secrets
 
-See `sops-nix` for guidance.
-Create a `.sops.yaml` file etc.
+Secrets are managed using [sops-nix](https://github.com/Mic92/sops-nix).
 
-After adding a host, run `sops updatekeys secrets/secrets.yaml`
+Setup and common tasks:
+- Create a `.sops.yaml` file etc.
+- After adding a host, run `sops updatekeys secrets/secrets.yaml`
+- Add a pubkey: `sops rotate --in-place --add-age age1xxxxxxx modules/sops/secrets.yaml`
+
