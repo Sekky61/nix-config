@@ -9,7 +9,6 @@
       startUrl = "http://nixpi:1270";
 
       background = {
-        image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/640px-Moraine_Lake_17092005.jpg";
         blur = "sm";
         brightness = 50;
         opacity = 50;
@@ -46,7 +45,13 @@
     };
 
     widgets = [
-      {logo = {};}
+      {
+        resources = {
+          cpu = true;
+          memory = true;
+          disk = "/";
+        };
+      }
       {
         search = {
           provider = "google";
@@ -104,8 +109,25 @@
             };
           }
         ];
+      }
+      {
         "Nixpi" = [
           {
+            "Tailscale" = {
+              description = "Tailscale Network";
+              href = "https://login.tailscale.com/admin/machines";
+              widget = {
+                type = "tailscale";
+              };
+            };
+          }
+          {
+            "Resources" = {
+              widget = {
+                type = "resources";
+                cpu = true;
+              };
+            };
           }
         ];
       }

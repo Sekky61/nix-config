@@ -4,3 +4,5 @@ nixos.qcow2
 _music*.scss
 .direnv
 
+.sops.yaml
+

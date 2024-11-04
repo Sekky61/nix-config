@@ -44,3 +44,9 @@ Press `Super + /` to open the list of keybindings.
 
 Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
 
+## Secrets
+
+See `sops-nix` for guidance.
+Create a `.sops.yaml` file etc.
+
+After adding a host, run `sops updatekeys secrets/secrets.yaml`

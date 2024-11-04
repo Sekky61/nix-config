@@ -1,6 +1,7 @@
 { self
 , nixpkgs
 , raspberry-pi-nix
+, sops-nix
 , ...
 } @ inputs: {
   michal = nixpkgs.lib.nixosSystem {
@@ -16,9 +17,10 @@
         impurity.configRoot = self;
         impurity.enable = true;
       }
+      sops-nix.nixosModules.sops # Couldnt solve it in sops module
 
       ../homes # Imports based on username
-      ./host # Imports based on hostname
+      ./host   # Imports based on hostname
       ../assets
       ../modules
       ../modules/dev
@@ -47,7 +49,9 @@
         impurity.configRoot = self;
         # impurity.enable = true;
       }
+      sops-nix.nixosModules.sops
       raspberry-pi-nix.nixosModules.raspberry-pi
+
       ./rpi.nix
       ../modules
       ../homes # Imports based on username
