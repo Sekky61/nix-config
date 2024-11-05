@@ -58,6 +58,7 @@
 
       # Services
       ../services/homepage.nix
+      ../services/adguardhome.nix
     ];
   };
 
