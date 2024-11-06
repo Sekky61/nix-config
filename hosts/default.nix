@@ -57,6 +57,7 @@
       ../homes # Imports based on username
 
       # Services
+      ../services/service_proxy.nix
       ../services/homepage.nix
       ../services/adguardhome.nix
     ];

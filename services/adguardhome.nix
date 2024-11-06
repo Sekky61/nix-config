@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, hostname, ... }:
 with lib;
 let
   # Source: https://github.com/idrisr/nix-config/blob/main/nixos-modules/ad-blocker.nix
@@ -43,13 +43,23 @@ in {
       adguardhome = {
         enable = true;
         openFirewall = true;
+        mutableSettings = true; # settings do not work without it!
         port = cfg.port;
         settings = {
           # bind_port = adguardPort;
-          schema_version = 20;
           http = {
             address = "localhost:${builtins.toString cfg.port}";
           };
+          filtering.rewrites = [
+            {
+              domain = hostname;
+              answer = "100.64.16.110";
+            }
+            {
+              domain = "*.${hostname}";
+              answer = "100.64.16.110";
+            }
+          ];
 
           users = [
             # broken
