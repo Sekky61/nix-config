@@ -1,22 +1,28 @@
-{ config, pkgs, hostname, ... }:
+{ config, pkgs, hostname, runningServices, ... }:
+with builtins;
+let
+  servicesList = map (name: 
+      let
+        cfg = runningServices.${name};
+        subdomain = if (cfg ? subdomain) then cfg.subdomain else name;
+      in 
+      {
+        name = "${subdomain}.${hostname}";
+        value = {
+          listen = [{ addr = "0.0.0.0"; port = 80; }];
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.port}";  # Port where Homepage is running
+          };
+        };
+      }
+  ) (attrNames runningServices);
+
+  virtualHosts = listToAttrs servicesList;
+in
 {
   services.nginx = {
     enable = true;
-    virtualHosts = {
-      "homepage.${hostname}" = {
-        listen = [{ addr = "0.0.0.0"; port = 80; }];
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:1270";  # Port where Homepage is running
-        };
-      };
-
-      "adguard.${hostname}" = {
-        listen = [{ addr = "0.0.0.0"; port = 80; }];
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:1280";  # Port where Pi-hole is running
-        };
-      };
-    };
+    inherit virtualHosts;
   };
 
   # open 80 port

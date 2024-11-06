@@ -39,6 +39,16 @@
     specialArgs = {
       username = "pi";
       hostname = "nixpi";
+      runningServices = {
+        homepage = {
+          port = 1270;
+          subdomain = "homepage";
+        };
+        adguardhome = {
+          port = 1280;
+          subdomain = "adguard";
+        };
+      };
       inherit inputs;
     };
     system = "aarch64-linux";

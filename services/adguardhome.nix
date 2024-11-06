@@ -1,4 +1,4 @@
-{ config, lib, hostname, ... }:
+{ config, lib, hostname, runningServices, ... }:
 with lib;
 let
   # Source: https://github.com/idrisr/nix-config/blob/main/nixos-modules/ad-blocker.nix
@@ -7,12 +7,14 @@ let
 
   # The deployed server needs to have `tailscale set --accept-dns=false`
   cfg = config.adguardhome;
+  serviceCfg = runningServices.adguardhome;
+  enable = serviceCfg != null;
 in {
 
   options.adguardhome = {
     port = mkOption {
       type = types.int;
-      default = 1280;
+      default = serviceCfg.port;
       description = ''
         The port to run AdGuard Home
       '';
@@ -31,7 +33,6 @@ in {
   };
 
   config = {
-
     networking = {
       firewall = {
         allowedTCPPorts = [ cfg.port ];
@@ -41,7 +42,7 @@ in {
 
     services = {
       adguardhome = {
-        enable = true;
+        inherit enable;
         openFirewall = true;
         mutableSettings = true; # settings do not work without it!
         port = cfg.port;

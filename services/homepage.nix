@@ -1,9 +1,12 @@
-{ config, pkgs, domain, ... }:
-{
+{ config, pkgs, hostname, runningServices, ... }:
+let
+  serviceCfg = runningServices.homepage;
+  enable = serviceCfg != null;
+in {
   # Source: https://github.com/V3ntus/nixos/blob/8cd44c2ea0d05e21701c8150abde892f4e76c0a8/hosts/homelab/net/homepage.nix
   services.homepage-dashboard = {
-    enable = true;
-    listenPort = 1270; # Almost home
+    inherit enable;
+    listenPort = serviceCfg.port;
 
     environmentFile = config.sops.templates.homepage-env-file.path;
 
@@ -13,9 +16,10 @@
     #   console.log(process.env);
     # '';
 
+
     settings = {
       title = "The Homepage";
-      startUrl = "http://nixpi:1270";
+      startUrl = "http://${hostname}:${toString serviceCfg.port}";
 
       background = {
         blur = "sm";
