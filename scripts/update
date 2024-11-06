@@ -12,6 +12,7 @@ usage() {
     echo "  update        : Update software versions and rewrite lock file"
     echo "  pi-img        : Build rpi image"
     echo "  pi-deploy     : Deploy to pi"
+    echo "  pi-gc         : Run nix-collect-garbage on pi"
     echo "  cleanup       : Remove old generations and garbage"
 }
 
@@ -53,6 +54,10 @@ run_pi_deploy() {
     echo "Deployed to pi"
 }
 
+nix-gc-on-nixpi() {
+  ssh nixpi 'nix-collect-garbage --delete-old'
+}
+
 # Function to run the update command
 run_update_command() {
     echo "Updating software versions and rewriting lock file"
@@ -78,6 +83,7 @@ declare -A commands=(
     ["cleanup"]="run_cleanup_command"
     ["pi-img"]="run_rpi_command"
     ["pi-deploy"]="run_pi_deploy"
+    ["pi-gc"]="nix-gc-on-nixpi"
     ["help"]="usage"
 )
 
