@@ -132,6 +132,20 @@
               };
             };
           }
+          {
+            "AdGuardHome" = {
+              description = "Adguard Home DNS filter";
+              href = "http://nixpi:${builtins.toString config.adguardhome.port}";
+
+              widget = {
+                type = "adguard";
+                url = "http://nixpi:${builtins.toString config.adguardhome.port}";
+                username = config.adguardhome.admin.name;
+                password = config.adguardhome.admin.password;
+                latency = true;
+              };
+            };
+          }
         ];
       }
     ];
