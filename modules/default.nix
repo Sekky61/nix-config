@@ -4,6 +4,7 @@
     ./terminal.nix
     ./tailscale.nix
     ./cachix.nix
+    ./docker.nix
     ./sops
   ];
 

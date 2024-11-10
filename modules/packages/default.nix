@@ -28,6 +28,7 @@
     parted # partitions
     caligula # TUI for disk imaging
     dig
+    ncdu # disk usage
 
     # troubleshooting
     hwinfo
