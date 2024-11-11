@@ -909,6 +909,7 @@ local servers = {
   jsonls = {},
   nil_ls = {}, -- nix
   gopls = {},
+  csharp_ls = {},
 
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   custom_elements_ls = {},

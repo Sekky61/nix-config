@@ -29,6 +29,7 @@
       ../modules/hyprland.nix
       ../modules/ssh.nix
       ../modules/browser/chrome.nix
+      ../modules/unity.nix
     ];
   };
 
