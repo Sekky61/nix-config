@@ -18,6 +18,38 @@ let
   '';
 in
 {
+  environment.systemPackages = with pkgs; [
+    launcher
+    nwg-displays # gui for monitors, wayland
+    hyprlock # lock screen
+    hypridle # auto lock
+    hyprshot
+
+    fuzzel # app picker
+    bemoji # emoji picker
+    grim
+    slurp
+    hyprpicker # color picker
+
+    # hyprland
+    brightnessctl
+    cliphist # clipboard history
+    tesseract # OCR
+    imagemagick
+    pavucontrol
+    playerctl
+    swappy
+    swww
+    wayshot
+    wlsunset
+    wl-clipboard
+    wf-recorder
+    iio-sensor-proxy # pc sensors
+    libinput # wayland input settings
+    libinput-gestures
+    xwayland # apps that do not work with wayland like spotify rn
+
+  ];
 
   home-manager.users.${username} = _: {
     xdg.desktopEntries."org.gnome.Settings" = {
@@ -28,13 +60,6 @@ in
       categories = [ "X-Preferences" ];
       terminal = false;
     };
-
-    home.packages = with pkgs; [
-      launcher
-      nwg-displays # gui for monitors, wayland
-      hyprlock # lock screen
-      hypridle # auto lock
-    ];
 
     programs.hyprlock = {
       enable = true;
@@ -278,58 +303,66 @@ in
         };
         bind =
           let
-            SLURP_COMMAND = "$(slurp -d -c eedcf5BB -b 4f425644 -s 00000000)";
+            ss_flags = {
+              monitor = "-m output";
+              region = "-m region";
+              window = "-m window";
+              clipboard = "--clipboard-only"; # default: both storage and clipboard
+              freeze = "--freeze";
+              stdout = "--raw";
+            };
+            screen = flagArr: toString (["hyprshot"] ++ flagArr);
+            ss_region_stdout = screen (with ss_flags; [region stdout]);
+            ss_region_clipboard = screen (with ss_flags; [region clipboard]);
           in
           [
+            # Launch
             "Super, Space, exec, ags -t 'overview'" # Launcher
-            "Super, C, exec, code --password-store=gnome"
             "Super, Return, exec, alacritty"
+            "Super, W, exec, google-chrome-stable"
+            "Super, C, exec, code --password-store=gnome"
             "Super, E, exec, nautilus --new-window"
             "Super+Alt, E, exec, alacritty -e yazi"
-            "Super+Alt, E, exec, thunar"
-            "Super, W, exec, google-chrome-stable"
-            "Super+Shift, W, exec, wps" # todo idk
-            ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center''
-            "Control+Super, V, exec, pavucontrol"
-            "Control+Shift, Escape, exec, gnome-system-monitor"
-            "Super, Period, exec, bemoji"
+            # System
             "Super, Q, killactive, "
-            "Super+Alt, Space, togglefloating, "
             "Shift+Super+Alt, Q, exec, hyprctl kill" # select a window to kill
+            "Control+Alt, Delete, exec, ags -t 'session'" # session menu (logout, restart, shutdown)
             "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell"
             "Control+Shift+Alt+Super, Delete, exec, systemctl poweroff"
-            # screenshot crop and edit
-            ''
-              Super+Shift+Alt, S, exec, grim -g "${SLURP_COMMAND}" - | swappy -f -
-            ''
-            # screenshot crop and copy
-            ''
-              Super+Shift, S, exec, grim -g "${SLURP_COMMAND}" - | wl-copy
-            '' # todo closes window
+            # Open
+            ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center'' # Settings
+            "Control+Super, V, exec, pavucontrol" # sound mixer
+            "Control+Shift, Escape, exec, gnome-system-monitor" # system resources
+            "Super, Period, exec, bemoji" # emoji
+            "Super+Alt, Space, togglefloating, "
+            "Super, K, exec, ags -t 'osk'" # virtual keyboard
+            # screenshot
+            ",Print,exec, ${ss_region_clipboard}" # May not work
+            "Super, S, exec, ${ss_region_clipboard}"
+            "Super+Alt, S, exec, ${ss_region_stdout} | swappy -f -"
+            "Super+Shift, S, exec, ${ss_region_stdout} | tesseract stdin stdout | wl-copy"
+            # Record
             "Super+Alt, R, exec, record"
             "Control+Alt, R, exec, record --fullscreen"
             "Super+Shift+Alt, R, exec, record --fullscreen-sound"
-            "Super+Shift, C, exec, hyprpicker -a"
+            "Super+Shift, C, exec, hyprpicker -a" # color picker
             "Super, V, exec, pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy" # clipboard history
-            ''
-              Control+Super+Shift,S,exec,grim -g "${SLURP_COMMAND}" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png"
-            ''
+            # Lock
             "Super, L, exec, hyprlock"
             "Super+Shift, L, exec, hyprlock"
             "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
             "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
-            "Control+Super, R, exec, killall ags ydotool; ags -b hypr"
-            "Super, Tab, exec, ags -t 'overview'"
+            "Control+Super, R, exec, killall ags ydotool; ags -b hypr" # reset ags
+            "Super, Tab, exec, ags -t 'overview'" # todo broken
             "Super, Slash, exec, ags -t 'cheatsheet'"
             # Open side menu
             "Super, B, exec, ags -t 'sideleft'"
             "Super, A, exec, ags -t 'sideleft'"
             "Super, O, exec, ags -t 'sideleft'"
             "Super, N, exec, ags -t 'sideright'"
+            # Rest
             "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
             "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
-            "Super, K, exec, ags -t 'osk'" # virtual keyboard
-            "Control+Alt, Delete, exec, ags -t 'session'" # session menu (logout, restart, shutdown)
             "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
             "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
             "Super+Shift, left, movewindow, l"
@@ -375,8 +408,8 @@ in
             "Super, 8, workspace, 8"
             "Super, 9, workspace, 9"
             "Super, 0, workspace, 10"
-            "Super, S, togglespecialworkspace,"
-            "Control+Super, S, togglespecialworkspace,"
+            # "Super, S, togglespecialworkspace,"
+            # "Control+Super, S, togglespecialworkspace,"
             "Alt, Tab, cyclenext"
             "Alt, Tab, bringactivetotop,"
             "Super+Shift, 1, movetoworkspacesilent, 1"
@@ -390,7 +423,7 @@ in
             "Super+Shift, 9, movetoworkspacesilent, 9"
             "Super+Shift, 0, movetoworkspacesilent, 10"
             "Control+Shift+Super, Up, movetoworkspacesilent, special"
-            "Super+Shift, S, movetoworkspacesilent, special"
+            # "Super+Shift, S, movetoworkspacesilent, special"
             "Super, mouse_up, workspace, +1"
             "Super, mouse_down, workspace, -1"
             "Control+Super, mouse_up, workspace, +1"
@@ -404,7 +437,6 @@ in
         bindl = [
           ",XF86AudioMute, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
           "Super+Shift,M, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
-          ",Print,exec,grim - | wl-copy"
           ''Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
           '',XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
           "Super+Shift, B, exec, playerctl previous"

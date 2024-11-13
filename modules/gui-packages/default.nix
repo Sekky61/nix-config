@@ -38,33 +38,11 @@
     gradience
     gnome-tweaks
 
-    # hyprland
-    brightnessctl
-    cliphist # clipboard history
-    fuzzel # app picker
-    bemoji # emoji picker
-    grim
-    hyprpicker
-    tesseract
-    imagemagick
-    pavucontrol
-    playerctl
-    swappy
-    slurp
-    swww
-    wayshot
-    wlsunset
-    wl-clipboard
-    wf-recorder
-    iio-sensor-proxy # pc sensors
-    libinput # wayland input settings
-    libinput-gestures
-    xwayland # apps that do not work with wayland like spotify rn
-
     # tools
     blender-hip
 
     # troubleshooting
+    # keywords: debug keys print
     showmethekey # show pressed keys
     xorg.xev
 

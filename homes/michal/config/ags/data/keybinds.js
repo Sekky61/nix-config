@@ -75,8 +75,9 @@ export const keybindList = [[
         "name": "Utilities",
         "binds": [
             // { "keys": ["PrtSc"], "action": "Screenshot  >>  clipboard" },
-            { "keys": ["", "Shift", "Alt", "+", "S"], "action": "Screen snip  >>  edit" },
-            { "keys": ["", "Shift", "Ctrl", "+", "S"], "action": "Image to text  >>  clipboard" },
+            { "keys": ["", "+", "S"], "action": "Screen region >> clipboard" },
+            { "keys": ["", "Alt", "+", "S"], "action": "Screen region >> edit" },
+            { "keys": ["", "Shift", "+", "S"], "action": "OCR" },
             { "keys": ["", "Shift", "+", "C"], "action": "Color picker" },
             { "keys": ["", "Alt", "+", "R"], "action": "Record region" },
             { "keys": ["Ctrl", "Alt", "+", "R"], "action": "Record region with sound" },
@@ -126,7 +127,6 @@ export const keybindList = [[
         "name": "Misc",
         "binds": [
             { "keys": ["", "Ctrl", "+", "V"], "action": "Sound io controls" },
-            { "keys": ["", "+", "."], "action": "Emoji picker  >>  clipboard" },
             { "keys": ["", "Ctrl", "+", "R"], "action": "Reload GUI" },
         ],
         "appeartick": 3
