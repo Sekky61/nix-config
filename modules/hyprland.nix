@@ -156,6 +156,8 @@ in
           "QT_QPA_PLATFORM, wayland"
           "QT_QPA_PLATFORMTHEME, qt5ct"
           "QT_STYLE_OVERRIDE,kvantum"
+          "GDK_SCALE, 2"
+          "XCURSOR_SIZE, 32"
           "WLR_NO_HARDWARE_CURSORS, 1"
         ];
         monitor = [
