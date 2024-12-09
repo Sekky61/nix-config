@@ -28,6 +28,8 @@
     cmake
     alejandra # nix formatter
 
+    python311Packages.pip
+
     # tools
     git
     ffmpeg
@@ -36,8 +38,14 @@
     insomnia
     wireshark
     act # github actions locally
+    mkcert
 
     # deps
     glib
+  ];
+
+  # localhost https dev
+  security.pki.certificateFiles = [
+    "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
   ];
 }
