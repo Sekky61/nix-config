@@ -26,11 +26,14 @@
     vlc
     spotify
     rnote # drawing app for stylus
+    gromit-mpx # Draw on screen
 
     # games
     wineWowPackages.waylandFull
     winetricks
     lutris
+    parsec-bin
+    moonlight-qt
 
     discord
 
