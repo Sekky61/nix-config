@@ -182,6 +182,14 @@
   zramSwap.enable = true;
   zramSwap.memoryPercent = 100;
 
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.gutenprint ];
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
   # logind
   services.logind.extraConfig = ''
     HandlePowerKey=ignore
