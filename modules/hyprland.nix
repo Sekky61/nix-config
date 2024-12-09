@@ -362,6 +362,11 @@ in
             "Super, A, exec, ags -t 'sideleft'"
             "Super, O, exec, ags -t 'sideleft'"
             "Super, N, exec, ags -t 'sideright'"
+            # gromit-mpx
+            ", F7, togglespecialworkspace, gromit"
+            "SHIFT , F7, exec, gromit-mpx --clear"
+            ", F6, exec, gromit-mpx --undo"
+            "SHIFT , F6, exec, gromit-mpx --redo"
             # Rest
             "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
             "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
@@ -483,6 +488,14 @@ in
           "float,title:^(Open Folder)(.*)$"
           "float,title:^(Save As)(.*)$"
           "float,title:^(Library)(.*)$ "
+          # Gromit-MPX
+          "noblur, ^(Gromit-mpx)$"
+          "opacity 1 override, 1 override, ^(Gromit-mpx)$"
+          "noshadow, ^(Gromit-mpx)$"
+          "size 100% 100%, ^(Gromit-mpx)$"
+        ];
+        workspace = [
+          "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
         ];
         windowrulev2 = [ "tile,class:(wpsoffice)" ];
         layerrule = [
