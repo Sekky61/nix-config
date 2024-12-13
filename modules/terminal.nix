@@ -23,6 +23,7 @@
     ripgrep
     unzip
     zoxide
+    atuin # shell history
     bat
     eza
     fd

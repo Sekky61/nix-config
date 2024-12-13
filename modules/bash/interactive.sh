@@ -28,6 +28,12 @@ function y() {
 }
 
 eval "$(zoxide init bash)"
+eval "$(atuin init bash)"
+
+ble-face auto_complete='fg=242,bg=235'
+ble-face auto_complete='fg=white,bg=69'
+ble-face auto_complete='fg=240,underline,italic'
+ble-face filename_directory='fg=33'
 
 if command -v direnv &> /dev/null; then
     eval "$(direnv hook bash)"
