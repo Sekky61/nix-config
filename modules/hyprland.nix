@@ -315,11 +315,6 @@ in
         xwayland = {
           force_zero_scaling = true;
         };
-        debug = {
-          # overlay = true;
-          # damage_tracking = 0;
-          # damage_blink = true;
-        };
         bind =
           let
             ss_flags = {

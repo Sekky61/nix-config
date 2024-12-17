@@ -34,6 +34,7 @@
     git
     ffmpeg
     vscode
+    code-cursor
     nixos-generators
     insomnia
     wireshark

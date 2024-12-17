@@ -10,6 +10,7 @@
     ./fonts.nix
     ./terminal-gui.nix
     ./alacritty.nix
+    ./kitty.nix
   ];
 
   # packages for daily needs

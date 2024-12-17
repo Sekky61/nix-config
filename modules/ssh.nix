@@ -1,4 +1,4 @@
-{ username, ... }:
+{ username, pkgs, ... }:
 {
   # different from home-manager.users
   users.users.${username} = {
@@ -28,4 +28,10 @@
       enableSSHSupport = true;
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    gnome-keyring
+  ];
+
+  services.gnome.gnome-keyring.enable = true;
 }

@@ -91,6 +91,8 @@
     # pam.services.swaylock-effects = {};
   };
 
+  services.gnome.gnome-keyring.enable = true;
+
   # dconf
   programs = {
     ssh = {
