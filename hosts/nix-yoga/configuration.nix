@@ -85,13 +85,9 @@
   };
 
   security = {
-    rtkit.enable = true;
+    rtkit.enable = true; # related to sound
     polkit.enable = true;
-    # pam.services.swaylock = { };
-    # pam.services.swaylock-effects = {};
   };
-
-  services.gnome.gnome-keyring.enable = true;
 
   # dconf
   programs = {
@@ -194,7 +190,7 @@
 
   # logind
   services.logind.extraConfig = ''
-    HandlePowerKey=ignore
+    HandlePowerKey=suspend
     HandleLidSwitch=suspend
     HandleLidSwitchExternalPower=ignore
   '';

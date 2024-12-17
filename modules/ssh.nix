@@ -21,13 +21,7 @@
     };
   };
 
-  programs.gnupg = {
-    # ssh passwords
-    agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-  };
+  # Keychain section
 
   environment.systemPackages = with pkgs; [
     gnome-keyring
