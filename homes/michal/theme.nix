@@ -16,18 +16,6 @@ let
     '';
   };
 
-  nerdfonts = pkgs.nerdfonts.override {
-    fonts = [
-      "Ubuntu"
-      "UbuntuMono"
-      "CascadiaCode"
-      "FantasqueSansMono"
-      "JetBrainsMono"
-      "FiraCode"
-      "Mononoki"
-      "SpaceMono"
-    ];
-  };
   google-fonts = pkgs.google-fonts.override {
     fonts = [
       # Sans
@@ -49,7 +37,6 @@ in
       adwaita-qt6
       adw-gtk3
       material-symbols
-      nerdfonts
       noto-fonts
       noto-fonts-cjk-sans
       google-fonts
@@ -77,14 +64,14 @@ in
       gtk.enable = true;
     };
     file = {
-      ".local/share/fonts" = {
-        recursive = true;
-        source = "${nerdfonts}/share/fonts/truetype/NerdFonts";
-      };
-      ".fonts" = {
-        recursive = true;
-        source = "${nerdfonts}/share/fonts/truetype/NerdFonts";
-      };
+      # ".local/share/fonts" = {
+      #   recursive = true;
+      #   source = "${nerdfonts}/share/fonts/truetype/NerdFonts";
+      # };
+      # ".fonts" = {
+      #   recursive = true;
+      #   source = "${nerdfonts}/share/fonts/truetype/NerdFonts";
+      # };
       # ".config/gtk-4.0/gtk.css" = {
       #   text = ''
       #     window.messagedialog .response-area > button,

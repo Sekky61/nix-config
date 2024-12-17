@@ -63,7 +63,7 @@ in
       name = "Settings";
       comment = "Gnome Control Center";
       icon = "org.gnome.Settings";
-      exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome.gnome-control-center}/bin/gnome-control-center";
+      exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome-control-center}/bin/gnome-control-center";
       categories = [ "X-Preferences" ];
       terminal = false;
     };
@@ -251,23 +251,15 @@ in
             noise = 1.0e-2;
             contrast = 1;
           };
-          # new version
-          # shadow = {
-          #   enabled = true;
-          #   color = "rgba(0000001A)";
-          #   offset = "0 2";
-          #   range = 20;
-          #   render_power = 2;
-          #   ignore_window = true;
-          # };
-
           # Shadow
-          drop_shadow = true;
-          shadow_ignore_window = true;
-          shadow_range = 20;
-          shadow_offset = "0 2";
-          shadow_render_power = 2;
-          "col.shadow" = "rgba(0000001A)";
+          shadow = {
+            enabled = true;
+            color = "rgba(0000001A)";
+            offset = "0 2";
+            range = 20;
+            render_power = 2;
+            ignore_window = true;
+          };
 
           # Dim
           dim_inactive = true;

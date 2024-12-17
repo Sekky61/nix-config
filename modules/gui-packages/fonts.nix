@@ -4,17 +4,13 @@
     packages = with pkgs; [
       jetbrains-mono
       monaspace
-      nerdfonts
+      nerd-fonts.fira-code
+      nerd-fonts.monaspace
+      nerd-fonts.droid-sans-mono
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
       roboto
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "DroidSansMono"
-        ];
-      })
     ];
     fontconfig.defaultFonts = {
       serif = [
