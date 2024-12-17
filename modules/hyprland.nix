@@ -22,6 +22,8 @@ let
     gigabyte = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
   };
 
+  myWallpaper = "~/Pictures/wallpapers/wave.png";
+
   rounding = 5; # px
 in
 {
@@ -78,7 +80,7 @@ in
 
         background = [
           {
-            path = "~/.config/wallpapers/wave.png";
+            path = myWallpaper;
             blur_passes = 2;
             blur_size = 6;
           }
@@ -207,8 +209,10 @@ in
         };
         gestures = {
           workspace_swipe = true;
-          workspace_swipe_distance = 700;
           workspace_swipe_fingers = 3;
+          workspace_swipe_distance = 700;
+          workspace_swipe_touch = true;
+
           workspace_swipe_cancel_ratio = 0.2;
           workspace_swipe_min_speed_to_force = 5;
           workspace_swipe_direction_lock = true;
@@ -293,6 +297,10 @@ in
         misc = {
           vfr = 1;
           vrr = 1;
+
+          key_press_enables_dpms = true; # Should wake up screen
+          mouse_move_enables_dpms = true;
+
           # layers_hog_mouse_focus = true;
           focus_on_activate = true;
           animate_manual_resizes = false;
