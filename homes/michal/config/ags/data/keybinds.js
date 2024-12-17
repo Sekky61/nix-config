@@ -18,7 +18,8 @@ export const keybindList = [[
         "name": "Workspaces: management",
         "binds": [
             { "keys": ["", "Ctrl", "+", "#"], "action": "Move window to workspace #" },
-            { "keys": ["", "Alt", "+", "S"], "action": "Move window to special workspace" },
+            { "keys": ["", "+", "M"], "action": "Move window to the next screen" },
+            // { "keys": ["", "Alt", "+", "S"], "action": "Move window to special workspace" },
             { "keys": ["", "Alt", "+", "PageUp"], "action": "Move window to workspace on the left" },
             { "keys": ["", "Alt", "+", "PageDown"], "action": "Move window to workspace on the right" }
         ],

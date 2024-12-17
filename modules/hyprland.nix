@@ -16,6 +16,13 @@ let
 
     exec ${hyprland}/bin/Hyprland
   '';
+
+  myMonitors = {
+    laptop = "Samsung Display Corp. 0x4193";
+    gigabyte = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
+  };
+
+  rounding = 5; # px
 in
 {
   environment.systemPackages = with pkgs; [
@@ -161,8 +168,8 @@ in
           "WLR_NO_HARDWARE_CURSORS, 1"
         ];
         monitor = [
-          "desc:Samsung Display Corp. 0x4193,2880x1800@90.0,0x0,1.5" # Yoga laptop screen
-          "desc:GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444,1920x1080@165.0,1920x0,1" # desk monitor
+          "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5" # Yoga laptop screen
+          "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor
           ",preferred,auto,1" # auto
         ];
         "exec-once" = [
@@ -231,7 +238,7 @@ in
           follow_mouse = 1;
         };
         decoration = {
-          rounding = 8;
+          rounding = rounding;
 
           blur = {
             enabled = true;
@@ -244,6 +251,16 @@ in
             noise = 1.0e-2;
             contrast = 1;
           };
+          # new version
+          # shadow = {
+          #   enabled = true;
+          #   color = "rgba(0000001A)";
+          #   offset = "0 2";
+          #   range = 20;
+          #   render_power = 2;
+          #   ignore_window = true;
+          # };
+
           # Shadow
           drop_shadow = true;
           shadow_ignore_window = true;
@@ -253,7 +270,7 @@ in
           "col.shadow" = "rgba(0000001A)";
 
           # Dim
-          dim_inactive = false;
+          dim_inactive = true;
           dim_strength = 0.1;
           dim_special = 0;
         };
@@ -430,6 +447,7 @@ in
             "Super+Shift, 9, movetoworkspacesilent, 9"
             "Super+Shift, 0, movetoworkspacesilent, 10"
             "Control+Shift+Super, Up, movetoworkspacesilent, special"
+            "Super, m, movecurrentworkspacetomonitor, +1"
             # "Super+Shift, S, movetoworkspacesilent, special"
             "Super, mouse_up, workspace, +1"
             "Super, mouse_down, workspace, -1"
