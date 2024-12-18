@@ -171,7 +171,7 @@ in
         ];
         monitor = [
           "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5" # Yoga laptop screen
-          "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor
+          "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor. scale 1 is big but works best
           ",preferred,auto,1" # auto
         ];
         "exec-once" = [

@@ -59,3 +59,15 @@ Press `Super + /` to open the list of keybindings.
 Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
 To change wallpaper, run script using `Control+Super+T`.
 
+## Features
+
+<!-- Over time add some info about each chosen part of the system -->
+
+### Greetd
+
+Uses `tuigreet`, on login launches Hyprland.
+
+### Hyprland
+
+The window manager. Launches Chrome on startup. Uses Ags bar. See shortcuts with `Super+/`.
+
