@@ -181,22 +181,6 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
   { 'akinsho/toggleterm.nvim', version = "*", config = true },
-
-  {
-    "zbirenbaum/copilot-cmp",
-    event = "InsertEnter",
-    config = function() require("copilot_cmp").setup() end,
-    dependencies = {
-      "zbirenbaum/copilot.lua",
-      cmd = "Copilot",
-      config = function()
-        require("copilot").setup({
-          suggestion = { enabled = false },
-          panel = { enabled = false },
-        })
-      end,
-    },
-  },
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -310,126 +294,60 @@ require('lazy').setup({
   },
   { "Bilal2453/luvit-meta",    lazy = true }, -- optional `vim.uv` typings
   {
-    'yacineMTB/dingllm.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      local system_prompt =
-      'You should replace the code that you are sent, only following the comments. Do not talk at all. Only output valid code. Do not provide any backticks that surround the code. Never ever output backticks like this ```. Any comment that is asking you for something should be removed after you satisfy them. Other comments should left alone. Do not output backticks'
-      local helpful_prompt = 'You are a helpful assistant. What I have sent are my notes so far.'
-      local dingllm = require 'dingllm'
-
-
-      local function handle_open_router_spec_data(data_stream)
-        local success, json = pcall(vim.json.decode, data_stream)
-        if success then
-          if json.choices and json.choices[1] and json.choices[1].text then
-            local content = json.choices[1].text
-            if content then
-              dingllm.write_string_at_cursor(content)
-            end
-          end
-        else
-          print("non json " .. data_stream)
-        end
-      end
-
-      local function custom_make_openai_spec_curl_args(opts, prompt)
-        local url = opts.url
-        local api_key = opts.api_key_name and os.getenv(opts.api_key_name)
-        local data = {
-          prompt = prompt,
-          model = opts.model,
-          temperature = 0.7,
-          stream = true,
-        }
-        local args = { '-N', '-X', 'POST', '-H', 'Content-Type: application/json', '-d', vim.json.encode(data) }
-        if api_key then
-          table.insert(args, '-H')
-          table.insert(args, 'Authorization: Bearer ' .. api_key)
-        end
-        table.insert(args, url)
-        return args
-      end
-
-
-      local function llama_405b_base()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://openrouter.ai/api/v1/chat/completions',
-          model = 'meta-llama/llama-3.1-405b',
-          api_key_name = 'OPEN_ROUTER_API_KEY',
-          max_tokens = '128',
-          replace = false,
-        }, custom_make_openai_spec_curl_args, handle_open_router_spec_data)
-      end
-
-      local function groq_replace()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.groq.com/openai/v1/chat/completions',
-          model = 'llama-3.1-70b-versatile',
-          api_key_name = 'GROQ_API_KEY',
-          system_prompt = system_prompt,
-          replace = true,
-        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
-      end
-
-      local function groq_help()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.groq.com/openai/v1/chat/completions',
-          model = 'llama-3.1-70b-versatile',
-          api_key_name = 'GROQ_API_KEY',
-          system_prompt = helpful_prompt,
-          replace = false,
-        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
-      end
-
-      local function llama405b_replace()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.lambdalabs.com/v1/chat/completions',
-          model = 'hermes-3-llama-3.1-405b-fp8',
-          api_key_name = 'LAMBDA_API_KEY',
-          system_prompt = system_prompt,
-          replace = true,
-        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
-      end
-
-      local function llama405b_help()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.lambdalabs.com/v1/chat/completions',
-          model = 'hermes-3-llama-3.1-405b-fp8',
-          api_key_name = 'LAMBDA_API_KEY',
-          system_prompt = helpful_prompt,
-          replace = false,
-        }, dingllm.make_openai_spec_curl_args, dingllm.handle_openai_spec_data)
-      end
-
-      local function anthropic_help()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.anthropic.com/v1/messages',
-          model = 'claude-3-5-sonnet-20240620',
-          api_key_name = 'ANTHROPIC_API_KEY',
-          system_prompt = helpful_prompt,
-          replace = false,
-        }, dingllm.make_anthropic_spec_curl_args, dingllm.handle_anthropic_spec_data)
-      end
-
-      local function anthropic_replace()
-        dingllm.invoke_llm_and_stream_into_editor({
-          url = 'https://api.anthropic.com/v1/messages',
-          model = 'claude-3-5-sonnet-20240620',
-          api_key_name = 'ANTHROPIC_API_KEY',
-          system_prompt = system_prompt,
-          replace = true,
-        }, dingllm.make_anthropic_spec_curl_args, dingllm.handle_anthropic_spec_data)
-      end
-
-      vim.keymap.set({ 'n', 'v' }, '<leader>lk', groq_replace, { desc = 'llm groq' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>lK', groq_help, { desc = 'llm groq_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>lL', llama405b_help, { desc = 'llm llama405b_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>ll', llama405b_replace, { desc = 'llm llama405b_replace' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>lI', anthropic_help, { desc = 'llm anthropic_help' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>li', anthropic_replace, { desc = 'llm anthropic' })
-      vim.keymap.set({ 'n', 'v' }, '<leader>lo', llama_405b_base, { desc = 'llama base' })
-    end,
+    -- LLM
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
+    version = false, -- set this if you want to always pull the latest change
+    opts = {
+      -- add any opts here
+      provider = "groq",
+      vendors = {
+        groq = {
+          __inherited_from = "openai",
+          api_key_name = "GROQ_API_KEY",
+          endpoint = "https://api.groq.com/openai/v1/",
+          model = "llama-3.3-70b-versatile",
+        },
+      },
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
   },
   {
     "kdheepak/lazygit.nvim",
@@ -1056,7 +974,6 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
-    { name = "copilot" },
     {
       name = "spell",
       option = {
@@ -1113,15 +1030,6 @@ cmp.setup.cmdline(':', {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
-vim.keymap.set('i', '<C-right>', '<Plug>(copilot-accept-word)', { remap = false, desc = 'Copilot accept a word.' })
-
--- set the color of the copilot suggestion
-vim.api.nvim_set_hl(0, 'CopilotSuggestion', {
-  fg = '#A9BA9D',
-  ctermfg = 8,
-  -- force = true -- not in 0.9.5 ??
-})
 
 require("nvim-lightbulb").setup({
   autocmd = { enabled = true }
