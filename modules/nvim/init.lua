@@ -308,8 +308,16 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>ss', tsb.git_status, { desc = '[S]earch [S]tatus' })
         vim.keymap.set('n', '<leader>sc', tsb.commands, { desc = '[S]earch [C]ommands' })
         vim.keymap.set('n', '<leader>s=', tsb.spell_suggest, { desc = '[S]earch Spelling' })
-        vim.keymap.set('n', '<leader>sm', tsb.builtin, { desc = '[S]earch [M]enu' })
         vim.keymap.set('n', '<leader>sk', tsb.keymaps, { desc = '[S]earch [K]eymaps' })
+        vim.keymap.set('n', '<leader>sm', function()
+          tsb.builtin({ include_extensions = true })
+        end, { desc = '[S]earch [M]enu' })
+
+        vim.keymap.set('n', '<leader>sc', function()
+          require('telescope.builtin').find_files({
+            cwd = vim.fn.expand('%:p:h')
+          })
+        end, { desc = '[S]earch from [C]urrent dir' })
 
         -- see treesitter symbols
         vim.keymap.set('n', '<leader>sv', tsb.treesitter, { desc = '[S]earch [V]ariables (Treesitter Symbols)' })
