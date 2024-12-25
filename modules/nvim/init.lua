@@ -315,6 +315,9 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>sv', tsb.treesitter, { desc = '[S]earch [V]ariables (Treesitter Symbols)' })
         vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
 
+        -- undo
+        vim.keymap.set("n", "<leader>su", "<cmd>Telescope undo<cr>", { desc = '[S]earch [U]udo' })
+
     end,
   },
 
