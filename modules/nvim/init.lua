@@ -165,19 +165,157 @@ require('lazy').setup({
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-      -- Only load if `make` is available. Make sure you have the system
-      -- requirements installed.
+      'nvim-telescope/telescope-ui-select.nvim',
+      "debugloop/telescope-undo.nvim",
       {
+        -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+        -- Only load if `make` is available. Make sure you have the system
+        -- requirements installed.
         'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
         build = 'make',
         cond = function()
           return vim.fn.executable 'make' == 1
         end,
       },
     },
+    config = function()
+        local ts = require('telescope')
+        local ts_undo = require('telescope-undo.actions')
+        local processes_picker = require('telescope-processes')
+        
+        local h_pct = 0.90
+        local w_pct = 0.80
+        local w_limit = 75
+        local standard_setup = {
+            borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+            preview = { hide_on_startup = true },
+            layout_strategy = 'vertical',
+            layout_config = {
+                vertical = {
+                    mirror = true,
+                    prompt_position = 'top',
+                    width = function(_, cols, _)
+                        return math.min( math.floor( w_pct * cols ), w_limit )
+                    end,
+                    height = function(_, _, rows)
+                    return math.floor( rows * h_pct )
+                    end,
+                    preview_cutoff = 10,
+                    preview_height = 0.4,
+                },
+            },
+        }
+        local fullscreen_setup = {
+            borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+            preview = { hide_on_startup = false },
+            layout_strategy = 'flex',
+            layout_config = {
+                flex = { flip_columns = 100 },
+                horizontal = {
+                    mirror = false,
+                    prompt_position = 'top',
+                    width = function(_, cols, _)
+                        return math.floor(cols * w_pct)
+                    end,
+                    height = function(_, _, rows)
+                        return math.floor(rows * h_pct)
+                    end,
+                    preview_cutoff = 10,
+                    preview_width = 0.5,
+                },
+                vertical = {
+                    mirror = true,
+                    prompt_position = 'top',
+                    width = function(_, cols, _)
+                        return math.floor(cols * w_pct)
+                    end,
+                    height = function(_, _, rows)
+                        return math.floor(rows * h_pct)
+                    end,
+                    preview_cutoff = 10,
+                    preview_height = 0.5,
+                },
+            },
+        }
+        ts.setup {
+            defaults = vim.tbl_extend('error', fullscreen_setup, {
+                sorting_strategy = 'ascending',
+                path_display = { "filename_first" },
+                mappings = {
+                    -- <C-/> to see all binds
+                    -- <C-t> to open in new tab
+                    -- <C-x> to open in split
+                    -- <C-v> to open in vsplit
+                    n = {
+                        ['o'] = require('telescope.actions.layout').toggle_preview,
+                        ['<C-c>'] = require('telescope.actions').close,
+                    },
+                    i = {
+                        ['<C-h>'] = require('telescope.actions.layout').toggle_preview,
+                    },
+                },
+            }),
+            pickers = {
+                find_files = {
+                    find_command = {
+                        'fd', '--type', 'f', '-H', '--strip-cwd-prefix',
+                    }
+                },
+            },
+            extensions = {
+                ["ui-select"] = {
+                  require("telescope.themes").get_dropdown {
+                    -- even more opts
+                  },
+                },
+                undo = vim.tbl_extend('error', fullscreen_setup, {
+                    vim_context_lines = 4,
+                    preview_title = "Diff",
+                    mappings = {
+                        i = {
+                            ['<cr>'] = ts_undo.restore,
+                            ['<C-cr>'] = ts_undo.restore,
+                            ['<C-y>d'] = ts_undo.yank_deletions,
+                            ['<C-y>a'] = ts_undo.yank_additions,
+                        },
+                        n = {
+                            ['<cr>'] = ts_undo.restore,
+                            ['ya'] = ts_undo.yank_additions,
+                            ['yd'] = ts_undo.yank_deletions,
+                        },
+                    },
+                })
+            }
+        }
+        ts.load_extension('fzf')
+        ts.load_extension('undo')
+        ts.load_extension("ui-select")
+
+        -- See `:help telescope.builtin`
+        local tsb = require('telescope.builtin')
+        vim.keymap.set('n', '<leader>?', tsb.oldfiles, { desc = '[?] Find recently opened files' })
+        vim.keymap.set('n', '<leader><space>', tsb.buffers, { desc = '[ ] Find existing buffers' })
+        vim.keymap.set('n', '<leader>/', tsb.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
+
+        -- <C-q>    Send all items not filtered to quickfixlist (qflist)
+        -- combine with :cdo (apply command to all items in quickfix list)
+        vim.keymap.set('n', '<leader>gf', tsb.git_files, { desc = 'Search [G]it [F]iles' })
+        vim.keymap.set('n', '<leader>sf', tsb.find_files, { desc = '[S]earch [F]iles' })
+        vim.keymap.set('n', '<leader>sh', tsb.help_tags, { desc = '[S]earch [H]elp' })
+        vim.keymap.set('n', '<leader>sw', tsb.grep_string, { desc = '[S]earch current [W]ord' })
+        vim.keymap.set('n', '<leader>sg', tsb.live_grep, { desc = '[S]earch by [G]rep' })
+        vim.keymap.set('n', '<leader>sd', tsb.diagnostics, { desc = '[S]earch [D]iagnostics' })
+        vim.keymap.set('n', '<leader>ss', tsb.git_status, { desc = '[S]earch [S]tatus' })
+        vim.keymap.set('n', '<leader>sc', tsb.commands, { desc = '[S]earch [C]ommands' })
+        vim.keymap.set('n', '<leader>s=', tsb.spell_suggest, { desc = '[S]earch Spelling' })
+        vim.keymap.set('n', '<leader>sm', tsb.builtin, { desc = '[S]earch [M]enu' })
+        vim.keymap.set('n', '<leader>sk', tsb.keymaps, { desc = '[S]earch [K]eymaps' })
+
+        -- see treesitter symbols
+        vim.keymap.set('n', '<leader>sv', tsb.treesitter, { desc = '[S]earch [V]ariables (Treesitter Symbols)' })
+        vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
+
+    end,
   },
 
   {
@@ -284,10 +422,6 @@ require('lazy').setup({
   {
     -- git
     "https://tpope.io/vim/fugitive.git"
-  },
-  {
-    -- use telescope for all selections
-    'nvim-telescope/telescope-ui-select.nvim'
   },
   {
     "folke/lazydev.nvim",
@@ -482,6 +616,7 @@ require('lazy').setup({
   },
   "jay-babu/mason-nvim-dap.nvim",
   "williamboman/mason.nvim",
+  -- { dir = "~/Documents/lsp-sample-extractor.nvim", opts = {} }   -- my experiment
 
 }, {})
 
@@ -560,83 +695,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- [[ Configure Telescope ]]
--- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
-  pickers = {
-    find_files = {
-      hidden = true,
-      no_ignore = false
-    },
-    grep_string = {
-      hidden = true,
-      no_ignore = false
-    }
-  },
-  extensions = {
-    ["ui-select"] = {
-      require("telescope.themes").get_dropdown {
-        -- even more opts
-      }
-
-      -- pseudo code / specification for writing custom displays, like the one
-      -- for "codeactions"
-      -- specific_opts = {
-      --   [kind] = {
-      --     make_indexed = function(items) -> indexed_items, width,
-      --     make_displayer = function(widths) -> displayer
-      --     make_display = function(displayer) -> function(e)
-      --     make_ordinal = function(e) -> string
-      --   },
-      --   -- for example to disable the custom builtin "codeactions" display
-      --      do the following
-      --   codeactions = false,
-      -- }
-    }
-  }
-}
-local processes_picker = require('telescope-processes')
-vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
-
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
--- To get ui-select loaded and working with telescope, you need to call
-require("telescope").load_extension("ui-select")
-
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
-
--- <C-q>	Send all items not filtered to quickfixlist (qflist)
--- combine with :cdo (apply command to all items in quickfix list)
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').git_status, { desc = '[S]earch [S]tatus' })
-vim.keymap.set('n', '<leader>sc', require('telescope.builtin').commands, { desc = '[S]earch [C]ommands' })
-vim.keymap.set('n', '<leader>s=', require('telescope.builtin').spell_suggest, { desc = '[S]earch Spelling' })
-vim.keymap.set('n', '<leader>sm', require('telescope.builtin').builtin, { desc = '[S]earch [M]enu' })
-
--- see treesitter symbols
-vim.keymap.set('n', '<leader>sv', require('telescope.builtin').treesitter, { desc = '[S]earch [V]ariables (Symbols)' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -780,7 +838,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  vim.keymap.set({'n', 'i'}, '<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -1281,6 +1339,24 @@ wk.add({
     },
   },
 });
+
+-- debug/dev
+
+-- Pretty print
+P = function (v)
+  print(vim.inspect(v))
+  return v
+end
+
+RELOAD = function (...)
+  return require("plenary.reload").reload_module(...)
+end
+
+-- Reload
+R = function (name)
+  RELOAD(name)
+  return require(name)
+end
 
 --theme
 vim.cmd.colorscheme "catppuccin-frappe"
