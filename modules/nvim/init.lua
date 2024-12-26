@@ -1,7 +1,6 @@
 -- Neovim config. Michal Majer
 
 -- Set <space> as the leader key
--- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader          = ' '
 vim.g.maplocalleader     = ' '
@@ -25,16 +24,11 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- NOTE: Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
+-- import plugins
 require('lazy').setup({
-  -- NOTE: First, some plugins that don't require any configuration
-
   -- Git related plugins
   'tpope/vim-rhubarb',
+  "https://tpope.io/vim/fugitive.git",
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -134,7 +128,8 @@ require('lazy').setup({
     },
   },
 
-  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
+  -- Theme
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
   {
     -- Set lualine as statusline
@@ -156,7 +151,23 @@ require('lazy').setup({
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
     main = "ibl",
-    opts = {}
+    opts = {
+      indent = {
+        highlight = {
+          "CursorColumn",
+          "Whitespace",
+        },
+        char = ""
+      },
+      whitespace = {
+        highlight = {
+          "CursorColumn",
+          "Whitespace",
+        },
+        remove_blankline_trail = false,
+      },
+      scope = { enabled = false },
+    }
   },
 
   -- Fuzzy Finder (files, lsp, etc)
@@ -337,7 +348,6 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
-  { 'akinsho/toggleterm.nvim', version = "*", config = true },
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -371,8 +381,27 @@ require('lazy').setup({
     },
     lazy = false,
   },
-  'kosayoda/nvim-lightbulb',
-  'rmagatti/auto-session',
+  {
+    'kosayoda/nvim-lightbulb',
+    opts = {
+      autocmd = { enabled = true },
+      number = {
+        enabled = true,
+      },
+    }
+  },
+  {
+    -- Session management. <leader>sm and "session" to get menu of all sessions
+    'rmagatti/auto-session',
+    lazy = false,
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      suppressed_dirs = { '~/', '~/Documents', '~/Downloads', '/' },
+    }
+  },
   {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -418,22 +447,28 @@ require('lazy').setup({
     dependencies = { 'neovim/nvim-lspconfig' },
   },
 
-  -- treesitter context
   {
+    -- treesitter context (function header visible on top)
     'nvim-treesitter/nvim-treesitter-context',
+    opts = {
+      enable = true,            -- Enable this plugin (Can be enabled/disabled later via commands)
+      max_lines = 0,            -- How many lines the window should span. Values <= 0 mean no limit.
+      min_window_height = 0,    -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+      line_numbers = true,
+      multiline_threshold = 20, -- Maximum number of lines to show for a single context
+      trim_scope = 'outer',     -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+      mode = 'cursor',          -- Line used to calculate context. Choices: 'cursor', 'topline'
+      -- Separator between context and content. Should be a single character string, like '-'.
+      -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+      separator = nil,
+      zindex = 20,     -- The Z-index of the context window
+      on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+    }
   },
   -- history tree
-  {
-    'mbbill/undotree',
-  },
+  'mbbill/undotree',
   -- completions for command line
-  {
-    'hrsh7th/cmp-cmdline',
-  },
-  {
-    -- git
-    "https://tpope.io/vim/fugitive.git"
-  },
+  'hrsh7th/cmp-cmdline',
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -1108,62 +1143,12 @@ cmp.setup.cmdline(':', {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-require("nvim-lightbulb").setup({
-  autocmd = { enabled = true }
-})
-
 -- indent-blankline
 vim.opt.list = true
 vim.opt.listchars:append "space:⋅"
 
-local highlight = {
-  "CursorColumn",
-  "Whitespace",
-}
-require("ibl").setup {
-  indent = { highlight = highlight, char = "" },
-  whitespace = {
-    highlight = highlight,
-    remove_blankline_trail = false,
-  },
-  scope = { enabled = false },
-}
-
 -- color the indent
 vim.cmd [[highlight IndentBlanklineIndent1 guifg=#8a8686 gui=nocombine]]
-
-
-require("auto-session").setup {
-  log_level = "error",
-
-  cwd_change_handling = {
-    restore_upcoming_session = true,   -- already the default, no need to specify like this, only here as an example
-    pre_cwd_changed_hook = nil,        -- already the default, no need to specify like this, only here as an example
-    post_cwd_changed_hook = function() -- example refreshing the lualine status line _after_ the cwd changes
-      require("lualine").refresh()     -- refresh lualine so the new session name is displayed in the status bar
-    end,
-  },
-}
-
-require 'treesitter-context'.setup {
-  enable = true,            -- Enable this plugin (Can be enabled/disabled later via commands)
-  max_lines = 0,            -- How many lines the window should span. Values <= 0 mean no limit.
-  min_window_height = 0,    -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-  line_numbers = true,
-  multiline_threshold = 20, -- Maximum number of lines to show for a single context
-  trim_scope = 'outer',     -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-  mode = 'cursor',          -- Line used to calculate context. Choices: 'cursor', 'topline'
-  -- Separator between context and content. Should be a single character string, like '-'.
-  -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-  separator = nil,
-  zindex = 20,     -- The Z-index of the context window
-  on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
-}
-
-require("toggleterm").setup {
-  open_mapping = [[<c-\>]],
-  direction = 'float',
-}
 
 -- Avante proompts
 
@@ -1372,7 +1357,7 @@ end
 --theme
 vim.cmd.colorscheme "catppuccin-frappe"
 
--- jump to the context
+-- jump to the context when in one
 vim.keymap.set("n", "[k", function()
   require("treesitter-context").go_to_context(vim.v.count1)
 end, { silent = true, desc = "Jump to previous context" })
