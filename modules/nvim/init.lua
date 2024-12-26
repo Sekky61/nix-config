@@ -42,6 +42,7 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
+      'WhoIsSethDaniel/mason-tool-installer.nvim', -- auto install things outside of LSPs
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -858,12 +859,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -884,7 +879,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
-  vim.keymap.set({'n', 'i'}, '<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  vim.keymap.set({'n', 'i'}, '<C-K>', vim.lsp.buf.signature_help, { desc = 'Signature Documentation'})
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -928,6 +923,12 @@ require("mason-nvim-dap").setup({
     },
   },
 })
+require('mason-tool-installer').setup {
+  -- a list of all tools you want to ensure are installed upon start
+  ensure_installed = {
+    'stylua',
+  }
+}
 
 -- Enable the following language servers
 -- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
@@ -992,7 +993,6 @@ require('lspconfig').zls.setup {
   filetypes = { 'zig' },
   settings = {
     zls = {
-      zig_exe_path = '~/.zvm/bin/zig',
       warn_style = true,
       enable_autofix = true,
       highlight_global_var_declarations = true,
