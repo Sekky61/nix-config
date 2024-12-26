@@ -130,7 +130,7 @@ require('lazy').setup({
   },
 
   -- Theme
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
 
   {
     -- Set lualine as statusline
@@ -191,153 +191,152 @@ require('lazy').setup({
       },
     },
     config = function()
-        local ts = require('telescope')
-        local ts_undo = require('telescope-undo.actions')
-        local processes_picker = require('telescope-processes')
-        
-        local h_pct = 0.90
-        local w_pct = 0.80
-        local w_limit = 75
-        local standard_setup = {
-            borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
-            preview = { hide_on_startup = true },
-            layout_strategy = 'vertical',
-            layout_config = {
-                vertical = {
-                    mirror = true,
-                    prompt_position = 'top',
-                    width = function(_, cols, _)
-                        return math.min( math.floor( w_pct * cols ), w_limit )
-                    end,
-                    height = function(_, _, rows)
-                    return math.floor( rows * h_pct )
-                    end,
-                    preview_cutoff = 10,
-                    preview_height = 0.4,
-                },
+      local ts = require('telescope')
+      local ts_undo = require('telescope-undo.actions')
+      local processes_picker = require('telescope-processes')
+
+      local h_pct = 0.90
+      local w_pct = 0.80
+      local w_limit = 75
+      local standard_setup = {
+        borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+        preview = { hide_on_startup = true },
+        layout_strategy = 'vertical',
+        layout_config = {
+          vertical = {
+            mirror = true,
+            prompt_position = 'top',
+            width = function(_, cols, _)
+              return math.min(math.floor(w_pct * cols), w_limit)
+            end,
+            height = function(_, _, rows)
+              return math.floor(rows * h_pct)
+            end,
+            preview_cutoff = 10,
+            preview_height = 0.4,
+          },
+        },
+      }
+      local fullscreen_setup = {
+        borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+        preview = { hide_on_startup = false },
+        layout_strategy = 'flex',
+        layout_config = {
+          flex = { flip_columns = 100 },
+          horizontal = {
+            mirror = false,
+            prompt_position = 'top',
+            width = function(_, cols, _)
+              return math.floor(cols * w_pct)
+            end,
+            height = function(_, _, rows)
+              return math.floor(rows * h_pct)
+            end,
+            preview_cutoff = 10,
+            preview_width = 0.5,
+          },
+          vertical = {
+            mirror = true,
+            prompt_position = 'top',
+            width = function(_, cols, _)
+              return math.floor(cols * w_pct)
+            end,
+            height = function(_, _, rows)
+              return math.floor(rows * h_pct)
+            end,
+            preview_cutoff = 10,
+            preview_height = 0.5,
+          },
+        },
+      }
+      ts.setup {
+        defaults = vim.tbl_extend('error', fullscreen_setup, {
+          sorting_strategy = 'ascending',
+          path_display = { "filename_first" },
+          mappings = {
+            -- <C-/> to see all binds
+            -- <C-t> to open in new tab
+            -- <C-x> to open in split
+            -- <C-v> to open in vsplit
+            n = {
+              ['o'] = require('telescope.actions.layout').toggle_preview,
+              ['<C-c>'] = require('telescope.actions').close,
             },
-        }
-        local fullscreen_setup = {
-            borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
-            preview = { hide_on_startup = false },
-            layout_strategy = 'flex',
-            layout_config = {
-                flex = { flip_columns = 100 },
-                horizontal = {
-                    mirror = false,
-                    prompt_position = 'top',
-                    width = function(_, cols, _)
-                        return math.floor(cols * w_pct)
-                    end,
-                    height = function(_, _, rows)
-                        return math.floor(rows * h_pct)
-                    end,
-                    preview_cutoff = 10,
-                    preview_width = 0.5,
-                },
-                vertical = {
-                    mirror = true,
-                    prompt_position = 'top',
-                    width = function(_, cols, _)
-                        return math.floor(cols * w_pct)
-                    end,
-                    height = function(_, _, rows)
-                        return math.floor(rows * h_pct)
-                    end,
-                    preview_cutoff = 10,
-                    preview_height = 0.5,
-                },
+            i = {
+              ['<C-h>'] = require('telescope.actions.layout').toggle_preview,
             },
-        }
-        ts.setup {
-            defaults = vim.tbl_extend('error', fullscreen_setup, {
-                sorting_strategy = 'ascending',
-                path_display = { "filename_first" },
-                mappings = {
-                    -- <C-/> to see all binds
-                    -- <C-t> to open in new tab
-                    -- <C-x> to open in split
-                    -- <C-v> to open in vsplit
-                    n = {
-                        ['o'] = require('telescope.actions.layout').toggle_preview,
-                        ['<C-c>'] = require('telescope.actions').close,
-                    },
-                    i = {
-                        ['<C-h>'] = require('telescope.actions.layout').toggle_preview,
-                    },
-                },
-            }),
-            pickers = {
-                find_files = {
-                    find_command = {
-                        'fd', '--type', 'f', '-H', '--strip-cwd-prefix',
-                    }
-                },
-            },
-            extensions = {
-                ["ui-select"] = {
-                  require("telescope.themes").get_dropdown {
-                    -- even more opts
-                  },
-                },
-                undo = vim.tbl_extend('error', fullscreen_setup, {
-                    vim_context_lines = 4,
-                    preview_title = "Diff",
-                    mappings = {
-                        i = {
-                            ['<cr>'] = ts_undo.restore,
-                            ['<C-cr>'] = ts_undo.restore,
-                            ['<C-y>d'] = ts_undo.yank_deletions,
-                            ['<C-y>a'] = ts_undo.yank_additions,
-                        },
-                        n = {
-                            ['<cr>'] = ts_undo.restore,
-                            ['ya'] = ts_undo.yank_additions,
-                            ['yd'] = ts_undo.yank_deletions,
-                        },
-                    },
-                })
+          },
+        }),
+        pickers = {
+          find_files = {
+            find_command = {
+              'fd', '--type', 'f', '-H', '--strip-cwd-prefix',
             }
-        }
-        ts.load_extension('fzf')
-        ts.load_extension('undo')
-        ts.load_extension("ui-select")
-
-        -- See `:help telescope.builtin`
-        local tsb = require('telescope.builtin')
-        vim.keymap.set('n', '<leader>?', tsb.oldfiles, { desc = '[?] Find recently opened files' })
-        vim.keymap.set('n', '<leader><space>', tsb.buffers, { desc = '[ ] Find existing buffers' })
-        vim.keymap.set('n', '<leader>/', tsb.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
-
-        -- <C-q>    Send all items not filtered to quickfixlist (qflist)
-        -- combine with :cdo (apply command to all items in quickfix list)
-        vim.keymap.set('n', '<leader>gf', tsb.git_files, { desc = 'Search [G]it [F]iles' })
-        vim.keymap.set('n', '<leader>sf', tsb.find_files, { desc = '[S]earch [F]iles' })
-        vim.keymap.set('n', '<leader>sh', tsb.help_tags, { desc = '[S]earch [H]elp' })
-        vim.keymap.set('n', '<leader>sw', tsb.grep_string, { desc = '[S]earch current [W]ord' })
-        vim.keymap.set('n', '<leader>sg', tsb.live_grep, { desc = '[S]earch by [G]rep' })
-        vim.keymap.set('n', '<leader>sd', tsb.diagnostics, { desc = '[S]earch [D]iagnostics' })
-        vim.keymap.set('n', '<leader>ss', tsb.git_status, { desc = '[S]earch [S]tatus' })
-        vim.keymap.set('n', '<leader>sc', tsb.commands, { desc = '[S]earch [C]ommands' })
-        vim.keymap.set('n', '<leader>s=', tsb.spell_suggest, { desc = '[S]earch Spelling' })
-        vim.keymap.set('n', '<leader>sk', tsb.keymaps, { desc = '[S]earch [K]eymaps' })
-        vim.keymap.set('n', '<leader>sm', function()
-          tsb.builtin({ include_extensions = true })
-        end, { desc = '[S]earch [M]enu' })
-
-        vim.keymap.set('n', '<leader>sc', function()
-          require('telescope.builtin').find_files({
-            cwd = vim.fn.expand('%:p:h')
+          },
+        },
+        extensions = {
+          ["ui-select"] = {
+            require("telescope.themes").get_dropdown {
+              -- even more opts
+            },
+          },
+          undo = vim.tbl_extend('error', fullscreen_setup, {
+            vim_context_lines = 4,
+            preview_title = "Diff",
+            mappings = {
+              i = {
+                ['<cr>'] = ts_undo.restore,
+                ['<C-cr>'] = ts_undo.restore,
+                ['<C-y>d'] = ts_undo.yank_deletions,
+                ['<C-y>a'] = ts_undo.yank_additions,
+              },
+              n = {
+                ['<cr>'] = ts_undo.restore,
+                ['ya'] = ts_undo.yank_additions,
+                ['yd'] = ts_undo.yank_deletions,
+              },
+            },
           })
-        end, { desc = '[S]earch from [C]urrent dir' })
+        }
+      }
+      ts.load_extension('fzf')
+      ts.load_extension('undo')
+      ts.load_extension("ui-select")
 
-        -- see treesitter symbols
-        vim.keymap.set('n', '<leader>sv', tsb.treesitter, { desc = '[S]earch [V]ariables (Treesitter Symbols)' })
-        vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
+      -- See `:help telescope.builtin`
+      local tsb = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>?', tsb.oldfiles, { desc = '[?] Find recently opened files' })
+      vim.keymap.set('n', '<leader><space>', tsb.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>/', tsb.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
 
-        -- undo
-        vim.keymap.set("n", "<leader>su", "<cmd>Telescope undo<cr>", { desc = '[S]earch [U]udo' })
+      -- <C-q>    Send all items not filtered to quickfixlist (qflist)
+      -- combine with :cdo (apply command to all items in quickfix list)
+      vim.keymap.set('n', '<leader>gf', tsb.git_files, { desc = 'Search [G]it [F]iles' })
+      vim.keymap.set('n', '<leader>sf', tsb.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sh', tsb.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sw', tsb.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', tsb.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', tsb.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>ss', tsb.git_status, { desc = '[S]earch [S]tatus' })
+      vim.keymap.set('n', '<leader>sc', tsb.commands, { desc = '[S]earch [C]ommands' })
+      vim.keymap.set('n', '<leader>s=', tsb.spell_suggest, { desc = '[S]earch Spelling' })
+      vim.keymap.set('n', '<leader>sk', tsb.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sm', function()
+        tsb.builtin({ include_extensions = true })
+      end, { desc = '[S]earch [M]enu' })
 
+      vim.keymap.set('n', '<leader>sc', function()
+        require('telescope.builtin').find_files({
+          cwd = vim.fn.expand('%:p:h')
+        })
+      end, { desc = '[S]earch from [C]urrent dir' })
+
+      -- see treesitter symbols
+      vim.keymap.set('n', '<leader>sv', tsb.treesitter, { desc = '[S]earch [V]ariables (Treesitter Symbols)' })
+      vim.keymap.set('n', '<leader>sp', processes_picker.list_processes, { desc = '[S]earch [P]rocesses' })
+
+      -- undo
+      vim.keymap.set("n", "<leader>su", "<cmd>Telescope undo<cr>", { desc = '[S]earch [U]udo' })
     end,
   },
 
@@ -481,7 +480,7 @@ require('lazy').setup({
       },
     },
   },
-  { "Bilal2453/luvit-meta",    lazy = true }, -- optional `vim.uv` typings
+  { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
   {
     -- LLM
     "yetone/avante.nvim",
@@ -508,9 +507,9 @@ require('lazy').setup({
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       --- The below dependencies are optional,
-      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "hrsh7th/nvim-cmp",            -- autocompletion for avante commands and mentions
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      "zbirenbaum/copilot.lua",      -- for providers='copilot'
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
@@ -630,7 +629,7 @@ require('lazy').setup({
         }
       end
 
-      local make_lldb_config = function (language)
+      local make_lldb_config = function(language)
         return {
           {
             type = 'codelldb',
@@ -658,7 +657,6 @@ require('lazy').setup({
       for _, lang in ipairs(lldb_langs) do
         dap.configurations[lang] = make_lldb_config(lang)
       end
-
     end,
   },
   "jay-babu/mason-nvim-dap.nvim",
@@ -879,7 +877,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
-  vim.keymap.set({'n', 'i'}, '<C-K>', vim.lsp.buf.signature_help, { desc = 'Signature Documentation'})
+  vim.keymap.set({ 'n', 'i' }, '<C-K>', vim.lsp.buf.signature_help, { desc = 'Signature Documentation' })
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -1339,17 +1337,17 @@ wk.add({
 -- debug/dev
 
 -- Pretty print
-P = function (v)
+P = function(v)
   print(vim.inspect(v))
   return v
 end
 
-RELOAD = function (...)
+RELOAD = function(...)
   return require("plenary.reload").reload_module(...)
 end
 
 -- Reload
-R = function (name)
+R = function(name)
   RELOAD(name)
   return require(name)
 end
