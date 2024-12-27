@@ -25,6 +25,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- import plugins
+--
+-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 require('lazy').setup({
   -- Git related plugins
   'tpope/vim-rhubarb',
@@ -44,15 +46,13 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim', -- auto install things outside of LSPs
 
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
     },
   },
-
+  {
+    -- Useful status updates (right bottom corner)
+    "j-hui/fidget.nvim",
+    opts = {},
+  },
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -100,6 +100,7 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      current_line_blame = true,
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
         local function map(mode, l, r, desc)
@@ -109,12 +110,10 @@ require('lazy').setup({
           vim.keymap.set(mode, l, r, opts)
         end
 
-        vim.keymap.set('n', '[h', require('gitsigns').prev_hunk,
-          { buffer = bufnr, desc = 'Go to Previous [C]hange' })
-        vim.keymap.set('n', ']h', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Go to Next [C]hange' })
-        vim.keymap.set('n', '<leader>pc', require('gitsigns').preview_hunk,
-          { buffer = bufnr, desc = '[P]review [C]hange' })
-        vim.keymap.set('n', '<leader>tB', gs.toggle_current_line_blame, { buffer = bufnr, desc = 'Toggle [B]lame' })
+        map('n', '[h', function() gs.nav_hunk('prev') end, 'Go to Previous [C]hange')
+        map('n', ']h', function() gs.nav_hunk('next') end, 'Go to Next [C]hange')
+        map('n', '<leader>pc', gs.preview_hunk, '[P]review [C]hange')
+        map('n', '<leader>tB', gs.toggle_current_line_blame, 'Toggle [B]lame')
         map({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', 'Stage hunk')
         map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', 'Reset hunk')
         map('n', '<leader>hS', gs.stage_buffer, 'Stage buffer')
@@ -124,7 +123,7 @@ require('lazy').setup({
         map('n', '<leader>hp', gs.preview_hunk, 'Preview hunk')
         map('n', '<leader>hb', function() gs.blame_line { full = true } end, 'Blame line')
         map('n', '<leader>hd', gs.diffthis, 'Diff hunk')
-        map('n', '<!-- <leader> -->hD', function() gs.diffthis('~') end)
+        map('n', '<leader>hD', function() gs.diffthis('~') end)
       end,
     },
   },
@@ -682,6 +681,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -744,6 +744,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
+  modules = {},
+  ignore_install = {},
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = {
     'html', 'javascript', 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'zig', 'typescript', 'vimdoc', 'vim',
@@ -781,12 +783,12 @@ require('nvim-treesitter.configs').setup {
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
       keymaps = {
         -- You can use the capture groups defined in textobjects.scm
-        ['ap'] = '@parameter.outer',
-        ['ip'] = '@parameter.inner',
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
+        ['ap'] = { query = '@parameter.outer', desc = "parameter" },
+        ['ip'] = { query = '@parameter.inner', desc = "parameter" },
+        ['af'] = { query = '@function.outer', desc = "function" },
+        ['if'] = { query = '@function.inner', desc = "function" },
+        ['ac'] = { query = '@class.outer', desc = "class" },
+        ['ic'] = { query = '@class.inner', desc = "class" },
       },
     },
     move = {
@@ -868,12 +870,13 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, { desc = '[G]oto [D]efinition' }) -- jumps directly if only one is found
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+  local tsb = require('telescope.builtin')
+  nmap('gd', tsb.lsp_definitions, '[G]oto [D]efinition') -- jumps directly if only one is found
+  nmap('gr', tsb.lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>ts', vim.lsp.buf.type_definition, '[T]ype [D]efinition')
+  nmap('<leader>ds', tsb.lsp_document_symbols, '[D]ocument [S]ymbols')
+  nmap('<leader>ws', tsb.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
@@ -1173,12 +1176,11 @@ local avante_code_readability_analysis = [[
   Some readability issues to consider:
   - Unclear naming
   - Unclear purpose
-  - Redundant or obvious comments
+  - Very obvious comments
   - Lack of comments
   - Long or complex one liners
   - Too much nesting
-  - Long variable names
-  - Inconsistent naming and code style.
+  - Inconsistent naming
   - Code repetition
   You may identify additional problems. The user submits a small section of code from a larger file.
   Only list lines with readability issues, in the format <line_num>|<issue and proposed solution>
@@ -1186,12 +1188,12 @@ local avante_code_readability_analysis = [[
 ]]
 local avante_optimize_code = 'Optimize the following code'
 local avante_summarize = 'Summarize the following text'
-local avante_translate = 'Translate this into Chinese, but keep any code blocks inside intact'
-local avante_explain_code = 'Explain the following code'
+local avante_translate = 'Translate this into english, but keep any code blocks inside intact'
+local avante_explain_code = 'Explain the unobvious parts of the following code'
 local avante_complete_code = 'Complete the following codes written in ' .. vim.bo.filetype
-local avante_add_docstring = 'Add docstring to the following codes'
-local avante_fix_bugs = 'Fix the bugs inside the following codes if any'
-local avante_add_tests = 'Implement tests for the following code'
+local avante_document_function = 'Add documentation to the following function'
+local avante_fix_bugs = 'Fix the bugs inside the following codes if any. Make a note about the bugfix'
+local avante_add_tests = 'Implement simple but robust tests for the following code'
 
 local wk = require('which-key');
 wk.add({
@@ -1257,9 +1259,9 @@ wk.add({
     {
       '<leader>ad',
       function()
-        require('avante.api').ask { question = avante_add_docstring }
+        require('avante.api').ask { question = avante_document_function }
       end,
-      desc = 'Docstring(ask)',
+      desc = 'Document function(ask)',
     },
     {
       '<leader>ab',
@@ -1313,9 +1315,9 @@ wk.add({
     {
       '<leader>aD',
       function()
-        prefill_edit_window(avante_add_docstring)
+        prefill_edit_window(avante_document_function)
       end,
-      desc = 'Docstring(edit)',
+      desc = 'Document function(edit)',
     },
     {
       '<leader>aB',
