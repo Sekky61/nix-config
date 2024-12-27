@@ -173,7 +173,7 @@
       nixpkgs-fmt
       nixfmt-classic
 
-
+      alsa-utils # audio debug (arecord -l)
 
       maven
     ];

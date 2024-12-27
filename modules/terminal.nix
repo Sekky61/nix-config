@@ -35,6 +35,6 @@
     ethtool # network controls
     traceroute
 
-    fancy-motd
+    # fancy-motd # greet, welcome message
   ];
 }
