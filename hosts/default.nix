@@ -49,6 +49,10 @@
           port = 1280;
           subdomain = "adguard";
         };
+        home-assistant = {
+          port = 1290;
+          subdomain = "homeassistant";
+        };
       };
       inherit inputs;
     };
