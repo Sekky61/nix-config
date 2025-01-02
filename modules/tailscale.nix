@@ -9,6 +9,8 @@
     useRoutingFeatures = "both";
   };
 
+  services.resolved.enable = true; # Possible fix for no connection when tailscale is on
+
   # Now login as Sekky61@github using
   # sudo tailscale up
 

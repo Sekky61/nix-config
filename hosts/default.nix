@@ -1,6 +1,6 @@
 { self
 , nixpkgs
-, raspberry-pi-nix
+# , raspberry-pi-nix
 , sops-nix
 , ...
 } @ inputs: {
@@ -65,9 +65,10 @@
         # impurity.enable = true;
       }
       sops-nix.nixosModules.sops
-      raspberry-pi-nix.nixosModules.raspberry-pi
+      # raspberry-pi-nix.nixosModules.raspberry-pi
 
-      ./rpi.nix
+      ./rpi
+      # ./rpi.nix
       ../modules
       ../homes # Imports based on username
 

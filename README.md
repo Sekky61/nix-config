@@ -4,7 +4,7 @@ Welcome. I hope you get inspired here.
 It can be hard to put together a NixOS config, it certainly was for me.
 This is mainly because you can structure it however you want.
 
-My config is based on [CirnOS](https://github.com/end-4/CirnOS) ([docs](https://end-4.github.io/dots-hyprland-wiki/en/i-i/02usage/)) and [erictossell's flake](https://github.com/erictossell/nixflakes), go and give them a star!
+My config is based on [CirnOS](https://github.com/end-4/CirnOS) ([docs](https://end-4.github.io/dots-hyprland-wiki/en/i-i/02usage/)), [erictossell's flake](https://github.com/erictossell/nixflakes) and [konradmalik's dotfiles](https://github.com/konradmalik/dotfiles/tree/main), go and give them a star!
 
 The configuration starts with definition of hosts (computers) in [`hosts/default.nix`](hosts/default.nix).
 Each `nixosSystem` defines arguments like `username` and `hostname`, which are available in all subsequent *modules*.
@@ -39,6 +39,36 @@ Setup and common tasks:
 - Create a `.sops.yaml` file etc.
 - After adding a host, run `sops updatekeys secrets/secrets.yaml`
 - Add a pubkey: `sops rotate --in-place --add-age age1xxxxxxx modules/sops/secrets.yaml`
+
+## Raspberry PI, ISO and installers
+
+Installing on new machine requires generating `hardware-configuration.nix` and adding it to the flake.
+
+Build ISO or rpi SD card image:
+```bash
+nix build .#installer-iso
+```
+
+```bash
+nix build .#rpi-sd-image
+```
+
+Flash it (in case of ISO unpack - `unzstd -d rpi.img.zst`):
+```bash
+sudo dd if=installer.iso of=/dev/sdX bs=4096 conv=fsync status=progress
+```
+
+Find IP:
+```bash
+sudo nmap -p 22 192.168.0.0/24
+```
+
+Partition the drives as you wish, then:
+```bash
+sudo nixos-install --flake github:Sekky61/nix-config#rpi --root /mnt --no-bootloader
+```
+or use the update script. This way you do not have to commit to try the install.
+
 
 ## Development
 

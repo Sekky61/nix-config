@@ -34,7 +34,8 @@
       url = "github:Kirottu/anyrun";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+    # raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -44,30 +45,11 @@
 
   outputs = inputs@{ flake-parts, ... }:
   flake-parts.lib.mkFlake { inherit inputs; } {
-    flake = {
-      # editing flake.nix triggers certain utilities such as direnv
-      # to reload - editing host configurations do not require a direnv
-      # reload, so lets move hosts out of the way
-      nixosConfigurations = import ./hosts inputs;
-    };
     systems = [
       # systems for which you want to build the `perSystem` attributes
       "x86_64-linux"
       # ...
     ];
-    perSystem =
-      { system, pkgs, ... }:
-      {
-        _module.args.pkgs = import inputs.nixpkgs {
-          inherit system;
-          overlays = [ ];
-        };
-
-        formatter = pkgs.nixfmt-rfc-style;
-
-        devShells = {
-          default = pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix ]; };
-        };
-      };
+    imports = [ ./flake ];
   };
 }

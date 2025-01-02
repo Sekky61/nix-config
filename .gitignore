@@ -5,4 +5,5 @@ _music*.scss
 .direnv
 
 .sops.yaml
+*.iso
 
