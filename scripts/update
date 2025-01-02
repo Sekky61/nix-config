@@ -50,7 +50,7 @@ run_rpi_command() {
 
 run_pi_deploy() {
     echo "Running rpi deploy command"
-    nixos-rebuild switch --flake ".#rpi" --target-host root@nixpi-wifi --use-remote-sudo
+    nixos-rebuild switch --flake ".#rpi" --target-host root@nixpi --use-remote-sudo
     echo "Deployed to pi"
 }
 

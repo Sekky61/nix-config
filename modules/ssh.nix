@@ -13,12 +13,12 @@
     settings.KbdInteractiveAuthentication = false;
     settings.X11Forwarding = true;
 
-    knownHosts = {
-      nixpi-wifi = {
-        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBimO7J9WOplF/P1YLgWfx5IFy9nGY+sBfn7xoAdY5hZ root@nixpi";
-        extraHostNames = [ "nixpi" ];
-      };
-    };
+    # knownHosts = {
+    #   nixpi = {
+    #     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBimO7J9WOplF/P1YLgWfx5IFy9nGY+sBfn7xoAdY5hZ root@nixpi";
+    #     extraHostNames = [ "nixpi-wifi" ];
+    #   };
+    # };
   };
 
   # Keychain section

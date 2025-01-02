@@ -1,4 +1,4 @@
-{ hostname, username, lib, pkgs, ... }:
+{ hostname, username, lib, pkgs, config, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -55,8 +55,16 @@
     };
 
     # Enabling WIFI
-    wireless.enable = true;
-    wireless.interfaces = [ "wlan0" ];
+    wireless = {
+      enable = true;
+      interfaces = [ "wlan0" ];
+      secretsFile = config.sops.secrets.wireless.path;
+      networks = {
+        "Smart Toilet" = {
+          pskRaw = "ext:smart_toilet_psk";
+        };
+      };
+    };
   };
   hardware = {
     bluetooth.enable = true;

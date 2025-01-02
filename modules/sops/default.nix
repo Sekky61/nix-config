@@ -30,6 +30,10 @@
     "nixpi/tailscale-id" = { };
   };
 
+  sops.secrets.wireless = {
+    neededForUsers = true;
+  };
+
   sops.templates.homepage-env-file.content = ''
     HOMEPAGE_VAR_NIXPI_TAILSCALE_API_KEY=${config.sops.placeholder."nixpi/tailscale-api-key"}
     HOMEPAGE_VAR_NIXPI_TAILSCALE_ID=${config.sops.placeholder."nixpi/tailscale-id"}
