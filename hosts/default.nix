@@ -68,7 +68,6 @@ let
         # raspberry-pi-nix.nixosModules.raspberry-pi
 
         ./rpi
-        # ./rpi.nix
         ../modules
         ../homes # Imports based on username
 
