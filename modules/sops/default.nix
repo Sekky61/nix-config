@@ -28,6 +28,8 @@
   sops.secrets = {
     "nixpi/tailscale-api-key" = { };
     "nixpi/tailscale-id" = { };
+    "home/longitude" = { };
+    "home/latitude" = { };
   };
 
   sops.secrets.wireless = {

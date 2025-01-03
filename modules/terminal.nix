@@ -34,6 +34,7 @@
     lazygit
     ethtool # network controls
     traceroute
+    home-assistant-cli
 
     # fancy-motd # greet, welcome message
   ];
