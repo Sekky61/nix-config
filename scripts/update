@@ -1,115 +1,24 @@
 #!/usr/bin/env bash
-
-# First, commands are defined as functions
-# Then, command is selected and run
-
-# Function to display usage information
-usage() {
-    echo "Usage: $0 [command]"
-    echo "Available commands:"
-    echo "  (no argument) : Update system"
-    echo "  desktopiso    : Build desktop ISO"
-    echo "  update        : Update software versions and rewrite lock file"
-    echo "  pi-img        : Build rpi image"
-    echo "  pi-deploy     : Deploy to pi"
-    echo "  pi-gc         : Run nix-collect-garbage on pi"
-    echo "  cleanup       : Remove old generations and garbage"
-}
+set -euo pipefail
 
 # Function to run the default command
-run_default_command() {
-    echo "Running default command"
+default_command() {
     sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake ".#michal" --impure --log-format internal-json -v |& nom --json
 }
 
-# Function to run the desktop ISO command
-run_desktopiso_command() {
-    echo "Running desktop ISO command"
-    sudo --preserve-env=IMPURITY_PATH nix build .#nixosConfigurations.desktopIso.config.system.build.isoImage --impure
-    echo "ISO built at result/iso/"
-}
-
-# IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nix build  .#nixosConfigurations.michal.config.system.build.vm --impure
-
-# rpi
-run_rpi_command() {
-    echo "Running rpi command"
-    nix build '.#nixosConfigurations.rpi.config.system.build.sdImage'
-    echo "ISO built at result/sd-image/"
-    # Next steps:
-    #
-    # Get device file:
-    # sudo lsblk -p
-    #
-    # Write image to SD card:
-    # caligula burn result/sd-image/nixos-sd-image-24.11.20241006.c31898a-aarch64-linux.img.zst -o /dev/mmcblk0
-    #
-    # find ip
-    # sudo nmap -sn 192.168.0.0/24
-}
-
-run_pi_deploy() {
-    echo "Running rpi deploy command"
-    nixos-rebuild switch --flake ".#rpi" --target-host root@nixpi --use-remote-sudo
-    echo "Deployed to pi"
-}
-
-nix-gc-on-nixpi() {
-  ssh nixpi 'nix-collect-garbage --delete-old'
-}
-
-# Function to run the update command
-run_update_command() {
-    echo "Updating software versions and rewriting lock file"
-    nix flake update
-    echo "Rebuilding system with updated versions"
-    sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
-}
-
-# Function to remove old generations and remove garbage
-run_cleanup_command() {
-    echo "Removing old generations and garbage"
-    nix-env --delete-generations 14d
-    nix-store --gc
+# Deploy to nixpi over ssh
+update_nixpi() {
+    nixos-rebuild switch --flake ".#rpi" --target-host root@nixpi --use-remote-sudo --log-format internal-json -v |& nom --json
 }
 
 export IMPURITY_PATH=$(pwd)
 
-# check if it matches a command
-declare -A commands=(
-    ["default"]="run_default_command"
-    ["desktopiso"]="run_desktopiso_command"
-    ["update"]="run_update_command"
-    ["cleanup"]="run_cleanup_command"
-    ["pi-img"]="run_rpi_command"
-    ["pi-deploy"]="run_pi_deploy"
-    ["pi-gc"]="nix-gc-on-nixpi"
-    ["help"]="usage"
-)
-
-# set the key (default) if no argument
-command=${1:-default}
-
-# if no command matches, print error and exit
-command_function=${commands[$command]}
-if [ -z "$command_function" ]; then
-    echo "Error: Unknown command '$command'"
-    usage
-    exit 1
-fi
-
-# If help, print and exit
-if [ "$1" == "help" ]; then
-    usage
+# Else, ask for sudo
+if [ "${1-default}" = "nixpi" ]; then
+    update_nixpi
     exit 0
 fi
 
-# Else, ask for sudo
-if [ "$1" != "help" ]; then
-    sudo echo "Running as root"
-fi
-
-# run the command
-echo "Running command '$command': '$command_function'"
-$command_function
+sudo echo "Running as root"
+default_command
 
