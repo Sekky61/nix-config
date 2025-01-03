@@ -22,6 +22,23 @@ in {
         Device ID of bed lamp bulb. IDs can be found in the device URL in HA.
       '';
     };
+
+    diningLampId = mkOption {
+      type = with types; uniq str;
+      default =  "a8bd80644982e9e4aace526323841988";
+      description = ''
+        Device ID of dining lamp bulb. IDs can be found in the device URL in HA.
+      '';
+    };
+
+    fanId = mkOption {
+      type = with types; uniq str;
+      default =  "e8664f73457881c479e09f28472b7dba";
+      description = ''
+        Device ID of standing fan. IDs can be found in the device URL in HA.
+      '';
+    };
+
   };
 
   config = {
@@ -36,6 +53,7 @@ in {
 
         "homekit" # Apple
 
+        "xiaomi_miio"
         "tuya"
         "ifttt"
         "telegram_bot"
@@ -54,6 +72,14 @@ in {
             {
               type = "light";
               entity = "light.white";
+              show_state = true;
+              show_icon = true;
+              tap_action = {action = "toggle";};
+              hold_action = {action = "Default action";};
+            }
+            {
+              type = "light";
+              entity = "light.dining";
               show_state = true;
               show_icon = true;
               tap_action = {action = "toggle";};
@@ -85,6 +111,15 @@ in {
               tap_action = {
                 action = "toggle";
               };
+            }
+            {
+              type = "entities";
+              entities = [
+                {
+                  entity = "fan.mi_smart_standing_fan_2_lite";
+                }
+              ];
+              title = "Fan";
             }
           ];
         } ];
