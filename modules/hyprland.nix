@@ -325,9 +325,21 @@ in
               freeze = "--freeze";
               stdout = "--raw";
             };
-            screen = flagArr: toString (["hyprshot"] ++ flagArr);
-            ss_region_stdout = screen (with ss_flags; [region stdout]);
-            ss_region_clipboard = screen (with ss_flags; [region clipboard]);
+            screen = flagArr: toString ([ "hyprshot" ] ++ flagArr);
+            ss_region_stdout = screen (
+              with ss_flags;
+              [
+                region
+                stdout
+              ]
+            );
+            ss_region_clipboard = screen (
+              with ss_flags;
+              [
+                region
+                clipboard
+              ]
+            );
           in
           [
             # Launch

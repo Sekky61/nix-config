@@ -43,13 +43,14 @@
     };
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-  flake-parts.lib.mkFlake { inherit inputs; } {
-    systems = [
-      # systems for which you want to build the `perSystem` attributes
-      "x86_64-linux"
-      # ...
-    ];
-    imports = [ ./flake ];
-  };
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        # systems for which you want to build the `perSystem` attributes
+        "x86_64-linux"
+        # ...
+      ];
+      imports = [ ./flake ];
+    };
 }

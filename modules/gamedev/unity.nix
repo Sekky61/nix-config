@@ -1,11 +1,14 @@
 { pkgs, username, ... }:
 {
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     unityhub
-    (with dotnetCorePackages; combinePackages [
-      sdk_6_0
-      sdk_7_0
-    ])
+    (
+      with dotnetCorePackages;
+      combinePackages [
+        sdk_6_0
+        sdk_7_0
+      ]
+    )
 
   ];
 

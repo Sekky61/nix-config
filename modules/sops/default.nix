@@ -1,8 +1,7 @@
 { pkgs, config, ... }:
 {
-  imports =
-    [
-    ];
+  imports = [
+  ];
 
   environment.systemPackages = with pkgs; [
     sops

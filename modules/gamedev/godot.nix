@@ -1,6 +1,6 @@
 { pkgs, username, ... }:
 {
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     godot_4
   ];
 }

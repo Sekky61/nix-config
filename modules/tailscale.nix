@@ -9,7 +9,6 @@
     useRoutingFeatures = "both";
   };
 
-
   # Now login as Sekky61@github using
   # sudo tailscale up
 
