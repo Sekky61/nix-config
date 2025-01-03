@@ -27,7 +27,7 @@
   # Here defined aliases are available for all users
   programs.bash = {
     completion.enable = true;
-    blesh.enable = true; # line editor
+    blesh.enable = true; # line editor, autocompletions. Alternative: carapace
     shellInit = builtins.readFile ./.bash_aliases;
     interactiveShellInit = builtins.readFile ./interactive.sh;
   };

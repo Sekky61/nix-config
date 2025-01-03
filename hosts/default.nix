@@ -14,18 +14,8 @@ let
         inherit inputs;
       };
       modules = [
-        {
-          # Impurity
-          imports = [ inputs.impurity.nixosModules.impurity ];
-          impurity.configRoot = self;
-          # impurity.enable = true;
-        }
-        sops-nix.nixosModules.sops # Couldnt solve it in sops module
+        ./common
 
-        ../homes # Imports based on username
-        ./host   # Imports based on hostname
-        ../assets
-        ../modules
         ../modules/dev
         ../modules/packages
         ../modules/gui-packages
@@ -64,12 +54,7 @@ let
           impurity.configRoot = self;
           # impurity.enable = true;
         }
-        sops-nix.nixosModules.sops
-        # raspberry-pi-nix.nixosModules.raspberry-pi
-
-        ../modules
-        ../homes # Imports based on username
-        ./host   # Imports based on hostname
+        ./common
 
         # Services
         ../services # controlled by runningServices
