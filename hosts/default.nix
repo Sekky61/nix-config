@@ -67,9 +67,9 @@ let
         sops-nix.nixosModules.sops
         # raspberry-pi-nix.nixosModules.raspberry-pi
 
-        ./rpi
         ../modules
         ../homes # Imports based on username
+        ./host   # Imports based on hostname
 
         # Services
         ../services # controlled by runningServices
