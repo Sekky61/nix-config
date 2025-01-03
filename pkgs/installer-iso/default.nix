@@ -1,4 +1,4 @@
-{ pkgs, specialArgs }:
+{ pkgs, specialArgs, system }:
 let
   nixosEvaluation = import (pkgs.path + "/nixos/lib/eval-config.nix") {
     modules = [

@@ -20,16 +20,17 @@ I also define some *services*, which allow me to easily host them.
 
 ## Usage
 
-Run `./scripts/update` to update the system. The script has commands, see `./scripts/update help`.
+Run `./scripts/update` to update the system.
 
 ### Installation
 
-This flake includes my hardware configuration, so you would need to add your host in `hosts/`.
+The flake includes my hardware configuration, so you would need to create your host in `hosts/`.
 
 ```bash
 git clone https://github.com/Sekky61/nix-config && cd nix-config
-IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake .#michal --impure
+sudo nixos-rebuild switch --flake ".#hostname"
 ```
+(substitute your `hostname`)
 
 ## Secrets
 
@@ -44,21 +45,19 @@ Setup and common tasks:
 
 Installing on new machine requires generating `hardware-configuration.nix` and adding it to the flake.
 
-Build ISO or rpi SD card image:
+Build minimal ISO (x86) or rpi SD card image:
 ```bash
-nix build .#installer-iso
-```
-
-```bash
+nix build .#minimal-iso
+# or
 nix build .#rpi-sd-image
 ```
 
-Flash it (in case of ISO unpack - `unzstd -d rpi.img.zst`):
+Flash it (possibly unpack first - `unzstd -d rpi.img.zst`):
 ```bash
 sudo dd if=installer.iso of=/dev/sdX bs=4096 conv=fsync status=progress
 ```
 
-Find IP:
+Find IP of the installed device:
 ```bash
 sudo nmap -p 22 192.168.0.0/24
 ```
@@ -68,6 +67,7 @@ Partition the drives as you wish, then:
 sudo nixos-install --flake github:Sekky61/nix-config#rpi --root /mnt --no-bootloader
 ```
 or use the update script. This way you do not have to commit to try the install.
+`--no-bootloader` is unverified. You may need to get new `hardware-configuration`.
 
 
 ## Development
@@ -100,4 +100,12 @@ Uses `tuigreet`, on login launches Hyprland.
 ### Hyprland
 
 The window manager. Launches Chrome on startup. Uses Ags bar. See shortcuts with `Super+/`.
+
+### Impurity
+
+Each host definition has its complement `hostname-impure`.
+Impurity means that certain files line nvim config get linked to this repository instead of
+nix store. This is useful for fast iterations on configs.
+
+To use them, try `scripts/update --impure`.
 

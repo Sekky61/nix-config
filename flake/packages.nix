@@ -23,7 +23,7 @@
           ];
         in
         {
-          installer-iso = import ./../pkgs/installer-iso { inherit pkgs specialArgs; };
+          minimal-iso = import ./../pkgs/installer-iso { inherit pkgs specialArgs; };
           rpi-sd-image =
             (self.nixosConfigurations.rpi.extendModules { inherit modules; }).config.system.build.sdImage;
         }

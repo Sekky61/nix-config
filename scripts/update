@@ -1,24 +1,61 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Function to run the default command
-default_command() {
-    sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake ".#michal" --impure --log-format internal-json -v |& nom --json
+# Function to update with pure configuration
+update_pure() {
+    local hostname="$1"
+    sudo echo "Running as root"
+    sudo nixos-rebuild switch --flake "." --log-format internal-json -v |& nom --json
 }
 
-# Deploy to nixpi over ssh
-update_nixpi() {
-    nixos-rebuild switch --flake ".#rpi" --target-host root@nixpi --use-remote-sudo --log-format internal-json -v |& nom --json
+# Function to update with impure configuration
+update_impure() {
+    local hostname="$1"
+    sudo echo "Running as root"
+    sudo --preserve-env=IMPURITY_PATH nixos-rebuild switch --flake ".#${hostname}-impure" --impure --log-format internal-json -v |& nom --json
+}
+
+# Deploy to remote host over ssh
+update_remote() {
+    local hostname="$1"
+    # nom cannot be used: i cannot see when it asks for password
+    nixos-rebuild switch --flake ".#${hostname}" --target-host "root@${hostname}" --use-remote-sudo
 }
 
 export IMPURITY_PATH=$(pwd)
+REMOTE=false
+PURE=true
+HOSTNAME="${HOSTNAME:-michal}"
 
-# Else, ask for sudo
-if [ "${1-default}" = "nixpi" ]; then
-    update_nixpi
-    exit 0
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --hostname=*)
+            HOSTNAME="${1#*=}"
+            shift
+            ;;
+        --remote)
+            REMOTE=true
+            shift
+            ;;
+        --impure)
+            PURE=false
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--hostname=<hostname>] [--remote] [--impure]"
+            exit 1
+            ;;
+    esac
+done
+
+if [ "$REMOTE" = false ]; then
+    if [ "$PURE" = true ]; then
+        update_pure "$HOSTNAME"
+    else
+        update_impure "$HOSTNAME"
+    fi
+else
+    update_remote "$HOSTNAME"
 fi
-
-sudo echo "Running as root"
-default_command
-
