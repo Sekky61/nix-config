@@ -118,9 +118,5 @@ michal.programs # Programs that might be not desired everywhere
 michal.services # Long running services like Home assistant
 ```
 
-Inspect all config:
-```bash
-nix repl
-:lf .
-nixosConfigurations.nix-yoga.config.michal. <tab>
-```
+See `./scripts/list-custom-options` for more.
+

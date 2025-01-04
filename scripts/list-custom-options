@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+
+# Inspect all config:
+# ```bash
+# nix repl
+# :lf .
+# nixosConfigurations.nix-yoga.config.michal. <tab>
+# ```
+
+# List all custom options. Should be the same for all hosts
+# TODO: list description, type, ...
+nix eval .#nixosConfigurations.nix-yoga.config.michal --json | jq
