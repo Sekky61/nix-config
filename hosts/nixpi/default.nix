@@ -13,10 +13,12 @@
 
   users.users.${username} = {
     isNormalUser = true;
-    password = "password";
     group = "pi";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkCgOhmEum22iwht2rfJxWnbNCVbd0gWOPXdYHO1vPU majer"
+    ];
+    extraGroups = [
+      "wheel"
     ];
   };
   users.groups.pi = { };

@@ -1,4 +1,5 @@
 {
+  config,
   self,
   impurity,
   inputs,
@@ -40,5 +41,14 @@
 
     # username specified in the nixosSystem
     users.${username} = ./${username};
+  };
+
+  # Passwords
+  # Does not work after creating the users (so far untested).
+
+  sops.secrets.user-password.neededForUsers = true;
+  users.users.${username} = {
+    isNormalUser = true;
+    hashedPasswordFile = config.sops.secrets.user-password.path;
   };
 }

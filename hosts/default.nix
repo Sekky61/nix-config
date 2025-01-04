@@ -48,12 +48,6 @@ let
       };
       system = "aarch64-linux";
       modules = [
-        {
-          # Impurity
-          imports = [ inputs.impurity.nixosModules.impurity ];
-          impurity.configRoot = self;
-          # impurity.enable = true;
-        }
         ./common
 
         # Services

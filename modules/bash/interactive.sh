@@ -27,7 +27,6 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-eval "$(zoxide init bash)"
 eval "$(atuin init bash)"
 
 ble-face auto_complete='fg=242,bg=235'

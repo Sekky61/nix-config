@@ -19,9 +19,11 @@
     config = lib.mkForce { };
   };
 
-  networking.hostName = "nix-installer-iso";
-  networking.networkmanager.enable = true;
-  networking.wireless.enable = false;
+  networking = {
+    hostName = "nix-installer-iso";
+    networkmanager.enable = true;
+    wireless.enable = false;
+  };
 
   # users.users.root.openssh.authorizedKeys.keys = config.sshKeys.personal.keys;
 

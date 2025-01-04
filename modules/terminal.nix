@@ -22,7 +22,6 @@
     gh
     ripgrep
     unzip
-    zoxide
     atuin # shell history
     bat
     eza
@@ -38,4 +37,12 @@
 
     # fancy-motd # greet, welcome message
   ];
+
+
+  home-manager.users.${username} = {
+    programs.zoxide = {
+      enable = true;
+      enableBashIntegration = true;
+    };
+  };
 }
