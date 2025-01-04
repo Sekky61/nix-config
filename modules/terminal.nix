@@ -48,6 +48,9 @@
         enable = true;
         enableBashIntegration = true;
         daemon.enable = true; # todo sync
+        settings = {
+          enter_accept = true;
+        };
       };
       zoxide = {
         enable = true;

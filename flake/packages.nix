@@ -25,9 +25,13 @@
         in
         {
           minimal-iso = import ./../pkgs/installer-iso { inherit pkgs specialArgs; };
+
           rpi-sd-image =
             (self.nixosConfigurations.rpi.extendModules { inherit modules; }).config.system.build.sdImage;
         }
-      );
+      ) // {
+        nix-yoga-vm =
+          self.nixosConfigurations.nix-yoga.config.system.build.vmWithBootLoader;
+      };
     };
 }
