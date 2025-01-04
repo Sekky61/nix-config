@@ -11,6 +11,31 @@
     wpa_supplicant
   ];
 
+  # Services
+
+  michal.services = {
+    proxy = {
+      enable = true;
+    };
+    homepage = {
+      enable = true;
+      port = 1270;
+      subdomain = "homepage";
+    };
+    adguardhome = {
+      enable = true;
+      port = 1280;
+      subdomain = "adguard";
+    };
+    home-assistant = {
+      enable = true;
+      port = 1290;
+      subdomain = "homeassistant";
+    };
+  };
+
+  # Rest
+
   users.users.${username} = {
     isNormalUser = true;
     group = "pi";

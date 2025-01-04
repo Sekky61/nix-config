@@ -30,20 +30,6 @@ let
       specialArgs = {
         username = "pi";
         hostname = "nixpi";
-        runningServices = {
-          homepage = {
-            port = 1270;
-            subdomain = "homepage";
-          };
-          adguardhome = {
-            port = 1280;
-            subdomain = "adguard";
-          };
-          home-assistant = {
-            port = 1290;
-            subdomain = "homeassistant";
-          };
-        };
         inherit inputs;
       };
       system = "aarch64-linux";
@@ -51,7 +37,7 @@ let
         ./common
 
         # Services
-        ../services # controlled by runningServices
+        ../services
       ];
     };
   };

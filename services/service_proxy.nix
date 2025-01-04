@@ -1,36 +1,46 @@
-{ config, pkgs, hostname, runningServices, ... }:
+{ config, lib, hostname, ... }:
 with builtins;
+with lib;
 let
-  servicesList = map (name: 
-      let
-        cfg = runningServices.${name};
-        subdomain = if (cfg ? subdomain) then cfg.subdomain else name;
-      in 
-      {
-        name = "${subdomain}.${hostname}";
-        value = {
-          listen = [{ addr = "0.0.0.0"; port = 80; }];
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.port}";  # Port where Homepage is running
-          };
-        };
-      }
-  ) (attrNames runningServices);
+  cfg = config.michal.services.proxy;
 
-  virtualHosts = listToAttrs servicesList;
+  allRunningServicesOptions = filterAttrs (n: v: n != "proxy" && v.enable) config.michal.services;
+
+  # https://noogle.dev/f/lib/mapAttrs'
+  virtualHosts = mapAttrs' (name: serviceCfg:
+    let
+      subdomain = if (serviceCfg ? subdomain) then serviceCfg.subdomain else name;
+    in 
+    {
+      name = "${subdomain}.${hostname}";
+      value = {
+        listen = [{ addr = "0.0.0.0"; port = 80; }];
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString serviceCfg.port}";  # Port where Homepage is running
+        };
+      };
+    }
+  ) allRunningServicesOptions;
 in
 {
-  services.nginx = {
-    enable = true;
-    inherit virtualHosts;
+
+  options.michal.services.proxy = {
+    enable = mkEnableOption "the service proxy"; # Prefixes "Whether to enable "
   };
 
-  # open 80 port
-  networking.firewall.allowedTCPPorts = [ 80 ];
+  config = mkIf cfg.enable {
+    services.nginx = {
+      enable = cfg.enable;
+      inherit virtualHosts;
+    };
 
-  # Local DNS configuration if using Pi-hole for DNS routing
-  # networking.extraHosts = ''
-  #   127.0.0.1 homepage.${hostname}
-  #   127.0.0.1 adguard.${hostname}
-  # '';
+    networking.firewall.allowedTCPPorts = [ 80 ];
+
+    # Local DNS configuration if using Pi-hole for DNS routing
+    #
+    # networking.extraHosts = ''
+    #   127.0.0.1 homepage.${hostname}
+    #   127.0.0.1 adguard.${hostname}
+    # '';
+  };
 }

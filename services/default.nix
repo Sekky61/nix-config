@@ -1,12 +1,39 @@
-{ config, lib, hostname, runningServices, ... }:
+{ config, lib, hostname, ... }:
 with lib;
 let
-  anyServices = runningServices != null;
+  myServiceOptions = serviceName: with lib; {
+    
+    enable = mkEnableOption "the ${serviceName} service"; # Prefixes "Whether to enable "
 
-  servicesToRun = map (name: ./${name}.nix) (attrNames runningServices);
+    port = mkOption {
+      type = types.ints.u16;
+      description = ''
+        The port to run ${serviceName} on
+      '';
+    };
 
+    subdomain = mkOption {
+      type = types.str;
+      description = ''
+        The subdomain to expose ${serviceName} on
+      '';
+    };
+  };
 in {
   imports = []
-    ++ (if anyServices then [ ./service_proxy.nix ] else [])
-    ++ servicesToRun;
+    ++ [
+      # Proxy all services
+      ./service_proxy.nix
+
+      # The Services
+      ./adguardhome.nix
+      ./home-assistant.nix
+      ./homepage.nix
+    ];
+
+  # Add my generic options to lib
+  _module.args = {
+    inherit myServiceOptions;
+  };
+
 }

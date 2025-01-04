@@ -1,20 +1,11 @@
-{ config, lib, hostname, runningServices, pkgs, ... }:
+{ config, lib, myServiceOptions, pkgs, ... }:
 with lib;
 let
-  cfg = config.home-assistant;
-  serviceCfg = runningServices.home-assistant;
-  enable = serviceCfg != null;
+  # TODO: external address via Tailscale for some services (.mora)
+  cfg = config.michal.services.home-assistant;
 in {
 
-  options.home-assistant = {
-    port = mkOption {
-      type = types.int;
-      default = serviceCfg.port;
-      description = ''
-        The port to run home-assistant on
-      '';
-    };
-    
+  options.michal.services.home-assistant = myServiceOptions "Home Assistant" // {
     bedLampId = mkOption {
       type = with types; uniq str;
       default =  "1c35878105b007dee872426c985e9704";
@@ -41,9 +32,9 @@ in {
 
   };
 
-  config = {
+  config = mkIf cfg.enable {
     services.home-assistant = {
-      inherit enable;
+      enable = cfg.enable;
       extraComponents =  [
         # Components required to complete the onboarding
         "esphome"
@@ -136,7 +127,11 @@ in {
         # Includes dependencies for a basic setup
         # https://www.home-assistant.io/integrations/default_config/
         default_config = {};
-        http.server_port = cfg.port;
+        http = {
+          server_port = cfg.port;
+          # use_x_forwarded_for = true; # TODO causes HA crash
+          # trusted_proxies = [ "192.168.1.0/24" ];
+        };
         homeassistant = {
           unit_system = "metric";
           name = "Home";
