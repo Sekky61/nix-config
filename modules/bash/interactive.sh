@@ -27,8 +27,6 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-eval "$(atuin init bash)"
-
 ble-face auto_complete='fg=242,bg=235'
 ble-face auto_complete='fg=white,bg=69'
 ble-face auto_complete='fg=240,underline,italic'

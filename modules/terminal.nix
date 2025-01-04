@@ -13,7 +13,7 @@
   # ---- System Configuration ----
   programs = {
     htop.enable = true;
-    mtr.enable = true; # todo
+    mtr.enable = true; # todo alias (my trace route)
   };
 
   environment.systemPackages = with pkgs; [
@@ -22,7 +22,6 @@
     gh
     ripgrep
     unzip
-    atuin # shell history
     bat
     eza
     fd
@@ -40,9 +39,20 @@
 
 
   home-manager.users.${username} = {
-    programs.zoxide = {
-      enable = true;
-      enableBashIntegration = true;
+    programs = {
+      bash = {
+        enable = true;
+        enableCompletion = true; # needed for bashIntegrations
+      };
+      atuin = {
+        enable = true;
+        enableBashIntegration = true;
+        daemon.enable = true; # todo sync
+      };
+      zoxide = {
+        enable = true;
+        enableBashIntegration = true;
+      };
     };
   };
 }
