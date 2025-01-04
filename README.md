@@ -109,3 +109,18 @@ nix store. This is useful for fast iterations on configs.
 
 To use them, try `scripts/update --impure`.
 
+### Options
+
+The modules are gradually becoming configurable via `michal` namespace.
+
+```nix
+michal.programs # Programs that might be not desired everywhere
+michal.services # Long running services like Home assistant
+```
+
+Inspect all config:
+```bash
+nix repl
+:lf .
+nixosConfigurations.nix-yoga.config.michal. <tab>
+```

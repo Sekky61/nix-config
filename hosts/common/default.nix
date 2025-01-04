@@ -1,4 +1,8 @@
 { self, hostname, inputs, ... }: {
+  # Sources for writing modules:
+  # https://nixos.org/manual/nixos/stable/#sec-writing-modules
+  # https://nixos.wiki/wiki/NixOS_modules
+
   imports = [
     # Import based on hostname
     ../${hostname}

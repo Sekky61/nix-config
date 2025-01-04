@@ -20,14 +20,6 @@ in
     # templates = import ./../templates;
 
     nixosConfigurations = import ../hosts inputs;
-
-    # homeConfigurations = {
-    #   "konrad@generic" = inputs.home-manager.lib.homeManagerConfiguration {
-    #     pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
-    #     extraSpecialArgs = specialArgs;
-    #     modules = [ ./../home/konrad/generic.nix ];
-    #   };
-    # };
   };
 
   perSystem =

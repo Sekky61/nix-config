@@ -7,4 +7,8 @@
     ./laptop.nix
     ./locale.nix
   ];
+
+  michal.programs = {
+    bitwarden.enable = true;
+  };
 }

@@ -24,10 +24,6 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "@wheel" ];
 
-  # konrad.services.autoupgrade = {
-  #   enable = true;
-  # };
-
   networking.firewall.enable = false;
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
