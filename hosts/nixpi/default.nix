@@ -62,14 +62,6 @@
     firmware = [ pkgs.wireless-regdb ];
   };
 
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = true;
-    settings.KbdInteractiveAuthentication = true;
-    settings.PermitRootLogin = "yes";
-    settings.X11Forwarding = true;
-  };
-
   time.timeZone = "Europe/Prague";
   users.users.root.initialPassword = "root";
   networking = {

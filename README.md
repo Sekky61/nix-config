@@ -36,8 +36,10 @@ sudo nixos-rebuild switch --flake ".#hostname"
 
 Secrets are managed using [sops-nix](https://github.com/Mic92/sops-nix).
 
+There is one universal age key for development. It is backed up in password manager.
+
 Setup and common tasks:
-- Create a `.sops.yaml` file etc.
+- To add a host, run `./scripts/age-pubkey` and add the key to `.sops.yaml`
 - After adding a host, run `sops updatekeys modules/sops/secrets.yaml`
 - Add a pubkey: `sops rotate --in-place --add-age age1xxxxxxx modules/sops/secrets.yaml`
 

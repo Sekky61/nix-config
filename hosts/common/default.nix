@@ -12,7 +12,6 @@
     # And common stuff
     ../../assets
     ../../modules
-    inputs.sops-nix.nixosModules.sops # important to include "inputs"
     {
       # Impurity
       imports = [ inputs.impurity.nixosModules.impurity ];
