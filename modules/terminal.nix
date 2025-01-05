@@ -57,6 +57,11 @@
         enable = true;
         enableBashIntegration = true;
       };
+      nix-index = {
+        # Create index with `nix-index`, then `nix-locate pattern` (for example `nix-locate bin/zig`)
+        enable = true;
+        enableBashIntegration = true;
+      };
     };
   };
 }
