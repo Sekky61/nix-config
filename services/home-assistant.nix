@@ -128,9 +128,11 @@ in {
         # https://www.home-assistant.io/integrations/default_config/
         default_config = {};
         http = {
+          # server_host = "127.0.0.1"; # TODO: proxy does not work
           server_port = cfg.port;
-          # use_x_forwarded_for = true; # TODO causes HA crash
-          # trusted_proxies = [ "192.168.1.0/24" ];
+          use_x_forwarded_for = true;
+          trusted_proxies = [ "127.0.0.1" "::1" ];
+          cors_allowed_origins = [ "http://homeassistant.nixpi" "http://nixpi:1290" ];
         };
         homeassistant = {
           unit_system = "metric";

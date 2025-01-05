@@ -12,12 +12,16 @@ let
       '';
     };
 
+    proxy = mkEnableOption "proxying of the service from port 80 under subdomain";
+
     subdomain = mkOption {
       type = types.str;
       description = ''
         The subdomain to expose ${serviceName} on
       '';
     };
+
+    # TODO: always import all options, todo proxy settings
   };
 in {
   imports = []

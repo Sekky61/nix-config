@@ -4,7 +4,7 @@ with lib;
 let
   cfg = config.michal.services.proxy;
 
-  allRunningServicesOptions = filterAttrs (n: v: n != "proxy" && v.enable) config.michal.services;
+  allRunningServicesOptions = filterAttrs (n: v: n != "proxy" && v.enable && v.proxy) config.michal.services;
 
   # https://noogle.dev/f/lib/mapAttrs'
   virtualHosts = mapAttrs' (name: serviceCfg:
@@ -17,6 +17,10 @@ let
         listen = [{ addr = "0.0.0.0"; port = 80; }];
         locations."/" = {
           proxyPass = "http://127.0.0.1:${toString serviceCfg.port}";  # Port where Homepage is running
+          extraConfig = ''
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          '';
         };
       };
     }

@@ -20,16 +20,19 @@
     homepage = {
       enable = true;
       port = 1270;
+      proxy = true;
       subdomain = "homepage";
     };
     adguardhome = {
       enable = true;
       port = 1280;
+      proxy = true;
       subdomain = "adguard";
     };
     home-assistant = {
       enable = true;
       port = 1290;
+      proxy = true;
       subdomain = "homeassistant";
     };
   };
