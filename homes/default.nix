@@ -47,8 +47,9 @@
   # Does not work after creating the users (so far untested).
 
   sops.secrets.user-password.neededForUsers = true;
+  users.mutableUsers = false;
   users.users.${username} = {
     isNormalUser = true;
-    hashedPasswordFile = config.sops.secrets.user-password.path;
+    hashedPasswordFile = config.sops.secrets.user-password.path; # must be a hash (mkpasswd). Yes it happened to me. Yes i deleted all passwords and couldnt get in.
   };
 }

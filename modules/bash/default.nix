@@ -5,6 +5,7 @@
     ./scripts.nix
   ];
 
+  # todo move
   environment.shellAliases = {
     l = "eza";
     ls = "eza --color=auto";
