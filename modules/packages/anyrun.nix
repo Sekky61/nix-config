@@ -14,14 +14,15 @@
       config = {
         plugins = with inputs.anyrun.packages.${pkgs.system}; [
           applications
-          randr
-          rink
+          randr # todo not working?
+          rink # calculator
           shell
-          symbols
+          symbols # search unicode
         ];
 
         width.fraction = 0.3;
         y.absolute = 15;
+
         hidePluginInfo = true;
         closeOnClick = true;
       };

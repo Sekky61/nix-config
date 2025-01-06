@@ -343,7 +343,7 @@ in
           in
           [
             # Launch
-            "Super, Space, exec, ags -t 'overview'" # Launcher
+            "Super, Space, exec, ags -t 'overview'" # Launcher, uses anyrun
             "Super, Return, exec, alacritty"
             "Super, W, exec, google-chrome-stable"
             "Super, C, exec, code --password-store=gnome"
@@ -376,7 +376,7 @@ in
             # Lock
             "Super, L, exec, hyprlock"
             "Super+Shift, L, exec, hyprlock"
-            "Control+Super, Slash, exec, pkill anyrun || anyrun" # todo crashes after one letter
+            "Control+Super, Slash, exec, pkill anyrun || anyrun"
             "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
             "Control+Super, R, exec, killall ags ydotool; ags -b hypr" # reset ags
             "Super, Tab, exec, ags -t 'overview'" # todo broken
