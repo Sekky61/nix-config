@@ -122,3 +122,9 @@ michal.services # Long running services like Home assistant
 
 See `./scripts/list-custom-options` for more.
 
+### Neovim
+
+The `nvim` config (located [here](modules/nvim/init.lua)) contains many useful
+plugins and keybinds with descriptions. The plugins get installed at launch, so
+this is not a pure Nix solution.
+

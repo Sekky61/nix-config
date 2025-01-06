@@ -25,8 +25,10 @@ in
 
   environment.systemPackages = with pkgs; [
     git
-    btop
     gh
+    lazygit
+
+    btop
     ripgrep
     unzip
     fd
@@ -34,7 +36,6 @@ in
     socat
     jq
     gojq
-    lazygit
     ethtool # network controls
     traceroute
     whois
