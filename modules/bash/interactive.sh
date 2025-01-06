@@ -18,15 +18,6 @@ c_test () {
     echo ''
 }
 
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
-}
-
 # todo: move
 ble-face auto_complete='fg=242,bg=235'
 ble-face auto_complete='fg=white,bg=69'

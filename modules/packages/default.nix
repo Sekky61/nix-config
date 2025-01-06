@@ -1,11 +1,9 @@
 {
   pkgs,
-  username,
   ...
 }:
 {
   imports = [
-    ./yazi.nix
     ./anyrun.nix
   ];
 

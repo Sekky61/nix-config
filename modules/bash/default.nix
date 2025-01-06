@@ -23,7 +23,6 @@
   programs.bash = {
     completion.enable = true;
     blesh.enable = true; # line editor, autocompletions. Alternative: carapace
-    shellInit = builtins.readFile ./.bash_aliases;
     interactiveShellInit = builtins.readFile ./interactive.sh;
   };
 }
