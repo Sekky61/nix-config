@@ -7,15 +7,9 @@
 
   # todo move
   environment.shellAliases = {
-    l = "eza";
-    ls = "eza --color=auto";
-    la = "eza -a";
-    ll = "eza -lah";
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
-
-    cat = "bat";
 
     gitlog = "git log --graph --oneline --decorate";
     initenvrc = "echo \"use flake\" >> .envrc && direnv allow";

@@ -60,6 +60,7 @@ in
     {
       michal.sshKeys = {
         personal.keys = remoteKeys ++ cfg.personal.extraKeys;
+        # todo: also keep the pubkeys around in a file
         personal.remotes = [
           {
             url = "https://github.com/Sekky61.keys";
