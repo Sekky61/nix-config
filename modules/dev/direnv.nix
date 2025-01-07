@@ -1,4 +1,5 @@
 {
+  # load flake development shell on cd
   programs = {
     direnv = {
       enable = true;

@@ -26,6 +26,9 @@
         {
           minimal-iso = import ./../pkgs/installer-iso { inherit pkgs specialArgs; };
 
+          minimal-pi-sd-image =
+            (self.nixosConfigurations.minimal-pi.extendModules { inherit modules; }).config.system.build.sdImage;
+
           nixpi-sd-image =
             (self.nixosConfigurations.nixpi.extendModules { inherit modules; }).config.system.build.sdImage;
         }

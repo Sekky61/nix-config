@@ -1,14 +1,10 @@
-{ hostname, username, lib, pkgs, config, ... }:
+{ username, lib, pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
-  ];
+    ../../modules/wifi.nix
 
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    wirelesstools
-    wpa_supplicant
+    # general admin packages
   ];
 
   # Services
@@ -37,21 +33,26 @@
     };
   };
 
-  # Rest
+  # Users
 
   users.users.${username} = {
     isNormalUser = true;
     group = "pi";
     extraGroups = [
-      "wheel"
+      "wheel" # sudo
     ];
   };
   users.groups.pi = { };
 
+  users.users.root.initialPassword = "root";
+
+  # Rest
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "@wheel" ];
+  time.timeZone = "Europe/Prague";
 
-  networking.firewall.enable = false;
+  networking.firewall.enable = false; #todo
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
   hardware = {
@@ -59,28 +60,6 @@
     firmware = [ pkgs.wireless-regdb ];
   };
 
-  time.timeZone = "Europe/Prague";
-  users.users.root.initialPassword = "root";
-  networking = {
-    hostName = hostname;
-    useDHCP = false;
-    interfaces = {
-      wlan0.useDHCP = true;
-      eth0.useDHCP = true;
-    };
-
-    # Enabling WIFI
-    wireless = {
-      enable = true;
-      interfaces = [ "wlan0" ];
-      secretsFile = config.sops.secrets.wireless.path;
-      networks = {
-        "Smart Toilet" = {
-          pskRaw = "ext:smart_toilet_psk";
-        };
-      };
-    };
-  };
   hardware = {
     bluetooth.enable = true;
   };

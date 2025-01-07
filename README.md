@@ -46,12 +46,15 @@ Setup and common tasks:
 ## Raspberry PI, ISO and installers
 
 Installing on new machine requires generating `hardware-configuration.nix` and adding it to the flake.
+In other words, you need to get the machine running with Nix (not necessarily nixos as I understand it), generate the configuration. After that you can use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere) or update via ssh.
+
+### Get NixOS installed on machine
 
 Build minimal ISO (x86) or rpi SD card image:
 ```bash
 nix build .#minimal-iso
 # or
-nix build .#nixpi-sd-image
+nix build .#minimal-pi-sd-image
 ```
 
 Flash it (possibly unpack first - `unzstd -d rpi.img.zst`):
@@ -64,12 +67,12 @@ Find IP of the installed device:
 sudo nmap -p 22 192.168.0.0/24
 ```
 
-Partition the drives as you wish, then:
+Partition the drives as you wish, then You may need to get new `hardware-configuration` (not described here). Generate config:
 ```bash
-sudo nixos-install --flake github:Sekky61/nix-config#rpi --root /mnt --no-bootloader
+sudo nixos-install --flake github:Sekky61/nix-config#nixpi --root /mnt --no-bootloader
 ```
 or use the update script. This way you do not have to commit to try the install.
-`--no-bootloader` is unverified. You may need to get new `hardware-configuration`.
+`--no-bootloader` is unverified.
 
 
 ## Development
@@ -114,6 +117,7 @@ To use them, try `scripts/update --impure`.
 ### Options
 
 The modules are gradually becoming configurable via `michal` namespace.
+The other features are selectively imported by hosts as modules.
 
 ```nix
 michal.programs # Programs that might be not desired everywhere

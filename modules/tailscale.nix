@@ -10,7 +10,7 @@
   };
 
   # Now login as Sekky61@github using
-  # sudo tailscale up
+  # sudo tailscale up/login
 
   # exit node:
   # sudo tailscale up --advertise-exit-node

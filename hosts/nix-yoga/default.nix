@@ -1,18 +1,24 @@
 {
   imports = [
+    # HW
     ./hardware-configuration.nix
     ./configuration.nix
-
     ./audio.nix
-    ./gnome.nix
     ./laptop.nix
-    ./locale.nix
+    ../../modules/wifi.nix
 
-    ../../modules/dev
+    # Desktop/gui
+    ./gnome.nix
     ../../modules/gui-packages
     ../../modules/hyprland.nix
     ../../modules/browser/chrome.nix
     ../../modules/gamedev/godot.nix
+    ../../assets
+
+    # dev
+    ../../modules/terminal.nix
+    ../../modules/docker.nix
+    ../../modules/dev
   ];
 
   michal.programs = {

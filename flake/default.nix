@@ -27,7 +27,22 @@ in
     {
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
-        overlays = [ ];
+        overlays = [
+          (self: super: {
+            home-assistant-custom-components.localtuya
+              = super.home-assistant-custom-components.localtuya.overrideAttrs (oldAttrs: 
+            let
+              version = "2024.12.1";
+            in
+            {
+              inherit version;
+              src = builtins.fetchGit { # a fork
+                url = "https://github.com/xZetsubou/hass-localtuya";
+                rev = "v${version}";
+              };
+            });
+          })
+        ];
       };
 
       formatter = pkgs.nixfmt-rfc-style;

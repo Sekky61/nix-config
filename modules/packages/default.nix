@@ -3,6 +3,7 @@
   ...
 }:
 {
+  # todo rename to debug/admin
   # packages for daily needs
   environment.systemPackages = with pkgs; [
 

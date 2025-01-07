@@ -2,10 +2,12 @@
 set -euo pipefail
 
 # Build and flash raspberry pi 4 sd card
+# It has problems with sops-nix (newly generated key cannot decrypt secrets)
 
 # Use `lsblk`
 SD=${SD:-/dev/mmcblk0}
 
-nix build .#nixpi-sd-image
+nix build .#minimal-pi-sd-image
+rm nixpi.iso
 unzstd -d result/sd-image/*.img.zst -o nixpi.iso
 sudo dd if=nixpi.iso of=$SD bs=4096 conv=fsync status=progress

@@ -8,6 +8,7 @@
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+    ../../modules/ssh.nix
     # ./../../../hosts/common/modules/nix/nixos.nix
     # ./../../../home/konrad/common/options/ssh-keys.nix
     # ./../../../home/konrad/common/modules/base/ssh-keys.nix
@@ -25,7 +26,8 @@
     wireless.enable = false;
   };
 
-  # users.users.root.openssh.authorizedKeys.keys = config.sshKeys.personal.keys;
+  # needed for updates for now
+  users.users.root.openssh.authorizedKeys.keys = config.michal.sshKeys.personal.keys;
 
   environment.systemPackages = with pkgs; [
     busybox

@@ -36,7 +36,7 @@
       };
 
       wireless = {
-        neededForUsers = true;
+        # neededForUsers = true;
       };
     };
 

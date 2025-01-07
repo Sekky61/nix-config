@@ -73,6 +73,9 @@ in
       users.users.${username} = {
         openssh.authorizedKeys.keys = cfg.personal.keys;
       };
+      users.users.root = {
+        openssh.authorizedKeys.keys = cfg.personal.keys;
+      };
 
       services.openssh = {
         enable = true;

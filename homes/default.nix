@@ -32,14 +32,15 @@
     # in home-manager through osConfig without us passing it
     extraSpecialArgs = {
       inherit
-        inputs
         self
-        impurity
+        inputs
+        impurity # to link configs like nvim
         username
         ;
     };
 
     # username specified in the nixosSystem
+    # loads dynamically based on username
     users.${username} = ./${username};
   };
 
@@ -50,6 +51,7 @@
   users.mutableUsers = false;
   users.users.${username} = {
     isNormalUser = true;
+    initialPassword = "password"; # for first time install, should be overwritten by hashedPasswordFile
     hashedPasswordFile = config.sops.secrets.user-password.path; # must be a hash (mkpasswd). Yes it happened to me. Yes i deleted all passwords and couldnt get in.
   };
 }

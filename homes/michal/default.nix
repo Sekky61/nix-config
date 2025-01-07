@@ -17,6 +17,7 @@ in
     ./theme.nix
     ./git.nix
     ./java.nix
+
   ];
 
   home = {
@@ -40,24 +41,11 @@ in
       package = pkgs.google-fonts.override { fonts = [ "Rubik" ]; };
       size = 11;
     };
-    gtk3 = {
-      bookmarks = [
-        "file://${homeDirectory}/Downloads"
-        "file://${homeDirectory}/Documents"
-        "file://${homeDirectory}/Pictures"
-        "file://${homeDirectory}/Music"
-        "file://${homeDirectory}/Videos"
-        "file://${homeDirectory}/.config"
-        "file://${homeDirectory}/.config/ags"
-        "file://${homeDirectory}/.config/hypr"
-        "file://${homeDirectory}/GitHub"
-        "file:///mnt/Windows"
-      ];
-    };
   };
 
   programs = {
     home-manager.enable = true;
   };
-  home.stateVersion = "23.11"; # this must be the version at which you have started using the program
+  # this must be the version at which you have started using home-manager
+  home.stateVersion = "23.11";
 }

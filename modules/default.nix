@@ -1,14 +1,15 @@
 { pkgs, ... }:
 {
   imports = [
-    ./terminal.nix
+    # Truly common, always there
     ./tailscale.nix
-    ./cachix.nix
-    ./docker.nix
-    ./packages
     ./ssh.nix
-    ./nix-config.nix
     ./sops
+    ./nix-config.nix
+    ./cachix.nix
+    ./locale.nix
+    ./impure.nix
+    ./packages # admin/debug packages
 
     # Modules with options
     ./bitwarden.nix
@@ -16,6 +17,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    nix-output-monitor
+    nix-output-monitor # pretty nixos-switch
   ];
 }

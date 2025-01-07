@@ -8,7 +8,6 @@
   imports = [
     ./direnv.nix
     ./debugger.nix
-    ./docker.nix
   ];
 
   # packages for development
@@ -40,6 +39,7 @@
     wireshark
     act # github actions locally
     mkcert
+    dive # for exploring docker images layers
 
     # deps
     glib
