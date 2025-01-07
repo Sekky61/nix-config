@@ -3,6 +3,20 @@ with lib;
 let
   # TODO: external address via Tailscale for some services (.mora)
   cfg = config.michal.services.home-assistant;
+
+  # TODO: does not work
+  hass-localtuya = pkgs.callPackage pkgs.buildHomeAssistantComponent {
+    name = "hass-localtuya";
+    owner = "xZetsubou";
+    version = "2024.12.1";
+    domain = "hass-localtuya"; # copied
+    src = pkgs.fetchFromGitHub {
+      owner = "xZetsubou";
+      repo = "hass-localtuya";
+      tag = "2024.12.1";
+      hash = "sha256-SXYqzpHPuXFR6w/cUKo3VN8XRn6XA2mGbdRXs9oLk6k=";
+    };
+  };
 in {
 
   options.michal.services.home-assistant = myServiceOptions "Home Assistant" // {
@@ -33,6 +47,7 @@ in {
   };
 
   config = mkIf cfg.enable {
+
     services.home-assistant = {
       enable = cfg.enable;
       extraComponents =  [
@@ -121,6 +136,7 @@ in {
       ];
 
       customComponents = with pkgs.home-assistant-custom-components; [
+        # hass-localtuya
         localtuya
       ];
       config = {

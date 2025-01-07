@@ -1,6 +1,5 @@
-{ nixpkgs, ... } @ inputs: 
+{ lib, inputs, system, ... }: 
 let 
-  lib = nixpkgs.lib;
   nixosSystem = lib.nixosSystem;
   hosts = {
     nix-yoga = nixosSystem {
@@ -31,43 +30,46 @@ let
     { impurity.enable = true; }
   ]; })) hosts;
 
-in hosts // impure-hosts // {
+in {
 
-  desktopIso = nixosSystem {
-    specialArgs = { inherit inputs; };
-    system = "x86_64-linux";
-    modules = [
-      ../modules/ssh.nix
-      ({ pkgs
-       , modulesPath
-       , ...
-       }: {
-        imports = [ 
-          (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
-        ];
-        environment.systemPackages = [ pkgs.neovim ];
-      })
-    ];
-  };
 
-  minimal-pi = nixosSystem {
-    specialArgs = {
-      username = "pi";
-      hostname = "rpi";
-      inherit inputs;
+  flake.nixosConfigurations = hosts // impure-hosts // {
+    desktopIso = nixosSystem {
+      specialArgs = { inherit inputs; };
+      system = "x86_64-linux";
+      modules = [
+        ../modules/ssh.nix
+        ({ pkgs
+         , modulesPath
+         , ...
+         }: {
+          imports = [ 
+            (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
+          ];
+          environment.systemPackages = [ pkgs.neovim ];
+        })
+      ];
     };
-    system = "aarch64-linux";
-    modules = [
-      ../modules/ssh.nix
-      ({ username, ... }: {
-        users.users.root.initialPassword = "root";
-        users.users.${username} = {
-          initialPassword = "password";
-          isNormalUser = true;
-          group = "pi";
-        };
-        users.groups.pi = {};
-      })
-    ];
+
+    minimal-pi = nixosSystem {
+      specialArgs = {
+        username = "pi";
+        hostname = "rpi";
+        inherit inputs;
+      };
+      system = "aarch64-linux";
+      modules = [
+        ../modules/ssh.nix
+        ({ username, ... }: {
+          users.users.root.initialPassword = "root";
+          users.users.${username} = {
+            initialPassword = "password";
+            isNormalUser = true;
+            group = "pi";
+          };
+          users.groups.pi = {};
+        })
+      ];
+    };
   };
 }

@@ -30,6 +30,9 @@
       port = 1290;
       proxy = true;
       subdomain = "homeassistant";
+      bedLampId = "37756192b7a6e872261e11b8853e4647";
+      diningLampId = "ec2b6aba1eb4b926d436dad61c31807b";
+      fanId = "c0396ed75d9f83cabe0daf3842a4b1b3";
     };
   };
 
