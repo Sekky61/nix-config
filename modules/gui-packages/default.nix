@@ -11,6 +11,7 @@
     ./terminal-gui.nix
     ./alacritty.nix
     ./kitty.nix
+    ./anyrun.nix
   ];
 
   # packages for daily needs

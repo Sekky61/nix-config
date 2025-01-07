@@ -3,10 +3,6 @@
   ...
 }:
 {
-  imports = [
-    ./anyrun.nix
-  ];
-
   # packages for daily needs
   environment.systemPackages = with pkgs; [
 

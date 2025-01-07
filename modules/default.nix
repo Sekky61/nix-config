@@ -5,6 +5,8 @@
     ./tailscale.nix
     ./cachix.nix
     ./docker.nix
+    ./packages
+    ./ssh.nix
     ./nix-config.nix
     ./sops
 
