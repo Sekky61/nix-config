@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Build and flash raspberry pi 4 sd card
+
+# Use `lsblk`
+SD=${SD:-/dev/mmcblk0}
+
+nix build .#nixpi-sd-image
+unzstd -d result/sd-image/*.img.zst -o nixpi.iso
+sudo dd if=nixpi.iso of=$SD bs=4096 conv=fsync status=progress

@@ -26,8 +26,8 @@
         {
           minimal-iso = import ./../pkgs/installer-iso { inherit pkgs specialArgs; };
 
-          rpi-sd-image =
-            (self.nixosConfigurations.rpi.extendModules { inherit modules; }).config.system.build.sdImage;
+          nixpi-sd-image =
+            (self.nixosConfigurations.nixpi.extendModules { inherit modules; }).config.system.build.sdImage;
         }
       ) // {
         nix-yoga-vm =

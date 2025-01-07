@@ -51,7 +51,7 @@ Build minimal ISO (x86) or rpi SD card image:
 ```bash
 nix build .#minimal-iso
 # or
-nix build .#rpi-sd-image
+nix build .#nixpi-sd-image
 ```
 
 Flash it (possibly unpack first - `unzstd -d rpi.img.zst`):
