@@ -858,13 +858,19 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
     end
 
+
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  -- You are banned
+  if client.name == "ts_ls" then
+    client.server_capabilities.documentFormattingProvider = false
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
