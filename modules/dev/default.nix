@@ -13,7 +13,7 @@
   # packages for development
   environment.systemPackages = with pkgs; [
     # langs
-    nodejs
+    nodejs_23
     gjs
     bun
     cargo

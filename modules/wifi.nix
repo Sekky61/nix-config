@@ -7,10 +7,12 @@
 
   networking = {
     hostName = hostname;
-    interfaces = {
-      wlan0.useDHCP = true;
-      eth0.useDHCP = true;
-    };
+    # Add something like this to each host
+    #
+    # interfaces = {
+    #   wlan0.useDHCP = true;
+    #   eth0.useDHCP = true;
+    # };
 
     # Enabling WIFI
     wireless = {
