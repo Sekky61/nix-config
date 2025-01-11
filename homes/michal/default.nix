@@ -11,7 +11,7 @@ in
     ## Dotfiles (manual)
     ./dotfiles.nix
     # Stuff
-    ./ags.nix
+    ../../modules/gui-packages/ags
     ./dconf.nix
     ./mimelist.nix
     ./theme.nix

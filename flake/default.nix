@@ -27,7 +27,7 @@ in
       formatter = pkgs.nixfmt-rfc-style;
 
       devShells = {
-        default = pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix hass-localtuya ]; };
+        default = pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix ]; };
       };
     };
 }
