@@ -61,7 +61,7 @@ function WorkspaceContents(count: number) {
 /** css is defined in _bar.scss */
 export default function Workspaces() {
     return <EventBox
-        className="bar-group bar-group-standalone bar-group-pad bar-ws-width"
+        className="bar-group-standalone bar-group-pad bar-ws-width"
         onScroll={(_el, e) => {
             const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
             console.log(e.x, e.y, e.delta_x, e.delta_y, e.direction, e.modifier, e.time);
