@@ -13,16 +13,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={TOP | LEFT | RIGHT}
         application={App}>
-        <centerbox>
+        <centerbox
+            className="bar-bg"
+        >
             <Workspaces />
-            <button
-                onClicked="echo hello"
-                halign={Gtk.Align.CENTER}
-                className="btn-primary"
-            >
-                Welcome to AGS!
-            </button>
-            <box />
             <button
                 onClicked={() => print("hello")}
                 halign={Gtk.Align.CENTER}

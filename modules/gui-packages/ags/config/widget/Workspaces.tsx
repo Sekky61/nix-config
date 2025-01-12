@@ -28,28 +28,39 @@ function WorkspaceContents(count: number) {
 
     return Array.from({ length: count }, (_, i) => i).map((_, index) => {
         const wsId = index + 1;
-        return <box>
-            <label
-                setup={(self) => {
-                    self.toggleClassName('bar-ws-occupied', perId(o => o[wsId] !== undefined).get());
-                    self.hook(perId, (self) => {
-                        // Does not fire on first render, so is also set in setup
-                        self.toggleClassName('bar-ws-occupied', perId.get()[wsId] !== undefined);
-                    });
-                    self.hook(focusedWs, (_self) => {
+        const w = perId.get()[wsId];
+        return (
+            <box>
+                <button
+                    onClicked={_b => {
+                        hyprland.dispatch("workspace", wsId.toString());
+                    }}
+                >
+                <label
+                    setup={(self) => {
+                        self.toggleClassName('bar-ws-occupied', perId(o => o[wsId] !== undefined).get());
+                        self.hook(perId, (self) => {
+                            // Does not fire on first render, so is also set in setup
+                            self.toggleClassName('bar-ws-occupied', perId.get()[wsId] !== undefined);
+                        });
+
                         self.toggleClassName('bar-ws-active', focusedWs.get().id === wsId);
-                    });
-                }}
-                className="bar-ws"
-                label={wsId.toString()} />
-        </box>
+                        self.hook(focusedWs, (_self) => {
+                            self.toggleClassName('bar-ws-active', focusedWs.get().id === wsId);
+                        });
+                    }}
+                    className="bar-ws"
+                    label={wsId.toString()}
+                />
+                </button>
+            </box>
+        );
     });
 }
 
 /** css is defined in _bar.scss */
 export default function Workspaces() {
     return <EventBox
-        onClick={(e) => console.log(e)}
         className="bar-group bar-group-standalone bar-group-pad bar-ws-width"
         onScroll={(_el, e) => {
             const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
