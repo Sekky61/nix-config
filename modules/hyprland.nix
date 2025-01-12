@@ -176,7 +176,7 @@ in
         ];
         "exec-once" = [
           # system tray
-          # "ags run"
+          "ags run"
           # wallpaper
           "swww kill; swww init"
           # go to sleep after inactivity

@@ -39,7 +39,7 @@ in
     enable = true;
 
     # symlink to ~/.config/ags
-    configDir = null; # impurity.link ./config;
+    configDir = impurity.link ./config;
 
     # additional packages to add to gjs's runtime
     extraPackages = with astalPkgs; [
