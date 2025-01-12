@@ -3,13 +3,17 @@ import { Variable } from "astal"
 import Workspaces from "./Workspaces"
 import Tray from "./Tray"
 import BatteryLevel from "./BatteryLevel"
+import type { ChildrenProps } from "../util"
+import FocusedClient from "./FocusedClient"
 
 const time = Variable("").poll(1000, "date")
 
-export function BarGroup({ child }: {child: JSX.Element}) {
+/** Wrap a component in colored bubble */
+export function BarGroup({ child, children }: ChildrenProps) {
     return <box className='bar-group-margin bar-sides'>
         <box className='bar-group bar-group-standalone bar-group-pad-system'>
             {child}
+            {children}
         </box>
     </box>
 }
@@ -25,8 +29,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         application={App}>
         <centerbox
             className="bar-bg"
+            startWidget={
+                <FocusedClient />
+            }
             centerWidget={
-                <box>
+                <box className='spacing-h-4'>
                     <BarGroup>
                         <Workspaces />
                     </BarGroup>
@@ -36,15 +43,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
             }
             endWidget={
-            <box hexpand halign={Gtk.Align.END}>
-                <button
-                    onClicked={() => print("hello")}
-                    halign={Gtk.Align.CENTER}
-                >
-                    <label label={time()} />
-                </button>
-                <Tray />
-            </box>
+                <box hexpand halign={Gtk.Align.END}>
+                    <button
+                        onClicked={() => print("hello")}
+                        halign={Gtk.Align.CENTER}
+                    >
+                        <label label={time()} />
+                    </button>
+                    <Tray />
+                </box>
             }
         >
         </centerbox>

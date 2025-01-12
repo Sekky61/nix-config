@@ -74,7 +74,19 @@ export default function Workspaces() {
         }}
     >
         <box>
-            {WorkspaceContents(12)}
+            {bind(hyprland, "workspaces").as(wss => wss
+                .filter(ws => !(ws.id >= -99 && ws.id <= -2)) // filter out special workspaces
+                .sort((a, b) => a.id - b.id)
+                .map(ws => (
+                    <button
+                        className={bind(hyprland, "focusedWorkspace").as(fw =>
+                            ws === fw ? "bar-ws bar-ws-active" : "bar-ws")}
+                        onClicked={() => ws.focus()}>
+                        {ws.id}
+                    </button>
+                ))
+            )}
         </box>
     </EventBox>
 }
+
