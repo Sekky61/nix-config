@@ -19,6 +19,7 @@
       enable = true;
       interfaces = [ "wlan0" ];
       secretsFile = config.sops.secrets.wireless.path;
+      userControlled.enable = true;
       networks = {
         "Smart Toilet" = {
           pskRaw = "ext:smart_toilet_psk";

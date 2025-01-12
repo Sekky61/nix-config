@@ -193,14 +193,13 @@
 
   # network
   networking = {
-    networkmanager.enable = true;
+    networkmanager.enable = false;
     interfaces = {
       wlan0.useDHCP = true;
     };
   };
 
   services.resolved.enable = true; # Fix for no connection when tailscale is on
-
 
   # bluetooth
   hardware.bluetooth = {
