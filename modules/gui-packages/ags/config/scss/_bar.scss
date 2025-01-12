@@ -82,6 +82,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .bar-ws {
+    @include full-rounding;
     min-width: $bar_ws_width;
     color: mix($onBackground, $background, 40%);
     @if $darkmode ==true {
@@ -89,14 +90,15 @@ $bar_subgroup_bg: $surfaceVariant;
     }
 }
 
-.bar-ws-active {
-    background-color: $secondaryContainer;
-    color: $onSecondaryContainer;
-}
-
 .bar-ws-occupied {
     background-color: $bar_subgroup_bg;
     color: $onSurfaceVariant;
+}
+
+/* Apply active above occupied (css rule order) */
+.bar-ws-active {
+    background-color: $secondaryContainer;
+    color: $onSecondaryContainer;
 }
 
 .bar-separator {
