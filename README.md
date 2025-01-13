@@ -16,7 +16,7 @@ I also define some *services*, which allow me to easily host them.
 ## Jump table
 
 - [Neovim config](modules/nvim/init.lua)
-- [Hyprland config](modules/hyprland.nix)
+- [Hyprland config](modules/hyprland/)
 
 ## Usage
 

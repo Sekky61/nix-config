@@ -24,6 +24,10 @@
         "Smart Toilet" = {
           pskRaw = "ext:smart_toilet_psk";
         };
+        "WiFi Mission 3" = {
+          pskRaw = "ext:mission_3_psk";
+        };
+        "Regiojet - zluty" = {};
       };
     };
   };
