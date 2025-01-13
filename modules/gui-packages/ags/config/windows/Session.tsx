@@ -19,16 +19,41 @@ const sessionButtons: Record<string, SessionButtonProps> = {
     'cancel': { name: 'Cancel', icon: 'close', command: () => toggleWindow('session'), props: { className: 'session-button-cancel' } },
 }
 
+const { CENTER, END } = Gtk.Align
 
 function SessionButton(p: SessionButtonProps) {
-    return <button className='session-button' onClick={p.command}>
-        <label label={p.icon} className='icon-material' vexpand />
-    </button>
+    const revealer = <revealer
+                        valign={END}
+                        transition_type={Gtk.RevealerTransitionType.SLIDE_DOWN}
+                        transition_duration={200}>
+                        <label label={p.name} className='txt-smaller session-button-desc' />
+                    </revealer> as Gtk.Revealer;
+    return <button className='session-button' onClick={p.command}
+                onFocusInEvent={(self) => revealer.revealChild = true}
+                onFocusOutEvent={(self) => revealer.revealChild = false}
+                onHover={(self) => {
+                    revealer.revealChild = true;
+                    const display = Gdk.Display.get_default();
+                    if(!display) return;
+                    const cursor = Gdk.Cursor.new_from_name(display, 'pointer');
+                    self.get_window()?.set_cursor(cursor);
+                }}
+                onHoverLost={(self) => {
+                    revealer.revealChild = false
+                    const display = Gdk.Display.get_default();
+                    if(!display) return;
+                    const cursor = Gdk.Cursor.new_from_name(display, 'default');
+                    self.get_window()?.set_cursor(cursor);
+                }}
+            >
+            <overlay className='session-button-box' overlay={revealer}>
+                <label label={p.icon} className='icon-material' vexpand />
+            </overlay>
+        </button>
 }
 
 /** Code can target this window by its name 'session', like `ags toggle 'session'` */
 export default function SessionWindow() {
-    const { CENTER } = Gtk.Align
 
     return <window
         name="session"
@@ -42,13 +67,14 @@ export default function SessionWindow() {
                 self.hide()
         }}>
         <box className='session-bg'>
-            <box halign={CENTER} vexpand vertical>
-                <box valign={CENTER}>
+            <box halign={CENTER} vexpand vertical className='spacing-v-15'>
+                <label halign={CENTER} label='Use arrow keys to navigate.\nEnter to select, Esc to cancel.' className='txt-small txt' />
+                <box valign={CENTER} className='spacing-h-15'>
                     <SessionButton {...sessionButtons['lock']} />
                     <SessionButton {...sessionButtons['logout']} />
                     <SessionButton {...sessionButtons['sleep']} />
                 </box>
-                <box valign={CENTER}>
+                <box valign={CENTER} className='spacing-h-15'>
                     <SessionButton {...sessionButtons['hibernate']} />
                     <SessionButton {...sessionButtons['shutdown']} />
                     <SessionButton {...sessionButtons['reboot']} />
