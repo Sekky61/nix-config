@@ -79,9 +79,11 @@ or use the update script. This way you do not have to commit to try the install.
 
 ### AGS notes
 
+(This is for v1, v2 bar is in progress)
+
 Press `Super + /` to open the list of keybindings.
 
-[Very useful docs](https://aylur.github.io/ags-docs/). Also look at [GJS docs](https://gjs.guide/).
+[Very useful docs](https://aylur.github.io/ags/). Also look at [GJS docs](https://gjs.guide/).
 
 - class `corner-black` makes fake rounded screen
 - class `corner` controls rounding of the top bar
@@ -104,7 +106,7 @@ Uses `tuigreet`, on login launches Hyprland.
 
 ### Hyprland
 
-The window manager. Launches Chrome on startup. Uses Ags bar. See shortcuts with `Super+/`.
+The window manager. Launches Chrome on startup. Uses Ags/astal bar. See shortcuts with `Super+/`.
 
 ### Impurity
 

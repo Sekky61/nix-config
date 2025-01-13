@@ -1,3 +1,6 @@
+@use 'lib_mixins';
+@use './material';
+
 .test {
     background-image: linear-gradient(
         45deg, #f4d609 0%, #f4d609 10%, #212121 10%, #212121 20%, #f4d609 20%, #f4d609 30%, #212121 30%, 
@@ -13,41 +16,41 @@
 }
 
 .txt-title {
-    @include titlefont;
+    @include lib_mixins.titlefont;
     font-size: 2.045rem;
 }
 
 .txt-title-small {
-    @include titlefont;
+    @include lib_mixins.titlefont;
     font-size: 1.364rem;
 }
 
 .techfont {
-    @include techfont;
+    @include lib_mixins.techfont;
 }
 
 .txt-reading {
-    @include readingfont;
+    @include lib_mixins.readingfont;
 }
 
 .no-anim {
-    @include noanim;
+    @include lib_mixins.noanim;
 }
 
 .txt {
-    color: $onBackground;
+    color: material.$onBackground;
 }
 
 .txt-primary {
-    color: $primary;
+    color: material.$primary;
 }
 
 .txt-onSecondaryContainer {
-    color: $onSecondaryContainer;
+    color: material.$onSecondaryContainer;
 }
 
 .txt-onSurfaceVariant {
-    color: $onSurfaceVariant;
+    color: material.$onSurfaceVariant;
 }
 
 .txt-shadow {
@@ -56,62 +59,62 @@
 }
 
 .txt-gigantic {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 3rem;
 }
 
 .txt-massive {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 2.7273rem;
 }
 
 .txt-hugerass {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 2.045rem;
 }
 
 .txt-hugeass {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1.8182rem;
 }
 
 .txt-larger {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1.6363rem;
 }
 
 .txt-large {
     //16pt
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1.4545rem;
 }
 
 .txt-norm {
     //14pt
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1.2727rem;
 }
 
 .txt-small {
     //12pt
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1.0909rem;
 }
 
 .txt-smallie {
     //11pt
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 1rem;
 }
 
 .txt-smaller {
     //10pt
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 0.9091rem;
 }
 
 .txt-tiny {
-    @include mainfont;
+    @include lib_mixins.mainfont;
     font-size: 0.7273rem;
 }
 
@@ -120,11 +123,11 @@
 }
 
 .txt-subtext {
-    @include subtext;
+    @include lib_mixins.subtext;
 }
 
 .txt-action {
-    @include actiontext;
+    @include lib_mixins.actiontext;
 }
 
 .txt-thin {
@@ -144,37 +147,37 @@
 }
 
 .btn-primary {
-    @include full-rounding;
-    background-color: $primary;
-    color: $onPrimary;
+    @include lib_mixins.full-rounding;
+    background-color: material.$primary;
+    color: material.$onPrimary;
     padding: 0.682rem 1.023rem;
 }
 
 .titlefont {
-    @include titlefont;
+    @include lib_mixins.titlefont;
 }
 
 .mainfont {
-    @include mainfont;
+    @include lib_mixins.mainfont;
 }
 
 .icon-material {
-    @include icon-material;
+    @include lib_mixins.icon-material;
 }
 
 .icon-nerd {
-    @include icon-nerd;
+    @include lib_mixins.icon-nerd;
 }
 
 .separator-line {
-    background-color: $outline;
+    background-color: material.$outline;
     min-width: 0.068rem;
     min-height: 0.068rem;
 }
 
 .separator-circle {
-    @include full-rounding;
-    background-color: $outline;
+    @include lib_mixins.full-rounding;
+    background-color: material.$outline;
     margin: 0rem 0.682rem;
     min-width: 0.273rem;
     min-height: 0.273rem;
@@ -373,15 +376,15 @@
 }
 
 .anim-enter {
-    @include anim-enter;
+    @include lib_mixins.anim-enter;
 }
 
 .anim-exit {
-    @include anim-exit;
+    @include lib_mixins.anim-exit;
 }
 
 .button-minsize {
-    @include button-minsize;
+    @include lib_mixins.button-minsize;
 }
 
 .margin-right-5 {
@@ -499,26 +502,26 @@
 }
 
 .menu-decel {
-    @include menu_decel;
+    @include lib_mixins.menu_decel;
 }
 .element-show {
-    @include element_easeInOut;
+    @include lib_mixins.element_easeInOut;
 }
 .element-hide {
-    @include element_easeInOut;
+    @include lib_mixins.element_easeInOut;
 }
 .element-move {
-    @include element_easeInOut;
+    @include lib_mixins.element_easeInOut;
 }
 .element-decel {
-    @include element_decel;
+    @include lib_mixins.element_decel;
 }
 .element-bounceout {
-    @include element_bounceOut;
+    @include lib_mixins.element_bounceOut;
 }
 .element-accel {
-    @include element_accel;
+    @include lib_mixins.element_accel;
 }
 .page-move {
-    @include page_move;
+    @include lib_mixins.page_move;
 }

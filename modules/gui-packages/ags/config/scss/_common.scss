@@ -1,19 +1,23 @@
+@use 'sass:color';
+@use './material';
+@use './lib_mixins';
+
 // * {
-//     border: 1px solid $onSurfaceVariant; // Debugging
+//     border: 1px solid material.$onSurfaceVariant; // Debugging
 // }
 
 // *:focus {
-//     outline: 1px solid mix($onSurface, $surface, 40%);
-//     -gtk-outline-radius: $rounding_small;
+//     outline: 1px solid color.mix(material.$onSurface, material.$surface, 40%);
+//     -gtk-outline-radius: material.$rounding_small;
 // }
 
 * {
     selection {
-        background-color: $secondary;
-        color: $onSecondary;
+        background-color: material.$secondary;
+        color: material.$onSecondary;
     }
 
-    caret-color: $primary;
+    caret-color: material.$primary;
 }
 
 @keyframes appear {
@@ -27,10 +31,10 @@
 }
 
 menu {
-    @include elevation-border-softer;
+    @include lib_mixins.elevation-border-softer;
     padding: 0.681rem;
-    background: $surfaceVariant;
-    color: $onSurfaceVariant;
+    background: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
     border-radius: 1.159rem;
     -gtk-outline-radius: 1.159rem;
 
@@ -57,19 +61,19 @@ menu>menuitem {
 
 menu>menuitem:hover,
 menu>menuitem:focus {
-    background-color: mix($surfaceVariant, $onSurfaceVariant, 90%);
+    background-color: color.mix(material.$surfaceVariant, material.$onSurfaceVariant, 90%);
 }
 
 menu>menuitem:active {
-    background-color: mix($surfaceVariant, $onSurfaceVariant, 80%);
+    background-color: color.mix(material.$surfaceVariant, material.$onSurfaceVariant, 80%);
 }
 
 radio {
-    @include full-rounding;
+    @include lib_mixins.full-rounding;
     margin: 0.273rem;
     min-width: 15px;
     min-height: 15px;
-    border: 0.068rem solid $outline;
+    border: 0.068rem solid material.$outline;
 }
 
 // radio:first-child {
@@ -79,8 +83,8 @@ radio {
 radio:checked {
     min-width: 8px;
     min-height: 8px;
-    background-color: $onPrimary;
-    border: 0.477rem solid $primary;
+    background-color: material.$onPrimary;
+    border: 0.477rem solid material.$primary;
 }
 
 tooltip {
@@ -88,10 +92,10 @@ tooltip {
     animation-duration: 100ms;
     animation-timing-function: ease-out;
     animation-iteration-count: 1;
-    @include normal-rounding;
-    background-color: $surfaceVariant;
-    color: $onSurfaceVariant;
-    border: 1px solid $onSurfaceVariant;
+    @include lib_mixins.normal-rounding;
+    background-color: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
+    border: 1px solid material.$onSurfaceVariant;
 }
 
 /////////////////////////////////////////
@@ -105,10 +109,10 @@ tooltip {
 //     ╰── button.image-button.emoji-section
 
 popover {
-    @include elevation-border-softer;
+    @include lib_mixins.elevation-border-softer;
     padding: 0.681rem;
-    background: $surfaceVariant;
-    color: $onSurfaceVariant;
+    background: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
     border-radius: 1.159rem;
     -gtk-outline-radius: 1.159rem;
 
@@ -127,50 +131,50 @@ popover {
 }
 
 .configtoggle-box:focus {
-    border: 0.136rem solid mix($onSurface, $surface, 40%);
+    border: 0.136rem solid color.mix(material.$onSurface, material.$surface, 40%);
 }
 
 .switch-bg {
-    @include element_decel;
-    @include full-rounding;
-    background-color: mix($surface, $background, 50%);
-    border: 0.136rem solid $onSurface;
+    @include lib_mixins.element_decel;
+    @include lib_mixins.full-rounding;
+    background-color: color.mix(material.$surface, material.$background, 50%);
+    border: 0.136rem solid material.$onSurface;
     min-width: 2.864rem;
     min-height: 1.637rem;
 }
 
 .switch-bg-true {
-    background-color: $primary;
-    border: 0.136rem solid $primary;
+    background-color: material.$primary;
+    border: 0.136rem solid material.$primary;
 }
 
 .switch-fg {
-    @include full-rounding;
-    @include menu_decel;
-    background-color: $onSurface;
-    color: $surface;
+    @include lib_mixins.full-rounding;
+    @include lib_mixins.menu_decel;
+    background-color: material.$onSurface;
+    color: material.$surface;
     min-width: 0.819rem;
     min-height: 0.819rem;
     margin-left: 0.477rem;
 }
 
 .switch-fg-true {
-    background-color: $onPrimary;
-    color: $primary;
+    background-color: material.$onPrimary;
+    color: material.$primary;
     min-width: 1.431rem;
     min-height: 1.431rem;
     margin-left: 1.431rem;
 }
 
 .switch-fg-toggling-false {
-    @include menu_decel;
+    @include lib_mixins.menu_decel;
     min-width: 1.636rem;
     min-height: 0.819rem;
 }
 
 .segment-container {
-    @include full-rounding;
-    border: 0.068rem solid $outline;
+    @include lib_mixins.full-rounding;
+    border: 0.068rem solid material.$outline;
 }
 
 .segment-container>*:first-child {
@@ -179,7 +183,7 @@ popover {
 }
 
 .segment-container>* {
-    border-right: 0.068rem solid $outline;
+    border-right: 0.068rem solid material.$outline;
     padding: 0.341rem 0.682rem;
 }
 
@@ -190,23 +194,23 @@ popover {
 }
 
 .segment-btn {
-    color: $onSurface;
+    color: material.$onSurface;
 }
 
 .segment-btn:focus,
 .segment-btn:hover {
-    background-color: $hovercolor;
+    background-color: material.$hovercolor;
 }
 
 .segment-btn-enabled {
-    background-color: $secondaryContainer;
-    color: $onSecondaryContainer;
+    background-color: material.$secondaryContainer;
+    color: material.$onSecondaryContainer;
 }
 
 .segment-btn-enabled:hover,
 .segment-btn-enabled:focus {
-    background-color: $secondaryContainer;
-    color: $onSecondaryContainer;
+    background-color: material.$secondaryContainer;
+    color: material.$onSecondaryContainer;
 }
 
 .gap-v-5 {

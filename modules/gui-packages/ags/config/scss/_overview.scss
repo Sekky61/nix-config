@@ -1,22 +1,27 @@
+@use 'sass:color';
+@use "sass:string";
+@use 'lib_mixins';
+@use 'material';
+
 .overview-window {
     margin-top: 2.727rem;
 }
 
 .overview-search-box {
-    @include element_decel;
-    @include large-rounding;
-    @include elevation-border;
-    @include elevation2;
+    @include lib_mixins.element_decel;
+    @include lib_mixins.large-rounding;
+    @include lib_mixins.elevation-border;
+    @include lib_mixins.elevation2;
     min-width: 13.636rem;
     min-height: 3.409rem;
     padding: 0rem 1.364rem;
     padding-right: 2.864rem;
-    background-color: $t_background;
-    color: $onBackground;
+    background-color: material.$t_background;
+    color: material.$onBackground;
 
     selection {
-        background-color: $secondary;
-        color: $onSecondary;
+        background-color: material.$secondary;
+        color: material.$onSecondary;
     }
 
     caret-color: transparent;
@@ -24,11 +29,11 @@
 
 .overview-search-box-extended {
     min-width: 25.909rem;
-    caret-color: $onSecondaryContainer;
+    caret-color: material.$onSecondaryContainer;
 }
 
 .overview-search-prompt {
-    color: $subtext;
+    color: material.$subtext;
 }
 
 .overview-search-icon {
@@ -37,24 +42,24 @@
 
 .overview-search-prompt-box {
     margin-left: -18.545rem;
-    margin-right: $elevation_margin + 0.068rem;
+    margin-right: lib_mixins.$elevation_margin + 0.068rem;
 }
 
 .overview-search-icon-box {
     margin-left: -18.545rem;
-    margin-right: $elevation_margin + 0.068rem;
+    margin-right: lib_mixins.$elevation_margin + 0.068rem;
 }
 
 .overview-search-results {
     // min-height: 2.813rem;
     // min-height: 37.5rem;
-    @include large-rounding;
-    @include elevation-border;
-    @include elevation2;
+    @include lib_mixins.large-rounding;
+    @include lib_mixins.elevation-border;
+    @include lib_mixins.elevation2;
     min-width: 28.773rem;
     padding: 0.682rem;
-    background-color: $t_background;
-    color: $onBackground;
+    background-color: material.$t_background;
+    color: material.$onBackground;
 }
 
 .overview-search-results-icon {
@@ -70,12 +75,12 @@
 
 .overview-search-results-txt-cmd {
     margin-right: 0.682rem;
-    @include techfont;
+    @include lib_mixins.techfont;
     font-size: 1.227rem;
 }
 
 .overview-search-result-btn {
-    @include normal-rounding;
+    @include lib_mixins.normal-rounding;
     padding: 0.341rem;
     min-width: 2.386rem;
     min-height: 2.386rem;
@@ -85,55 +90,118 @@
 
 .overview-search-result-btn:hover,
 .overview-search-result-btn:focus {
-    background-color: $hovercolor;
+    background-color: material.$hovercolor;
 }
 
 .overview-search-result-btn:active {
-    background-color: $activecolor;
+    background-color: material.$activecolor;
 }
 
 .overview-tasks {
-    @include large-rounding;
-    @include elevation-border;
-    @include elevation2;
+    @include lib_mixins.large-rounding;
+    @include lib_mixins.elevation-border;
+    @include lib_mixins.elevation2;
     padding: 0.341rem;
-    background-color: $t_background;
-    color: $onBackground;
+    background-color: material.$t_background;
+    color: material.$onBackground;
 }
 
 .overview-tasks-workspace {
-    @include normal-rounding;
-    // @include elevation-border;
+    @include lib_mixins.normal-rounding;
+    // @include lib_mixins.elevation-border;
     margin: 0.341rem;
-    background-color: mix($t_t_surface, $t_onSurface, 93%);
+    background-color: color.mix(material.$t_t_surface, material.$t_onSurface, 93%);
 }
 
 .overview-tasks-workspace-number {
-    @include mainfont;
-    color: mix($t_onSurface, $t_surface, 93%);
+    @include lib_mixins.mainfont;
+    color: color.mix(material.$t_onSurface, material.$t_surface, 93%);
 }
 
 .overview-tasks-window {
-    @include normal-rounding;
-    @include menu_decel;
-    background-color: $t_surfaceVariant;
-    color: $onSecondaryContainer;
-    border: 0.068rem solid $t_t_t_onSecondaryContainer;
+    @include lib_mixins.normal-rounding;
+    @include lib_mixins.menu_decel;
+    background-color: material.$t_surfaceVariant;
+    color: material.$onSecondaryContainer;
+    border: 0.068rem solid material.$t_t_t_onSecondaryContainer;
 }
 
 .overview-tasks-window:hover,
 .overview-tasks-window:focus {
-    background-color: mix($l_t_secondaryContainer, $primary, 95%);
+    background-color: color.mix(material.$l_t_secondaryContainer, material.$primary, 95%);
 }
 
 .overview-tasks-window:active {
-    background-color: mix($l_t_secondaryContainer, $primary, 90%);
+    background-color: color.mix(material.$l_t_secondaryContainer, material.$primary, 90%);
 }
 
 .overview-tasks-window-selected {
-    background-color: mix($l_t_secondaryContainer, $primary, 90%);
+    background-color: color.mix(material.$l_t_secondaryContainer, material.$primary, 90%);
 }
 
 .overview-tasks-window-dragging {
     opacity: 0.2;
+}
+
+/* */
+
+
+@function gtkalpha($c, $a) {
+    @return string.unquote("alpha(#{$c},#{$a})");
+}
+
+// todo delete after troubleshooting
+
+// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+window#launcher {
+    all: unset;
+
+    box.Applauncher {
+        background-color: $bg-color;
+        border-radius: 11px;
+        margin: 1rem;
+        padding: .8rem;
+        box-shadow: 2px 3px 8px 0 gtkalpha(black, .4);
+
+        entry {
+            margin-bottom: .8rem;
+        }
+
+        button {
+            min-width: 0;
+            min-height: 0;
+            padding: .5rem;
+
+            icon {
+                font-size: 3em;
+                margin-right: .3rem;
+            }
+
+            label.name {
+                font-weight: bold;
+                font-size: 1.1em
+            }
+
+            label.description {
+                color: gtkalpha($fg-color, .8);
+            }
+        }
+
+        box.not-found {
+            padding: 1rem;
+
+            icon {
+                font-size: 6em;
+                color: gtkalpha($fg-color, .7);
+            }
+
+            label {
+                color: gtkalpha($fg-color, .9);
+                font-size: 1.2em;
+            }
+        }
+    }
 }

@@ -1,3 +1,7 @@
+@use 'sass:color';
+@use 'lib_mixins';
+@use 'material';
+
 $osk_key_height: 2.5rem;
 $osk_key_width: 2.5rem;
 $osk_key_padding: 0.188rem;
@@ -5,13 +9,13 @@ $osk_key_rounding: 0.682rem;
 $osk_key_fontsize: 1.091rem;
 
 .osk-window {
-    // @include menu_decel_fast;
-    @include large-rounding;
-    @include elevation-border;
-    @include elevation2;
+    // @include lib_mixins.menu_decel_fast;
+    @include lib_mixins.large-rounding;
+    @include lib_mixins.elevation-border;
+    @include lib_mixins.elevation2;
     // min-height: 29.591rem;
     // min-width: 50rem;
-    background-color: $t_background;
+    background-color: material.$t_background;
 }
 
 .osk-body {
@@ -20,19 +24,19 @@ $osk_key_fontsize: 1.091rem;
 }
 
 .osk-show {
-    @include menu_decel_fast;
+    @include lib_mixins.menu_decel_fast;
 }
 
 .osk-hide {
     margin-top: 30.682rem;
     margin-bottom: -30.682rem;
     // opacity: 0;
-    @include menu_accel_fast;
+    @include lib_mixins.menu_accel_fast;
 }
 
 .osk-dragline {
-    @include full-rounding;
-    background-color: $surfaceVariant;
+    @include lib_mixins.full-rounding;
+    background-color: material.$surfaceVariant;
     min-height: 0.273rem;
     min-width: 10.227rem;
     margin-top: 0.545rem;
@@ -41,8 +45,8 @@ $osk_key_fontsize: 1.091rem;
 
 .osk-key {
     border-radius: $osk_key_rounding;
-    background-color: $t_surfaceVariant;
-    color: $onSurfaceVariant;
+    background-color: material.$t_surfaceVariant;
+    color: material.$onSurfaceVariant;
     padding: $osk_key_padding;
     font-weight: 500;
     font-size: $osk_key_fontsize;
@@ -50,16 +54,16 @@ $osk_key_fontsize: 1.091rem;
 
 .osk-key:hover,
 .osk-key:focus {
-    background-color: $hovercolor;
+    background-color: material.$hovercolor;
 }
 
 .osk-key:active {
-    background-color: $activecolor;
+    background-color: material.$activecolor;
     font-size: $osk_key_fontsize;
 }
 
 .osk-key-active {
-    background-color: $activecolor;
+    background-color: material.$activecolor;
 }
 
 .osk-key-normal {
@@ -69,7 +73,7 @@ $osk_key_fontsize: 1.091rem;
 
 .osk-key-fn {
     min-width: $osk_key_width * 1.005;
-    min-height: $osk_key_height / 2;
+    min-height: $osk_key_height * 0.5;
 }
 
 .osk-key-tab {
@@ -94,8 +98,8 @@ $osk_key_fontsize: 1.091rem;
 
 .osk-control-button {
     border-radius: $osk_key_rounding;
-    background-color: $t_surfaceVariant;
-    color: $onSurfaceVariant;
+    background-color: material.$t_surfaceVariant;
+    color: material.$onSurfaceVariant;
     font-weight: 500;
     font-size: $osk_key_fontsize;
     padding: 0.682rem;
@@ -103,11 +107,11 @@ $osk_key_fontsize: 1.091rem;
 
 .osk-control-button:hover,
 .osk-control-button:focus {
-    background-color: mix($t_surfaceVariant, $t_onSurfaceVariant, 90%);
+    background-color: color.mix(material.$t_surfaceVariant, material.$t_onSurfaceVariant, 90%);
 }
 
 .osk-control-button:active {
-    background-color: mix($t_surfaceVariant, $t_onSurfaceVariant, 70%);
+    background-color: color.mix(material.$t_surfaceVariant, material.$t_onSurfaceVariant, 70%);
     font-size: $osk_key_fontsize;
 }
 

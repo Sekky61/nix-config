@@ -1,36 +1,40 @@
+@use 'sass:color';
+@use 'material';
+@use 'lib_mixins';
+
 .session-bg {
     margin-top: -2.727rem;
-    background-color: mix($t_t_background, $background, 40%);
+    background-color: color.mix(material.$t_t_background, material.$background, 40%);
 }
 
 .session-button {
-    @include large-rounding;
+    @include lib_mixins.large-rounding;
     min-width: 8.182rem;
     min-height: 8.182rem;
-    background-color: $surfaceVariant;
-    color: $onSurfaceVariant;
+    background-color: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
     font-size: 3rem;
 }
 
 .session-button-focused {
-    background-color: $secondaryContainer;
-    color: $onSecondaryContainer;
+    background-color: material.$secondaryContainer;
+    color: material.$onSecondaryContainer;
 }
 
 .session-button-desc {
-    background-color: mix($surface, $surfaceVariant, 50%);
-    color: mix($onSurface, $onSurfaceVariant, 50%);
-    border-bottom-left-radius: $rounding_large;
-    border-bottom-right-radius: $rounding_large;
+    background-color: color.mix(material.$surface, material.$surfaceVariant, 50%);
+    color: color.mix(material.$onSurface, material.$onSurfaceVariant, 50%);
+    border-bottom-left-radius: lib_mixins.$rounding_large;
+    border-bottom-right-radius: lib_mixins.$rounding_large;
     padding: 0.205rem 0.341rem;
     font-weight: 700;
 }
 
 .session-button-cancel {
-    @include large-rounding;
+    @include lib_mixins.large-rounding;
     min-width: 8.182rem;
     min-height: 5.455rem;
-    background-color: $surfaceVariant;
-    color: $onSurfaceVariant;
+    background-color: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
     font-size: 3rem;
 }

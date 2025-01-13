@@ -340,10 +340,11 @@ in
                 clipboard
               ]
             );
+            toggleWindow = name: "ags toggle '${name}'";
           in
           [
             # Launch
-            "Super, Space, exec, ags -t 'overview'" # Launcher, uses anyrun
+            "Super, Space, exec, ${toggleWindow "launcher"}" # Launcher, uses anyrun
             "Super, Return, exec, alacritty"
             "Super, W, exec, google-chrome-stable"
             "Super, C, exec, code --password-store=gnome"
@@ -352,8 +353,8 @@ in
             # System
             "Super, Q, killactive, "
             "Shift+Super+Alt, Q, exec, hyprctl kill" # select a window to kill
-            "Control+Alt, Delete, exec, ags -t 'session'" # session menu (logout, restart, shutdown)
-            "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell"
+            "Control+Alt, Delete, exec, ${toggleWindow "session"}" # session menu (logout, restart, shutdown)
+            "Control+Shift+Alt, Delete, exec, pkill wlogout || wlogout -p layer-shell" # todo wlogout not installed
             "Control+Shift+Alt+Super, Delete, exec, systemctl poweroff"
             # Open
             ''Super, I, exec, XDG_CURRENT_DESKTOP="gnome" gnome-control-center'' # Settings
@@ -361,7 +362,7 @@ in
             "Control+Shift, Escape, exec, gnome-system-monitor" # system resources
             "Super, Period, exec, bemoji" # emoji
             "Super+Alt, Space, togglefloating, "
-            "Super, K, exec, ags -t 'osk'" # virtual keyboard
+            "Super, K, exec, ${toggleWindow "osk"}" # virtual keyboard
             # screenshot
             ",Print,exec, ${ss_region_clipboard}" # May not work
             "Super, S, exec, ${ss_region_clipboard}"
@@ -378,21 +379,21 @@ in
             "Super+Shift, L, exec, hyprlock"
             "Control+Super, Slash, exec, pkill anyrun || anyrun"
             "Control+Super, T, exec, ~/.config/ags/scripts/color_generation/switchwall.sh"
-            "Control+Super, R, exec, killall ags ydotool; ags -b hypr" # reset ags
-            "Super, Tab, exec, ags -t 'overview'" # todo broken
-            "Super, Slash, exec, ags -t 'cheatsheet'"
+            "Control+Super, R, exec, killall ags ydotool; ags bundle hypr" # reset ags
+            "Super, Tab, exec, ${toggleWindow "launcher"}" # todo broken
+            "Super, Slash, exec, ${toggleWindow "cheatsheet"}"
             # Open side menu
-            "Super, B, exec, ags -t 'sideleft'"
-            "Super, A, exec, ags -t 'sideleft'"
-            "Super, O, exec, ags -t 'sideleft'"
-            "Super, N, exec, ags -t 'sideright'"
+            "Super, B, exec, ${toggleWindow "sideleft"}"
+            "Super, A, exec, ${toggleWindow "sideleft"}"
+            "Super, O, exec, ${toggleWindow "sideleft"}"
+            "Super, N, exec, ${toggleWindow "sideright"}"
             # gromit-mpx
             ", F7, togglespecialworkspace, gromit"
             "SHIFT , F7, exec, gromit-mpx --clear"
             ", F6, exec, gromit-mpx --undo"
             "SHIFT , F6, exec, gromit-mpx --redo"
             # Rest
-            "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'"
+            "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'" # todo fix
             "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
             "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
             "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
@@ -496,7 +497,6 @@ in
           "Control+Super, R, exec, killall ags .ags-wrapped ydotool; ags &"
           "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
         ];
-        # bindir = [ "Super, Super_L, exec, ags -t 'overview'" ]; # Launcher
         binde = [
           "Super, Minus, splitratio, -0.1"
           "Super, Equal, splitratio, 0.1"

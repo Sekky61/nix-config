@@ -1,22 +1,26 @@
+@use 'sass:color';
+@use 'lib_mixins';
+@use 'material';
+
 .dock-bg {
-    @include small-rounding;
-    @include elevation2;
-    background-color: $t_background;
+    @include lib_mixins.small-rounding;
+    @include lib_mixins.elevation2;
+    background-color: material.$t_background;
     padding: 0.682rem;
 }
 
 .dock-app-btn {
-    @include normal-rounding;
+    @include lib_mixins.normal-rounding;
     padding: 0.273rem;
 }
 
 .dock-app-btn:hover,
 .dock-app-btn:focus {
-    background-color: mix($t_surface, $t_onSurface, 95%);
+    background-color: color.mix(material.$t_surface, material.$t_onSurface, 95%);
 }
 
 .dock-app-btn:active {
-    background-color: mix($t_surface, $t_onSurface, 85%);
+    background-color: color.mix(material.$t_surface, material.$t_onSurface, 85%);
 }
 
 .dock-app-icon {
@@ -27,5 +31,5 @@
 
 .dock-separator {
     min-width: 0.068rem;
-    background-color: $surfaceVariant;
+    background-color: material.$surfaceVariant;
 }

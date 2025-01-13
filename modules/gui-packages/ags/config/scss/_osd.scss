@@ -1,3 +1,6 @@
+@use 'lib_mixins';
+@use 'material';
+
 // .osd-window {
     // margin-top: 2.727rem;
 // }
@@ -8,9 +11,9 @@
 }
 
 .osd-value {
-    @include elevation-border;
-    @include elevation2;
-    background-color: $t_background;
+    @include lib_mixins.elevation-border;
+    @include lib_mixins.elevation2;
+    background-color: material.$t_background;
     border-radius: 1.023rem;
     padding: 0.625rem 1.023rem;
     padding-top: 0.313rem;
@@ -21,42 +24,42 @@
     min-width: 0.068rem;
     padding: 0rem;
     border-radius: 10rem;
-    @include fluent_decel;
+    @include lib_mixins.fluent_decel;
 
     trough {
         min-height: 0.954rem;
         min-width: 0.068rem;
         border-radius: 10rem;
-        background-color: $secondaryContainer;
-        // border: 0.068rem solid $onSecondaryContainer;
+        background-color: material.$secondaryContainer;
+        // border: 0.068rem solid material.$onSecondaryContainer;
     }
 
     progress {
-        @include fluent_decel;
+        @include lib_mixins.fluent_decel;
         min-height: 0.680rem;
         min-width: 0.680rem;
         margin: 0rem 0.137rem;
         border-radius: 10rem;
-        background-color: $onSecondaryContainer;
+        background-color: material.$onSecondaryContainer;
     }
 }
 
 .osd-icon {
-    color: $onPrimaryContainer;
+    color: material.$onPrimaryContainer;
 }
 
 .osd-label {
     font-size: 1.023rem;
     font-weight: 500;
-    color: $onBackground;
+    color: material.$onBackground;
     margin-top: 0.341rem;
 }
 
 .osd-value-txt {
-    @include titlefont;
+    @include lib_mixins.titlefont;
     font-size: 1.688rem;
     font-weight: 500;
-    color: $onBackground;
+    color: material.$onBackground;
 }
 
 .osd-notifs {
@@ -65,58 +68,58 @@
 
 .osd-colorscheme {
     border-radius: 1.023rem;
-    background-color: $t_background;
+    background-color: material.$t_background;
     padding: 1.023rem;
-    @include elevation2;
+    @include lib_mixins.elevation2;
 }
 
 .osd-color {
-    @include full-rounding;
+    @include lib_mixins.full-rounding;
     min-width: 2.727rem;
     min-height: 1.705rem;
     padding: 0rem 0.341rem;
     font-weight: bold;
 
     box {
-        @include full-rounding;
+        @include lib_mixins.full-rounding;
         margin: 0.409rem;
     }
 }
 
 .osd-color-primary {
-    background-color: $primary;
-    color: $onPrimary;
-    box { background-color: $onPrimary; }
+    background-color: material.$primary;
+    color: material.$onPrimary;
+    box { background-color: material.$onPrimary; }
 }
 .osd-color-primaryContainer {
-    background-color: $primaryContainer;
-    color: $onPrimaryContainer;
-    box { background-color: $onPrimaryContainer; }
+    background-color: material.$primaryContainer;
+    color: material.$onPrimaryContainer;
+    box { background-color: material.$onPrimaryContainer; }
 }
 .osd-color-secondary {
-    background-color: $secondary;
-    color: $onSecondary;
-    box { background-color: $onSecondary; }
+    background-color: material.$secondary;
+    color: material.$onSecondary;
+    box { background-color: material.$onSecondary; }
 }
 .osd-color-secondaryContainer {
-    background-color: $secondaryContainer;
-    color: $onSecondaryContainer;
-    box { background-color: $onSecondaryContainer; }
+    background-color: material.$secondaryContainer;
+    color: material.$onSecondaryContainer;
+    box { background-color: material.$onSecondaryContainer; }
 }
 .osd-color-surfaceVariant {
-    background-color: $surfaceVariant;
-    color: $onSurfaceVariant;
-    box { background-color: $onSurfaceVariant; }
+    background-color: material.$surfaceVariant;
+    color: material.$onSurfaceVariant;
+    box { background-color: material.$onSurfaceVariant; }
 }
 .osd-color-surface {
-    background-color: $surface;
-    color: $onSurface;
-    box { background-color: $onSurface; }
+    background-color: material.$surface;
+    color: material.$onSurface;
+    box { background-color: material.$onSurface; }
 }
 .osd-color-background {
-    background-color: $background;
-    color: $onBackground;
-    box { background-color: $onBackground; }
+    background-color: material.$background;
+    color: material.$onBackground;
+    box { background-color: material.$onBackground; }
 }
 
 .osd-show {

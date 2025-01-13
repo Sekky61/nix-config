@@ -1,0 +1,20 @@
+// _index.scss (acts as an entry point for all styles)
+// Colors
+@forward './material';
+@forward './colors';
+@forward './lib_mixins';
+@forward './lib_classes';
+@forward './common';
+
+// Components
+@forward './bar';
+@forward './cheatsheet';
+@forward './desktopbackground';
+@forward './dock';
+@forward './osd';
+@forward './overview';
+@forward './osk';
+@forward './sidebars';
+@forward './session';
+@forward './notifications';
+/* @forward './music'; // Add music last to ensure pywal-related styles are applied last (might not be relevant anymore) */

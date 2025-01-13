@@ -1,10 +1,10 @@
 import { App, Astal, Gtk, Gdk } from "astal/gtk3"
-import Workspaces from "./Workspaces"
-import Tray from "./Tray"
-import BatteryLevel from "./BatteryLevel"
+import Workspaces from "../widget/Workspaces"
+import Tray from "../widget/Tray"
+import BatteryLevel from "../widget/BatteryLevel"
 import type { ChildrenProps } from "../util"
-import FocusedClient from "./FocusedClient"
-import Time from "./Time"
+import FocusedClient from "../widget/FocusedClient"
+import Time from "../widget/Time"
 
 /** Wrap a component in colored bubble */
 export function BarGroup({ child, children }: ChildrenProps) {

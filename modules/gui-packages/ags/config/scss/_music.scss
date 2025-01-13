@@ -1,13 +1,16 @@
+@use 'sass:color';
+@use 'material';
+
 @import './material';
 @import './musicmaterial';
 @import './wal';
 @import './musicwal';
 @import './colors';
 @import './lib_mixins';
-$music_gradient1: mix($color1, $background, 50%);
+$music_gradient1: color.mix($color1, $background, 50%);
 
 // @if $darkmode ==true {
-//     $music_gradient1: mix($color1, $background, 30%);
+//     $music_gradient1: color.mix($color1, $background, 30%);
 // }
 
 $music_gradient2: $color3;
@@ -15,10 +18,10 @@ $music_gradient3: $color5;
 $music_colorstart_transparentize: 0.3;
 $music_extra_transparentize: 0.15;
 
-$secondaryContainer: transparentize(mix(mix($background, $color2, 50%), $color6, 80%), 0.5);
-$onSecondaryContainer: mix($color7, $color2, 90%);
+$secondaryContainer: color.adjust(color.mix(color.mix($background, $color2, 50%), $color6, 80%), $alpha: -0.5);
+$onSecondaryContainer: color.mix($color7, $color2, 90%);
 @if $darkmode ==false {
-    $onSecondaryContainer: mix($onSecondaryContainer, black, 50%);
+    $onSecondaryContainer: color.mix($onSecondaryContainer, black, 50%);
 }
 
 .osd-music {
@@ -31,10 +34,10 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
     background-color: $t_background;
     padding: 0rem 1.023rem;
     background: // Inspired by Amberol
-        linear-gradient(127deg, transparentize($music_gradient1, $music_colorstart_transparentize), transparentize($music_gradient1, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
-        linear-gradient(217deg, transparentize($music_gradient2, $music_colorstart_transparentize), transparentize($music_gradient2, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
+        linear-gradient(127deg, color.adjust($music_gradient1, $alpha: -$music_colorstart_transparentize), color.adjust($music_gradient1, $alpha: -$music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
+        linear-gradient(217deg, color.adjust($music_gradient2, $alpha: -$music_colorstart_transparentize), color.adjust($music_gradient2, $alpha: -$music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
         radial-gradient(circle at 0% 100%, $color4 13%, rgba(0, 0, 0, 0) 100%),
-        linear-gradient(336deg, transparentize($music_gradient3, $music_colorstart_transparentize), transparentize($music_gradient3, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
+        linear-gradient(336deg, color.adjust($music_gradient3, $alpha: -$music_colorstart_transparentize), color.adjust($music_gradient3, $alpha: -$music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
         linear-gradient($background, $background), // We don't want wallpaper tint, so here's a fully opaque surface
     ;
 }
@@ -83,7 +86,7 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
     @include element_decel;
     @include mainfont;
     font-size: 0.955rem;
-    color: mix($onSecondaryContainer, $secondaryContainer, 80%);
+    color: color.mix($onSecondaryContainer, $secondaryContainer, 80%);
 }
 
 .osd-music-pill {
@@ -115,11 +118,11 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 
 .osd-music-controlbtn:hover,
 .osd-music-controlbtn:focus {
-    background-color: mix($secondaryContainer, $onSecondaryContainer, 90%);
+    background-color: color.mix($secondaryContainer, $onSecondaryContainer, 90%);
 }
 
 .osd-music-controlbtn:active {
-    background-color: mix($secondaryContainer, $onSecondaryContainer, 85%);
+    background-color: color.mix($secondaryContainer, $onSecondaryContainer, 85%);
 }
 
 .osd-music-controlbtn-txt {
