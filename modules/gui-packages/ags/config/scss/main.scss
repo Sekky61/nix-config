@@ -7,6 +7,13 @@
 // }
 *:not(popover) { all: unset; }
 
+window {
+    background-color: transparent;
+}
+
+#launcher {
+    background-color: transparent;
+}
 
 // Classes for interaction
 .growingRadial {

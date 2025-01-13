@@ -1,5 +1,6 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk3"
 import { execAsync, Variable } from "astal"
+import { toggleWindow } from "../util";
 
 type SessionButtonProps = {
     name: string;
@@ -9,13 +10,13 @@ type SessionButtonProps = {
 }
 
 const sessionButtons: Record<string, SessionButtonProps> = {
-    'lock': { name: 'Lock', icon: 'lock', command: () => { App.closeWindow('session'); execAsync('hyprlock') } },
-    'logout': { name: 'Logout', icon: 'logout', command: () => { App.closeWindow('session'); execAsync(['bash', '-c', 'pkill Hyprland || pkill sway']) } },
-    'sleep': { name: 'Sleep', icon: 'sleep', command: () => { App.closeWindow('session'); execAsync('systemctl suspend') } },
-    'hibernate': { name: 'Hibernate', icon: 'downloading', command: () => { App.closeWindow('session'); execAsync('systemctl hibernate') } },
-    'shutdown': { name: 'Shutdown', icon: 'power_settings_new', command: () => { App.closeWindow('session'); execAsync('systemctl poweroff') } },
-    'reboot': { name: 'Reboot', icon: 'restart_alt', command: () => { App.closeWindow('session'); execAsync('systemctl reboot') } },
-    'cancel': { name: 'Cancel', icon: 'close', command: () => App.closeWindow('session'), props: { className: 'session-button-cancel' } },
+    'lock': { name: 'Lock', icon: 'lock', command: () => { toggleWindow('session'); execAsync('hyprlock') } },
+    'logout': { name: 'Logout', icon: 'logout', command: () => { toggleWindow('session'); execAsync(['bash', '-c', 'pkill Hyprland || pkill sway']) } },
+    'sleep': { name: 'Sleep', icon: 'sleep', command: () => { toggleWindow('session'); execAsync('systemctl suspend') } },
+    'hibernate': { name: 'Hibernate', icon: 'downloading', command: () => { toggleWindow('session'); execAsync('systemctl hibernate') } },
+    'shutdown': { name: 'Shutdown', icon: 'power_settings_new', command: () => { toggleWindow('session'); execAsync('systemctl poweroff') } },
+    'reboot': { name: 'Reboot', icon: 'restart_alt', command: () => { toggleWindow('session'); execAsync('systemctl reboot') } },
+    'cancel': { name: 'Cancel', icon: 'close', command: () => toggleWindow('session'), props: { className: 'session-button-cancel' } },
 }
 
 

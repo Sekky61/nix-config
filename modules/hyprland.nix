@@ -482,12 +482,14 @@ in
         bindle = [
           ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
           ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-          ",XF86MonBrightnessUp, exec, ags run-js 'brightness.screen_value += 0.05;indicator.popup(1);'"
-          ",XF86MonBrightnessDown, exec, ags run-js 'brightness.screen_value -= 0.05;indicator.popup(1);'"
+          ",XF86MonBrightnessUp, exec, brightnessctl set +10"
+          ",XF86MonBrightnessDown, exec, brightnessctl set -10"
+          # Present the changes
           ",XF86AudioRaiseVolume, exec, ags run-js 'indicator.popup(1);'"
           ",XF86AudioLowerVolume, exec, ags run-js 'indicator.popup(1);'"
           ",XF86MonBrightnessUp, exec, ags run-js 'indicator.popup(1);'"
           ",XF86MonBrightnessDown, exec, ags run-js 'indicator.popup(1);'"
+
           "Alt, I, exec, ydotool key 103:1 103:0 "
           "Alt, K, exec, ydotool key 108:1 108:0"
           "Alt, J, exec, ydotool key 105:1 105:0"

@@ -1,5 +1,5 @@
 import { Binding } from "astal";
-import { Gdk } from "astal/gtk3";
+import { App, Gdk } from "astal/gtk3";
 
 /** Composable interface for child/children quirk that TS has problem with */
 export interface ChildrenProps {
@@ -7,6 +7,16 @@ export interface ChildrenProps {
     children?: Array<JSX.Element> | Binding<Array<JSX.Element>>
 }
 
+/** Toggle visibility of a window by name */
+export function toggleWindow(windowName: string) {
+  const foundWindow = App.get_window(windowName);
+
+  if (!foundWindow) {
+    return;
+  }
+
+  foundWindow.set_visible(!foundWindow.visible);
+}
 
 export function scrollDirection(dir: Gdk.ScrollDirection, dx: number, dy: number): Gdk.ScrollDirection {
     if (dir === Gdk.ScrollDirection.SMOOTH) {
