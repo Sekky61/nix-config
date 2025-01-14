@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+# `record`
+#
+# A simple script to start/stop screen recording with `wf-recorder`. Outputs recordings to `~/Videos`.
+#
+# Options:
+# - **`--sound`**: Record a selected area with audio.
+# - **`--fullscreen`**: Record the full screen (no audio).
+# - **`--fullscreen-sound`**: Record the full screen with audio.
+# - *No option*: Record a selected area (no audio).
+#
+# Stops recording if already running.
 
 getdate() {
     date '+%Y%m%d_%H-%M-%S'

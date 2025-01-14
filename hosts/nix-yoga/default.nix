@@ -10,7 +10,7 @@
     # Desktop/gui
     ./gnome.nix
     ../../modules/gui-packages
-    ../../modules/hyprland.nix
+    ../../modules/hyprland
     ../../modules/browser/chrome.nix
     ../../modules/gamedev/godot.nix
     ../../assets
@@ -24,5 +24,6 @@
   michal.programs = {
     bitwarden.enable = true;
     ventoy.enable = true;
+
   };
 }
