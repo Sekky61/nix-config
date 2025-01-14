@@ -14,48 +14,70 @@ let
 
   cfg = config.michal.programs.hyprland.keybinds;
 
-  # Typedef for a keybind
-  # Guide: https://nlewo.github.io/nixos-manual-sphinx/development/option-types.xml.html
-  keybindModule = types.submodule ({
+  oneOrList = T: with types; either T (listOf T);
+
+  # One key combination
+  keyModule = types.submodule ({
     config,
     name,
     ...
   }: {
-      options = {
-        mods = mkOption {
-          type = with types; listOf (enum [ "SUPER" "SHIFT" "CONTROL" "ALT" ]);
-          description = "A list of modifier keys.";
-          example = [ "SUPER" "SHIFT" ];
-          default = [];
-        };
-        key = mkOption {
-          type = with types; str;
-          description = "The key to bind.";
-          example = "Q";
-          default = "";
-        };
-        dispatcher = mkOption {
-          type = with types; str;
-          description = "The action to perform.";
-          example = "exec";
-          default = "";
-        };
-        params = mkOption {
-          type = with types; either str (listOf str);
-          description = "Additional parameters for the dispatcher. Can be an array of params, in which case multiple binds differing only in params will be created.";
-          example = "firefox";
-          default = "";
-        };
-        description = mkOption {
-          type = with types; str;
-          default = "";
-          description = "An optional description of the binding. Must not include comma.";
-          example = "Launch Firefox";
-        };
-        flags = mkOption {
-          type = with types; listOf (enum [ "locked" "release" "longPress" "repeat" "nonConsuming" "mouse" "transparent" "ignoreMods" "separate" "description" "bypassInhibit" ]);
-          default = [ ];
-          description = ''A list of optional flags for the binding. [Docs](https://wiki.hyprland.org/Configuring/Binds/#bind-flags)
+    options = {
+      enable = mkOption {
+        type = with types; bool;
+        default = true;
+        description = "Whether the keybind should be used.";
+        example = false;
+      };
+      mods = mkOption {
+        type = with types; listOf (enum [ "SUPER" "SHIFT" "CONTROL" "ALT" ]);
+        description = "A list of modifier keys.";
+        example = [ "SUPER" "SHIFT" ];
+        default = [];
+      };
+      key = mkOption {
+        type = with types; str;
+        description = "The key to bind.";
+        example = "Q";
+      };
+      visible = mkOption {
+        type = with types; bool;
+        default = true;
+        description = "Whether the keybind should be visible in cheat sheet.";
+        example = false;
+      };
+    };
+  });
+
+  # One command (dispatcher and params)
+  commandModule = types.submodule ({
+    config,
+    name,
+    ...
+  }: {
+    options = {
+      enable = mkOption {
+        type = with types; bool;
+        default = true;
+        description = "Whether the keybind should be used.";
+        example = false;
+      };
+      dispatcher = mkOption {
+        type = with types; str;
+        description = "The action to perform.";
+        example = "workspace";
+        default = "exec";
+      };
+      params = mkOption {
+        type = with types; str;
+        description = "Additional parameters for the dispatcher.";
+        example = "firefox";
+        default = "";
+      };
+      flags = mkOption {
+        type = with types; listOf (enum [ "locked" "release" "longPress" "repeat" "nonConsuming" "mouse" "transparent" "ignoreMods" "separate" "description" "bypassInhibit" ]);
+        default = [ ];
+        description = ''A list of optional flags for the binding. [Docs](https://wiki.hyprland.org/Configuring/Binds/#bind-flags)
 
 l -> locked, will also work when an input inhibitor (e.g. a lockscreen) is active.
 r -> release, will trigger on release of a key.
@@ -69,7 +91,36 @@ s -> separate, will arbitrarily combine keys between each mod/key, see [Keysym c
 d -> has description, will allow you to write a description for your bind. (Note: implicitly true, cannot be disabled, do not add it.)
 p -> bypassInhibit, bypasses the app's requests to inhibit keybinds.
           '';
-          example = [ "repeat" ];
+        example = [ "repeat" ];
+      };
+    };
+  });
+
+  # Typedef for a keybind
+  # Guide: https://nlewo.github.io/nixos-manual-sphinx/development/option-types.xml.html
+  keybindModule = types.submodule ({
+    config,
+    name,
+    ...
+  }: {
+      options = {
+        description = mkOption {
+          type = with types; str;
+          default = "";
+          description = "An optional description of the binding. Must not include comma.";
+          example = "Launch Firefox";
+        };
+        bind = mkOption {
+          type = oneOrList keyModule;
+          description = "A keybind (or a list of them) that triggers the command.";
+          example = "exec";
+          default = "";
+        };
+        command = mkOption {
+          type = oneOrList commandModule;
+          description = "A command (or a list of them) to execute on each of the binds.";
+          example = "exec";
+          default = "";
         };
         visible = mkOption {
           type = with types; bool;
@@ -101,26 +152,30 @@ p -> bypassInhibit, bypasses the app's requests to inhibit keybinds.
     in
       builtins.concatStringsSep "" (map (f: table.${f}) flags);
 
+  cross = f: arr1: arr2:
+    lib.concatLists (map (x: map (y: (f x y)) arr2) arr1);
+
+  # decompress arrays of binds and commands. Now there are surely no arrays
+  expandBind = kb: cross (cmd: key: {
+      inherit (kb) description visible;
+      command = cmd;
+      bind = key;
+    }) (toList kb.command) (toList kb.bind);
+
+  expandedBinds = builtins.concatLists (map expandBind cfg);
+
   # Get flags of a keybind including those implicitly set
-  getFlags = kb: kb.flags ++ optionals (kb.description != "") ["description"];
+  getFlags = kb: kb.command.flags ++ optionals (kb.description != "") ["description"];
 
   # Format a bind line. Example: "Super+Shift, up, movewindow, u"
-  keybindLines = kb:
+  keybindLine = kb:
     let
-      mods = lib.concatStringsSep " + " kb.mods;
-      paramArr = lists.toList kb.params;
-      createLine = par: lib.concatStringsSep ", " [mods kb.key kb.description kb.dispatcher par];
+      mods = lib.concatStringsSep " + " kb.bind.mods;
     in
-      map createLine paramArr;
-      
-
-  # [ { mods, flags, ... } ] => [ { bind[f] = ["line" "line2"] } ]
-  bb = map (kb: { "bind${constructFlags (getFlags kb)}" = keybindLines kb;}) cfg;
-
-  # { "bindxx" = [ ["line1"] ["line2"] ] }
-  bindsNested = builtins.zipAttrsWith (name: valueLine: valueLine) bb;
-  # { "bindxx" = [ ["line1"] ["line2"] ] }
-  binds = mapAttrs (name: value: flatten value) bindsNested;
+      lib.concatStringsSep ", " [mods kb.bind.key kb.description kb.command.dispatcher kb.command.params];
+  
+  bindsByFlag = builtins.groupBy (kb: constructFlags (getFlags kb)) expandedBinds;
+  binds = mapAttrs' (flags: kbs: nameValuePair "bind${flags}" (map keybindLine kbs)) bindsByFlag;
 in
 {
   # Define the option
@@ -132,14 +187,18 @@ in
       with attributes such as `mods`, `key`, `dispatcher`, `params`, and `flags`.
     '';
     example = [
-      {
-        mods = [ "SUPER" "SHIFT" ];
-        key = "Q";
-        dispatcher = "exec";
-        params = "firefox";
-        description = "Launch Firefox";
-        flags = [ "repeat" ];
-      }
+       {
+         description = "Lock screen";
+         bind = [
+           { mods = [ "SUPER" ]; key = "L";}
+           { mods = [ "SUPER" "SHIFT" ]; key = "L";}
+         ];
+         command = {
+           params = "hyprlock";
+           dispatcher = "exec";
+           flags = [ ];
+         };
+       }
     ];
   };
 
@@ -151,8 +210,8 @@ in
         message = "config.michal.programs.hyprland.keybinds[].description must not contain a comma.";
       }
       {
-        assertion = builtins.all (kb: allUnique (getFlags kb)) cfg;
-        message = "config.michal.programs.hyprland.keybinds[].flags have a duplicate.";
+        assertion = builtins.all (kb: allUnique (getFlags kb)) expandedBinds;
+        message = "config.michal.programs.hyprland.keybinds[].command.flags have a duplicate.";
       }
     ];
 
@@ -188,379 +247,238 @@ in
       in [
       {
         description = "Toggle Session Menu (shutdown or restart)";
-        params = toggleWindow "session";
-        mods = [ "CONTROL" "ALT" ];
-        key = "Delete";
-        dispatcher = "exec";
-        flags = [ "repeat" ];
+        bind = { mods = [ "CONTROL" "ALT" ]; key = "Delete"; };
+        command = { params = toggleWindow "session"; };
       }
       {
         description = "Launch application launcher (anyrun)";
-        params = toggleWindow "launcher";
-        mods = [ "SUPER" ];
-        key = "Space";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "Space"; };
+        command = { params = toggleWindow "launcher"; };
       }
       {
         description = "Launch terminal";
-        params = "alacritty";
-        mods = [ "SUPER" ];
-        key = "Return";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "Return"; };
+        command = { params = "alacritty"; };
       }
       {
         description = "Launch Chrome";
-        params = "google-chrome-stable";
-        mods = [ "SUPER" ];
-        key = "W";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "W"; };
+        command = { params = "google-chrome-stable"; };
       }
       {
         description = "Launch VSCode";
-        params = "code --password-store=gnome";
-        mods = [ "SUPER" ];
-        key = "C";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "C"; };
+        command = {params = "code --password-store=gnome"; };
       }
       {
         description = "Launch file manager";
-        params = "nautilus --new-window";
-        mods = [ "SUPER" ];
-        key = "E";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "E"; };
+        command = { params = "nautilus --new-window"; };
       }
       {
         description = "Launch terminal file manager";
-        params = "alacritty -e yazi";
-        mods = [ "SUPER" "ALT" ];
-        key = "E";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" "ALT" ]; key = "E"; };
+        command = { params = "alacritty -e yazi"; };
       }
       {
         description = "Kill active window";
-        params = "";
-        mods = [ "SUPER" ];
-        key = "Q";
-        dispatcher = "killactive";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "Q"; };
+        command = { dispatcher = "killactive"; params = ""; };
       }
       {
         description = "Select window to kill"; # TODO not working
-        params = "hyprctl kill";
-        mods = [ "SHIFT" "SUPER" "ALT" ];
-        key = "Q";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SHIFT" "SUPER" "ALT" ]; key = "Q"; };
+        command = { params = "hyprctl kill"; };
       }
       {
         description = "Launch logout menu"; # TODO not working, also wlogout might not be installed
-        params = "pkill wlogout || wlogout -p layer-shell";
-        mods = [ "CONTROL" "SHIFT" "ALT" ];
-        key = "Delete";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "CONTROL" "SHIFT" "ALT" ]; key = "Delete"; };
+        command = { params = "pkill wlogout || wlogout -p layer-shell"; };
       }
       {
         description = "Power off system"; # TODO not working
-        params = "systemctl poweroff";
-        mods = [ "CONTROL" "SHIFT" "ALT" "SUPER" ];
-        key = "Delete";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "CONTROL" "SHIFT" "ALT" "SUPER" ]; key = "Delete"; };
+        command = { params = "systemctl poweroff"; };
       }
       {
         description = "Open system settings";
-        params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
-        mods = [ "SUPER" ];
-        key = "I";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "I"; };
+        command = { params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center''; };
       }
       {
         description = "Open volume control";
-        params = "pavucontrol";
-        mods = [ "CONTROL" "SUPER" ];
-        key = "V";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "CONTROL" "SUPER" ]; key = "V"; };
+        command = { params = "pavucontrol"; };
       }
       {
         description = "Open system monitor";
-        params = "gnome-system-monitor";
-        mods = [ "CONTROL" "SHIFT" ];
-        key = "Escape";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "CONTROL" "SHIFT" ]; key = "Escape"; };
+        command = { params = "gnome-system-monitor"; };
       }
       {
         description = "Open emoji picker";
-        params = "bemoji";
-        mods = [ "SUPER" ];
-        key = "Period";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "Period"; };
+        command = { params = "bemoji"; };
       }
       {
         description = "Toggle floating mode";
-        params = "";
-        mods = [ "SUPER" "ALT" ];
-        key = "Space";
-        dispatcher = "togglefloating";
-        flags = [ ];
+        bind = { mods = [ "SUPER" "ALT" ]; key = "Space"; };
+        command = { dispatcher = "togglefloating"; params = ""; };
       }
       {
         description = "Toggle on-screen keyboard"; # todo not reimplemented
-        params = toggleWindow "osk";
-        mods = [ "SUPER" ];
-        key = "K";
-        dispatcher = "exec";
-        flags = [ ];
+        bind = { mods = [ "SUPER" ]; key = "K"; };
+        command = { params = toggleWindow "osk"; };
       }
-       {
-         description = "Screenshot region OCR";
-         params = ss_region_clipboard;
-         mods = [ ];
-         key = "Print";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Screenshot region OCR"; 
-         params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
-         mods = [ "SUPER" "SHIFT" ];
-         key = "S";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Screenshot region to clipboard";
-         params = ss_region_clipboard;
-         mods = [ "SUPER" ];
-         key = "S"; 
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Screenshot region and edit";
-         params = "${ss_region_stdout} | swappy -f -";
-         mods = [ "SUPER" "ALT" ];
-         key = "S";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Screen recording";
-         params = "record";
-         mods = [ "SUPER" "ALT" ];
-         key = "R";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Fullscreen recording";
-         params = "record --fullscreen";
-         mods = [ "CONTROL" "ALT" ];
-         key = "R";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Fullscreen recording with audio";
-         params = "record --fullscreen-sound";
-         mods = [ "SUPER" "SHIFT" "ALT" ];
-         key = "R";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Color picker";
-         params = "hyprpicker -a";
-         mods = [ "SUPER" "SHIFT" ];
-         key = "C";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Clipboard history";
-         params = "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy";
-         mods = [ "SUPER" ];
-         key = "V";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Lock screen";
-         params = "hyprlock";
-         mods = [ "SUPER" ];
-         key = "L";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Lock screen";
-         params = "hyprlock";
-         mods = [ "SUPER" "SHIFT" ];
-         key = "L";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Launch application launcher";
-         params = "pkill anyrun || anyrun";
-         mods = [ "CONTROL" "SUPER" ];
-         key = "Slash";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Switch wallpaper"; # todo needs testing
-         params = "~/.config/ags/scripts/color_generation/switchwall.sh";
-         mods = [ "CONTROL" "SUPER" ];
-         key = "T";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Reset AGS"; # TODO
-         params = "ags quit; ags run &";
-         mods = [ "CONTROL" "SUPER" ];
-         key = "R";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle launcher";
-         params = toggleWindow "launcher";
-         mods = [ "SUPER" ];
-         key = "Tab";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle cheatsheet"; # todo
-         params = toggleWindow "cheatsheet";
-         mods = [ "SUPER" ];
-         key = "Slash";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle side menu left"; # todo
-         params = toggleWindow "sideleft";
-         mods = [ "SUPER" ];
-         key = "B";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle side menu left"; # todo
-         params = toggleWindow "sideleft";
-         mods = [ "SUPER" ];
-         key = "A";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle side menu left"; # todo
-         params = toggleWindow "sideleft";
-         mods = [ "SUPER" ];
-         key = "O";
-         dispatcher = "exec";
-         flags = [ ];
-       }
-       {
-         description = "Toggle side menu right"; # todo
-         params = toggleWindow "sideright";
-         mods = [ "SUPER" ];
-         key = "N";
-         dispatcher = "exec";
-         flags = [ ];
-       }
       {
-        description = "Set volume to 0%";
-        params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
-        mods = [ ];
-        key = "XF86AudioMute";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        description = "Screenshot region OCR";
+        bind = { key = "Print"; };
+        command = { params = ss_region_clipboard; };
+      }
+      {
+        description = "Screenshot region OCR"; 
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "S"; };
+        command = { params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy"; };
+      }
+      {
+        description = "Screenshot region to clipboard";
+        bind = { mods = [ "SUPER" ]; key = "S"; };
+        command = { params = ss_region_clipboard; };
+      }
+      {
+        description = "Screenshot region and edit";
+        bind = { mods = [ "SUPER" "ALT" ]; key = "S"; };
+        command = { params = "${ss_region_stdout} | swappy -f -"; };
+      }
+      {
+        description = "Screen recording";
+        bind = { mods = [ "SUPER" "ALT" ]; key = "R"; };
+        command = { params = "record"; };
+      }
+      {
+        description = "Fullscreen recording";
+        bind = { mods = [ "CONTROL" "ALT" ]; key = "R"; };
+        command = { params = "record --fullscreen"; };
+      }
+      {
+        description = "Fullscreen recording with audio";
+        bind = { mods = [ "SUPER" "SHIFT" "ALT" ]; key = "R"; };
+        command = { params = "record --fullscreen-sound"; };
+      }
+      {
+        description = "Color picker";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "C"; };
+        command = { params = "hyprpicker -a"; };
+      }
+      {
+        description = "Clipboard history";
+        bind = { mods = [ "SUPER" ]; key = "V"; };
+        command = { params = "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; };
+      }
+      {
+         description = "Lock screen";
+         bind = [
+           { mods = [ "SUPER" ]; key = "L";}
+           { mods = [ "SUPER" "SHIFT" ]; key = "L";}
+         ];
+         command = {
+           params = "hyprlock";
+         };
+      }
+      {
+        description = "Launch application launcher";
+        bind = { mods = [ "CONTROL" "SUPER" ]; key = "Slash"; };
+        command = { params = "pkill anyrun || anyrun"; };
+      }
+      {
+        description = "Switch wallpaper"; # todo needs testing
+        bind = { mods = [ "CONTROL" "SUPER" ]; key = "T"; };
+        command = { params = "~/.config/ags/scripts/color_generation/switchwall.sh"; };
+      }
+      {
+        description = "Reset AGS"; # TODO
+        bind = { mods = [ "CONTROL" "SUPER" ]; key = "R"; };
+        command = { params = "ags quit; ags run &"; };
+      }
+      {
+        description = "Toggle launcher";
+        bind = { mods = [ "SUPER" ]; key = "Tab"; };
+        command = { params = toggleWindow "launcher"; };
+      }
+      {
+        description = "Toggle cheatsheet"; # todo
+        bind = { mods = [ "SUPER" ]; key = "Slash"; };
+        command = { params = toggleWindow "cheatsheet"; };
+      }
+      {
+        description = "Toggle side menu left"; # todo
+        bind = { mods = [ "SUPER" ]; key = "B"; };
+        command = { params = toggleWindow "sideleft"; };
+      }
+      {
+        description = "Toggle side menu left"; # todo
+        bind = { mods = [ "SUPER" ]; key = "A"; };
+        command = { params = toggleWindow "sideleft"; };
+      }
+      {
+        description = "Toggle side menu left"; # todo
+        bind = { mods = [ "SUPER" ]; key = "O"; };
+        command = { params = toggleWindow "sideleft"; };
+      }
+      {
+        description = "Toggle side menu right"; # todo
+        bind = { mods = [ "SUPER" ]; key = "N"; };
+        command = { params = toggleWindow "sideright"; };
       }
       {
         description = "Set volume to 0%";
-        params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "M";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ ]; key = "XF86AudioMute"; };
+        command = { params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"; flags = [ "locked" ]; };
+      }
+      {
+        description = "Set volume to 0%";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "M"; };
+        command = { params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"; flags = [ "locked" ]; };
       }
       {
         description = "Play next track or move to 100% position";
-        params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "N";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "N"; };
+        command = { params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`"; flags = [ "locked" ]; };
       }
       {
         description = "Play next track or move to 100% position";
-        params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`";
-        mods = [ ];
-        key = "XF86AudioNext";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ ]; key = "XF86AudioNext"; };
+        command = { params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`"; flags = [ "locked" ]; };
       }
       {
         description = "Play previous track";
-        params = "playerctl previous";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "B";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "B"; };
+        command = { params = "playerctl previous"; flags = [ "locked" ]; };
       }
       {
         description = "Play/pause media";
-        params = "playerctl play-pause";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "P";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "P"; };
+        command = { params = "playerctl play-pause"; flags = [ "locked" ]; };
       }
       {
         description = "Play/pause media";
-        params = "playerctl play-pause";
-        mods = [ ];
-        key = "XF86AudioPlay";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ ]; key = "XF86AudioPlay"; };
+        command = { params = "playerctl play-pause"; flags = [ "locked" ]; };
       }
       {
         description = "Suspend system"; # With a delay
-        params = "sleep 0.1 && systemctl suspend";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "L";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "L"; };
+        command = { params = "sleep 0.1 && systemctl suspend"; flags = [ "locked" ]; };
       }
       {
         description = "Show popup via AGS JavaScript"; # todo
-        params = "ags run-js 'indicator.popup(1);'";
-        mods = [ ];
-        key = "XF86AudioMute";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ ]; key = "XF86AudioMute"; };
+        command = { params = "ags run-js 'indicator.popup(1);'"; flags = [ "locked" ]; };
       }
       {
         description = "Show popup via AGS JavaScript"; # todo
-        params = "ags run-js 'indicator.popup(1);'";
-        mods = [ "SUPER" "SHIFT" ];
-        key = "M";
-        dispatcher = "exec";
-        flags = [ "locked" ];
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "M"; };
+        command = { params = "ags run-js 'indicator.popup(1);'"; flags = [ "locked" ]; };
       }
     ];
 

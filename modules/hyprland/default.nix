@@ -27,15 +27,13 @@ let
     gigabyte = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
   };
 
-  myWallpaper = "~/Pictures/wallpapers/wave.png";
-
   rounding = 5; # px
-
-  toggleWindow = name: "ags toggle '${name}'";
 in
 {
   imports = [
     ./keybinds.nix
+    ./gromit.nix
+    ./hyprlock.nix
   ];
 
   config = {
@@ -43,8 +41,6 @@ in
     environment.systemPackages = with pkgs; [
       launcher
       nwg-displays # gui for monitors, wayland
-      hyprlock # lock screen
-      hypridle # auto lock
       hyprshot
 
       fuzzel # app picker
@@ -81,94 +77,6 @@ in
         exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome-control-center}/bin/gnome-control-center";
         categories = [ "X-Preferences" ];
         terminal = false;
-      };
-
-      programs.hyprlock = {
-        enable = true;
-        settings = {
-          general = {
-            grace = 10;
-            hide_cursor = true;
-          };
-
-          background = [
-            {
-              path = myWallpaper;
-              blur_passes = 2;
-              blur_size = 6;
-            }
-          ];
-
-          input-field = [
-            {
-              size = "250, 60";
-              outer_color = "rgb(#000000)";
-              # inner_color = "rgb(${hexToRgb colours.bgDark})";
-              font_color = "rgb(#7dc4e4)";
-              placeholder_text = "";
-            }
-          ];
-
-          label = [
-            {
-              text = "Macaroni and cheese balls";
-              color = "rgba(#cad3f5, 1.0)";
-              font_family = "Gabarito";
-              font_size = 64;
-              text_align = "center";
-              halign = "center";
-              valign = "center";
-              position = "0, 160";
-            }
-            {
-              text = "$TIME";
-              color = "rgba(#b8c0e0, 1.0)";
-              font_family = "Gabarito";
-              font_size = 32;
-              text_align = "center";
-              halign = "center";
-              valign = "center";
-              position = "0, 75";
-            }
-          ];
-        };
-      };
-
-      services.hypridle = {
-        enable = true;
-        settings = {
-          general = {
-            lock_cmd = "pidof hyprlock || hyprlock"; # avoid starting multiple hyprlock instances.
-            before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
-            after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
-          };
-
-          listener = [
-            {
-              timeout = 150; # 2.5min.
-              on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
-              on-resume = "brightnessctl -r"; # monitor backlight restore.
-            }
-            {
-              timeout = 155; # 2.5min.
-              on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
-              on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
-            }
-            {
-              timeout = 900; # 15min
-              on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
-            }
-            {
-              timeout = 330; # 5.5min
-              on-timeout = "hyprctl dispatch dpms off"; # screen off when timeout has passed
-              on-resume = "hyprctl dispatch dpms on"; # screen on when activity is detected after timeout has fired.
-            }
-            {
-              timeout = 1800; # 30min
-              on-timeout = "systemctl suspend"; # suspend pc
-            }
-          ];
-        };
       };
 
       wayland.windowManager.hyprland = {
@@ -329,11 +237,6 @@ in
             force_zero_scaling = true;
           };
           bind = [
-              # gromit-mpx
-              ", F7, togglespecialworkspace, gromit"
-              "SHIFT , F7, exec, gromit-mpx --clear"
-              ", F6, exec, gromit-mpx --undo"
-              "SHIFT , F6, exec, gromit-mpx --redo"
               # Rest
               "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'" # todo fix
               "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
@@ -445,14 +348,6 @@ in
             "float,title:^(Open Folder)(.*)$"
             "float,title:^(Save As)(.*)$"
             "float,title:^(Library)(.*)$ "
-            # Gromit-MPX
-            "noblur, ^(Gromit-mpx)$"
-            "opacity 1 override, 1 override, ^(Gromit-mpx)$"
-            "noshadow, ^(Gromit-mpx)$"
-            "size 100% 100%, ^(Gromit-mpx)$"
-          ];
-          workspace = [
-            "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
           ];
           windowrulev2 = [ "tile,class:(wpsoffice)" ];
           layerrule = [
