@@ -17,7 +17,7 @@ export function BarGroup({ child, children }: ChildrenProps) {
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
     return <window
         className="Bar"

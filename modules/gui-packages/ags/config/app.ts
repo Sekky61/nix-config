@@ -3,6 +3,7 @@ import style from "./scss/main.scss"
 import Bar from "./windows/Bar"
 import Applauncher from "./windows/AppLauncher"
 import SessionWindow from "./windows/Session"
+import CheatSheet from "./windows/CheatSheet"
 
 App.start({
     css: style,
@@ -10,5 +11,6 @@ App.start({
         App.get_monitors().map(Bar)
         Applauncher()
         SessionWindow()
+        CheatSheet()
     },
 })
