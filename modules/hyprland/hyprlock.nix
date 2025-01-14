@@ -47,7 +47,6 @@ in
           grace = 10;
           hide_cursor = true;
         };
-
         background = [
           {
             path = myWallpaper;
@@ -55,7 +54,6 @@ in
             blur_size = 6;
           }
         ];
-
         input-field = [
           {
             size = "250, 60";
@@ -125,6 +123,12 @@ in
             on-timeout = "systemctl suspend"; # suspend pc
           }
         ];
+      };
+    };
+
+    wayland.windowManager.hyprland = {
+      settings = {
+        exec-once = ["hypridle"];
       };
     };
 

@@ -140,7 +140,7 @@ p -> bypassInhibit, bypasses the app's requests to inhibit keybinds.
         "locked" = "l";
         "release" = "r";
         "longPress" = "o";
-        "repeat" = "r";
+        "repeat" = "e";
         "nonConsuming" = "n";
         "mouse" = "m";
         "transparent" = "t";
@@ -244,7 +244,25 @@ in
 
         toggleWindow = name: "ags toggle '${name}'";
 
-      in [
+        workspaceBinds = num:
+          let
+            n = toString num;
+          in [
+          {
+            description = "Toggle Session Menu (shutdown or restart)";
+            bind = { mods = [ "SUPER" ]; key = n; };
+            command = { dispatcher="workspace"; params = n; };
+          }
+          {
+            description = "Toggle Session Menu (shutdown or restart)";
+            bind = { mods = [ "SUPER" "SHIFT" ]; key = n; };
+            command = { dispatcher="movetoworkspacesilent"; params = n; };
+          }
+        ];
+
+        allWorkspaceBinds = concatLists (map workspaceBinds (range 1 9));
+
+      in allWorkspaceBinds ++ [
       {
         description = "Toggle Session Menu (shutdown or restart)";
         bind = { mods = [ "CONTROL" "ALT" ]; key = "Delete"; };
@@ -479,6 +497,199 @@ in
         description = "Show popup via AGS JavaScript"; # todo
         bind = { mods = [ "SUPER" "SHIFT" ]; key = "M"; };
         command = { params = "ags run-js 'indicator.popup(1);'"; flags = [ "locked" ]; };
+      }
+      {
+        description = "Toggle music controls";
+        bind = { mods = [ "SUPER" ]; key = "M"; };
+        command = {
+          params = "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
+        };
+      }
+      {
+        description = "Show color scheme";
+        bind = { mods = [ "SUPER" ]; key = "Comma"; };
+        command = {
+          params = "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
+        };
+      }
+      {
+        description = "Test notification";
+        bind = { mods = [ "SUPER" "ALT" ]; key = "F12"; };
+        command = {
+          params = "notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'";
+        };
+      }
+      {
+        description = "Urgent notification";
+        bind = { mods = [ "SUPER" "ALT" ]; key = "Equal"; };
+        command = {
+          params = "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
+        };
+      }
+      {
+        description = "Move window left";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "Left"; };
+        command = { dispatcher = "movewindow"; params = "l"; };
+      }
+      {
+        description = "Move window right";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "Right"; };
+        command = { dispatcher = "movewindow"; params = "r"; };
+      }
+      {
+        description = "Move window up";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "Up"; };
+        command = { dispatcher = "movewindow"; params = "u"; };
+      }
+      {
+        description = "Move window down";
+        bind = { mods = [ "SUPER" "SHIFT" ]; key = "Down"; };
+        command = { dispatcher = "movewindow"; params = "d"; };
+      }
+      {
+        description = "Move focus left";
+        bind = [
+            { mods = [ "SUPER" ]; key = "Left"; }
+            { mods = [ "SUPER" ]; key = "BracketLeft"; }
+        ];
+        command = { dispatcher = "movefocus"; params = "l"; };
+      }
+      {
+        description = "Move focus right";
+        bind = [
+            { mods = [ "SUPER" ]; key = "Right"; }
+            { mods = [ "SUPER" ]; key = "BracketRight"; }
+        ];
+        command = { dispatcher = "movefocus"; params = "r"; };
+      }
+      {
+        description = "Move focus up";
+        bind = { mods = [ "SUPER" ]; key = "Up"; };
+        command = { dispatcher = "movefocus"; params = "u"; };
+      }
+      {
+        description = "Move focus down";
+        bind = { mods = [ "SUPER" ]; key = "Down"; };
+        command = { dispatcher = "movefocus"; params = "d"; };
+      }
+      {
+        description = "Switch to next workspace";
+        bind = [
+          { mods = [ "CONTROL" "SUPER" ]; key = "Right"; }
+          { mods = [ "CONTROL" "SUPER" ]; key = "BracketRight"; }
+          { mods = [ "SUPER" ]; key = "Page_Down"; }
+          { mods = [ "CONTROL" "SUPER" ]; key = "Page_Down"; }
+        ];
+        command = { dispatcher = "workspace"; params = "+1"; };
+      }
+      {
+        description = "Switch to previous workspace";
+        bind = [
+          { mods = [ "CONTROL" "SUPER" ]; key = "Left"; }
+          { mods = [ "CONTROL" "SUPER" ]; key = "BracketLeft"; }
+          { mods = [ "SUPER" ]; key = "Page_Up"; }
+          { mods = [ "CONTROL" "SUPER" ]; key = "Page_Up"; }
+        ];
+        command = { dispatcher = "workspace"; params = "-1"; };
+      }
+      {
+        description = "Switch to workspace 5 above";
+        bind = [
+          { mods = [ "CONTROL" "SUPER" ]; key = "Up"; }
+        ];
+        command = { dispatcher = "workspace"; params = "-5"; };
+      }
+      {
+        description = "Switch to workspace 5 below";
+        bind = [
+          { mods = [ "CONTROL" "SUPER" ]; key = "Down"; }
+        ];
+        command = { dispatcher = "workspace"; params = "+5"; };
+      }
+      {
+        description = "Move to next workspace";
+        bind = [
+          { mods = [ "SUPER" "ALT" ]; key = "Page_Down"; }
+          { mods = [ "SUPER" "SHIFT" ]; key = "Page_Down"; }
+          { mods = [ "CONTROL" "SUPER" "SHIFT" ]; key = "Right"; }
+          { mods = [ "SUPER" "SHIFT" ]; key = "mouse_down"; }
+          { mods = [ "SUPER" "ALT" ]; key = "mouse_up"; }
+        ];
+        command = { dispatcher = "movetoworkspace"; params = "+1"; };
+      }
+      {
+        description = "Move to previous workspace";
+        bind = [
+          { mods = [ "SUPER" "ALT" ]; key = "Page_Up"; }
+          { mods = [ "SUPER" "SHIFT" ]; key = "Page_Up"; }
+          { mods = [ "CONTROL" "SUPER" "SHIFT" ]; key = "Left"; }
+          { mods = [ "SUPER" "SHIFT" ]; key = "mouse_up"; }
+          { mods = [ "SUPER" "ALT" ]; key = "mouse_down"; }
+        ];
+        command = { dispatcher = "movetoworkspace"; params = "-1"; };
+      }
+      {
+        description = "Fullscreen without topbar";
+        bind = { mods = [ "SUPER" ]; key = "F"; };
+        command = { dispatcher = "fullscreen"; params = "0"; };
+      }
+      {
+        description = "Fullscreen";
+        bind = { mods = [ "SUPER" ]; key = "D"; };
+        command = { dispatcher = "fullscreen"; params = "1"; };
+      }
+      {
+        description = "Fullscreen state toggle";
+        bind = { mods = [ "SUPER" "ALT" ]; key = "F"; };
+        command = { dispatcher = "fullscreenstate"; params = "-1 2"; };
+      }
+      {
+        description = "Move split left";
+        bind = [
+          { mods = [ "SUPER" ]; key = "Minus"; }
+          { mods = [ "SUPER" ]; key = "Semicolon"; }
+        ];
+        command = { dispatcher = "splitratio"; params = "-0.1"; flags = [ "repeat" ]; };
+      }
+      {
+        description = "Move split right";
+        bind = [
+          { mods = [ "SUPER" ]; key = "Equal"; }
+          { mods = [ "SUPER" ]; key = "Apostrophe"; }
+        ];
+        command = { dispatcher = "splitratio"; params = "0.1"; flags = [ "repeat" ]; };
+      }
+      {
+        description = "Raise volume";
+        bind = { key = "XF86AudioRaiseVolume"; };
+        command = [
+          { params = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"; }
+          { params = "ags run-js 'indicator.popup(1);'"; }
+        ];
+      }
+      {
+        description = "Lower volume";
+        bind = { key = "XF86AudioLowerVolume"; };
+        command = [
+          { params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"; }
+          { params = "ags run-js 'indicator.popup(1);'"; }
+        ];
+      }
+      {
+        description = "Increase brightness";
+        bind = { key = "XF86MonBrightnessUp"; };
+        command = [
+          { params = "brightnessctl set +10%"; }
+          { params = "ags run-js 'indicator.popup(1);'"; }
+        ];
+      }
+      {
+        description = "Decrease brightness";
+        bind = { key = "XF86MonBrightnessDown"; };
+        command = [
+          { params = "brightnessctl set 10%-"; }
+          { params = "ags run-js 'indicator.popup(1);'"; }
+        ];
       }
     ];
 

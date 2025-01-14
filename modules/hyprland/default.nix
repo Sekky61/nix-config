@@ -57,7 +57,7 @@ in
       pavucontrol
       playerctl
       swappy
-      swww
+      swww # wallpaper
       wayshot
       wlsunset
       wl-clipboard
@@ -91,6 +91,7 @@ in
             "WLR_NO_HARDWARE_CURSORS, 1"
           ];
           monitor = [
+            # todo generalize
             "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5" # Yoga laptop screen
             "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor. scale 1 is big but works best
             ",preferred,auto,1" # auto
@@ -100,11 +101,9 @@ in
             "ags run"
             # wallpaper
             "swww kill; swww init"
-            # go to sleep after inactivity
-            "hypridle"
             # hw sensors (screen rotation)
             "iio-hyprland"
-            # paste history
+            # paste history init
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
             # cursor
@@ -237,68 +236,12 @@ in
             force_zero_scaling = true;
           };
           bind = [
-              # Rest
-              "Super, M, exec, ags run-js 'openMusicControls.value = !openMusicControls.value;'" # todo fix
-              "Super, Comma, exec, ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'" # show color scheme
-              "Super+Alt, f12, exec, notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'"
-              "Super+Alt, Equal, exec, notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'"
-              "Super+Shift, left, movewindow, l"
-              "Super+Shift, right, movewindow, r"
-              "Super+Shift, up, movewindow, u"
-              "Super+Shift, down, movewindow, d"
-              "Super, left, movefocus, l"
-              "Super, right, movefocus, r"
-              "Super, up, movefocus, u"
-              "Super, down, movefocus, d"
-              "Super, BracketLeft, movefocus, l"
-              "Super, BracketRight, movefocus, r"
-              "Control+Super, right, workspace, +1"
-              "Control+Super, left, workspace, -1"
-              "Control+Super, BracketLeft, workspace, -1"
-              "Control+Super, BracketRight, workspace, +1"
-              "Control+Super, up, workspace, -5"
-              "Control+Super, down, workspace, +5"
-              "Super, Page_Down, workspace, +1"
-              "Super, Page_Up, workspace, -1"
-              "Control+Super, Page_Down, workspace, +1"
-              "Control+Super, Page_Up, workspace, -1"
-              "Super+Alt, Page_Down, movetoworkspace, +1"
-              "Super+Alt, Page_Up, movetoworkspace, -1"
-              "Super+Shift, Page_Down, movetoworkspace, +1"
-              "Super+Shift, Page_Up, movetoworkspace, -1"
-              "Control+Super+Shift, Right, movetoworkspace, +1"
-              "Control+Super+Shift, Left, movetoworkspace, -1"
-              "Super+Shift, mouse_down, movetoworkspace, -1"
-              "Super+Shift, mouse_up, movetoworkspace, +1"
-              "Super+Alt, mouse_down, movetoworkspace, -1"
-              "Super+Alt, mouse_up, movetoworkspace, +1"
-              "Super, F, fullscreen, 0" # full screen without topbar
-              "Super, D, fullscreen, 1" # full screen
-              "Super_Alt, F, fullscreenstate, -1 2"
-              "Super, 1, workspace, 1"
-              "Super, 2, workspace, 2"
-              "Super, 3, workspace, 3"
-              "Super, 4, workspace, 4"
-              "Super, 5, workspace, 5"
-              "Super, 6, workspace, 6"
-              "Super, 7, workspace, 7"
-              "Super, 8, workspace, 8"
-              "Super, 9, workspace, 9"
-              "Super, 0, workspace, 10"
-              # "Super, S, togglespecialworkspace,"
-              # "Control+Super, S, togglespecialworkspace,"
+            # todo move rest of keybinds
+
+            # "Super, S, togglespecialworkspace,"
+            # "Control+Super, S, togglespecialworkspace,"
               "Alt, Tab, cyclenext"
               "Alt, Tab, bringactivetotop,"
-              "Super+Shift, 1, movetoworkspacesilent, 1"
-              "Super+Shift, 2, movetoworkspacesilent, 2"
-              "Super+Shift, 3, movetoworkspacesilent, 3"
-              "Super+Shift, 4, movetoworkspacesilent, 4"
-              "Super+Shift, 5, movetoworkspacesilent, 5"
-              "Super+Shift, 6, movetoworkspacesilent, 6"
-              "Super+Shift, 7, movetoworkspacesilent, 7"
-              "Super+Shift, 8, movetoworkspacesilent, 8"
-              "Super+Shift, 9, movetoworkspacesilent, 9"
-              "Super+Shift, 0, movetoworkspacesilent, 10"
               "Control+Shift+Super, Up, movetoworkspacesilent, special"
               "Super, m, movecurrentworkspacetomonitor, +1"
               # "Super+Shift, S, movetoworkspacesilent, special"
@@ -313,16 +256,6 @@ in
             "Super, mouse:273, resizewindow" # right click to resize window
           ];
           bindle = [
-            ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
-            ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-            ",XF86MonBrightnessUp, exec, brightnessctl set +10"
-            ",XF86MonBrightnessDown, exec, brightnessctl set -10"
-            # Present the changes
-            ",XF86AudioRaiseVolume, exec, ags run-js 'indicator.popup(1);'"
-            ",XF86AudioLowerVolume, exec, ags run-js 'indicator.popup(1);'"
-            ",XF86MonBrightnessUp, exec, ags run-js 'indicator.popup(1);'"
-            ",XF86MonBrightnessDown, exec, ags run-js 'indicator.popup(1);'"
-
             "Alt, I, exec, ydotool key 103:1 103:0 "
             "Alt, K, exec, ydotool key 108:1 108:0"
             "Alt, J, exec, ydotool key 105:1 105:0"
@@ -331,12 +264,6 @@ in
           bindr = [
             "Control+Super, R, exec, killall ags .ags-wrapped ydotool; ags &"
             "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
-          ];
-          binde = [
-            "Super, Minus, splitratio, -0.1"
-            "Super, Equal, splitratio, 0.1"
-            "Super, Semicolon, splitratio, -0.1"
-            "Super, Apostrophe, splitratio, 0.1"
           ];
           windowrule = [
             "noblur,.*" # Disables blur for windows. Substantially improves performance.
