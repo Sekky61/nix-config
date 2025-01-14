@@ -409,18 +409,6 @@ in
             "Super, Z, movewindow"
             "Super, mouse:273, resizewindow" # right click to resize window
           ];
-          bindl = [
-            ",XF86AudioMute, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
-            "Super+Shift,M, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%"
-            ''Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
-            '',XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`''
-            "Super+Shift, B, exec, playerctl previous"
-            "Super+Shift, P, exec, playerctl play-pause"
-            ",XF86AudioPlay, exec, playerctl play-pause"
-            "Super+Shift, L, exec, sleep 0.1 && systemctl suspend"
-            ", XF86AudioMute, exec, ags run-js 'indicator.popup(1);'"
-            "Super+Shift,M,   exec, ags run-js 'indicator.popup(1);'"
-          ];
           bindle = [
             ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
             ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"

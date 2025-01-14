@@ -15,6 +15,7 @@ let
   cfg = config.michal.programs.hyprland.keybinds;
 
   # Typedef for a keybind
+  # Guide: https://nlewo.github.io/nixos-manual-sphinx/development/option-types.xml.html
   keybindModule = types.submodule ({
     config,
     name,
@@ -40,8 +41,8 @@ let
           default = "";
         };
         params = mkOption {
-          type = with types; str;
-          description = "Additional parameters for the dispatcher.";
+          type = with types; either str (listOf str);
+          description = "Additional parameters for the dispatcher. Can be an array of params, in which case multiple binds differing only in params will be created.";
           example = "firefox";
           default = "";
         };
@@ -104,17 +105,22 @@ p -> bypassInhibit, bypasses the app's requests to inhibit keybinds.
   getFlags = kb: kb.flags ++ optionals (kb.description != "") ["description"];
 
   # Format a bind line. Example: "Super+Shift, up, movewindow, u"
-  keybindLine = kb:
+  keybindLines = kb:
     let
       mods = lib.concatStringsSep " + " kb.mods;
+      paramArr = lists.toList kb.params;
+      createLine = par: lib.concatStringsSep ", " [mods kb.key kb.description kb.dispatcher par];
     in
-      lib.concatStringsSep ", " [mods kb.key kb.description kb.dispatcher kb.params];
+      map createLine paramArr;
+      
 
-  # [ { mods, flags, ... } ] => [ { bind[f] = "line" } ]
-  bb = map (kb: { "bind${constructFlags (getFlags kb)}" = keybindLine kb;}) cfg;
+  # [ { mods, flags, ... } ] => [ { bind[f] = ["line" "line2"] } ]
+  bb = map (kb: { "bind${constructFlags (getFlags kb)}" = keybindLines kb;}) cfg;
 
-  # { "bindxx" = [ "line1" "line2" ] }
-  binds = builtins.zipAttrsWith (name: valueLine: valueLine) bb;
+  # { "bindxx" = [ ["line1"] ["line2"] ] }
+  bindsNested = builtins.zipAttrsWith (name: valueLine: valueLine) bb;
+  # { "bindxx" = [ ["line1"] ["line2"] ] }
+  binds = mapAttrs (name: value: flatten value) bindsNested;
 in
 {
   # Define the option
@@ -476,6 +482,86 @@ in
          dispatcher = "exec";
          flags = [ ];
        }
+      {
+        description = "Set volume to 0%";
+        params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
+        mods = [ ];
+        key = "XF86AudioMute";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Set volume to 0%";
+        params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "M";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Play next track or move to 100% position";
+        params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "N";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Play next track or move to 100% position";
+        params = "playerctl next || playerctl position `bc <<< '100 * $(playerctl metadata mpris:length) / 1000000 / 100'`";
+        mods = [ ];
+        key = "XF86AudioNext";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Play previous track";
+        params = "playerctl previous";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "B";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Play/pause media";
+        params = "playerctl play-pause";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "P";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Play/pause media";
+        params = "playerctl play-pause";
+        mods = [ ];
+        key = "XF86AudioPlay";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Suspend system"; # With a delay
+        params = "sleep 0.1 && systemctl suspend";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "L";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Show popup via AGS JavaScript"; # todo
+        params = "ags run-js 'indicator.popup(1);'";
+        mods = [ ];
+        key = "XF86AudioMute";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
+      {
+        description = "Show popup via AGS JavaScript"; # todo
+        params = "ags run-js 'indicator.popup(1);'";
+        mods = [ "SUPER" "SHIFT" ];
+        key = "M";
+        dispatcher = "exec";
+        flags = [ "locked" ];
+      }
     ];
 
     home-manager.users.${username} = _: {
