@@ -61,7 +61,7 @@ in
       xwayland # apps that do not work with wayland like spotify rn
     ];
 
-    programs.iio-hyprland.enable = true; # screen rotation
+    programs.iio-hyprland.enable = true; # screen rotation, todo does not work
 
     home-manager.users.${username} = _: {
       # Optional, hint Electron apps to use Wayland:

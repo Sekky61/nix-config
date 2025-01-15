@@ -1,6 +1,6 @@
-import { App, Astal, Gtk, Widget } from "astal/gtk3"
+import { App, Astal, astalify, ConstructProps, Gtk, Widget } from "astal/gtk3"
 import { toggleWindow } from "../util";
-import { GLib, readFile } from "astal";
+import { GLib, GObject, readFile } from "astal";
 
 // Set by a derivation. Relative path ~ does not work
 const HOME = GLib.getenv("HOME")
@@ -27,45 +27,99 @@ type Keybind = {
   visible: boolean;
 };
 
-type KeyConfig = Keybind[];
+// match string with any of supplied words, case insensitive
+function anyOf(word: string, ...haystack: string[]) {
+    var regex = new RegExp( haystack.join( "|" ), "i");
+    return regex.test(word);
+}
 
-class KeyConfigManager {
-  private config: KeyConfig;
+// Define category rules with discriminating logic
+const categoryRules = {
+  screenshot: (keybind: Keybind) => {
+    const cmd = getCommand(keybind).params;
+    return anyOf(cmd, 'grimblast', 'wf-recorder', 'grim');
+  },
+  window: (keybind: Keybind) => {
+    const dispatcher = getCommand(keybind).dispatcher;
+    return anyOf(dispatcher, 'togglefloating', 'pseudo', 'killactive', 'window', 'togglesplit', 'move', 'resize');
+  },
+  workspace: (keybind: Keybind) => {
+    const dispatcher = getCommand(keybind).dispatcher;
+    return anyOf(dispatcher, 'workspace', 'movetoworkspace', 'movewindow');
+  },
+  launch: (keybind: Keybind) => {
+    const dispatcher = getCommand(keybind).dispatcher;
+    const cmd = getCommand(keybind).params;
+    return dispatcher === 'exec' && (
+      anyOf(cmd, 'launch', 'open')
+    );
+  },
+  system: (keybind: Keybind) => {
+    const cmd = getCommand(keybind).params;
+    return (
+      anyOf(cmd, 'brightnessctl', 'hyprlock', 'killall')
+    );
+  }
+} as const;
+
+const categories = Object.keys(categoryRules) as Category[];
+
+// Derive category type from rules object
+type Category = keyof typeof categoryRules;
+
+class BindsManager {
+  private binds: Keybind[];
+  private bindsByCategory: Record<Category, Keybind[]>;
 
   constructor() {
     const str = readFile(KEYBIND_JSON_PATH);
     try {
-        this.config = JSON.parse(str);
+        this.binds = JSON.parse(str);
     } catch (e) {
         console.error(e);
-        this.config = [];
+        this.binds = [];
     }
+    this.bindsByCategory = this.categorizeKeybinds();
   }
 
   getEnabled(): Keybind[] {
-    return this.config.filter(kb => kb.visible);
+    return this.binds.filter(kb => kb.visible);
   }
 
-  // get all keybinds, flattening Bind or Bind[] to Bind[]
-  getAllBinds(): Bind[] {
-    return this.config.flatMap((keybind) =>
-      Array.isArray(keybind.bind) ? keybind.bind : [keybind.bind]
-    );
+  getCategories() {
+    return this.bindsByCategory;
   }
 
-  // get all commands, flattening Command or Command[] to Command[]
-  getAllCommands(): Command[] {
-    return this.config.flatMap((keybind) =>
-      Array.isArray(keybind.command) ? keybind.command : [keybind.command]
-    );
+  static command(kb: Keybind) {
+    
   }
+
+    // Function to categorize a single keybind
+    categorizeKeybinds() {
+        const cats = {} as Record<Category, Keybind[]>;
+        for (const cat of categories) {
+            cats[cat] = this.keybindsFor(cat);
+        }
+        return cats;
+    }
+
+    keybindsFor(category: Category): Keybind[] {
+      const pred = categoryRules[category];
+      return this.getEnabled().filter(pred);
+    }
+
 }
 
 function getBind(kb: Keybind): Bind {
     return Array.isArray(kb.bind) ? kb.bind[0] : kb.bind;
 }
 
-const keys = new KeyConfigManager();
+function getCommand(kb: Keybind): Command {
+    return Array.isArray(kb.command) ? kb.command[0] : kb.command;
+}
+
+
+const keys = new BindsManager();
 
 const { CENTER } = Gtk.Align;
 
@@ -83,6 +137,20 @@ function CheatsheetHeader() {
     </centerbox>;
 }
 
+// Grid
+
+class Grid extends astalify(Gtk.Grid) {
+    static { GObject.registerClass(this) }
+
+    constructor(props: ConstructProps<
+        Grid,
+        Gtk.Grid.ConstructorProps,
+        { onColorSet: [] } // signals of Gtk.ColorButton have to be manually typed
+    >) {
+        super(props as any)
+    }
+}
+
 export default function CheatSheet() {
     console.dir(keys);
 
@@ -97,14 +165,24 @@ export default function CheatSheet() {
             {clickOutsideToClose}
             <box className="cheatsheet-bg spacing-v-15" vertical>
                 <CheatsheetHeader />
-                {keys.getEnabled().map(kb => <box>
-                    <box className='spacing-h-10'>
-                        <box>
-                            {[...getBind(kb).mods, getBind(kb).key].map(k => <label label={k} className='cheatsheet-key txt-small'/>)}
-                        </box>
-                        <label label={kb.description} className='txt chearsheet-action txt-small' />
-                    </box>
-                </box>)}
+                <scrollable widthRequest={500} heightRequest={500}>
+                    <Grid columnSpacing={10} columnHomogeneous setup={self => {
+                        self.insert_column(0);
+                        self.insert_column(1);
+                        self.insert_column(2);
+                        Object.entries(keys.getCategories()).map(([cat, keys], c) => {
+                                self.attach(<label label={cat} className='cheatsheet-category-title txt' />,c,0,1,1);
+                                keys.map((kb, r) => {
+                                    self.attach(<box className='spacing-h-10'>
+                                        <box>
+                                            {[...getBind(kb).mods, getBind(kb).key].map(k => <label label={k} className='cheatsheet-key txt-small'/>)}
+                                        </box>
+                                        <label label={kb.description} className='txt chearsheet-action txt-small' />
+                                    </box>, c,r+1,1,1);
+                                });
+                        });
+                    }}/>
+                </scrollable>
             </box>
         </box>
     </window>
