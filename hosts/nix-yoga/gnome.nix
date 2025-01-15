@@ -13,7 +13,6 @@
     ];
 
     systemPackages = with pkgs; [
-      gnome-extension-manager
       nautilus-open-any-terminal
       morewaita-icon-theme
       bibata-cursors

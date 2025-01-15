@@ -205,6 +205,7 @@
     powerOnBoot = true;
   };
 
+  # The programs.iio-hyprland.enable should be enough, but i didnt delete this
   hardware.sensor.iio.enable = true;
 
   # cross-compilation

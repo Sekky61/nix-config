@@ -37,8 +37,6 @@ in
       nwg-displays # gui for monitors, wayland
       hyprshot
 
-      iio-hyprland # used to be: inputs.iio-hyprland.packages.${pkgs.system}.default
-
       fuzzel # app picker
       bemoji # emoji picker
       grim
@@ -58,15 +56,16 @@ in
       wlsunset
       wl-clipboard
       wf-recorder
-      iio-sensor-proxy # pc sensors
       libinput # wayland input settings
       libinput-gestures
       xwayland # apps that do not work with wayland like spotify rn
     ];
 
+    programs.iio-hyprland.enable = true; # screen rotation
+
     home-manager.users.${username} = _: {
       # Optional, hint Electron apps to use Wayland:
-      # home.sessionVariables.NIXOS_OZONE_WL = "1";
+      home.sessionVariables.NIXOS_OZONE_WL = "1";
 
       xdg.desktopEntries."org.gnome.Settings" = {
         name = "Settings";
@@ -79,7 +78,7 @@ in
 
       wayland.windowManager.hyprland = {
         enable = true;
-      
+
         plugins = with pkgs; [
           # hyprlandPlugins.<plugin>
         ];
@@ -95,7 +94,7 @@ in
           ];
           monitor = [
             # todo generalize
-            "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5" # Yoga laptop screen
+            "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5,transform,0" # Yoga laptop screen
             "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor. scale 1 is big but works best
             ",preferred,auto,1" # auto
           ];
@@ -105,7 +104,7 @@ in
             # wallpaper
             "swww kill; swww init"
             # hw sensors (screen rotation)
-            "iio-hyprland"
+            "iio-hyprland eDP-1"
             # paste history init
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
