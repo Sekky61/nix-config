@@ -2,6 +2,20 @@
 let
   astalPkgs = inputs.ags.packages.${pkgs.system};
 
+  astalRuntimePkgs = with astalPkgs; [
+    battery
+    apps
+    auth
+    bluetooth
+    hyprland
+    mpris
+    network
+    notifd
+    powerprofiles
+    tray
+    wireplumber
+  ] ++ pkgsExtra;
+
   pkgsExtra = with pkgs; [
     ollama
     pywal
@@ -13,17 +27,17 @@ let
   ];
 
   pkgsExtraAgs = with pkgs; [
-      gtksourceview
-      gtksourceview4
-      ollama
-      python311Packages.material-color-utilities
-      python311Packages.pywayland
-      pywal
-      sassc
-      webkitgtk
-      webp-pixbuf-loader
-      ydotool
-    ];
+    gtksourceview
+    gtksourceview4
+    ollama
+    python311Packages.material-color-utilities
+    python311Packages.pywayland
+    pywal
+    sassc
+    webkitgtk
+    webp-pixbuf-loader
+    ydotool
+  ];
 in
 {
   imports = [ inputs.ags.homeManagerModules.default ];
@@ -42,36 +56,8 @@ in
     configDir = impurity.link ./config;
 
     # additional packages to add to gjs's runtime
-    extraPackages = with astalPkgs; [
-      battery
-      apps
-      auth
-      bluetooth
-      hyprland
-      mpris
-      network
-      notifd
-      powerprofiles
-      tray
-      wireplumber
-
-      # Todo: greet
-
-      pkgs.fzf
-    ] ++ pkgsExtraAgs;
+    extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;
   };
 
-  home.packages = with astalPkgs; [
-      battery
-      apps
-      auth
-      bluetooth
-      hyprland
-      mpris
-      network
-      notifd
-      powerprofiles
-      tray
-      wireplumber
-  ] ++ pkgsExtra;
+  home.packages = astalRuntimePkgs;
 }

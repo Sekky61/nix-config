@@ -3,23 +3,17 @@
   pkgs,
   lib,
   username,
-  config,
   ...
 }:
 with lib;
 let
-  cfg = config.michal.programs.hyprland;
-
-  hyprland = inputs.hyprland.packages.${pkgs.system}.hyprland;
-  plugins = inputs.hyprland-plugins.packages.${pkgs.system};
-
   launcher = pkgs.writeShellScriptBin "hypr" ''
     #!/${pkgs.bash}/bin/bash
 
     export WLR_NO_HARDWARE_CURSORS=1
     export _JAVA_AWT_WM_NONREPARENTING=1
 
-    exec ${hyprland}/bin/Hyprland
+    exec ${hyprland_pkg}/bin/Hyprland
   '';
 
   myMonitors = {
@@ -39,9 +33,11 @@ in
   config = {
 
     environment.systemPackages = with pkgs; [
-      launcher
+      # launcher
       nwg-displays # gui for monitors, wayland
       hyprshot
+
+      iio-hyprland # used to be: inputs.iio-hyprland.packages.${pkgs.system}.default
 
       fuzzel # app picker
       bemoji # emoji picker
@@ -69,6 +65,8 @@ in
     ];
 
     home-manager.users.${username} = _: {
+      # Optional, hint Electron apps to use Wayland:
+      # home.sessionVariables.NIXOS_OZONE_WL = "1";
 
       xdg.desktopEntries."org.gnome.Settings" = {
         name = "Settings";
@@ -81,6 +79,11 @@ in
 
       wayland.windowManager.hyprland = {
         enable = true;
+      
+        plugins = with pkgs; [
+          # hyprlandPlugins.<plugin>
+        ];
+
         settings = {
           env = [
             "QT_QPA_PLATFORM, wayland"

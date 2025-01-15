@@ -88,7 +88,6 @@
   };
 
   security = {
-    rtkit.enable = true; # related to sound
     polkit.enable = true;
   };
 
@@ -134,7 +133,6 @@
   environment = {
     localBinInPath = true;
     systemPackages = with pkgs; [
-      inputs.iio-hyprland.packages.${pkgs.system}.default
       curl
       bash
       fish

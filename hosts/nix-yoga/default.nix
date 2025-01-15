@@ -24,6 +24,5 @@
   michal.programs = {
     bitwarden.enable = true;
     ventoy.enable = true;
-
   };
 }
