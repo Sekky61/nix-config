@@ -8,54 +8,63 @@ const hyprland = AstalHyprland.get_default();
 
 const { CENTER, END } = Gtk.Align;
 
-const debouncedWorkspace = debounce((dir: '+1' | '-1') => {
-    hyprland.dispatch("workspace", dir);
+const debouncedWorkspace = debounce((dir: "+1" | "-1") => {
+  hyprland.dispatch("workspace", dir);
 }, 200);
 
-const idToColor = ['red', 'green', 'blue'];
+const idToColor = ["red", "green", "blue"];
 
 /** If there are 2+ monitors, mark the workspace with a color */
 function DotFor(monitor: AstalHyprland.Monitor) {
-    if(hyprland.monitors.length < 2) return undefined;
-    // TODO: eyeballed, might not be reliable
-    return <box halign={CENTER} valign={CENTER} css={`color: ${idToColor[monitor.id]}; font-size: 1.8rem;`}>
-        .
+  if (hyprland.monitors.length < 2) return undefined;
+  // TODO: eyeballed, might not be reliable
+  return (
+    <box
+      halign={CENTER}
+      valign={CENTER}
+      css={`color: ${idToColor[monitor.id]}; font-size: 1.8rem;`}
+    >
+      .
     </box>
+  );
 }
 
 /** css is defined in _bar.scss */
 export default function Workspaces() {
-    return <EventBox
-        onScroll={(_el, e) => {
-            const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
-            if(dir == Gdk.ScrollDirection.RIGHT) {
-                debouncedWorkspace(e.time, '+1');
-            }
-            if(dir == Gdk.ScrollDirection.LEFT) {
-                debouncedWorkspace(e.time, '-1');
-            }
-        }}
+  return (
+    <EventBox
+      onScroll={(_el, e) => {
+        const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
+        if (dir == Gdk.ScrollDirection.RIGHT) {
+          debouncedWorkspace(e.time, "+1");
+        }
+        if (dir == Gdk.ScrollDirection.LEFT) {
+          debouncedWorkspace(e.time, "-1");
+        }
+      }}
     >
-        <box className="">
-            {bind(hyprland, "workspaces").as(wss => wss
-                .filter(ws => !(ws.id >= -99 && ws.id <= -2)) // filter out special workspaces
-                .sort((a, b) => a.id - b.id)
-                .map(ws => (
-                <overlay overlay={DotFor(ws.monitor)}>
-                    <button
-                        className={bind(hyprland, "focusedWorkspace").as(fw => {
-                            const classes = ['bar-ws'];
-                            if (ws === fw) classes.push('bar-ws-active');
-                            // if (ws.monitor.name)
-                            return classes.join(' ');
-                        })}
-                        onClicked={() => ws.focus()}>
-                        {ws.id}
-                    </button>
-                </overlay>
-                ))
-            )}
-        </box>
+      <box className="">
+        {bind(hyprland, "workspaces").as((wss) =>
+          wss
+            .filter((ws) => !(ws.id >= -99 && ws.id <= -2)) // filter out special workspaces
+            .sort((a, b) => a.id - b.id)
+            .map((ws) => (
+              <overlay overlay={DotFor(ws.monitor)}>
+                <button
+                  className={bind(hyprland, "focusedWorkspace").as((fw) => {
+                    const classes = ["bar-ws"];
+                    if (ws === fw) classes.push("bar-ws-active");
+                    // if (ws.monitor.name)
+                    return classes.join(" ");
+                  })}
+                  onClicked={() => ws.focus()}
+                >
+                  {ws.id}
+                </button>
+              </overlay>
+            )),
+        )}
+      </box>
     </EventBox>
+  );
 }
-

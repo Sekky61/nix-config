@@ -1,6 +1,9 @@
 {
-    "name": "astal-shell",
-    "dependencies": {
-        "astal": "/home/michal/.local/share/ags"
-    }
+  "name": "astal-shell",
+  "scripts": {
+    "format": "bunx @biomejs/biome format --write"
+  },
+  "dependencies": {
+    "astal": "/home/michal/.local/share/ags"
+  }
 }
