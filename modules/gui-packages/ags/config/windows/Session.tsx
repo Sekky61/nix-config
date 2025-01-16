@@ -46,7 +46,7 @@ function SessionButton(p: SessionButtonProps) {
                     self.get_window()?.set_cursor(cursor);
                 }}
             >
-            <overlay className='session-button-box' overlay={revealer}>
+            <overlay overlay={revealer}>
                 <label label={p.icon} className='icon-material' vexpand />
             </overlay>
         </button>

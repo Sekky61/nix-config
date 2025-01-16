@@ -9,7 +9,7 @@ import Time from "../widget/Time"
 /** Wrap a component in colored bubble */
 export function BarGroup({ child, children }: ChildrenProps) {
     return <box className='bar-group-margin bar-sides'>
-        <box className='bar-group bar-group-standalone bar-group-pad-system'>
+        <box className='bar-group bar-group-standalone bar-group-pad'>
             {child}
             {children}
         </box>

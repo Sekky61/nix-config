@@ -152,8 +152,6 @@ class Grid extends astalify(Gtk.Grid) {
 }
 
 export default function CheatSheet() {
-    console.dir(keys);
-
     return <window
         name="cheatsheet"
         layer={Astal.Layer.OVERLAY}

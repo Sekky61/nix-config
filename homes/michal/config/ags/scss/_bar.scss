@@ -82,6 +82,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .bar-ws {
+    font-size: 0.3rem;
     min-width: $bar_ws_width;
     color: mix($onBackground, $background, 40%);
     @if $darkmode ==true {
