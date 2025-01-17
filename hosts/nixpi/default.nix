@@ -5,6 +5,7 @@
     ../../modules/wifi.nix
 
     # general admin packages
+    ../../modules/terminal.nix
   ];
 
   # Services

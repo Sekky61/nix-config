@@ -24,5 +24,6 @@
   michal.programs = {
     bitwarden.enable = true;
     ventoy.enable = true;
+    borg.enable = true;
   };
 }

@@ -35,6 +35,10 @@
         path = "${config.users.users.${username}.home}/.ssh/id_ed25519";
       };
 
+      # Passwordless key for disk backup
+      "borg-backup/key" = {};
+      "borg-backup/passphrase" = {};
+
       wireless = {
         # neededForUsers = true;
       };

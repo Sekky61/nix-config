@@ -2,6 +2,7 @@ result
 nixos.qcow2
 # These keep changing
 .direnv
+mount/
 
 .sops.yaml
 *.iso

@@ -128,7 +128,7 @@ $onSecondaryContainer: color.mix($color7, $color2, 90%);
 .osd-music-controlbtn-txt {
     @include element_decel;
     transition: 100ms cubic-bezier(0.05, 0.7, 0.1, 1);
-    @include icon-material;
+    @include lib_mixins.icon-material;
     font-size: 1.364rem;
     margin: -0.1rem 0rem;
 }
@@ -152,7 +152,7 @@ $onSecondaryContainer: color.mix($color7, $color2, 90%);
 
 .osd-music-playstate-btn>label {
     transition: 50ms cubic-bezier(0.05, 0.7, 0.1, 1);
-    @include icon-material;
+    @include lib_mixins.icon-material;
     font-size: 1.364rem;
     margin: -0.1rem 0rem;
 }

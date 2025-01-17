@@ -14,6 +14,7 @@
     # Modules with options
     ./bitwarden.nix
     ./ventoy.nix
+    ./borg.nix
   ];
 
   environment.systemPackages = with pkgs; [

@@ -95,7 +95,7 @@ $bar_subgroup_bg: material.$surfaceVariant;
 }
 
 .bar-ws-monitor-indicator {
-    @include icon-material;
+    @include lib_mixins.icon-material;
 }
 
 .bar-ws-occupied {

@@ -13,7 +13,7 @@ let
 in
 {
   options.michal.programs.ventoy = {
-    enable = mkEnableOption "Enables ventoy";
+    enable = mkEnableOption "ventoy";
   };
 
   config = mkIf cfg.enable {

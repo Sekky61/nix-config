@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+sudo mkdir -p mount
+sudo borg-job-borgbase mount --numeric-ids u6ddiz7x@u6ddiz7x.repo.borgbase.com:repo ./mount
+
+# unmount:
+# sudo borg umount ./mount

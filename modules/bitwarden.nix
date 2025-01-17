@@ -38,7 +38,7 @@ let
 in
 {
   options.michal.programs.bitwarden = {
-    enable = mkEnableOption "Enables bitwarden cli client";
+    enable = mkEnableOption "the bitwarden cli client";
   };
 
   config = mkIf cfg.enable {
