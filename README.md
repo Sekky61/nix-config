@@ -39,7 +39,8 @@ Secrets are managed using [sops-nix](https://github.com/Mic92/sops-nix).
 There is one universal age key for development. It is backed up in password manager.
 
 Setup and common tasks:
-- To add a host, run `./scripts/age-pubkey` and add the key to `.sops.yaml`
+- Adding new host: you need keys in `/etc/ssh/ssh_host_ed25519_key(.pub)`. They are generated after first build, but I think nothing prevents you from puting the keys there yourself. You would even spare some time adding the new key in sops.
+- If you decided to generate (or let nix generate) the key, run `./scripts/age-pubkey` and add the key to `.sops.yaml`
 - After adding a host, run `sops updatekeys modules/sops/secrets.yaml`
 - Add a pubkey: `sops rotate --in-place --add-age age1xxxxxxx modules/sops/secrets.yaml`
 
