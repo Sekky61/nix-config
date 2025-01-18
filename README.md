@@ -74,28 +74,6 @@ sudo nixos-install --flake github:Sekky61/nix-config#nixpi --root /mnt --no-boot
 or use the update script. This way you do not have to commit to try the install.
 `--no-bootloader` is unverified.
 
-
-## Development
-
-### AGS notes
-
-(This is for v1, v2 bar is in progress)
-
-Press `Super + /` to open the list of keybindings.
-
-[Very useful docs](https://aylur.github.io/ags/). Also look at [GJS docs](https://gjs.guide/).
-
-- class `corner-black` makes fake rounded screen
-- class `corner` controls rounding of the top bar
-- Media widget: left click to show detailed controls, middle click to play/pause, right click to next track
-- To debug, I just kill the ags with `ags -q` and then launch it in a shell: `ags`
-- HTTP requests like Gemini use `libsoup`.
-
-### Notes 
-
-Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
-To change wallpaper, run script using `Control+Super+T`.
-
 ## Features
 
 <!-- Over time add some info about each chosen part of the system -->
@@ -106,7 +84,8 @@ Uses `tuigreet`, on login launches Hyprland.
 
 ### Hyprland
 
-The window manager. Launches Chrome on startup. Uses Ags/astal bar. See shortcuts with `Super+/`.
+The window manager. See shortcuts with `Super+/`.
+Launches Chrome on startup. Uses Ags/astal bar. 
 
 ### Impurity
 
@@ -133,4 +112,29 @@ See `./scripts/list-custom-options` for more.
 The `nvim` config (located [here](modules/nvim/init.lua)) contains many useful
 plugins and keybinds with descriptions. The plugins get installed at launch, so
 this is not a pure Nix solution.
+
+### Backups
+
+[Borg](https://borgbackup.readthedocs.io/en/stable/) ([module](modules/borg.nix)) is used with the cloud solution [BorgBase](https://www.borgbase.com/).
+There is a daily backup with some weekly and monthly retention.
+
+## Development
+
+### AGS notes
+
+(after migrating to v2, some features are pending)
+
+Press `Super + /` to open the list of keybindings.
+
+[Very useful docs](https://aylur.github.io/ags/). Also look at [GJS docs](https://gjs.guide/).
+
+- class `corner-black` makes fake rounded screen
+- class `corner` controls rounding of the top bar
+- Media widget: left click to show detailed controls, middle click to play/pause, right click to next track
+- To debug, I just kill the ags with `ags quit` and then launch it in a shell: `ags run` (or with a `--directory` flag).
+
+### Notes 
+
+Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
+To change wallpaper, run script using `Control+Super+T`.
 
