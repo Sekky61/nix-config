@@ -1,0 +1,15 @@
+keys:
+  # Development
+  - &admin_majer age19z5x2n6x9qykp03lseh5uztgsfsmchn5gz6t98phjqkn6a6u8ugsdftl2w
+  # Hosts
+  - &host_nixpi_old age1jgc7q2urjrpp08lgn9sqh8jyffta23tzdhydyf6s49j5jw6lk30qa6k5y3
+  - &host_nixpi age1v9yj65nfhw4alw6nrha62dj85ar0edy6haaxg4jl8xxu94d9ls4s6044tx 
+  - &host_nix_yoga age15hc9vchm2c2z0qurszt9hlj6juvzdpz09etcr3vcftaxvree0e6szjnpwc
+creation_rules:
+  - path_regex: modules/sops/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_majer
+      - *host_nixpi_old
+      - *host_nixpi
+      - *host_nix_yoga
