@@ -1,38 +1,6 @@
 @use 'sass:color';
-
-// == BEGINNING OF CODEGEN ==
-
-$darkmode: true;
-$primary: #ffb783;
-$onPrimary: #512400;
-$primaryContainer: #733600;
-$onPrimaryContainer: #ffdbc4;
-$secondary: #e4bfa8;
-$onSecondary: #422b1b;
-$secondaryContainer: #5b412f;
-$onSecondaryContainer: #ffdbc4;
-$tertiary: #c9ca93;
-$onTertiary: #31320a;
-$tertiaryContainer: #47491f;
-$onTertiaryContainer: #e5e6ad;
-$error: #ffb4a9;
-$onError: #680003;
-$errorContainer: #930006;
-$onErrorContainer: #ffb4a9;
-$colorbarbg: #130F0D;
-$background: #130F0D;
-$onBackground: #ece0da;
-$surface: #201a17;
-$onSurface: #ece0da;
-$surfaceVariant: #52443b;
-$onSurfaceVariant: #d7c3b8;
-$outline: #9f8d83;
-$shadow: #000000;
-$inverseSurface: #ece0da;
-$inverseOnSurface: #362f2b;
-$inversePrimary: #954a02;
-
-// == END OF CODEGEN ==
+@use 'theme';
+@forward 'theme';
 
 ///////////// COLOR MODIFICATIONS /////////////
 // Material colors provide excellent readability, but can be uninteresting.
@@ -40,33 +8,33 @@ $inversePrimary: #954a02;
 $transparency_enabled: false;
 
 @if $transparency_enabled ==false {
-    @if $darkmode ==true {
-        $primary: color.mix($primary, white, 70%);
-        $primaryContainer: color.mix($primaryContainer, white, 90%);
-        $background: color.mix(color.mix($background, $primary, 94%), #000000, 50%);
-        $surface: color.mix($surface, $primaryContainer, 98%);
-        $surfaceVariant: color.mix($surfaceVariant, #000000, 75%);
-        // $secondaryContainer: color.mix($secondaryContainer, $primaryContainer, 90%);
+    @if theme.$darkmode ==true {
+        theme.$primary: color.mix(theme.$primary, white, 70%);
+        theme.$primaryContainer: color.mix(theme.$primaryContainer, white, 90%);
+        theme.$background: color.mix(color.mix(theme.$background, theme.$primary, 94%), #000000, 50%);
+        theme.$surface: color.mix(theme.$surface, theme.$primaryContainer, 98%);
+        theme.$surfaceVariant: color.mix(theme.$surfaceVariant, #000000, 75%);
+        // theme.$secondaryContainer: color.mix(theme.$secondaryContainer, theme.$primaryContainer, 90%);
     }
 
-    @if $darkmode ==false {
-        $background: color.mix($background, $primary, 87%);
-        $surface: color.mix($surface, $primary, 93%);
-        $surfaceVariant: color.mix($surfaceVariant, #ffffff, 25%);
+    @if theme.$darkmode ==false {
+        theme.$background: color.mix(theme.$background, theme.$primary, 87%);
+        theme.$surface: color.mix(theme.$surface, theme.$primary, 93%);
+        theme.$surfaceVariant: color.mix(theme.$surfaceVariant, #ffffff, 25%);
     }
 }
 
 @if $transparency_enabled ==true {
-    @if $darkmode ==true {
-        $background: color.mix(color.mix($background, $primary, 94%), #000000, 50%);
-        $surface: color.mix($surface, $primaryContainer, 98%);
-        $surfaceVariant: color.mix($surfaceVariant, #000000, 55%);
+    @if theme.$darkmode ==true {
+        theme.$background: color.mix(color.mix(theme.$background, theme.$primary, 94%), #000000, 50%);
+        theme.$surface: color.mix(theme.$surface, theme.$primaryContainer, 98%);
+        theme.$surfaceVariant: color.mix(theme.$surfaceVariant, #000000, 55%);
     }
 
-    @if $darkmode ==false {
-        $background: color.mix($background, $primary, 94%);
-        $surface: color.mix($surface, $primary, 93%);
-        $surfaceVariant: color.mix($surfaceVariant, #ffffff, 55%);
+    @if theme.$darkmode ==false {
+        theme.$background: color.mix(theme.$background, theme.$primary, 94%);
+        theme.$surface: color.mix(theme.$surface, theme.$primary, 93%);
+        theme.$surfaceVariant: color.mix(theme.$surfaceVariant, #ffffff, 55%);
     }
 }
 
@@ -78,7 +46,7 @@ $transparentize_surface_amount: 0.7;
 $transparentize_surface_amount_more: 0.8;
 $transparentize_surface_amount_subtract_surface: $transparentize_surface_amount - $transparentize_amount;
 
-@if $darkmode ==true {
+@if theme.$darkmode ==true {
     // Less transparency
     $transparentize_amount: 0.15;
     $transparentize_surface_amount_less: 0.5;
@@ -98,7 +66,7 @@ $onSuccess: #ffffff;
 $successContainer: #d1e8d5;
 $onSuccessContainer: #0c1f13;
 
-@if $darkmode ==true {
+@if theme.$darkmode ==true {
     // Dark variant
     $success: #b5ccba;
     $onSuccess: #213528;
@@ -107,62 +75,62 @@ $onSuccessContainer: #0c1f13;
 }
 
 // Transparent versions
-$t_primary: color.adjust($primary, $alpha: -$transparentize_amount);
-$t_onPrimary: color.adjust($onPrimary, $alpha: -$transparentize_amount);
-$t_primaryContainer: color.adjust($primaryContainer, $alpha: -$transparentize_amount);
-$t_onPrimaryContainer: color.adjust($onPrimaryContainer, $alpha: -$transparentize_amount);
-$t_secondary: color.adjust($secondary, $alpha: -$transparentize_amount);
-$t_onSecondary: color.adjust($onSecondary, $alpha: -$transparentize_amount);
-$t_secondaryContainer: color.adjust($secondaryContainer, $alpha: -$transparentize_amount);
-$l_t_secondaryContainer: color.adjust($secondaryContainer, $alpha: -$transparentize_surface_amount_less);
-$t_onSecondaryContainer: color.adjust($onSecondaryContainer, $alpha: -$transparentize_amount);
-$t_t_t_onSecondaryContainer: color.adjust($onSecondaryContainer, $alpha: -0.93);
-$t_tertiary: color.adjust($tertiary, $alpha: -$transparentize_amount);
-$t_onTertiary: color.adjust($onTertiary, $alpha: -$transparentize_amount);
-$t_tertiaryContainer: color.adjust($tertiaryContainer, $alpha: -$transparentize_amount);
-$t_onTertiaryContainer: color.adjust($onTertiaryContainer, $alpha: -$transparentize_amount);
-$t_error: color.adjust($error, $alpha: -$transparentize_amount);
-$t_onError: color.adjust($onError, $alpha: -$transparentize_amount);
-$t_errorContainer: color.adjust($errorContainer, $alpha: -$transparentize_amount);
-$t_onErrorContainer: color.adjust($onErrorContainer, $alpha: -$transparentize_amount);
-$t_colorbarbg: color.adjust($colorbarbg, $alpha: -$transparentize_amount);
-$t_background: color.adjust($background, $alpha: -$transparentize_amount);
-$t_t_background: color.adjust($background, $alpha: -$transparentize_surface_amount_more);
-$t_onBackground: color.adjust($onBackground, $alpha: -$transparentize_amount);
-$t_surface: color.adjust($surface, $alpha: -$transparentize_surface_amount);
-$t_t_surface: color.adjust($surface, $alpha: -$transparentize_surface_amount_more);
-$t_onSurface: color.adjust($onSurface, $alpha: -$transparentize_surface_amount);
-$t_surfaceVariant: color.adjust($surfaceVariant, $alpha: -$transparentize_surface_amount);
-$t_onSurfaceVariant: color.adjust($onSurfaceVariant, $alpha: -$transparentize_surface_amount);
-$t_t_surfaceVariant: color.adjust($surfaceVariant, $alpha: -$transparentize_surface_amount_more);
-$l_t_surfaceVariant: color.adjust($surfaceVariant, $alpha: -$transparentize_surface_amount_less);
-$l_l_t_surfaceVariant: color.adjust($surfaceVariant, $alpha: -$transparentize_surface_amount_less_less);
-$t_outline: color.adjust($outline, $alpha: -$transparentize_amount);
-$t_shadow: color.adjust($shadow, $alpha: -$transparentize_amount);
-$t_inverseSurface: color.adjust($inverseSurface, $alpha: -$transparentize_amount);
-$t_inverseOnSurface: color.adjust($inverseOnSurface, $alpha: -$transparentize_amount);
-$t_inversePrimary: color.adjust($inversePrimary, $alpha: -$transparentize_amount);
+$t_primary: color.adjust(theme.$primary, $alpha: -$transparentize_amount);
+$t_onPrimary: color.adjust(theme.$onPrimary, $alpha: -$transparentize_amount);
+$t_primaryContainer: color.adjust(theme.$primaryContainer, $alpha: -$transparentize_amount);
+$t_onPrimaryContainer: color.adjust(theme.$onPrimaryContainer, $alpha: -$transparentize_amount);
+$t_secondary: color.adjust(theme.$secondary, $alpha: -$transparentize_amount);
+$t_onSecondary: color.adjust(theme.$onSecondary, $alpha: -$transparentize_amount);
+$t_secondaryContainer: color.adjust(theme.$secondaryContainer, $alpha: -$transparentize_amount);
+$l_t_secondaryContainer: color.adjust(theme.$secondaryContainer, $alpha: -$transparentize_surface_amount_less);
+$t_onSecondaryContainer: color.adjust(theme.$onSecondaryContainer, $alpha: -$transparentize_amount);
+$t_t_t_onSecondaryContainer: color.adjust(theme.$onSecondaryContainer, $alpha: -0.93);
+$t_tertiary: color.adjust(theme.$tertiary, $alpha: -$transparentize_amount);
+$t_onTertiary: color.adjust(theme.$onTertiary, $alpha: -$transparentize_amount);
+$t_tertiaryContainer: color.adjust(theme.$tertiaryContainer, $alpha: -$transparentize_amount);
+$t_onTertiaryContainer: color.adjust(theme.$onTertiaryContainer, $alpha: -$transparentize_amount);
+$t_error: color.adjust(theme.$error, $alpha: -$transparentize_amount);
+$t_onError: color.adjust(theme.$onError, $alpha: -$transparentize_amount);
+$t_errorContainer: color.adjust(theme.$errorContainer, $alpha: -$transparentize_amount);
+$t_onErrorContainer: color.adjust(theme.$onErrorContainer, $alpha: -$transparentize_amount);
+$t_colorbarbg: color.adjust(theme.$colorbarbg, $alpha: -$transparentize_amount);
+$t_background: color.adjust(theme.$background, $alpha: -$transparentize_amount);
+$t_t_background: color.adjust(theme.$background, $alpha: -$transparentize_surface_amount_more);
+$t_onBackground: color.adjust(theme.$onBackground, $alpha: -$transparentize_amount);
+$t_surface: color.adjust(theme.$surface, $alpha: -$transparentize_surface_amount);
+$t_t_surface: color.adjust(theme.$surface, $alpha: -$transparentize_surface_amount_more);
+$t_onSurface: color.adjust(theme.$onSurface, $alpha: -$transparentize_surface_amount);
+$t_surfaceVariant: color.adjust(theme.$surfaceVariant, $alpha: -$transparentize_surface_amount);
+$t_onSurfaceVariant: color.adjust(theme.$onSurfaceVariant, $alpha: -$transparentize_surface_amount);
+$t_t_surfaceVariant: color.adjust(theme.$surfaceVariant, $alpha: -$transparentize_surface_amount_more);
+$l_t_surfaceVariant: color.adjust(theme.$surfaceVariant, $alpha: -$transparentize_surface_amount_less);
+$l_l_t_surfaceVariant: color.adjust(theme.$surfaceVariant, $alpha: -$transparentize_surface_amount_less_less);
+$t_outline: color.adjust(theme.$outline, $alpha: -$transparentize_amount);
+$t_shadow: color.adjust(theme.$shadow, $alpha: -$transparentize_amount);
+$t_inverseSurface: color.adjust(theme.$inverseSurface, $alpha: -$transparentize_amount);
+$t_inverseOnSurface: color.adjust(theme.$inverseOnSurface, $alpha: -$transparentize_amount);
+$t_inversePrimary: color.adjust(theme.$inversePrimary, $alpha: -$transparentize_amount);
 // Transparent material (extended)
-$t_success: color.adjust($error, $alpha: -$transparentize_amount);
-$t_onSuccess: color.adjust($onError, $alpha: -$transparentize_amount);
-$t_successContainer: color.adjust($errorContainer, $alpha: -$transparentize_amount);
-$t_onSuccessContainer: color.adjust($onErrorContainer,
+$t_success: color.adjust(theme.$error, $alpha: -$transparentize_amount);
+$t_onSuccess: color.adjust(theme.$onError, $alpha: -$transparentize_amount);
+$t_successContainer: color.adjust(theme.$errorContainer, $alpha: -$transparentize_amount);
+$t_onSuccessContainer: color.adjust(theme.$onErrorContainer,
         $alpha: -$transparentize_amount);
 
 // Others
 $hovercolor: color.mix($t_surface, $t_onSurface, 50%);
 $activecolor: color.mix($t_surface, $t_onSurface, 30%);
-$subtext: color.mix($onBackground, $background, 70%);
-$actiontext: color.mix($onBackground, $background, 85%);
+$subtext: color.mix(theme.$onBackground, theme.$background, 70%);
+$actiontext: color.mix(theme.$onBackground, theme.$background, 85%);
 
 // Terminal colors
 $termbg: color.mix($t_surfaceVariant, $t_onSurfaceVariant, 80%);
-$termfg: $onSurfaceVariant;
+$termfg: theme.$onSurfaceVariant;
 $term0: $t_background;
-$term1: $error;
-$term2: $inversePrimary;
-$term3: $onPrimaryContainer;
-$term4: $onPrimaryContainer;
-$term5: $onSecondaryContainer;
-$term6: $primary;
-$term7: $onSurfaceVariant;
+$term1: theme.$error;
+$term2: theme.$inversePrimary;
+$term3: theme.$onPrimaryContainer;
+$term4: theme.$onPrimaryContainer;
+$term5: theme.$onSecondaryContainer;
+$term6: theme.$primary;
+$term7: theme.$onSurfaceVariant;

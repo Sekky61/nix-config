@@ -1,6 +1,7 @@
 {
   lib,
   hostname,
+  config,
   ...
 }:
 let
@@ -19,6 +20,8 @@ let
     nix-yoga = "green";
     nixpi = "red";
   };
+
+  theme = config.michal.theme;
 
   osColor =
     fallback: if builtins.hasAttr hostname host_colors then host_colors.${hostname} else fallback;
@@ -62,7 +65,7 @@ in
         sigint_symbol = "󰂭 ";
         signal_symbol = "󱑽 ";
         success_symbol = "";
-        format = "[$symbol](fg:red)";
+        format = "[$symbol](fg:${theme.error})";
         map_symbol = true;
         disabled = false;
       };
@@ -83,7 +86,7 @@ in
         format = "[$symbol ](yellow dimmed)";
       };
       directory = {
-        format = " [${pad.left}](fg:cyan)[$path](bg:cyan bold fg:black)[${pad.right}](fg:cyan)";
+        format = " [${pad.left}](fg:${theme.primary})[$path](bg:${theme.primary} bold fg:${theme.onPrimary})[${pad.right}](fg:${theme.primary})";
         truncation_length = 6;
         truncation_symbol = "~/󰇘/";
       };
@@ -126,6 +129,8 @@ in
       java = lang "" "red";
       c = lang "" "blue";
       golang = lang "" "blue";
+      zig = lang "" "yellow";
+      nix = lang "󱄅" "blue";
     };
   };
 }

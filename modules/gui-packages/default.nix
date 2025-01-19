@@ -12,6 +12,7 @@
     ./alacritty.nix
     ./kitty.nix
     ./anyrun.nix
+    ./theme
   ];
 
   # packages for daily needs

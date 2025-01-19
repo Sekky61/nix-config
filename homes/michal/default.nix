@@ -35,13 +35,13 @@ in
     createDirectories = true;
   };
 
-  gtk = {
-    font = {
-      name = "Rubik";
-      package = pkgs.google-fonts.override { fonts = [ "Rubik" ]; };
-      size = 11;
-    };
-  };
+  # gtk = {
+  #   font = {
+  #     name = "Rubik";
+  #     package = pkgs.google-fonts.override { fonts = [ "Rubik" ]; };
+  #     size = 11;
+  #   };
+  # };
 
   programs = {
     home-manager.enable = true;

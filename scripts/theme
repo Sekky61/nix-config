@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#set -euo pipefail
+
+# theme.sh - Generate material theme from wallpaper, image, or color
+# Special --pick option uses hyprpicker for color selection
+# Does not make sense to run outside of repo
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT="$SCRIPT_DIR/../modules/gui-packages/theme/generate_colors_material.py"
+SCSS_FILE="$SCRIPT_DIR/../modules/gui-packages/ags/config/scss/_theme.scss"
+JSON_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/theme.json"
+
+if [[ "$1" == "--pick" ]]; then
+    color=$(hyprpicker -n 2>/dev/null)
+    if [[ -n "$color" ]]; then
+        python3 "$SCRIPT" --color "$color" "${@:2}" 1>"$SCSS_FILE" 3>"$JSON_FILE"
+    else
+        exit 1
+    fi
+else
+    python3 "$SCRIPT" "$@" 1>"$SCSS_FILE" 3>"$JSON_FILE"
+fi

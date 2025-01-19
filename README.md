@@ -105,7 +105,10 @@ Launches Chrome on startup. Uses Ags/astal bar.
 
 ### Theme
 
-Theme is set outside of Nix with a script. TODO not fixed after v2.
+The wallpaper is set in `hyprpaper.nix`.
+Theme colors can be derived form wallpaper, picked, or be based on a color.
+See the `./scripts/theme`.
+You must update the configuration for it to take effect.
 
 ### Impurity
 
@@ -146,6 +149,8 @@ sudo -s
 cd mount/<whatever>
 cp <whatever> <destination>
 ```
+You may need to change permissions on the destination: `sudo chown -R michal:users Documents`.
+Unmount: `sudo borg umount ./mount`.
 
 ## Development
 
@@ -165,5 +170,4 @@ Press `Super + /` to open the list of keybindings.
 ### Notes 
 
 Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
-To change wallpaper, run script using `Control+Super+T`.
 

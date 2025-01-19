@@ -38,7 +38,7 @@ $rounding_large: 1.705rem;
 
 @mixin mainfont {
     // Other clean sans-serif
-    font-family: "Rubik", "Geist", "AR One Sans", "Reddit Sans", "Inter",
+    font-family: //"Rubik", "Geist", "AR One Sans", "Reddit Sans", "Inter",
         "Roboto", "Ubuntu", "Noto Sans", sans-serif;
     // font-weight: 500;
 }

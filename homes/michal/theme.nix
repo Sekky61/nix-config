@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  lib,
   ...
 }:
 let
@@ -37,23 +36,10 @@ in
       adwaita-qt6
       adw-gtk3
       material-symbols
-      noto-fonts
-      noto-fonts-cjk-sans
       google-fonts
       moreWaita
       bibata-cursors
     ];
-    sessionVariables = {
-      XCURSOR_THEME = cursor-theme;
-      XCURSOR_SIZE = "24";
-      GTK_IM_MODULE = lib.mkForce "";
-    };
-    pointerCursor = {
-      package = cursor-package;
-      name = cursor-theme;
-      size = 24;
-      gtk.enable = true;
-    };
     file = {
       ".local/share/icons/MoreWaita" = {
         source = "${moreWaita}/share/icons";
@@ -63,8 +49,13 @@ in
 
   gtk = {
     enable = true;
-    font.name = "Rubik";
+    font = {
+      name = "Roboto";
+      size = 12; # This size directs size of text in UI (bar, settings)
+    };
     theme.name = gtk-theme;
+    
+    # Below is untested/unknown
     cursorTheme = {
       name = cursor-theme;
       package = cursor-package;

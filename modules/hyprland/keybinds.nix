@@ -409,11 +409,6 @@ in
         command = { params = "pkill anyrun || anyrun"; };
       }
       {
-        description = "Switch wallpaper"; # todo needs testing
-        bind = { mods = [ "CONTROL" "SUPER" ]; key = "T"; };
-        command = { params = "~/.config/ags/scripts/color_generation/switchwall.sh"; };
-      }
-      {
         description = "Reset AGS"; # TODO
         bind = { mods = [ "CONTROL" "SUPER" ]; key = "R"; };
         command = { params = "ags quit; ags run &"; };
