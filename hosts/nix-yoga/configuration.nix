@@ -152,8 +152,8 @@
   };
 
   # ZRAM
-  zramSwap.enable = true;
-  zramSwap.memoryPercent = 100;
+  # zramSwap.enable = true;
+  # zramSwap.memoryPercent = 100;
 
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.gutenprint ];
@@ -191,10 +191,12 @@
 
   # network
   networking = {
-    networkmanager.enable = false;
-    interfaces = {
-      wlan0.useDHCP = true;
-    };
+    networkmanager.enable = true;
+    wireless.enable = true;
+
+    # interfaces = {
+    #   wlan0.useDHCP = true;
+    # };
   };
 
   services.resolved.enable = true; # Fix for no connection when tailscale is on
