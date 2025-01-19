@@ -48,7 +48,7 @@
   # Does not work after creating the users (so far untested).
 
   sops.secrets.user-password.neededForUsers = true;
-  users.mutableUsers = false;
+  users.mutableUsers = true; # Use initialPasswords if nothing is in /etc/passwd, but do not overwrite anything
   users.users.${username} = {
     isNormalUser = true;
     initialPassword = "password"; # for first time install, should be overwritten by hashedPasswordFile

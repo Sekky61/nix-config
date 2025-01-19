@@ -28,6 +28,7 @@ in
     ./keybinds.nix
     ./gromit.nix
     ./hyprlock.nix
+    ./hyprpaper.nix
   ];
 
   config = {
@@ -298,9 +299,9 @@ in
             "noanim, sideright"
             "noanim, sideleft"
           ];
-          source = [
-            "./hyprland/colors.conf"
-          ];
+          # source = [ # todo
+          #   "./hyprland/colors.conf"
+          # ];
         };
       };
 

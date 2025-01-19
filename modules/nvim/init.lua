@@ -660,7 +660,7 @@ require('lazy').setup({
   },
   "jay-babu/mason-nvim-dap.nvim",
   "williamboman/mason.nvim",
-  { dir = "~/Documents/lsp-sample-extractor.nvim", opts = {} }   -- my experiment
+  -- { dir = "~/Documents/lsp-sample-extractor.nvim", opts = {} }   -- my experiment
 
 }, {})
 

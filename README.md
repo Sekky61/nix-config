@@ -103,6 +103,10 @@ Uses `tuigreet`, on login launches Hyprland.
 The window manager. See shortcuts with `Super+/`.
 Launches Chrome on startup. Uses Ags/astal bar. 
 
+### Theme
+
+Theme is set outside of Nix with a script. TODO not fixed after v2.
+
 ### Impurity
 
 Each host definition has its complement `hostname-impure`.
@@ -133,6 +137,15 @@ this is not a pure Nix solution.
 
 [Borg](https://borgbackup.readthedocs.io/en/stable/) ([module](modules/borg.nix)) is used with the cloud solution [BorgBase](https://www.borgbase.com/).
 There is a daily backup with some weekly and monthly retention.
+
+If you find yourself on a new computer, or just want to restore, here are the steps:
+
+```bash
+./scripts/mount-backups
+sudo -s
+cd mount/<whatever>
+cp <whatever> <destination>
+```
 
 ## Development
 

@@ -192,7 +192,7 @@
   # network
   networking = {
     networkmanager.enable = true;
-    wireless.enable = true;
+    # wireless.enable = true;
 
     # interfaces = {
     #   wlan0.useDHCP = true;

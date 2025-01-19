@@ -5,7 +5,7 @@
 }:
 let
   # TODO move to config option
-  myWallpaper = "~/Pictures/wallpapers/wave.png";
+  myWallpaper = "~/.config/wallpapers/spyxfamily.png";
 in
 {
   # Hyprlock is the lockscreen handling for hyprland

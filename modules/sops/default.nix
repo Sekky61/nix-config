@@ -33,6 +33,7 @@
 
       "private_keys/id_ed25519" = {
         path = "${config.users.users.${username}.home}/.ssh/id_ed25519";
+        owner = config.users.users.${username}.name;
       };
 
       # Passwordless key for disk backup
