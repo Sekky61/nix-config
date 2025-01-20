@@ -32,7 +32,6 @@
     # tools
     git
     ffmpeg
-    vscode
     code-cursor
     nixos-generators
     insomnia
@@ -44,6 +43,12 @@
     # deps
     glib
   ];
+
+  home-manager.users.${username} = _: {
+    programs.vscode = {
+      enable = true;
+    };
+  };
 
   # localhost https dev
   security.pki.certificateFiles = [

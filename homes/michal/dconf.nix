@@ -14,7 +14,10 @@ with lib.hm.gvariant;
 
     "org/gnome/desktop/interface" = {
       show-battery-percentage = true;
+      # gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+      color-scheme = "prefer-dark"; # This is what controls dark theme on settings etc.
     };
+
 
     "org/gnome/desktop/peripherals/touchpad" = {
       tap-to-click = true;
@@ -38,6 +41,14 @@ with lib.hm.gvariant;
         "org.gnome.Weather.desktop"
         "org.gnome.Boxes.desktop"
       ];
+    };
+
+    "org/gnome/calculator" = {
+      button-mode = "programming";
+      show-thousands = true;
+      base = 10;
+      word-size = 64;
+      window-position = lib.hm.gvariant.mkTuple [100 100];
     };
 
     "org/gnome/desktop/session" = {
@@ -135,7 +146,7 @@ with lib.hm.gvariant;
     };
 
     "system/locale" = {
-      region = "hu_HU.UTF-8";
+      region = "cs_CZ.UTF-8";
     };
 
     "com/github/stunkymonkey/nautilus-open-any-terminal" = {

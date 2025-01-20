@@ -9,6 +9,35 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT="$SCRIPT_DIR/../modules/gui-packages/theme/generate_colors_material.py"
 SCSS_FILE="$SCRIPT_DIR/../modules/gui-packages/ags/config/scss/_theme.scss"
 JSON_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/theme.json"
+PRESET_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/preset.json"
+
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT
+
+tmp_preset_file="$tmp_dir/preset.json"
+
+apply_gtk() { # Using gradience-cli
+    lightdark=$(get_light_dark)
+
+    # Copy template to temp directory
+    cp "$PRESET_FILE" "$tmp_preset_file"
+
+    # Apply colors
+    for i in "${!colorlist[@]}"; do
+        sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]}/g" "$tmp_preset_file"
+    done
+
+    gradience-cli apply -p "$tmp_preset_file" --gtk both
+
+    # Set light/dark preference
+    if [ "$lightdark" = "-l" ]; then
+        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+    else
+        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    fi
+}
 
 if [[ "$1" == "--pick" ]]; then
     color=$(hyprpicker -n 2>/dev/null)

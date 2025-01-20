@@ -123,8 +123,8 @@ in
             layout = "dwindle";
             resize_on_border = true; # click and drag on border to resize
             border_size = 1;
-            "col.active_border" = "rgba(38bdf8ee)";
-            "col.inactive_border" = "rgba(0369a1cc)";
+            #"col.active_border" = "rgba(38bdf8ee)";
+            #"col.inactive_border" = "rgba(0369a1cc)";
           };
           dwindle = {
             preserve_split = true;
@@ -181,7 +181,7 @@ in
             # Shadow
             shadow = {
               enabled = true;
-              color = "rgba(0000001A)";
+              #color = "rgba(0000001A)";
               offset = "0 2";
               range = 20;
               render_power = 2;

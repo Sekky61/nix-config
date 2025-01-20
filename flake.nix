@@ -23,6 +23,7 @@
       url = "github:somepaulo/MoreWaita";
       flake = false;
     };
+    stylix.url = "github:danth/stylix";
     firefox-gnome-theme = {
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
