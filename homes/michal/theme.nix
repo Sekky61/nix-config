@@ -53,7 +53,7 @@ in
       name = "Roboto";
       size = 12; # This size directs size of text in UI (bar, settings)
     };
-    theme.name = gtk-theme;
+    # theme.name = gtk-theme;
     
     # Below is untested/unknown
     cursorTheme = {
@@ -61,12 +61,12 @@ in
       package = cursor-package;
     };
     iconTheme.name = moreWaita.name;
-    gtk3.extraCss = ''
-      headerbar, .titlebar,
-      .csd:not(.popup):not(tooltip):not(messagedialog) decoration{
-        border-radius: 0;
-      }
-    '';
+    # gtk3.extraCss = ''
+    #   headerbar, .titlebar,
+    #   .csd:not(.popup):not(tooltip):not(messagedialog) decoration{
+    #     border-radius: 0;
+    #   }
+    # '';
   };
 
   qt = {

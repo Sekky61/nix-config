@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#set -euo pipefail
+set -euo pipefail
+set -o xtrace
 
 # theme.sh - Generate material theme from wallpaper, image, or color
 # Special --pick option uses hyprpicker for color selection
@@ -9,37 +10,45 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT="$SCRIPT_DIR/../modules/gui-packages/theme/generate_colors_material.py"
 SCSS_FILE="$SCRIPT_DIR/../modules/gui-packages/ags/config/scss/_theme.scss"
 JSON_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/theme.json"
-PRESET_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/preset.json"
+PRESET_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/gtk_template.json"
 
 tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT
 
 tmp_preset_file="$tmp_dir/preset.json"
 
+# Extract colors from JSON
+colorlist=($(jq -r 'keys[]' "$JSON_FILE"))
+colorvalues=()
+for color in "${colorlist[@]}"; do
+    value=$(jq -r ".$color" "$JSON_FILE")
+    colorvalues+=("$value")
+done
+
 apply_gtk() { # Using gradience-cli
-    lightdark=$(get_light_dark)
+    dark=$(jq .darkmode $JSON_FILE)
 
     # Copy template to temp directory
     cp "$PRESET_FILE" "$tmp_preset_file"
 
     # Apply colors
     for i in "${!colorlist[@]}"; do
-        sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]}/g" "$tmp_preset_file"
+        sed -i "s/{{ \$${colorlist[$i]} }}/${colorvalues[$i]}/g" "$tmp_preset_file"
     done
 
     gradience-cli apply -p "$tmp_preset_file" --gtk both
 
     # Set light/dark preference
-    if [ "$lightdark" = "-l" ]; then
-        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
-        gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
-    else
+    if [ "$dark" = "true" ]; then
         gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    else
+        gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
     fi
 }
 
-if [[ "$1" == "--pick" ]]; then
+if [[ "${1:-default}" == "--pick" ]]; then
     color=$(hyprpicker -n 2>/dev/null)
     if [[ -n "$color" ]]; then
         python3 "$SCRIPT" --color "$color" "${@:2}" 1>"$SCSS_FILE" 3>"$JSON_FILE"
@@ -49,3 +58,6 @@ if [[ "$1" == "--pick" ]]; then
 else
     python3 "$SCRIPT" "$@" 1>"$SCSS_FILE" 3>"$JSON_FILE"
 fi
+
+apply_gtk
+
