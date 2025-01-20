@@ -3,7 +3,6 @@
   fonts = {
     packages = with pkgs; [
       jetbrains-mono
-      monaspace
       nerd-fonts.fira-code
       nerd-fonts.monaspace
       nerd-fonts.droid-sans-mono
@@ -21,7 +20,7 @@
         "Roboto"
         "Noto Color Emoji"
       ];
-      monospace = [ "Monaspace Neon" ];
+      monospace = [ "MonaspiceKr Nerd Font Mono" ];
       emoji = [ "Noto Color Emoji" ];
     };
   };

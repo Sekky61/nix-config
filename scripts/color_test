@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo -e "\e[1mBold Text\e[0m"
+echo -e "\e[3mItalic Text\e[0m"
+echo -e "\e[4mUnderlined Text\e[0m"
+echo -e "\e[9mStrikethrough Text\e[0m"
+echo -e "\e[31mRed Text\e[0m"
+echo -e "\e[32mGreen Text\e[0m"
+echo -e "\e[33mYellow Text\e[0m"
+echo -e "\e[34mBlue Text\e[0m"
+echo -e "\e[35mMagenta Text\e[0m"
+echo -e "\e[36mCyan Text\e[0m"
+echo -e "\e[90mDimmed Text\e[0m"
+echo -e "\e[7mInverted Colors\e[0m"
+echo -e "\e[5mBlinking Text (if supported)\e[0m"
+
+echo -e "\n256-color palette test:"
+for i in {0..255}; do
+    printf "\e[48;5;%dm %3d \e[0m" "$i" "$i"
+    if (( (i + 1) % 16 == 0 )); then
+        echo
+    fi
+done
+
+echo -e "\nTruecolor test (if supported):"
+for r in {0..5}; do
+    for g in {0..5}; do
+        for b in {0..5}; do
+            printf "\e[48;2;$(($r * 51));$(($g * 51));$(($b * 51))m     "
+        done
+        echo -e "\e[0m"
+    done
+done
