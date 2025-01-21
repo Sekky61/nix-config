@@ -75,6 +75,10 @@ in
         enable = true;
         enableBashIntegration = true;
         icons = "auto";
+        extraOptions = [
+          "--almost-all"
+          "--mounts"
+        ];
       };
       nix-index = {
         # Create index with `nix-index`, then `nix-locate pattern` (for example `nix-locate bin/zig`)

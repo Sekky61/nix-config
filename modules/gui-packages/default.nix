@@ -13,6 +13,7 @@
     ./kitty.nix
     ./anyrun.nix
     ./theme
+    ./remote-desktop.nix
   ];
 
   # packages for daily needs
@@ -35,7 +36,6 @@
     winetricks
     lutris
     parsec-bin
-    moonlight-qt
 
     discord
 

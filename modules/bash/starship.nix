@@ -7,7 +7,7 @@
 let
   lang = icon: color: {
     symbol = icon;
-    format = "[$symbol ](${color})";
+    format = "[$symbol $version](${color})";
   };
   os = icon: fg: "[${icon} ](fg:${osColor fg})";
   pad = {
@@ -32,10 +32,11 @@ in
     settings = {
       add_newline = true;
       format = lib.strings.concatStrings [
-        "$nix_shell"
         "$os"
+        "$nix_shell"
         "$directory"
         "$container"
+        "$direnv"
         "$git_branch $git_status"
         "$python"
         "$nodejs"
@@ -43,6 +44,7 @@ in
         "$rust"
         "$java"
         "$c"
+        "$zig"
         "$golang"
         "$cmd_duration"
         "$status"
@@ -79,14 +81,14 @@ in
       };
       nix_shell = {
         disabled = false;
-        format = "[${pad.left}](fg:white)[ ](bg:white fg:black)[${pad.right}](fg:white) ";
+        format = "[${pad.left}](fg:${theme.tertiary})[ ](bg:${theme.tertiary} fg:${theme.onTertiary})[${pad.right}](fg:${theme.tertiary}) ";
       };
       container = {
         symbol = " 󰏖";
         format = "[$symbol ](yellow dimmed)";
       };
       directory = {
-        format = " [${pad.left}](fg:${theme.primary})[$path](bg:${theme.primary} bold fg:${theme.onPrimary})[${pad.right}](fg:${theme.primary})";
+        format = " [${pad.left}](fg:${theme.primary})[$path](bg:${theme.primary} bold fg:${theme.onPrimary})[${pad.right}](fg:${theme.primary}) ";
         truncation_length = 6;
         truncation_symbol = "~/󰇘/";
       };
@@ -122,6 +124,13 @@ in
         SUSE = os "" "green";
         Ubuntu = os "" "bright-purple";
       };
+      direnv = { 
+        disabled = false;
+        format = "[${pad.left}](fg:${theme.secondary})[$symbol $loaded](bg:${theme.secondary} bold fg:${theme.onSecondary})[${pad.right}](fg:${theme.secondary}) ";
+        symbol = "";
+        loaded_msg = "󰄬";
+        unloaded_msg = "";
+      };
       python = lang "" "yellow";
       nodejs = lang " " "yellow";
       lua = lang "󰢱" "blue";
@@ -129,7 +138,10 @@ in
       java = lang "" "red";
       c = lang "" "blue";
       golang = lang "" "blue";
-      zig = lang "" "yellow";
+      zig = lang "" "bold yellow" // {
+        detect_files = [ "build.zig" ];
+        detect_folders = [ ".zig-cache" ];
+      };
       nix = lang "󱄅" "blue";
     };
   };
