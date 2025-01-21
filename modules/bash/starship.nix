@@ -15,6 +15,13 @@ let
     right = "";
   };
 
+  # color: one of 'primary', 'secondary', 'tertiary'
+  bubble = text: color:
+    let
+      colorCapitalized = lib.strings.concatStrings [(lib.toUpper (lib.substring 0 1 color)) (lib.substring 1 (lib.stringLength color) color)];
+    in
+    "[${pad.left}](fg:${theme.${color}})[${text}](bg:${theme.${color}} bold fg:${theme."on${colorCapitalized}"})[${pad.right}](fg:${theme.${color}}) ";
+
   # username and hostname based color
   host_colors = {
     nix-yoga = "green";
@@ -77,18 +84,18 @@ in
       };
       cmd_duration = {
         min_time = 300;
-        format = "[$duration ](fg:yellow)";
+        format = " [$duration ](fg:yellow)";
       };
       nix_shell = {
         disabled = false;
-        format = "[${pad.left}](fg:${theme.tertiary})[ ](bg:${theme.tertiary} fg:${theme.onTertiary})[${pad.right}](fg:${theme.tertiary}) ";
+        format = bubble " " "tertiary";
       };
       container = {
         symbol = " 󰏖";
         format = "[$symbol ](yellow dimmed)";
       };
       directory = {
-        format = " [${pad.left}](fg:${theme.primary})[$path](bg:${theme.primary} bold fg:${theme.onPrimary})[${pad.right}](fg:${theme.primary}) ";
+        format = bubble "$path" "primary";
         truncation_length = 6;
         truncation_symbol = "~/󰇘/";
       };
@@ -126,7 +133,7 @@ in
       };
       direnv = { 
         disabled = false;
-        format = "[${pad.left}](fg:${theme.secondary})[$symbol $loaded](bg:${theme.secondary} bold fg:${theme.onSecondary})[${pad.right}](fg:${theme.secondary}) ";
+        format = bubble "$symbol $loaded" "secondary";
         symbol = "";
         loaded_msg = "󰄬";
         unloaded_msg = "";
