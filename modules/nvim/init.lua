@@ -660,6 +660,7 @@ require('lazy').setup({
   },
   "jay-babu/mason-nvim-dap.nvim",
   "williamboman/mason.nvim",
+
   -- { dir = "~/Documents/lsp-sample-extractor.nvim", opts = {} }   -- my experiment
 
 }, {})
@@ -672,6 +673,7 @@ require('lazy').setup({
 vim.opt.scrolloff = 8
 
 vim.opt.tabstop = 4
+vim.opt.expandtab = true
 
 -- Draw a line at the 80th character
 vim.opt.colorcolumn = '80'
@@ -932,8 +934,10 @@ require("mason-nvim-dap").setup({
 })
 require('mason-tool-installer').setup {
   -- a list of all tools you want to ensure are installed upon start
+  -- In practice, put here what lspconfig does not recognise
   ensure_installed = {
     'stylua',
+    'nxls',
   }
 }
 
@@ -950,6 +954,7 @@ local servers = {
   omnisharp = {},
 
   html = { filetypes = { 'html', 'twig', 'hbs' } },
+  htmx = {},
   custom_elements_ls = {},
   cssls = { filetypes = { 'scss', 'less', 'stylus', 'css' } },
   tailwindcss = {},
@@ -957,6 +962,7 @@ local servers = {
   ts_ls = {}, -- wraps tsserver
   biome = {},
   astro = {},
+  eslint = {},
   emmet_ls = {
     filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
   },
@@ -967,8 +973,6 @@ local servers = {
       telemetry = { enable = false },
     },
   },
-
-  nxls = {},
 
 }
 

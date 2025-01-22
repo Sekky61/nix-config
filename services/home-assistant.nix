@@ -132,7 +132,7 @@ in {
       };
       lovelaceConfigWritable = true;
       customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
-        zigbee2mqtt-networkmap
+        # zigbee2mqtt-networkmap # conflict with the other zigbee
       ];
 
       customComponents = with pkgs.home-assistant-custom-components; [
@@ -290,6 +290,6 @@ in {
       "f ${config.services.home-assistant.configDir}/automations.yaml 0755 hass hass"
     ];
 
-    services.zigbee2mqtt.enable = true;
+    # services.zigbee2mqtt.enable = true;
   };
 }
