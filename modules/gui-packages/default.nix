@@ -12,7 +12,6 @@
     ./alacritty.nix
     ./kitty.nix
     ./anyrun.nix
-    ./theme
     ./remote-desktop.nix
   ];
 

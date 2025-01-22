@@ -47,7 +47,6 @@
   # Passwords
   # Does not work after creating the users (so far untested).
 
-  sops.secrets.user-password.neededForUsers = true;
   users.mutableUsers = true; # Use initialPasswords if nothing is in /etc/passwd, but do not overwrite anything
   users.users.${username} = {
     isNormalUser = true;

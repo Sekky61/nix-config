@@ -15,6 +15,7 @@
     ./bitwarden.nix
     ./ventoy.nix
     ./borg.nix
+    ./theme
   ];
 
   environment.systemPackages = with pkgs; [

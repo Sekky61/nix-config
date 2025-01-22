@@ -7,10 +7,10 @@ set -o xtrace
 # Does not make sense to run outside of repo
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPT="$SCRIPT_DIR/../modules/gui-packages/theme/generate_colors_material.py"
+SCRIPT="$SCRIPT_DIR/../modules/theme/generate_colors_material.py"
 SCSS_FILE="$SCRIPT_DIR/../modules/gui-packages/ags/config/scss/_theme.scss"
-JSON_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/theme.json"
-PRESET_FILE="$SCRIPT_DIR/../modules/gui-packages/theme/gtk_template.json"
+JSON_FILE="$SCRIPT_DIR/../modules/theme/theme.json"
+PRESET_FILE="$SCRIPT_DIR/../modules/theme/gtk_template.json"
 
 tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT

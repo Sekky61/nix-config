@@ -953,6 +953,7 @@ local servers = {
   custom_elements_ls = {},
   cssls = { filetypes = { 'scss', 'less', 'stylus', 'css' } },
   tailwindcss = {},
+  angularls = {},
   ts_ls = {}, -- wraps tsserver
   biome = {},
   astro = {},
@@ -966,6 +967,8 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+
+  nxls = {},
 
 }
 

@@ -40,7 +40,7 @@ in
     stylix = {
       enable = true;
       autoEnable = true;
-      image = ../../../assets/wallpapers/spyxfamily.png;
+      image = ../../assets/wallpapers/spyxfamily.png;
       base16Scheme = with themeJson; {
         # Hyprland: background
         # Chrome: theme
