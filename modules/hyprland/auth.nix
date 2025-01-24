@@ -20,6 +20,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    security.polkit.enable = true;
+
     home-manager.users.${username} = _: {
       home.packages = with pkgs; [
         hyprpolkitagent
