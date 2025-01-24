@@ -29,6 +29,7 @@ in
     ./gromit.nix
     ./hyprlock.nix
     ./hyprpaper.nix
+    ./auth.nix
   ];
 
   config = {
@@ -99,7 +100,7 @@ in
             "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor. scale 1 is big but works best
             ",preferred,auto,1" # auto
           ];
-          "exec-once" = [
+          exec-once = [
             # system tray
             "ags run"
             # wallpaper

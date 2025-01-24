@@ -25,5 +25,6 @@
     bitwarden.enable = true;
     ventoy.enable = true;
     borg.enable = true;
+    polkit.enable = true;
   };
 }
