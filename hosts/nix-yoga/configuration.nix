@@ -2,11 +2,20 @@
 , pkgs
 , username
 , config
+, nixos-hardware
 , ...
 }: {
   # nix
   documentation.nixos.enable = false; # .desktop
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    rocmSupport = true;
+  };
+
+  imports = [
+    inputs.nixos-hardware.nixosModules.lenovo-yoga-7-14ARH7-amdgpu
+  ];
+
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;

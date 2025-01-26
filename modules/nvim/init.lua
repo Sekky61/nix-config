@@ -496,6 +496,12 @@ require('lazy').setup({
           endpoint = "https://api.groq.com/openai/v1/",
           model = "llama-3.3-70b-versatile",
         },
+        ollama = {
+          __inherited_from = "openai",
+          api_key_name = "",
+          endpoint = "http://127.0.0.1:11434/v1",
+          model = "deepseek-r1:14b",
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

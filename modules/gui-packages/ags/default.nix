@@ -17,7 +17,6 @@ let
   ] ++ pkgsExtra;
 
   pkgsExtra = with pkgs; [
-    ollama
     pywal
     sassc
     (python311.withPackages (p: [
@@ -29,7 +28,6 @@ let
   pkgsExtraAgs = with pkgs; [
     gtksourceview
     gtksourceview4
-    ollama
     python311Packages.material-color-utilities
     python311Packages.pywayland
     pywal

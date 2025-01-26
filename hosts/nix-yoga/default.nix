@@ -26,5 +26,9 @@
     ventoy.enable = true;
     borg.enable = true;
     polkit.enable = true;
+    ollama = {
+      enable = true;
+      gui = true;
+    };
   };
 }

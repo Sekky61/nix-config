@@ -15,6 +15,7 @@
     ./bitwarden.nix
     ./ventoy.nix
     ./borg.nix
+    ./ollama.nix
     ./theme
   ];
 
