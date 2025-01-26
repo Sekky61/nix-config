@@ -176,7 +176,7 @@ export default function CheatSheet() {
         {clickOutsideToClose}
         <box className="cheatsheet-bg spacing-v-15" vertical>
           <CheatsheetHeader />
-          <scrollable widthRequest={500} heightRequest={500}>
+          <scrollable widthRequest={1000} heightRequest={800}>
             <Grid
               columnSpacing={10}
               columnHomogeneous
@@ -197,7 +197,9 @@ export default function CheatSheet() {
                       <box className="spacing-h-10">
                         <box>
                           {[...getBind(kb).mods, getBind(kb).key].map((k) => (
-                            <label label={k} className="cheatsheet-key txt-small" />
+                            <Key>
+                              {k}
+                            </Key>
                           ))}
                         </box>
                         <label label={kb.description} className="txt chearsheet-action txt-small" />
@@ -216,4 +218,11 @@ export default function CheatSheet() {
       </box>
     </window>
   );
+}
+
+function Key(props: {child: string }) {
+  console.log(props);
+  const key = props?.child ?? '?';
+  const renderedKey = key.toLowerCase() === 'super' ? '' : key;
+  return <label label={renderedKey} className="cheatsheet-key txt-small" />
 }
