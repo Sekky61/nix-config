@@ -156,6 +156,12 @@ Unmount: `sudo borg umount ./mount`.
 
 ### AGS notes
 
+To get typescript types:
+```bash
+cd modules/gui-packages/ags/config
+npm i
+```
+
 (after migrating to v2, some features are pending)
 
 Press `Super + /` to open the list of keybindings.

@@ -6,10 +6,10 @@
 //     border: 1px solid material.$onSurfaceVariant; // Debugging
 // }
 
-// *:focus {
-//     outline: 1px solid color.mix(material.$onSurface, material.$surface, 40%);
-//     -gtk-outline-radius: material.$rounding_small;
-// }
+/* *:focus { */
+/*     outline: 1px solid color.mix(material.$onSurface, material.$surface, 40%); */
+/*     -gtk-outline-radius: material.$rounding_small; */
+/* } */
 
 * {
     selection {

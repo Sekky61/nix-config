@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'lib_mixins';
 @use 'material';
 
@@ -52,4 +53,34 @@
 .cheatsheet-category-title {
     @include lib_mixins.titlefont;
     font-size: 1.705rem;
+}
+
+.cheatsheet-category-container {
+    min-height: 500px;
+}
+
+.cheatsheet-button {
+    @include lib_mixins.element_decel;
+    padding: 0rem lib_mixins.$rounding_small;
+    background-color: material.$t_secondaryContainer;
+    color: material.$onSecondaryContainer;
+
+    &:hover, &:checked {
+        background-color: material.$hovercolor;
+    }
+
+    &:focus {
+        outline: 1px solid color.mix(material.$onSurface, material.$surface, 40%);
+        -gtk-outline-radius: lib_mixins.$rounding_small;
+    }
+
+    &:active {
+        background-color: material.$activecolor;
+    }
+}
+
+stackswitcher {
+    button {
+        @extend .cheatsheet-button;
+    }
 }

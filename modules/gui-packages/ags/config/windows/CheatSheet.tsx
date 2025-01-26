@@ -1,10 +1,13 @@
-import { App, Astal, astalify, ConstructProps, Gtk, Widget } from "astal/gtk3";
+import { GLib, GObject, Variable, bind, readFile } from "astal";
+import { App, Astal, type ConstructProps, Gtk, Widget, astalify } from "astal/gtk3";
 import { toggleWindow } from "../util";
-import { GLib, GObject, readFile } from "astal";
 
 // Set by a derivation. Relative path ~ does not work
 const HOME = GLib.getenv("HOME");
 const KEYBIND_JSON_PATH = `${HOME}/.config/keybinds.json`;
+
+// Variable controlling displayed category
+const activeCategory = Variable<Category>("window");
 
 type Bind = {
   enable: boolean;
@@ -29,7 +32,7 @@ type Keybind = {
 
 // match string with any of supplied words, case insensitive
 function anyOf(word: string, ...haystack: string[]) {
-  var regex = new RegExp(haystack.join("|"), "i");
+  const regex = new RegExp(haystack.join("|"), "i");
   return regex.test(word);
 }
 
@@ -131,8 +134,7 @@ const clickOutsideToClose = new Widget.EventBox({
 function CheatsheetHeader() {
   return (
     <centerbox
-      vertical={false}
-      startWidget={<box />}
+      vertical={true}
       centerWidget={
         <box vertical className="spacing-h-15">
           <label label="Cheat Sheet" className="txt-title txt" halign={CENTER} />
@@ -142,20 +144,48 @@ function CheatsheetHeader() {
   );
 }
 
-// Grid
+/** A single key, with border and special rendering of super key */
+function Key(props: { child: string }) {
+  const key = props?.child ?? "?";
+  const renderedKey = key.toLowerCase() === "super" ? "" : key;
+  return <label label={renderedKey} className="cheatsheet-key txt-small" />;
+}
 
-class Grid extends astalify(Gtk.Grid) {
+interface KeyCategoryProps {
+  name: string;
+  keybinds: Keybind[];
+}
+
+function KeyCategory({ name, keybinds }: KeyCategoryProps) {
+  // Name on top level box is for stack
+  return (
+    <box vertical className="cheatsheet-category-container" name={name}>
+      <label label={name} className="cheatsheet-category-title txt" />
+      {keybinds.map((kb) => (
+        <box className="spacing-h-10">
+          <box>
+            {[...getBind(kb).mods, getBind(kb).key].map((k) => (
+              <Key>{k}</Key>
+            ))}
+          </box>
+          <label label={kb.description} className="txt chearsheet-action txt-small" />
+        </box>
+      ))}
+    </box>
+  );
+}
+
+// subclass, register, define constructor props
+class StackSwitcher extends astalify(Gtk.StackSwitcher) {
   static {
     GObject.registerClass(this);
   }
 
   constructor(
     props: ConstructProps<
-      Grid,
-      Gtk.Grid.ConstructorProps,
-      {
-        onColorSet: [];
-      } // signals of Gtk.ColorButton have to be manually typed
+      StackSwitcher,
+      Gtk.StackSwitcher.ConstructorProps,
+      {} // signals of Gtk.StackSwitcher have to be manually typed
     >,
   ) {
     super(props as any);
@@ -163,6 +193,19 @@ class Grid extends astalify(Gtk.Grid) {
 }
 
 export default function CheatSheet() {
+  const stack = (
+    <stack
+      visibleChildName={bind(activeCategory)}
+      setup={(st) => {
+        Object.entries(keys.getCategories()).map(([catName, keys]) =>
+          // Needs add_titled, not just children
+          st.add_titled(<KeyCategory name={catName} keybinds={keys} />, catName, catName),
+        );
+      }}
+    ></stack>
+  ) as Gtk.Stack;
+  // todo cannot style the stackswitcher buttons
+
   return (
     <window
       name="cheatsheet"
@@ -176,53 +219,10 @@ export default function CheatSheet() {
         {clickOutsideToClose}
         <box className="cheatsheet-bg spacing-v-15" vertical>
           <CheatsheetHeader />
-          <scrollable widthRequest={1000} heightRequest={800}>
-            <Grid
-              columnSpacing={10}
-              columnHomogeneous
-              setup={(self) => {
-                self.insert_column(0);
-                self.insert_column(1);
-                self.insert_column(2);
-                Object.entries(keys.getCategories()).map(([cat, keys], c) => {
-                  self.attach(
-                    <label label={cat} className="cheatsheet-category-title txt" />,
-                    c,
-                    0,
-                    1,
-                    1,
-                  );
-                  keys.map((kb, r) => {
-                    self.attach(
-                      <box className="spacing-h-10">
-                        <box>
-                          {[...getBind(kb).mods, getBind(kb).key].map((k) => (
-                            <Key>
-                              {k}
-                            </Key>
-                          ))}
-                        </box>
-                        <label label={kb.description} className="txt chearsheet-action txt-small" />
-                      </box>,
-                      c,
-                      r + 1,
-                      1,
-                      1,
-                    );
-                  });
-                });
-              }}
-            />
-          </scrollable>
+          <StackSwitcher className="spacing-h-10" stack={stack} />
+          {stack}
         </box>
       </box>
     </window>
   );
-}
-
-function Key(props: {child: string }) {
-  console.log(props);
-  const key = props?.child ?? '?';
-  const renderedKey = key.toLowerCase() === 'super' ? '' : key;
-  return <label label={renderedKey} className="cheatsheet-key txt-small" />
 }
