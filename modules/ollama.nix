@@ -11,6 +11,7 @@ let
   # Default port 11434
   # GUI at http://127.0.0.1:1300
   # TODO proxy
+  # CPU only - rocm being rocm
 in
 {
   options.michal.programs.ollama = {
@@ -21,10 +22,8 @@ in
   config = mkIf cfg.enable {
     services.ollama = {
       enable = true;
-      package = pkgs.ollama-rocm; # didnt detect gpu with normal ollama
       openFirewall = false;
-      acceleration = "rocm";
-      rocmOverrideGfx = "10.3.0";
+      acceleration = false;
     };
 
     services.nextjs-ollama-llm-ui = {
