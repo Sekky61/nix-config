@@ -661,7 +661,22 @@ require('lazy').setup({
   "jay-babu/mason-nvim-dap.nvim",
   "williamboman/mason.nvim",
 
-  -- { dir = "~/Documents/lsp-sample-extractor.nvim", opts = {} }   -- my experiment
+  -- my experiment
+  {
+    'Sekky61/lsp-sample-extractor.nvim',
+    -- dir = "~/Documents/lsp-sample-extractor.nvim",
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    keys = {
+      {
+        "<leader>lx",
+        "<Plug>(lsp_sample_get)",
+        desc = "Extract code sample",
+        mode = { 'n', 'x' }
+      },
+    }
+  },
 
 }, {})
 
