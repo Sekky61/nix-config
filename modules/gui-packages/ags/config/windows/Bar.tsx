@@ -1,10 +1,41 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk3";
-import Workspaces from "../widget/Workspaces";
-import Tray from "../widget/Tray";
-import BatteryLevel from "../widget/BatteryLevel";
+import { bind, Variable } from "astal";
+import { App, Astal, type Gdk, Gtk } from "astal/gtk3";
 import type { ChildrenProps } from "../util";
+import BatteryLevel from "../widget/BatteryLevel";
 import FocusedClient from "../widget/FocusedClient";
 import Time from "../widget/Time";
+import Tray from "../widget/Tray";
+import Workspaces from "../widget/Workspaces";
+
+export enum BarOrientation {
+  HORIZONTAL = "horizontal",
+  VERTICAL = "vertical",
+  TOGGLE = "toggle",
+}
+
+interface BarRequestOptions {
+  orientation?: BarOrientation;
+}
+
+export function handleBarRequest(options: BarRequestOptions): string {
+  if (options.orientation) {
+    let newOrientation: BarOrientation = options.orientation;
+    if (options.orientation === BarOrientation.TOGGLE) {
+      newOrientation =
+        barOrientation.get() === BarOrientation.VERTICAL
+          ? BarOrientation.HORIZONTAL
+          : BarOrientation.VERTICAL;
+    }
+    barOrientation.set(newOrientation);
+    return newOrientation;
+  }
+  throw new Error(`handleBarRequest: bad request ${JSON.stringify(options)}`);
+}
+
+const barOrientation = Variable<BarOrientation>(BarOrientation.HORIZONTAL);
+export const vertical: Variable<boolean> = Variable.derive([barOrientation], (bo) => {
+  return bo === BarOrientation.VERTICAL;
+});
 
 /** Wrap a component in colored bubble */
 export function BarGroup({ child, children }: ChildrenProps) {
@@ -19,38 +50,58 @@ export function BarGroup({ child, children }: ChildrenProps) {
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-  const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
+  const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor;
+  const { CENTER, START, END, FILL } = Gtk.Align;
 
   return (
     <window
       className="Bar"
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | LEFT | RIGHT}
+      anchor={bind(vertical).as((ver) => (ver ? TOP | BOTTOM | RIGHT : TOP | LEFT | RIGHT))}
       application={App}
     >
       <centerbox
         className="bar-bg"
-        startWidget={<FocusedClient />}
+        orientation={bind(vertical).as((v) =>
+          v ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL,
+        )}
+        vertical={bind(vertical)}
+        startWidget={
+          <box
+            hexpand
+            vexpand
+            halign={bind(vertical).as((v) => (v ? CENTER : FILL))}
+            valign={bind(vertical).as((v) => (v ? START : CENTER))}
+          >
+            {bind(vertical).as((v) => (v ? <box /> : <FocusedClient />))}
+          </box>
+        }
         centerWidget={
-          <box className="spacing-h-4">
+          <box vertical={bind(vertical)} className="spacing-h-4">
             <BarGroup>
-              <Workspaces />
+              <Workspaces vertical={bind(vertical)} />
             </BarGroup>
             <BarGroup>
-              <BatteryLevel />
+              <BatteryLevel vertical={bind(vertical)} />
             </BarGroup>
           </box>
         }
         endWidget={
-          <box hexpand halign={Gtk.Align.END}>
+          <box
+            vertical={bind(vertical)}
+            hexpand
+            vexpand
+            halign={bind(vertical).as((v) => (v ? CENTER : END))}
+            valign={bind(vertical).as((v) => (v ? END : CENTER))}
+          >
             <BarGroup>
-              <Time />
+              <Time vertical={bind(vertical)} />
             </BarGroup>
-            <Tray />
+            <Tray vertical={bind(vertical)} />
           </box>
         }
-      ></centerbox>
+      />
     </window>
   );
 }

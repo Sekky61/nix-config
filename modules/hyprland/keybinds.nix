@@ -243,6 +243,7 @@ in
         );
 
         toggleWindow = name: "ags toggle '${name}'";
+        agsRequest = cmd: "ags request '${cmd}'";
 
         workspaceBinds = num:
           let
@@ -417,6 +418,11 @@ in
         description = "Toggle launcher";
         bind = { mods = [ "SUPER" ]; key = "Tab"; };
         command = { params = toggleWindow "launcher"; };
+      }
+      {
+        description = "Toggle between horizontal and vertical bar";
+        bind = { mods = [ "SUPER" ]; key = "T"; };
+        command = { params = agsRequest "bar-toggle"; };
       }
       {
         description = "Toggle cheatsheet"; # todo

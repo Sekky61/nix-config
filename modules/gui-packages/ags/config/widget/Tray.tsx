@@ -1,11 +1,16 @@
-import { bind } from "astal";
+import { bind, Binding } from "astal";
 import AstalTray from "gi://AstalTray?version=0.1";
 
-export default function SysTray() {
+interface TrayProps {
+  vertical: Binding<boolean>;
+}
+
+
+export default function SysTray({vertical}: TrayProps) {
   const tray = AstalTray.get_default();
 
   return (
-    <box className="bar-systray">
+    <box className="bar-systray" vertical={vertical}>
       {bind(tray, "items").as((items) =>
         items.map((item) => (
           <menubutton

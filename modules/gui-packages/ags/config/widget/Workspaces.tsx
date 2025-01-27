@@ -2,7 +2,7 @@ import { Gdk, Gtk } from "astal/gtk3";
 import { EventBox } from "astal/gtk3/widget";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import { debounce, scrollDirection } from "../util";
-import { bind } from "astal";
+import { bind, Binding } from "astal";
 
 const hyprland = AstalHyprland.get_default();
 
@@ -30,20 +30,21 @@ function DotFor(monitor: AstalHyprland.Monitor) {
 }
 
 /** css is defined in _bar.scss */
-export default function Workspaces() {
+export default function Workspaces(props: { vertical: boolean | Binding<boolean> }) {
+
   return (
     <EventBox
       onScroll={(_el, e) => {
         const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
-        if (dir == Gdk.ScrollDirection.RIGHT) {
+        if (dir === Gdk.ScrollDirection.RIGHT) {
           debouncedWorkspace(e.time, "+1");
         }
-        if (dir == Gdk.ScrollDirection.LEFT) {
+        if (dir === Gdk.ScrollDirection.LEFT) {
           debouncedWorkspace(e.time, "-1");
         }
       }}
     >
-      <box className="">
+      <box vertical={props.vertical} className="">
         {bind(hyprland, "workspaces").as((wss) =>
           wss
             .filter((ws) => !(ws.id >= -99 && ws.id <= -2)) // filter out special workspaces
