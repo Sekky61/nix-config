@@ -886,8 +886,6 @@ local on_attach = function(client, bufnr)
     if desc then
       desc = 'LSP: ' .. desc
     end
-
-
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
@@ -916,6 +914,7 @@ local on_attach = function(client, bufnr)
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
   nmap('<leader>wl', function()
+    -- debug
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
   nmap('<leader>f', function()
@@ -928,11 +927,18 @@ local on_attach = function(client, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+-- auto fmt
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.js", "*.ts", "*.jsx", "*.tsx", "*.lua" }, -- adjust patterns as needed
+  callback = function()
+    MyFormat()
+  end,
+})
+
 -- custom format function
 function MyFormat()
   vim.lsp.buf.format {
     async = true,
-    filter = function(client) return client.name ~= "tsserver" end
   }
 end
 
@@ -970,7 +976,10 @@ local servers = {
   pyright = {},
   rust_analyzer = {},
   jsonls = {},
-  nil_ls = {}, -- nix
+  nil_ls = {
+    -- nix
+    formatter = { command = { "alejandra" } },
+  },
   gopls = {},
   omnisharp = {},
 
@@ -1034,6 +1043,15 @@ require('lspconfig').zls.setup {
     }
   }
 }
+
+require('lspconfig').eslint.setup({
+  on_attach = function(client, bufnr)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = bufnr,
+      command = "EslintFixAll",
+    })
+  end,
+})
 
 local bashate = require('efmls-configs.linters.bashate')
 local languages = {

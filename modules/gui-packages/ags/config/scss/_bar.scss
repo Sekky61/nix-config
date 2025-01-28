@@ -88,6 +88,7 @@ $bar_subgroup_bg: material.$surfaceVariant;
 .bar-ws {
     @include lib_mixins.full-rounding;
     min-width: $bar_ws_width;
+    min-height: $bar_ws_width;
     color: color.mix(material.$onBackground, material.$background, 40%);
     @if material.$darkmode ==true {
         color: color.mix(material.$onBackground, material.$background, 45%);

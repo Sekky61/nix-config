@@ -24,7 +24,7 @@ in
   perSystem =
     { system, pkgs, ... }:
     {
-      formatter = pkgs.nixfmt-rfc-style;
+      formatter = pkgs.alejandra;
 
       devShells = {
         default = pkgs.mkShell { buildInputs = with pkgs; [ nixfmt statix ]; };
