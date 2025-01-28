@@ -683,7 +683,43 @@ require('lazy').setup({
       },
     }
   },
-
+  {
+    'stevearc/conform.nvim',
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        -- Customize or remove this keymap to your liking
+        "<leader>f",
+        function()
+          require("conform").format({ async = true })
+        end,
+        mode = "",
+        desc = "Format buffer",
+      },
+    },
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      format_on_save = function(bufnr)
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return { timeout_ms = 500, lsp_format = "fallback" }
+      end,
+      formatters_by_ft = {
+        lua = { "stylua" },
+        -- Conform will run multiple formatters sequentially
+        python = { "isort", "black" },
+        -- You can customize some of the format options for the filetype (:help conform.format)
+        rust = { "rustfmt", lsp_format = "fallback" },
+        -- Conform will run the first available formatter
+        javascript = { "prettierd", "prettier", "biome", stop_after_first = true },
+        nix = { "alejandra" }
+      },
+    },
+  }
 }, {})
 
 -- [[ Setting options ]]
@@ -917,30 +953,27 @@ local on_attach = function(client, bufnr)
     -- debug
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
-  nmap('<leader>f', function()
-    MyFormat()
-  end, '[F]ormat')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    MyFormat()
-  end, { desc = 'Format current buffer with LSP' })
 end
 
--- auto fmt
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.js", "*.ts", "*.jsx", "*.tsx", "*.lua" }, -- adjust patterns as needed
-  callback = function()
-    MyFormat()
-  end,
+-- Toggle auto format
+-- Format(Enable|Disable)
+vim.api.nvim_create_user_command("FormatDisable", function(args)
+  if args.bang then
+    -- FormatDisable! will disable formatting just for this buffer
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = true
+  end
+end, {
+  desc = "Disable autoformat-on-save",
+  bang = true,
 })
-
--- custom format function
-function MyFormat()
-  vim.lsp.buf.format {
-    async = true,
-  }
-end
+vim.api.nvim_create_user_command("FormatEnable", function()
+  vim.b.disable_autoformat = false
+  vim.g.disable_autoformat = false
+end, {
+  desc = "Re-enable autoformat-on-save",
+})
 
 -- DAP
 
@@ -959,6 +992,7 @@ require("mason-nvim-dap").setup({
     },
   },
 })
+
 require('mason-tool-installer').setup {
   -- a list of all tools you want to ensure are installed upon start
   -- In practice, put here what lspconfig does not recognise
@@ -978,7 +1012,6 @@ local servers = {
   jsonls = {},
   nil_ls = {
     -- nix
-    formatter = { command = { "alejandra" } },
   },
   gopls = {},
   omnisharp = {},
