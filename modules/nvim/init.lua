@@ -706,7 +706,7 @@ require('lazy').setup({
         if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
           return
         end
-        return { timeout_ms = 500, lsp_format = "fallback" }
+        return { timeout_ms = 500 }
       end,
       formatters_by_ft = {
         lua = { "stylua" },
@@ -717,6 +717,9 @@ require('lazy').setup({
         -- Conform will run the first available formatter
         javascript = { "prettierd", "prettier", "biome", stop_after_first = true },
         nix = { "alejandra" }
+      },
+      default_format_opts = {
+        lsp_format = "fallback",
       },
     },
   }
@@ -957,6 +960,7 @@ end
 
 -- Toggle auto format
 -- Format(Enable|Disable)
+-- https://github.com/stevearc/conform.nvim/blob/master/doc/recipes.md
 vim.api.nvim_create_user_command("FormatDisable", function(args)
   if args.bang then
     -- FormatDisable! will disable formatting just for this buffer
@@ -999,6 +1003,7 @@ require('mason-tool-installer').setup {
   ensure_installed = {
     'stylua',
     'nxls',
+    'prettierd'
   }
 }
 
