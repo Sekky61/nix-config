@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ./starship.nix
     ./scripts.nix

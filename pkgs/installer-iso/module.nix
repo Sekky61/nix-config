@@ -4,8 +4,7 @@
   lib,
   modulesPath,
   ...
-}:
-{
+}: {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
     ../../modules/ssh.nix
@@ -17,7 +16,7 @@
   nixpkgs = {
     hostPlatform = lib.mkDefault "x86_64-linux";
     # we provide external instance
-    config = lib.mkForce { };
+    config = lib.mkForce {};
   };
 
   networking = {

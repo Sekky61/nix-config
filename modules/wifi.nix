@@ -1,5 +1,9 @@
-{ hostname, pkgs, config, ... }:
 {
+  hostname,
+  pkgs,
+  config,
+  ...
+}: {
   environment.systemPackages = with pkgs; [
     wirelesstools
     wpa_supplicant
@@ -17,7 +21,7 @@
     # Enabling WIFI
     wireless = {
       enable = true;
-      interfaces = [ "wlan0" ];
+      interfaces = ["wlan0"];
       secretsFile = config.sops.secrets.wireless.path;
       userControlled.enable = true;
       networks = {

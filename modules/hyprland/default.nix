@@ -5,8 +5,7 @@
   username,
   ...
 }:
-with lib;
-let
+with lib; let
   launcher = pkgs.writeShellScriptBin "hypr" ''
     #!/${pkgs.bash}/bin/bash
 
@@ -22,8 +21,7 @@ let
   };
 
   rounding = 5; # px
-in
-{
+in {
   imports = [
     ./keybinds.nix
     ./gromit.nix
@@ -33,7 +31,6 @@ in
   ];
 
   config = {
-
     environment.systemPackages = with pkgs; [
       # launcher
       nwg-displays # gui for monitors, wayland
@@ -74,7 +71,7 @@ in
         comment = "Gnome Control Center";
         icon = "org.gnome.Settings";
         exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome-control-center}/bin/gnome-control-center";
-        categories = [ "X-Preferences" ];
+        categories = ["X-Preferences"];
         terminal = false;
       };
 
@@ -244,15 +241,15 @@ in
 
             # "Super, S, togglespecialworkspace,"
             # "Control+Super, S, togglespecialworkspace,"
-              "Alt, Tab, cyclenext"
-              "Alt, Tab, bringactivetotop,"
-              "Control+Shift+Super, Up, movetoworkspacesilent, special"
-              "Super, m, movecurrentworkspacetomonitor, +1"
-              # "Super+Shift, S, movetoworkspacesilent, special"
-              "Super, mouse_up, workspace, +1"
-              "Super, mouse_down, workspace, -1"
-              "Control+Super, mouse_up, workspace, +1"
-              "bind = Control+Super, mouse_down, workspace, -1"
+            "Alt, Tab, cyclenext"
+            "Alt, Tab, bringactivetotop,"
+            "Control+Shift+Super, Up, movetoworkspacesilent, special"
+            "Super, m, movecurrentworkspacetomonitor, +1"
+            # "Super+Shift, S, movetoworkspacesilent, special"
+            "Super, mouse_up, workspace, +1"
+            "Super, mouse_down, workspace, -1"
+            "Control+Super, mouse_up, workspace, +1"
+            "bind = Control+Super, mouse_down, workspace, -1"
           ];
           bindm = [
             "Super, mouse:272, movewindow" # left click to move window
@@ -280,7 +277,7 @@ in
             "float,title:^(Save As)(.*)$"
             "float,title:^(Library)(.*)$ "
           ];
-          windowrulev2 = [ "tile,class:(wpsoffice)" ];
+          windowrulev2 = ["tile,class:(wpsoffice)"];
           layerrule = [
             "xray 1, .*"
             "noanim, selection"
@@ -305,7 +302,6 @@ in
           # ];
         };
       };
-
     };
   };
 }

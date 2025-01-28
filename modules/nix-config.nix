@@ -1,4 +1,8 @@
-{lib, inputs, ...}: {
+{
+  lib,
+  inputs,
+  ...
+}: {
   # Source: https://nixos-and-flakes.thiscute.world/best-practices/nix-path-and-flake-registry
 
   # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.

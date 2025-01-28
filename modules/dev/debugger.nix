@@ -2,8 +2,7 @@
   pkgs,
   username,
   ...
-}:
-{
+}: {
   # Debugging and performance analysis tools
 
   # packages for development

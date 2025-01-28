@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   fonts = {
     packages = with pkgs; [
       jetbrains-mono
@@ -20,8 +19,8 @@
         "Roboto"
         "Noto Color Emoji"
       ];
-      monospace = [ "MonaspiceKr Nerd Font Mono" ];
-      emoji = [ "Noto Color Emoji" ];
+      monospace = ["MonaspiceKr Nerd Font Mono"];
+      emoji = ["Noto Color Emoji"];
     };
   };
 }

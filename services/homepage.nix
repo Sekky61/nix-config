@@ -1,6 +1,11 @@
-{ config, lib, hostname, myServiceOptions, ... }:
-with lib;
-let
+{
+  config,
+  lib,
+  hostname,
+  myServiceOptions,
+  ...
+}:
+with lib; let
   cfg = config.michal.services.adguardhome;
 in {
   # Source: https://github.com/V3ntus/nixos/blob/8cd44c2ea0d05e21701c8150abde892f4e76c0a8/hosts/homelab/net/homepage.nix
@@ -8,7 +13,6 @@ in {
   options.michal.services.homepage = myServiceOptions "Homepage";
 
   config = mkIf cfg.enable {
-
     services.homepage-dashboard = {
       enable = cfg.enable;
       listenPort = cfg.port;
@@ -20,7 +24,6 @@ in {
       #   // Log the entire environment (debug)
       #   console.log(process.env);
       # '';
-
 
       settings = {
         title = "The Homepage";

@@ -1,20 +1,26 @@
-{ inputs, pkgs, impurity, ... }:
-let
+{
+  inputs,
+  pkgs,
+  impurity,
+  ...
+}: let
   astalPkgs = inputs.ags.packages.${pkgs.system};
 
-  astalRuntimePkgs = with astalPkgs; [
-    battery
-    apps
-    auth
-    bluetooth
-    hyprland
-    mpris
-    network
-    notifd
-    powerprofiles
-    tray
-    wireplumber
-  ] ++ pkgsExtra;
+  astalRuntimePkgs = with astalPkgs;
+    [
+      battery
+      apps
+      auth
+      bluetooth
+      hyprland
+      mpris
+      network
+      notifd
+      powerprofiles
+      tray
+      wireplumber
+    ]
+    ++ pkgsExtra;
 
   pkgsExtra = with pkgs; [
     pywal
@@ -36,12 +42,10 @@ let
     webp-pixbuf-loader
     ydotool
   ];
-in
-{
-  imports = [ inputs.ags.homeManagerModules.default ];
+in {
+  imports = [inputs.ags.homeManagerModules.default];
 
   # config generated with `ags init --gtk 3 --directory "./modules/gui-packages/ags/config/"`
-
 
   # Can be ran (developed) with:
   # `ags run --directory ~/Documents/nix-config/modules/gui-packages/ags/config`

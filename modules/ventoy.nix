@@ -4,14 +4,11 @@
   lib,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.michal.programs.bitwarden;
-
   # sudo ventoy-web
   # todo: script to create ventoy usb
-in
-{
+in {
   options.michal.programs.ventoy = {
     enable = mkEnableOption "ventoy";
   };

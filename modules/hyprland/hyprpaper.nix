@@ -3,8 +3,7 @@
   username,
   lib,
   ...
-}:
-{
+}: {
   home-manager.users.${username} = _: {
     services.hyprpaper = {
       enable = true;

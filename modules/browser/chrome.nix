@@ -2,8 +2,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   environment.systemPackages = with pkgs; [
     libsForQt5.plasma-browser-integration
     google-chrome

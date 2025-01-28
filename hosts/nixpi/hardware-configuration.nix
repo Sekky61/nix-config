@@ -1,6 +1,9 @@
-{ lib, inputs, ... }:
 {
-  imports = [ inputs.nixos-hardware.nixosModules.raspberry-pi-4 ];
+  lib,
+  inputs,
+  ...
+}: {
+  imports = [inputs.nixos-hardware.nixosModules.raspberry-pi-4];
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
 

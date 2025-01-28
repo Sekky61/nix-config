@@ -3,14 +3,15 @@
   username,
   config,
   ...
-}:
-let
+}: let
   userCfg = config.home-manager.users.${username};
   programEnabled = name: userCfg.programs.${name}.enable == true;
   # defined if program name is enabled
-  programAlias = name: if programEnabled name then name else null;
-in
-{
+  programAlias = name:
+    if programEnabled name
+    then name
+    else null;
+in {
   # This is the base to have at every vm, server or pc
   imports = [
     ./nvim
@@ -69,7 +70,7 @@ in
       };
       bat = {
         enable = true;
-        extraPackages = with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];
+        extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch];
       };
       eza = {
         enable = true;

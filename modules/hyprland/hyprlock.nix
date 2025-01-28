@@ -2,12 +2,10 @@
   pkgs,
   username,
   ...
-}:
-let
+}: let
   # TODO move to config option
   myWallpaper = "~/.config/wallpapers/spyxfamily.png";
-in
-{
+in {
   # Hyprlock is the lockscreen handling for hyprland
   # Hypridle manages automatic locking
 
@@ -19,23 +17,32 @@ in
   michal.programs.hyprland.keybinds = [
     {
       description = "Toggle drawing to screen"; # TODO toggle off does not work (kill it with super+q)
-      bind = { key = "F7"; };
-      command = { dispatcher = "togglespecialworkspace"; params = "gromit"; };
+      bind = {key = "F7";};
+      command = {
+        dispatcher = "togglespecialworkspace";
+        params = "gromit";
+      };
     }
     {
       description = "Clear drawing";
-      bind = { mods = [ "SHIFT" ]; key = "F7"; };
-      command = { params = "gromit-mpx --clear"; };
+      bind = {
+        mods = ["SHIFT"];
+        key = "F7";
+      };
+      command = {params = "gromit-mpx --clear";};
     }
     {
       description = "Drawing: Undo";
-      bind = { key = "F6"; };
-      command = { params = "gromit-mpx --undo"; };
+      bind = {key = "F6";};
+      command = {params = "gromit-mpx --undo";};
     }
     {
       description = "Drawing: Redo";
-      bind = { mods = [ "SHIFT" ]; key = "F6"; };
-      command = { params = "gromit-mpx --redo"; };
+      bind = {
+        mods = ["SHIFT"];
+        key = "F6";
+      };
+      command = {params = "gromit-mpx --redo";};
     }
   ];
 
@@ -131,6 +138,5 @@ in
         exec-once = ["hypridle"];
       };
     };
-
   };
 }

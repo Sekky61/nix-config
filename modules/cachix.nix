@@ -1,6 +1,5 @@
 # idk got this from matostitos
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   nix = {
     settings = {
       substituters = [

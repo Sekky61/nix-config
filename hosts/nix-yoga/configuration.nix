@@ -1,9 +1,10 @@
-{ inputs
-, pkgs
-, username
-, config
-, nixos-hardware
-, ...
+{
+  inputs,
+  pkgs,
+  username,
+  config,
+  nixos-hardware,
+  ...
 }: {
   # nix
   documentation.nixos.enable = false; # .desktop
@@ -40,7 +41,7 @@
     ];
   };
 
-  nix.settings.trusted-users = [ "@wheel" ];
+  nix.settings.trusted-users = ["@wheel"];
 
   # virtualisation
   # programs.virt-manager.enable = true;
@@ -49,7 +50,7 @@
     virtualbox.host.enable = true;
     virtualbox.guest.dragAndDrop = true;
   };
-  users.extraGroups.vboxusers.members = [ "michal" ];
+  users.extraGroups.vboxusers.members = ["michal"];
 
   services = {
     spice-vdagentd.enable = true; # protocol for sharing clipboard with VMs
@@ -106,7 +107,7 @@
     };
     firefox = {
       enable = true;
-      nativeMessagingHosts.packages = [ pkgs.plasma5Packages.plasma-browser-integration ];
+      nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
     };
     # Run dynamically linked stuff
     nix-ld = {
@@ -145,7 +146,7 @@
   # zramSwap.memoryPercent = 100;
 
   services.printing.enable = true;
-  services.printing.drivers = [ pkgs.gutenprint ];
+  services.printing.drivers = [pkgs.gutenprint];
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -200,13 +201,13 @@
   hardware.sensor.iio.enable = true;
 
   # cross-compilation
-  boot.binfmt.emulatedSystems = [ "i686-linux" "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = ["i686-linux" "aarch64-linux"];
   nix.settings.extra-platforms = config.boot.binfmt.emulatedSystems;
 
   # Boot
   boot = {
     tmp.cleanOnBoot = true;
-    supportedFilesystems = [ "btrfs" "ext4" "fat32" "ntfs" ];
+    supportedFilesystems = ["btrfs" "ext4" "fat32" "ntfs"];
     loader = {
       grub = {
         enable = true;

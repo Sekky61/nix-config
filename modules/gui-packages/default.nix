@@ -2,9 +2,7 @@
   pkgs,
   username,
   ...
-}:
-{
-
+}: {
   imports = [
     ./obs.nix
     ./fonts.nix

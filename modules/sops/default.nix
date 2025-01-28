@@ -1,5 +1,10 @@
-{ inputs, pkgs, config, username, ... }:
 {
+  inputs,
+  pkgs,
+  config,
+  username,
+  ...
+}: {
   # Great article: https://unmovedcentre.com/posts/secrets-management
 
   imports = [
@@ -17,7 +22,7 @@
 
     age = {
       # Age is derived from this ssh key
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       # Decryption key
       keyFile = "/var/lib/sops-nix/key.txt";
       # This will generate a new key if the key specified above does not exist
@@ -26,10 +31,10 @@
 
     # This is the actual specification of the secrets.
     secrets = {
-      "nixpi/tailscale-api-key" = { };
-      "nixpi/tailscale-id" = { };
-      "home/longitude" = { };
-      "home/latitude" = { };
+      "nixpi/tailscale-api-key" = {};
+      "nixpi/tailscale-id" = {};
+      "home/longitude" = {};
+      "home/latitude" = {};
 
       "private_keys/id_ed25519" = {
         path = "${config.users.users.${username}.home}/.ssh/id_ed25519";

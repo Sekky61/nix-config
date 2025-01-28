@@ -2,11 +2,9 @@
   pkgs,
   username,
   ...
-}:
-let
+}: let
   homeDirectory = "/home/${username}";
-in
-{
+in {
   imports = [
     ## Dotfiles (manual)
     ./dotfiles.nix
@@ -17,7 +15,6 @@ in
     ./theme.nix
     ./git.nix
     ./java.nix
-
   ];
 
   home = {

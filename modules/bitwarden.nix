@@ -5,8 +5,7 @@
   username,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.michal.programs.bitwarden;
   # helper to unlock bw and export session automatically
   jq = "${pkgs.jq}/bin/jq";
@@ -35,8 +34,7 @@ let
       ${bw} sync
     }
   '';
-in
-{
+in {
   options.michal.programs.bitwarden = {
     enable = mkEnableOption "the bitwarden cli client";
   };
@@ -47,6 +45,6 @@ in
     # Usage:
     # - `bwu` - Logs you in/unlocks vault
     # - `bw get password claude.ai`
-    environment.systemPackages = [ pkgs.bitwarden-cli ];
+    environment.systemPackages = [pkgs.bitwarden-cli];
   };
 }

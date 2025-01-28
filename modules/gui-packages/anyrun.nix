@@ -3,8 +3,7 @@
   pkgs,
   username,
   ...
-}:
-{
+}: {
   home-manager.users.${username} = _: {
     imports = [
       inputs.anyrun.homeManagerModules.default

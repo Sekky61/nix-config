@@ -3,8 +3,7 @@
   hostname,
   config,
   ...
-}:
-let
+}: let
   lang = icon: color: {
     symbol = icon;
     format = "[$symbol $version](${color})";
@@ -16,11 +15,9 @@ let
   };
 
   # color: one of 'primary', 'secondary', 'tertiary'
-  bubble = text: color:
-    let
-      colorCapitalized = lib.strings.concatStrings [(lib.toUpper (lib.substring 0 1 color)) (lib.substring 1 (lib.stringLength color) color)];
-    in
-    "[${pad.left}](fg:${theme.${color}})[${text}](bg:${theme.${color}} bold fg:${theme."on${colorCapitalized}"})[${pad.right}](fg:${theme.${color}}) ";
+  bubble = text: color: let
+    colorCapitalized = lib.strings.concatStrings [(lib.toUpper (lib.substring 0 1 color)) (lib.substring 1 (lib.stringLength color) color)];
+  in "[${pad.left}](fg:${theme.${color}})[${text}](bg:${theme.${color}} bold fg:${theme."on${colorCapitalized}"})[${pad.right}](fg:${theme.${color}}) ";
 
   # username and hostname based color
   host_colors = {
@@ -30,10 +27,11 @@ let
 
   theme = config.michal.theme;
 
-  osColor =
-    fallback: if builtins.hasAttr hostname host_colors then host_colors.${hostname} else fallback;
-in
-{
+  osColor = fallback:
+    if builtins.hasAttr hostname host_colors
+    then host_colors.${hostname}
+    else fallback;
+in {
   programs.starship = {
     enable = true;
     settings = {
@@ -131,7 +129,7 @@ in
         SUSE = os "" "green";
         Ubuntu = os "" "bright-purple";
       };
-      direnv = { 
+      direnv = {
         disabled = false;
         format = bubble "$symbol $loaded" "secondary";
         symbol = "";
@@ -145,10 +143,12 @@ in
       java = lang "" "red";
       c = lang "" "blue";
       golang = lang "" "blue";
-      zig = lang "" "bold yellow" // {
-        detect_files = [ "build.zig" ];
-        detect_folders = [ ".zig-cache" ];
-      };
+      zig =
+        lang "" "bold yellow"
+        // {
+          detect_files = ["build.zig"];
+          detect_folders = [".zig-cache"];
+        };
       nix = lang "󱄅" "blue";
     };
   };

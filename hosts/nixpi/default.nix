@@ -1,5 +1,9 @@
-{ username, lib, pkgs, ... }:
 {
+  username,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ../../modules/wifi.nix
@@ -46,7 +50,7 @@
       "wheel" # sudo
     ];
   };
-  users.groups.pi = { };
+  users.groups.pi = {};
 
   users.users.root.initialPassword = "root";
 
@@ -59,16 +63,16 @@
     };
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "@wheel" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = ["@wheel"];
   time.timeZone = "Europe/Prague";
 
   networking.firewall.enable = false; #todo
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [22 80 443];
 
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [ pkgs.wireless-regdb ];
+    firmware = [pkgs.wireless-regdb];
   };
 
   hardware = {

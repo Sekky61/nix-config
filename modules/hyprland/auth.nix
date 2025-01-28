@@ -30,6 +30,6 @@ in {
       wayland.windowManager.hyprland.settings.exec-once =
         optional cfg.enableHyprlandIntegration
         "systemctl --user start hyprpolkitagent";
-      };
     };
+  };
 }

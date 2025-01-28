@@ -5,8 +5,7 @@
   inputs,
   username,
   ...
-}:
-{
+}: {
   imports = [
     inputs.home-manager.nixosModules.home-manager
   ];
@@ -54,6 +53,6 @@
 
     # This caused nothing but pain. Lets just not.
     # must be a hash (mkpasswd). Yes it happened to me. Yes i deleted all passwords and couldnt get in. Counter: 3
-    # hashedPasswordFile = config.sops.secrets.user-password.path; 
+    # hashedPasswordFile = config.sops.secrets.user-password.path;
   };
 }

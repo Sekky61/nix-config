@@ -2,8 +2,7 @@
   pkgs,
   inputs,
   ...
-}:
-let
+}: let
   gtk-theme = "adw-gtk3-dark";
 
   moreWaita = pkgs.stdenv.mkDerivation {
@@ -28,8 +27,7 @@ let
 
   cursor-theme = "Bibata-Modern-Classic";
   cursor-package = pkgs.bibata-cursors;
-in
-{
+in {
   home = {
     packages = with pkgs; [
       # themes
@@ -54,7 +52,7 @@ in
       size = 12; # This size directs size of text in UI (bar, settings)
     };
     # theme.name = gtk-theme;
-    
+
     # Below is untested/unknown
     cursorTheme = {
       name = cursor-theme;

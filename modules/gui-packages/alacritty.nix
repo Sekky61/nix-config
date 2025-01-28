@@ -2,8 +2,7 @@
   pkgs,
   username,
   ...
-}:
-{
+}: {
   environment.systemPackages = with pkgs; [
     alacritty
     # other system-wide packages...
@@ -23,7 +22,7 @@
         ];
         font = {
           # Font names can be a mess, but this one is tested, working
-          normal = { family = "MonaspiceNe Nerd Font Mono"; };
+          normal = {family = "MonaspiceNe Nerd Font Mono";};
         };
         window.opacity = 0.94;
       };

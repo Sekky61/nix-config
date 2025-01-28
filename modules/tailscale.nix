@@ -2,8 +2,7 @@
   pkgs,
   username,
   ...
-}:
-{
+}: {
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
@@ -14,5 +13,4 @@
 
   # exit node:
   # sudo tailscale up --advertise-exit-node
-
 }

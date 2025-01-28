@@ -1,6 +1,11 @@
-{ config, lib, myServiceOptions, pkgs, ... }:
-with lib;
-let
+{
+  config,
+  lib,
+  myServiceOptions,
+  pkgs,
+  ...
+}:
+with lib; let
   # TODO: external address via Tailscale for some services (.mora)
   cfg = config.michal.services.home-assistant;
 
@@ -18,39 +23,38 @@ let
     };
   };
 in {
+  options.michal.services.home-assistant =
+    myServiceOptions "Home Assistant"
+    // {
+      bedLampId = mkOption {
+        type = with types; uniq str;
+        default = "1c35878105b007dee872426c985e9704";
+        description = ''
+          Device ID of bed lamp bulb. IDs can be found in the device URL in HA.
+        '';
+      };
 
-  options.michal.services.home-assistant = myServiceOptions "Home Assistant" // {
-    bedLampId = mkOption {
-      type = with types; uniq str;
-      default =  "1c35878105b007dee872426c985e9704";
-      description = ''
-        Device ID of bed lamp bulb. IDs can be found in the device URL in HA.
-      '';
+      diningLampId = mkOption {
+        type = with types; uniq str;
+        default = "a8bd80644982e9e4aace526323841988";
+        description = ''
+          Device ID of dining lamp bulb. IDs can be found in the device URL in HA.
+        '';
+      };
+
+      fanId = mkOption {
+        type = with types; uniq str;
+        default = "e8664f73457881c479e09f28472b7dba";
+        description = ''
+          Device ID of standing fan. IDs can be found in the device URL in HA.
+        '';
+      };
     };
-
-    diningLampId = mkOption {
-      type = with types; uniq str;
-      default =  "a8bd80644982e9e4aace526323841988";
-      description = ''
-        Device ID of dining lamp bulb. IDs can be found in the device URL in HA.
-      '';
-    };
-
-    fanId = mkOption {
-      type = with types; uniq str;
-      default =  "e8664f73457881c479e09f28472b7dba";
-      description = ''
-        Device ID of standing fan. IDs can be found in the device URL in HA.
-      '';
-    };
-
-  };
 
   config = mkIf cfg.enable {
-
     services.home-assistant = {
       enable = cfg.enable;
-      extraComponents =  [
+      extraComponents = [
         # Components required to complete the onboarding
         "esphome"
         "met"
@@ -67,68 +71,70 @@ in {
 
       lovelaceConfig = {
         title = "My Home";
-        views = [ {
-          title = "Example";
-          cards = [
-            {
-              type = "markdown";
-              title = "Lovelace";
-              content = "Welcome to your **Lovelace UI**.";
-            }
-            {
-              type = "light";
-              entity = "light.white";
-              show_state = true;
-              show_icon = true;
-              tap_action = {action = "toggle";};
-              hold_action = {action = "Default action";};
-            }
-            {
-              type = "light";
-              entity = "light.dining";
-              show_state = true;
-              show_icon = true;
-              tap_action = {action = "toggle";};
-              hold_action = {action = "Default action";};
-            }
-            {
-              type = "button";
-              name = "Dim Light";
-              icon = "mdi:lightbulb-on-10";
-              entity = "script.dim_light";
-              tap_action = {
-                action = "toggle";
-              };
-            }
-            {
-              type = "button";
-              name = "Normal Light";
-              icon = "mdi:lightbulb-on-50";
-              entity = "script.normal_light";
-              tap_action = {
-                action = "toggle";
-              };
-            }
-            {
-              type = "button";
-              name = "Bright Light";
-              icon = "mdi:lightbulb-on";
-              entity = "script.bright_light";
-              tap_action = {
-                action = "toggle";
-              };
-            }
-            {
-              type = "entities";
-              entities = [
-                {
-                  entity = "fan.mi_smart_standing_fan_2_lite";
-                }
-              ];
-              title = "Fan";
-            }
-          ];
-        } ];
+        views = [
+          {
+            title = "Example";
+            cards = [
+              {
+                type = "markdown";
+                title = "Lovelace";
+                content = "Welcome to your **Lovelace UI**.";
+              }
+              {
+                type = "light";
+                entity = "light.white";
+                show_state = true;
+                show_icon = true;
+                tap_action = {action = "toggle";};
+                hold_action = {action = "Default action";};
+              }
+              {
+                type = "light";
+                entity = "light.dining";
+                show_state = true;
+                show_icon = true;
+                tap_action = {action = "toggle";};
+                hold_action = {action = "Default action";};
+              }
+              {
+                type = "button";
+                name = "Dim Light";
+                icon = "mdi:lightbulb-on-10";
+                entity = "script.dim_light";
+                tap_action = {
+                  action = "toggle";
+                };
+              }
+              {
+                type = "button";
+                name = "Normal Light";
+                icon = "mdi:lightbulb-on-50";
+                entity = "script.normal_light";
+                tap_action = {
+                  action = "toggle";
+                };
+              }
+              {
+                type = "button";
+                name = "Bright Light";
+                icon = "mdi:lightbulb-on";
+                entity = "script.bright_light";
+                tap_action = {
+                  action = "toggle";
+                };
+              }
+              {
+                type = "entities";
+                entities = [
+                  {
+                    entity = "fan.mi_smart_standing_fan_2_lite";
+                  }
+                ];
+                title = "Fan";
+              }
+            ];
+          }
+        ];
       };
       lovelaceConfigWritable = true;
       customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
@@ -147,8 +153,8 @@ in {
           # server_host = "127.0.0.1"; # TODO: proxy does not work
           server_port = cfg.port;
           use_x_forwarded_for = true;
-          trusted_proxies = [ "127.0.0.1" "::1" ];
-          cors_allowed_origins = [ "http://homeassistant.nixpi" "http://nixpi:1290" ];
+          trusted_proxies = ["127.0.0.1" "::1"];
+          cors_allowed_origins = ["http://homeassistant.nixpi" "http://nixpi:1290"];
         };
         homeassistant = {
           unit_system = "metric";
@@ -159,7 +165,7 @@ in {
         homekit = {
           name = "MyHub";
           filter = {
-            include_domains = [ "light" "script" ];
+            include_domains = ["light" "script"];
           };
         };
 

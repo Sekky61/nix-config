@@ -6,30 +6,26 @@
   username,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.michal.theme;
 
   themeJson = builtins.fromJSON (readFile ./theme.json);
-
   # baseCss = config.lib.stylix.colors { # Handlebars formatting
   #   template = ./gtk_template.json;
   #   extension = "css";
   # };
-in
-{
+in {
   options.michal.theme = mkOption {
-
-      type = with types; attrsOf str;
-      default =  {};
-      description = ''
-        Keyed colors. Assume #RRGGBB. Names like primary, surface.
-      '';
-      example = {
-        primary = "#8dcdff";
-        outline = "#8b9198";
-        error = "#ffb4a9";
-      };
+    type = with types; attrsOf str;
+    default = {};
+    description = ''
+      Keyed colors. Assume #RRGGBB. Names like primary, surface.
+    '';
+    example = {
+      primary = "#8dcdff";
+      outline = "#8b9198";
+      error = "#ffb4a9";
+    };
   };
 
   imports = [

@@ -1,4 +1,4 @@
-{ hostname, ... }: {
+{hostname, ...}: {
   # Sources for writing modules:
   # https://nixos.org/manual/nixos/stable/#sec-writing-modules
   # https://nixos.wiki/wiki/NixOS_modules

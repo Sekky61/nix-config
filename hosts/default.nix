@@ -1,5 +1,9 @@
-{ lib, inputs, system, ... }: 
-let 
+{
+  lib,
+  inputs,
+  system,
+  ...
+}: let
   nixosSystem = lib.nixosSystem;
   hosts = {
     nix-yoga = nixosSystem {
@@ -26,50 +30,55 @@ let
     };
   };
 
-  impure-hosts = lib.mapAttrs' (name: config: lib.nameValuePair (name + "-impure") (config.extendModules { modules = [
-    { impurity.enable = true; }
-  ]; })) hosts;
-
+  impure-hosts = lib.mapAttrs' (name: config:
+    lib.nameValuePair (name + "-impure") (config.extendModules {
+      modules = [
+        {impurity.enable = true;}
+      ];
+    }))
+  hosts;
 in {
-
-
-  flake.nixosConfigurations = hosts // impure-hosts // {
-    desktopIso = nixosSystem {
-      specialArgs = { inherit inputs; };
-      system = "x86_64-linux";
-      modules = [
-        ../modules/ssh.nix
-        ({ pkgs
-         , modulesPath
-         , ...
-         }: {
-          imports = [ 
-            (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
-          ];
-          environment.systemPackages = [ pkgs.neovim ];
-        })
-      ];
-    };
-
-    minimal-pi = nixosSystem {
-      specialArgs = {
-        username = "pi";
-        hostname = "rpi";
-        inherit inputs;
+  flake.nixosConfigurations =
+    hosts
+    // impure-hosts
+    // {
+      desktopIso = nixosSystem {
+        specialArgs = {inherit inputs;};
+        system = "x86_64-linux";
+        modules = [
+          ../modules/ssh.nix
+          ({
+            pkgs,
+            modulesPath,
+            ...
+          }: {
+            imports = [
+              (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
+            ];
+            environment.systemPackages = [pkgs.neovim];
+          })
+        ];
       };
-      system = "aarch64-linux";
-      modules = [
-        ../modules/ssh.nix
-        ({ username, ... }: {
-          users.users.root.initialPassword = "root";
-          users.users.${username} = {
-            initialPassword = "password";
-            isNormalUser = true;
-            group = "pi";
-          };
-          users.groups.pi = {};
-        })
-      ];
+
+      minimal-pi = nixosSystem {
+        specialArgs = {
+          username = "pi";
+          hostname = "rpi";
+          inherit inputs;
+        };
+        system = "aarch64-linux";
+        modules = [
+          ../modules/ssh.nix
+          ({username, ...}: {
+            users.users.root.initialPassword = "root";
+            users.users.${username} = {
+              initialPassword = "password";
+              isNormalUser = true;
+              group = "pi";
+            };
+            users.groups.pi = {};
+          })
+        ];
+      };
     };
-  };
 }

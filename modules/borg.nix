@@ -5,24 +5,21 @@
   username,
   ...
 }:
-with lib;
-let
+with lib; let
   # On first run, you may need to ssh into the borgbase to add it to known hosts
   # Backed up at: https://www.borgbase.com
   # The first time can take a lot of time. Be more patient than I was ☮️
   #
   # Sources:
   # - https://xeiaso.net/blog/borg-backup-2021-01-09/
-
   # TODO: integrate to dashboard (healthcheck)
   # TODO: might be more suitable to configure this per-host
   cfg = config.michal.programs.borg;
   borgbase = "u6ddiz7x@u6ddiz7x.repo.borgbase.com";
-in
-{
+in {
   options.michal.programs.borg = {
     enable = mkEnableOption "borg backups to borgbase";
-    
+
     common-exclude-patterns = mkOption {
       type = with types; listOf str;
       default = [
@@ -74,14 +71,15 @@ in
   };
 
   config = mkIf cfg.enable {
-
     services.borgbackup.jobs."borgbase" = {
       paths = [
         "/home/${username}/Documents"
       ];
-      exclude = cfg.common-exclude-patterns ++ [
-        "/home/*/Documents/vms" # VMs too big
-      ];
+      exclude =
+        cfg.common-exclude-patterns
+        ++ [
+          "/home/*/Documents/vms" # VMs too big
+        ];
       repo = "ssh://${borgbase}/./repo";
       encryption = {
         mode = "repokey-blake2";
@@ -95,7 +93,7 @@ in
       prune.keep = {
         daily = 7;
         weekly = 4;
-        monthly = -1;  # Keep at least one archive for each month
+        monthly = -1; # Keep at least one archive for each month
       };
     };
   };

@@ -2,9 +2,7 @@
   pkgs,
   username,
   ...
-}:
-{
-
+}: {
   imports = [
     ./direnv.nix
     ./debugger.nix
