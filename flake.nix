@@ -7,7 +7,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    impurity.url = "github:outfoxxed/impurity.nix";
 
     ags = {
       url = "github:Aylur/ags";

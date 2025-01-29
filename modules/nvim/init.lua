@@ -24,6 +24,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
+
 -- import plugins
 --
 -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -761,7 +763,10 @@ require("lazy").setup({
                 -- You can customize some of the format options for the filetype (:help conform.format)
                 rust = { "rustfmt", lsp_format = "fallback" },
                 -- Conform will run the first available formatter
-                javascript = { "prettierd", "prettier", "biome", stop_after_first = true },
+                javascript = js_formatters,
+                typescript = js_formatters,
+                typescriptreact = js_formatters,
+                javascriptreact = js_formatters,
                 nix = { "alejandra" },
                 html = { "html_beautify" },
             },

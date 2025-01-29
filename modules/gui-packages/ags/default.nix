@@ -1,7 +1,7 @@
 {
   inputs,
   pkgs,
-  impurity,
+  lib,
   ...
 }: let
   astalPkgs = inputs.ags.packages.${pkgs.system};
@@ -55,7 +55,7 @@ in {
     enable = true;
 
     # symlink to ~/.config/ags
-    configDir = impurity.link ./config;
+    configDir = lib.michal.link ./config;
 
     # additional packages to add to gjs's runtime
     extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;

@@ -1,12 +1,12 @@
 {
   config,
-  impurity,
   inputs,
   pkgs,
+  lib,
   ...
 }: {
   xdg.configFile = let
-    link = impurity.link;
+    link = lib.michal.link;
   in {
     # These are the files that are symlinked to the configuration directory.
     # "ags".source = link ./config/ags;

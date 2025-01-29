@@ -1,16 +1,22 @@
 {
-  lib,
   inputs,
   system,
+  self,
   ...
 }: let
+  mkLib = nixpkgs:
+    nixpkgs.lib.extend
+    (final: prev: (import ../modules/lib.nix final) // inputs.home-manager.lib);
+
+  lib = mkLib inputs.nixpkgs;
+
   nixosSystem = lib.nixosSystem;
   hosts = {
     nix-yoga = nixosSystem {
       specialArgs = {
         username = "michal";
         hostname = "nix-yoga";
-        inherit inputs;
+        inherit inputs self lib;
       };
       modules = [
         ./common
@@ -21,7 +27,7 @@
       specialArgs = {
         username = "pi";
         hostname = "nixpi";
-        inherit inputs;
+        inherit inputs self;
       };
       system = "aarch64-linux";
       modules = [
@@ -30,10 +36,13 @@
     };
   };
 
+  # Impure versions of hosts
   impure-hosts = lib.mapAttrs' (name: config:
     lib.nameValuePair (name + "-impure") (config.extendModules {
       modules = [
-        {impurity.enable = true;}
+        {
+          config.michal.impurity.enable = true;
+        }
       ];
     }))
   hosts;

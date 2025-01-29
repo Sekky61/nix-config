@@ -1,7 +1,6 @@
 {
   config,
   self,
-  impurity,
   inputs,
   username,
   ...
@@ -33,7 +32,6 @@
       inherit
         self
         inputs
-        impurity # to link configs like nvim
         username
         ;
     };

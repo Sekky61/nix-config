@@ -7,7 +7,6 @@
     ./nix-config.nix
     ./cachix.nix
     ./locale.nix
-    ./impure.nix
     ./packages # admin/debug packages
 
     # Modules with options
@@ -16,6 +15,7 @@
     ./borg.nix
     ./ollama.nix
     ./theme
+    ./impurity.nix
   ];
 
   environment.systemPackages = with pkgs; [
