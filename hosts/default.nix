@@ -42,6 +42,7 @@
       modules = [
         {
           config.michal.impurity.enable = true;
+          config.michal.impurity.configRoot = ../.;
         }
       ];
     }))

@@ -35,7 +35,7 @@ in {
   config = {
     stylix = {
       enable = true;
-      autoEnable = true;
+      autoEnable = false; # conflicts with impure configs
       image = ../../assets/wallpapers/spyxfamily.png;
       base16Scheme = with themeJson; {
         # Hyprland: background
