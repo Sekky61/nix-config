@@ -11,6 +11,7 @@
     ./kitty.nix
     ./anyrun.nix
     ./remote-desktop.nix
+    ./ags
   ];
 
   # packages for daily needs

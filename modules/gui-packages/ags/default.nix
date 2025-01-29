@@ -1,7 +1,8 @@
 {
   inputs,
   pkgs,
-  lib,
+  username,
+  impurity,
   ...
 }: let
   astalPkgs = inputs.ags.packages.${pkgs.system};
@@ -43,23 +44,25 @@
     ydotool
   ];
 in {
-  imports = [inputs.ags.homeManagerModules.default];
+  home-manager.users.${username} = {
+    imports = [inputs.ags.homeManagerModules.default];
 
-  # config generated with `ags init --gtk 3 --directory "./modules/gui-packages/ags/config/"`
+    # config generated with `ags init --gtk 3 --directory "./modules/gui-packages/ags/config/"`
 
-  # Can be ran (developed) with:
-  # `ags run --directory ~/Documents/nix-config/modules/gui-packages/ags/config`
-  #
-  # - Do not use path relative to CWD
-  programs.ags = {
-    enable = true;
+    # Can be ran (developed) with:
+    # `ags run --directory ~/Documents/nix-config/modules/gui-packages/ags/config`
+    #
+    # - Do not use path relative to CWD
+    programs.ags = {
+      enable = true;
 
-    # symlink to ~/.config/ags
-    configDir = lib.michal.link ./config;
+      # symlink to ~/.config/ags
+      configDir = impurity.link ./config;
 
-    # additional packages to add to gjs's runtime
-    extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;
+      # additional packages to add to gjs's runtime
+      extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;
+    };
+
+    home.packages = astalRuntimePkgs;
   };
-
-  home.packages = astalRuntimePkgs;
 }

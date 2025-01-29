@@ -3,6 +3,7 @@
   inputs,
   pkgs,
   lib,
+  impurity,
   ...
 }: {
   xdg.configFile = let

@@ -9,7 +9,6 @@ in {
     ## Dotfiles (manual)
     ./dotfiles.nix
     # Stuff
-    ../../modules/gui-packages/ags
     ./dconf.nix
     ./mimelist.nix
     ./theme.nix
