@@ -36,6 +36,9 @@
     spotify
     rnote # drawing app for stylus
 
+    # Notifications
+    libnotify #(notify-send)
+
     # games
     wineWowPackages.waylandFull
     winetricks

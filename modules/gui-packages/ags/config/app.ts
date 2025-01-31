@@ -4,6 +4,7 @@ import Applauncher from "./windows/AppLauncher";
 import Bar, { BarOrientation, handleBarRequest } from "./windows/Bar";
 import CheatSheet from "./windows/CheatSheet";
 import SessionWindow from "./windows/Session";
+import { NotificationPopupWindow } from "./windows/Notification";
 
 function requestHandler(request: string, res: (response: any) => void) {
   let resp: string;
@@ -30,6 +31,7 @@ App.start({
     Applauncher();
     SessionWindow();
     CheatSheet();
+    NotificationPopupWindow();
   },
   requestHandler,
 });
