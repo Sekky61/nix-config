@@ -31,6 +31,10 @@
       enable = true;
       gui = true;
     };
-    zen.enable = true;
+    zen = {
+      enable = true;
+      default = true;
+    };
+    chrome.enable = true;
   };
 }

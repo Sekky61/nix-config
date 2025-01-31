@@ -1,5 +1,5 @@
 {
-  inputs,
+  config,
   pkgs,
   lib,
   username,
@@ -14,6 +14,8 @@ with lib; let
 
     exec ${hyprland_pkg}/bin/Hyprland
   '';
+
+  browser = config.environment.sessionVariables.BROWSER;
 
   myMonitors = {
     laptop = "Samsung Display Corp. 0x4193";
@@ -111,8 +113,8 @@ in {
             "hyprctl setcursor Bibata-Modern-Classic 24"
             # kdeconnect
             "kdeconnect-indicator"
-            # launch Chrome
-            "[workspace 1 silent] google-chrome-stable"
+            # launch browser
+            "[workspace 1 silent] ${browser}"
           ];
           general = {
             gaps_in = 2;

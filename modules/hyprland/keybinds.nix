@@ -300,12 +300,12 @@ in {
           command = {params = "alacritty";};
         }
         {
-          description = "Launch Chrome";
+          description = "Launch Browser";
           bind = {
             mods = ["SUPER"];
             key = "W";
           };
-          command = {params = "google-chrome-stable";};
+          command = {params = config.environment.sessionVariables.BROWSER;};
         }
         {
           description = "Launch VSCode";
