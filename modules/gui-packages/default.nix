@@ -16,6 +16,9 @@
     ./browser/chrome.nix
     ./browser/firefox.nix
     ./browser/zen.nix
+
+    # With options
+    ./steam.nix
   ];
 
   # packages for daily needs

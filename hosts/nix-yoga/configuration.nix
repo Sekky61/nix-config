@@ -100,11 +100,6 @@
     };
     wireshark.enable = true; # sets the group and whatnot
     dconf.enable = true;
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    };
     # Run dynamically linked stuff
     nix-ld = {
       enable = true;

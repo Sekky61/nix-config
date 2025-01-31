@@ -34,5 +34,6 @@
       default = true;
     };
     chrome.enable = true;
+    steam.enable = true;
   };
 }
