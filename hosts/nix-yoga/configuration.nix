@@ -105,10 +105,6 @@
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     };
-    firefox = {
-      enable = true;
-      nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
-    };
     # Run dynamically linked stuff
     nix-ld = {
       enable = true;

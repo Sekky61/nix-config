@@ -12,6 +12,10 @@
     ./anyrun.nix
     ./remote-desktop.nix
     ./ags
+
+    ./browser/chrome.nix
+    ./browser/firefox.nix
+    ./browser/zen.nix
   ];
 
   # packages for daily needs

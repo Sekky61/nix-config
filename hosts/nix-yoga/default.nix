@@ -11,8 +11,6 @@
     ./gnome.nix
     ../../modules/gui-packages
     ../../modules/hyprland
-    ../../modules/browser/chrome.nix
-    ../../modules/browser/zen.nix
     ../../modules/gamedev/godot.nix
     ../../assets
 
