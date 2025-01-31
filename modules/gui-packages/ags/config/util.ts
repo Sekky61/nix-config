@@ -52,13 +52,16 @@ export function scrollDirection(
   dir: Gdk.ScrollDirection,
   dx: number,
   dy: number,
-): Gdk.ScrollDirection {
+): Gdk.ScrollDirection | null {
   if (dir === Gdk.ScrollDirection.SMOOTH) {
-    if (Math.abs(dx) > Math.abs(dy)) {
+    console.log(dx, dy);
+    const absx = Math.abs(dx);
+    const absy = Math.abs(dy);
+    if (Math.max(absx, absy) < 0.03) return null;
+    if (absx > absy) {
       return dx > 0 ? Gdk.ScrollDirection.RIGHT : Gdk.ScrollDirection.LEFT;
-    } else {
-      return dy > 0 ? Gdk.ScrollDirection.DOWN : Gdk.ScrollDirection.UP;
     }
+    return dy > 0 ? Gdk.ScrollDirection.DOWN : Gdk.ScrollDirection.UP;
   }
   return dir;
 }
