@@ -1,5 +1,6 @@
-import { Binding } from "astal";
+import { type Binding, Variable } from "astal";
 import { App, Gdk } from "astal/gtk3";
+import { BehaviorSubject, type Observable } from "rxjs";
 
 /** Composable interface for child/children quirk that TS has problem with */
 export interface ChildrenProps {
@@ -16,6 +17,35 @@ export function toggleWindow(windowName: string) {
   }
 
   foundWindow.set_visible(!foundWindow.visible);
+}
+
+export function fromObservable<T>(o: Observable<T>): Variable<T | null>;
+export function fromObservable<T>(
+  o: Observable<T>,
+  initialValue: T,
+): Variable<T>;
+export function fromObservable<T>(o: BehaviorSubject<T>): Variable<T>;
+export function fromObservable<T>(...args: unknown[]): unknown {
+  const o = args[0] as Observable<T>;
+  let v: Variable<T | null>;
+  if (o && o instanceof BehaviorSubject) {
+    v = Variable<T>(o.value);
+  } else if (args[1]) {
+    v = Variable<T>(args[1] as T);
+  } else {
+    v = Variable<T | null>(null);
+  }
+  o.subscribe({
+    next: (val) => v.set(val),
+    error: (err) => {
+      console.error("observable error:", err);
+      v.drop();
+    },
+    complete: () => {
+      console.info("observable complete");
+    },
+  });
+  return v;
 }
 
 export function scrollDirection(

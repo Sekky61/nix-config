@@ -1,16 +1,32 @@
-import { Gdk, Gtk } from "astal/gtk3";
+import { type Astal, Gdk, Gtk } from "astal/gtk3";
 import { EventBox } from "astal/gtk3/widget";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import { debounce, scrollDirection } from "../util";
-import { bind, Binding } from "astal";
+import { bind, type Binding } from "astal";
+import { filter, map, Subject, throttleTime } from "rxjs";
 
 const hyprland = AstalHyprland.get_default();
 
 const { CENTER, END } = Gtk.Align;
 
-const debouncedWorkspace = debounce((dir: "+1" | "-1") => {
-  hyprland.dispatch("workspace", dir);
-}, 200);
+const scrolls = new Subject<Astal.ScrollEvent>();
+
+scrolls
+  .pipe(
+    throttleTime(150),
+    map((e) => {
+      const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
+      if (dir === Gdk.ScrollDirection.RIGHT) {
+        return "+1";
+      }
+      if (dir === Gdk.ScrollDirection.LEFT) {
+        return "-1";
+      }
+      return null;
+    }),
+    filter((dir) => !!dir),
+  )
+  .subscribe((dir) => hyprland.dispatch("workspace", dir));
 
 const idToColor = ["red", "green", "blue"];
 
@@ -22,7 +38,10 @@ function DotFor(monitor: AstalHyprland.Monitor) {
     <box
       halign={CENTER}
       valign={CENTER}
-      css={`color: ${idToColor[monitor.id]}; font-size: 1.8rem;`}
+      css={`
+        color: ${idToColor[monitor.id]};
+        font-size: 1.8rem;
+      `}
     >
       .
     </box>
@@ -30,18 +49,13 @@ function DotFor(monitor: AstalHyprland.Monitor) {
 }
 
 /** css is defined in _bar.scss */
-export default function Workspaces(props: { vertical: boolean | Binding<boolean> }) {
-
+export default function Workspaces(props: {
+  vertical: boolean | Binding<boolean>;
+}) {
   return (
     <EventBox
       onScroll={(_el, e) => {
-        const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
-        if (dir === Gdk.ScrollDirection.RIGHT) {
-          debouncedWorkspace(e.time, "+1");
-        }
-        if (dir === Gdk.ScrollDirection.LEFT) {
-          debouncedWorkspace(e.time, "-1");
-        }
+        scrolls.next(e);
       }}
     >
       <box vertical={props.vertical} className="">
