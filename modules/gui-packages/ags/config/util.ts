@@ -1,6 +1,6 @@
-import { type Binding, Variable } from "astal";
+import { type Binding, GObject, Variable } from "astal";
 import { App, Gdk } from "astal/gtk3";
-import { BehaviorSubject, type Observable } from "rxjs";
+import { BehaviorSubject, Observer, type Observable } from "rxjs";
 
 /** Composable interface for child/children quirk that TS has problem with */
 export interface ChildrenProps {
@@ -48,13 +48,63 @@ export function fromObservable<T>(...args: unknown[]): unknown {
   return v;
 }
 
+/**
+ * Turn an RXJS observable to a Gobject emitting a signal.
+ * To subscribe, connect to the 'observe' signal.
+ *
+ * Example:
+ * ```
+ * const o = new BehaviorSubject(42);
+ * const c = observableToGobject(o);
+ * const ins = c.get_default();
+ * ins.connect("observe", (emitter, {value}) => console.log("notified", value));
+ * o.next(43);
+ * ```
+ */
+export function observableToGobject<T>(o: Observable<T>) {
+  const signal_name = "observe";
+  return GObject.registerClass(
+    {
+      Signals: {
+        [signal_name]: {
+          param_types: [GObject.TYPE_JSOBJECT],
+        },
+      },
+    },
+    class GObs extends GObject.Object {
+      static instance: GObs | null;
+      static get_default() {
+        if (!this.instance) this.instance = new GObs();
+
+        return this.instance;
+      }
+      #observer: Observer<T>;
+      #subscription = o.subscribe();
+
+      constructor() {
+        super();
+        this.#observer = {
+          next: (v) => this.emit(signal_name, { value: v }),
+          complete: () => console.info("observer completed"),
+          error: (err: any) => console.error("observer error", err),
+        };
+        this.#subscription = o.subscribe(this.#observer);
+      }
+
+      unsubscribe() {
+        this.#subscription.unsubscribe();
+        GObs.instance = null;
+      }
+    },
+  );
+}
+
 export function scrollDirection(
   dir: Gdk.ScrollDirection,
   dx: number,
   dy: number,
 ): Gdk.ScrollDirection | null {
   if (dir === Gdk.ScrollDirection.SMOOTH) {
-    console.log(dx, dy);
     const absx = Math.abs(dx);
     const absy = Math.abs(dy);
     if (Math.max(absx, absy) < 0.03) return null;
