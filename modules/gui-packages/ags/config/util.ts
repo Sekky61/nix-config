@@ -1,6 +1,6 @@
-import { type Binding, GObject, Variable } from "astal";
+import { bind, type Binding, GObject, Variable } from "astal";
 import { App, Gdk } from "astal/gtk3";
-import { BehaviorSubject, Observer, type Observable } from "rxjs";
+import { BehaviorSubject, type Observer, type Observable } from "rxjs";
 
 /** Composable interface for child/children quirk that TS has problem with */
 export interface ChildrenProps {
@@ -48,6 +48,18 @@ export function fromObservable<T>(...args: unknown[]): unknown {
   return v;
 }
 
+function hashCode(str: string): number {
+  return Array.from(str).reduce(
+    (hash, char) => (hash * 31 + char.charCodeAt(0)) | 0,
+    0,
+  );
+}
+
+function uniqueName(obj: object): string {
+  const baseName = obj.constructor.name || "Unknown";
+  return `${baseName}_${Math.abs(hashCode(JSON.stringify(obj)))}`;
+}
+
 /**
  * Turn an RXJS observable to a Gobject emitting a signal.
  * To subscribe, connect to the 'observe' signal.
@@ -57,18 +69,24 @@ export function fromObservable<T>(...args: unknown[]): unknown {
  * const o = new BehaviorSubject(42);
  * const c = observableToGobject(o);
  * const ins = c.get_default();
- * ins.connect("observe", (emitter, {value}) => console.log("notified", value));
+ * ins.connect("notify::value", (v, w) =>
+ *   console.log("notified", v, w),
+ * );
  * o.next(43);
  * ```
  */
-export function observableToGobject<T>(o: Observable<T>) {
-  const signal_name = "observe";
+export function observableToGobject<T>(o: Observable<T>, name?: string) {
+  const prop_name = "value";
   return GObject.registerClass(
     {
-      Signals: {
-        [signal_name]: {
-          param_types: [GObject.TYPE_JSOBJECT],
-        },
+      GTypeName: name ?? uniqueName(o),
+      Properties: {
+        value: GObject.ParamSpec.jsobject(
+          prop_name,
+          "Value",
+          "A property holding current Observable value",
+          GObject.ParamFlags.READWRITE,
+        ),
       },
     },
     class GObs extends GObject.Object {
@@ -78,13 +96,17 @@ export function observableToGobject<T>(o: Observable<T>) {
 
         return this.instance;
       }
+
       #observer: Observer<T>;
-      #subscription = o.subscribe();
+      #subscription;
+      #value: T | undefined;
 
       constructor() {
         super();
         this.#observer = {
-          next: (v) => this.emit(signal_name, { value: v }),
+          next: (v) => {
+            this.value = v;
+          },
           complete: () => console.info("observer completed"),
           error: (err: any) => console.error("observer error", err),
         };
@@ -95,8 +117,31 @@ export function observableToGobject<T>(o: Observable<T>) {
         this.#subscription.unsubscribe();
         GObs.instance = null;
       }
+
+      get value() {
+        return this.#value;
+      }
+
+      set value(val) {
+        // Skip emission if the value has not changed
+        if (this.#value === val) return;
+
+        // Set the property value before emitting
+        this.#value = val;
+        this.notify("value");
+      }
     },
   );
+}
+
+/**
+ * Create a binding for an observable. Use it in jsx.
+ * It can have problems if registered multiple times.
+ */
+export function bindObservable<T>(o: Observable<T>): Binding<T | undefined> {
+  const Obj = observableToGobject(o);
+  const inst = Obj.get_default();
+  return bind(inst, "value");
 }
 
 export function scrollDirection(

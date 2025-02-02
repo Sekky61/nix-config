@@ -33,9 +33,12 @@ export function handleBarRequest(options: BarRequestOptions): string {
 }
 
 const barOrientation = Variable<BarOrientation>(BarOrientation.HORIZONTAL);
-export const vertical: Variable<boolean> = Variable.derive([barOrientation], (bo) => {
-  return bo === BarOrientation.VERTICAL;
-});
+export const vertical: Variable<boolean> = Variable.derive(
+  [barOrientation],
+  (bo) => {
+    return bo === BarOrientation.VERTICAL;
+  },
+);
 
 /** Wrap a component in colored bubble */
 export function BarGroup({ child, children }: ChildrenProps) {
@@ -52,13 +55,16 @@ export function BarGroup({ child, children }: ChildrenProps) {
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor;
   const { CENTER, START, END, FILL } = Gtk.Align;
+  console.log("Instantiate bar for monitor", gdkmonitor.model);
 
   return (
     <window
       className="Bar"
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={bind(vertical).as((ver) => (ver ? TOP | BOTTOM | RIGHT : TOP | LEFT | RIGHT))}
+      anchor={bind(vertical).as((ver) =>
+        ver ? TOP | BOTTOM | RIGHT : TOP | LEFT | RIGHT,
+      )}
       application={App}
     >
       <centerbox
