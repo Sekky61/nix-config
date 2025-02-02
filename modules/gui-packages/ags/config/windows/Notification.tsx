@@ -5,11 +5,11 @@ import { Variable, bind } from "astal";
 import type { Binding, Subscribable } from "astal/binding";
 import { Astal, type Gtk } from "astal/gtk3";
 import { ProgressBar } from "../widget/ProgressBar";
-import { PausableTimeout } from "../util";
+import { createEnumMap, PausableTimeout } from "../util";
 
 const notifd = AstalNotifd.get_default();
 
-const DEFAULT_TIMEOUT = 2000;
+const DEFAULT_TIMEOUT = 4000;
 
 // The purpose if this class is to replace Variable<Array<Widget>>
 // with a Map<number, Widget> type in order to track notification widgets
@@ -85,8 +85,7 @@ export const NotificationPopupWindow = () => {
       namespace="notification-popup-area"
       anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
       layer={Astal.Layer.OVERLAY}
-      // gdkmonitor={bind(primaryMonitor)}
-      // TODO: set visible only if there are notifications
+      visible={bind(notifs).as((n) => n.length !== 0)}
     >
       <box
         vertical
@@ -119,21 +118,22 @@ const NotificationIcon = ({
   return <icon icon={icon} className="notif-icon notif-icon-material" />;
 };
 
+const urgencyMap = createEnumMap(AstalNotifd.Urgency);
+
 const Notification = ({
   notification,
 }: {
   notification: AstalNotifd.Notification;
 }) => {
-  console.log("got notification! timeout:", notification.expireTimeout);
   const timer = new PausableTimeout(
     notification.expireTimeout === -1
       ? DEFAULT_TIMEOUT
       : notification.expireTimeout,
   );
-  const unsub = timer.subscribe(() => notification.dismiss());
+  const urgency = urgencyMap[notification.urgency];
 
   /** Invoke an action by its ID, checking if it exists */
-  function handleDefaultClick(event: Astal.ClickEvent) {
+  function handleDefaultClick(_eventBox: unknown, event: Astal.ClickEvent) {
     if (event.button === Astal.MouseButton.PRIMARY) {
       const action = notification
         .get_actions()
@@ -146,32 +146,34 @@ const Notification = ({
     }
   }
 
-  // TODO: rework layout
-  // Layout idea notes:
-  // Easy way to close is needed. Currently that's just a right-click, but a regular close button will probably be included as well
-  // Big image like in example would be cool to have, and it would prevent having to wrap the title
-  // I still think that the progress bar is a cool idea (but maybe not as the notification's bottom edge)
-  // that effect would be way easier to do in GTK 4
-  // Also, remember to wrap and justify all the labels!
-  // TODO: revealer for animations
-  // TODO: urgency (low: dimmed progress bar, normal: regular progress bar, critical: red border?)
-  // TODO: move into notification center
   return (
     // put the progress bar outside of the padding box so that it can hug the edge
     <eventbox
       onHover={() => timer.addPause()}
       onHoverLost={() => timer.removePause()}
-      onClick={(_eventBox, event) => handleDefaultClick(event)}
+      onClick={handleDefaultClick}
       // make sure the timer doesn't try do anything weird later
-      onDestroy={() => unsub.unsubscribe()}
+      setup={(eb) => {
+        eb.hook(timer.triggerAsAstal(), () => notification.dismiss());
+      }}
     >
       <box vertical={true} vexpand={false} widthRequest={400}>
-        <box vertical={true} className="popup-notif-normal" spacing={8}>
+        <box vertical={true} className={`popup-notif-${urgency}`} spacing={8}>
           <box spacing={8}>
-            <NotificationIcon notification={notification} />
+            <circularprogress
+              startAt={0.75}
+              endAt={0.75}
+              setup={(prog) => {
+                prog.hook(timer.progressAsAstal(), (p, v) => {
+                  prog.value = v;
+                });
+              }}
+            >
+              <NotificationIcon notification={notification} />
+            </circularprogress>
             <label
               label={bind(notification, "summary")}
-              className="title"
+              className={`txt-smallie notif-body-${urgency}`}
               xalign={0}
             />
             <button onClick={() => notification.dismiss()}>
@@ -180,7 +182,7 @@ const Notification = ({
           </box>
           <label
             label={bind(notification, "body")}
-            className="description"
+            className={`notif-body-${urgency}`}
             useMarkup={true}
             wrap={true}
             xalign={0}
@@ -192,7 +194,7 @@ const Notification = ({
                 <button
                   onClick={() => notification.invoke(action.id)}
                   hexpand={true}
-                  className="notif-action"
+                  className={`notif-action notif-action-${urgency}`}
                 >
                   {action.label}
                 </button>

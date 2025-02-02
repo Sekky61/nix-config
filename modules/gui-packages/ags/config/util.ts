@@ -1,5 +1,7 @@
 import { type Binding, GObject, Variable, bind } from "astal";
-import { App, Gdk } from "astal/gtk3";
+import { App, Astal, Gdk } from "astal/gtk3";
+import { type Subscribable as AstalSubscribable } from "astal/binding";
+
 import {
   BehaviorSubject,
   NEVER,
@@ -9,12 +11,15 @@ import {
   type Subscribable,
   Subscription,
   type Unsubscribable,
+  filter,
   fromEventPattern,
   interval,
   scan,
   switchMap,
+  take,
   timeout,
   timer,
+  map,
 } from "rxjs";
 
 /** Composable interface for child/children quirk that TS has problem with */
@@ -200,31 +205,61 @@ export class PausableInterval implements Subscribable<number> {
   }
 }
 
-export class PausableTimeout implements Subscribable<void> {
+export class PausableTimeout {
   private pauseCount$ = new BehaviorSubject(0);
-  private trigger$ = new Subject<void>();
-  private timeoutSub: Subscription | null = null;
+  private progress$ = new BehaviorSubject(0);
+  private trigger$: Observable<void>;
 
   constructor(private timeoutMs: number) {
     this.startTimeout();
   }
 
   private startTimeout() {
-    if (this.timeoutSub) this.timeoutSub.unsubscribe();
-
-    this.timeoutSub = this.pauseCount$
+    this.pauseCount$
       .pipe(
         scan((acc, v) => acc + v, 0),
-        switchMap((pauseCount) =>
-          pauseCount > 0 ? NEVER : timer(this.timeoutMs),
-        ),
+        switchMap((pauseCount) => (pauseCount > 0 ? NEVER : interval(200))),
+        scan((acc, v) => acc + 200, 0),
+        map((v) => v / this.timeoutMs),
       )
-      .subscribe(() => {
-        this.trigger$.next();
-      });
+      .subscribe((v) => this.progress$.next(v));
+
+    this.trigger$ = this.progress$.pipe(
+      filter((v) => v >= 1),
+      take(1),
+      map((_) => {}),
+    );
   }
 
-  subscribe(observer: Partial<Observer<void>> | (() => void)): Unsubscribable {
+  /** Fires repeatedly as the timeout progresses */
+  progressAsAstal(): AstalSubscribable {
+    const timeoutThis = this;
+    return {
+      subscribe(callback) {
+        const unsub = timeoutThis.progress$.subscribe(callback);
+        return () => unsub.unsubscribe();
+      },
+      get() {
+        return timeoutThis.progress$.getValue();
+      },
+    };
+  }
+
+  /** Fires once after the timeout */
+  triggerAsAstal(): AstalSubscribable {
+    const timeoutThis = this;
+    return {
+      subscribe(callback) {
+        const unsub = timeoutThis.trigger$.subscribe(callback);
+        return () => unsub.unsubscribe();
+      },
+      get() {
+        return 1;
+      },
+    };
+  }
+
+  timeoutSubscribe(observer: Partial<Observer<void>> | (() => void)) {
     return this.trigger$.subscribe(observer);
   }
 
@@ -235,6 +270,14 @@ export class PausableTimeout implements Subscribable<void> {
   removePause() {
     this.pauseCount$.next(-1);
   }
+}
+
+export function createEnumMap<T extends Record<string, string | number>>(
+  e: T,
+): Record<T[keyof T], keyof T> {
+  return Object.fromEntries(
+    Object.entries(e).map(([k, v]) => [v, k.toLowerCase()]),
+  ) as Record<T[keyof T], keyof T>;
 }
 
 export function scrollDirection(
