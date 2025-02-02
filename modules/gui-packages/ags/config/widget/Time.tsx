@@ -1,6 +1,6 @@
 import { type Binding, GLib, bind } from "astal";
 import { interval, map } from "rxjs";
-import { bindObservable, fromObservable, observableToGobject } from "../util";
+import { bindObservable } from "../util";
 
 export const timeObservable = interval(1000).pipe(
   map((_) => GLib.DateTime.new_now_local()),
@@ -17,7 +17,6 @@ export default function Time({
   vertical,
   horizontalFormat = "%H:%M - %A %e.",
 }: TimeProps) {
-  console.log("init time");
   const timeBind = bindObservable(timeObservable);
   // onDestroy={() => timeBind.drop()}>
   return (

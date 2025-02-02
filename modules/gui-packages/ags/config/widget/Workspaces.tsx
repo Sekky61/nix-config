@@ -1,7 +1,7 @@
 import { type Astal, Gdk, Gtk } from "astal/gtk3";
 import { EventBox } from "astal/gtk3/widget";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
-import { debounce, scrollDirection } from "../util";
+import { scrollDirection } from "../util";
 import { bind, type Binding } from "astal";
 import { filter, map, Subject, throttleTime } from "rxjs";
 

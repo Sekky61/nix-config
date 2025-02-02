@@ -1,108 +1,11 @@
 // source: https://github.com/Mabi19/desktop-shell/blob/main/notification-center/notification.tsx
 
-import type AstalIO from "gi://AstalIO";
 import AstalNotifd from "gi://AstalNotifd";
-import GLib from "gi://GLib";
 import { Variable, bind } from "astal";
-import { interval } from "astal";
 import type { Binding, Subscribable } from "astal/binding";
-import { App, Astal, type Gtk, Widget } from "astal/gtk3";
-// import { primaryMonitor } from "../utils/config";
-// import { Timer } from "../utils/timer";
+import { Astal, type Gtk } from "astal/gtk3";
 import { ProgressBar } from "../widget/ProgressBar";
-
-export class Notifier<T = void> implements Subscribable<T> {
-  protected subscriptions = new Set<(value: T) => void>();
-  protected lastValue: T;
-
-  constructor(value: T) {
-    this.lastValue = value;
-  }
-
-  notify(value: T) {
-    for (const sub of this.subscriptions) {
-      sub(value);
-    }
-  }
-
-  get() {
-    return this.lastValue;
-  }
-
-  protected unsubscribe(callback: (value: T) => void) {
-    this.subscriptions.delete(callback);
-  }
-
-  subscribe(callback: (value: T) => void) {
-    this.subscriptions.add(callback);
-    return () => this.unsubscribe(callback);
-  }
-}
-
-export class Timer extends Notifier {
-  private _pauseCount: number;
-  public get pauseCount(): number {
-    return this._pauseCount;
-  }
-  public set pauseCount(value: number) {
-    if (value < 0) {
-      console.warn("Tried to set negative pauses");
-      value = 0;
-    }
-    this._pauseCount = value;
-  }
-  timeout: number;
-  timeLeft: number;
-  private lastTickTime: number;
-  private interval: AstalIO.Time | null;
-
-  constructor(timeout: number) {
-    super();
-    this.timeout = timeout;
-    this.timeLeft = timeout;
-    this._pauseCount = 0;
-    this.lastTickTime = GLib.get_monotonic_time();
-
-    this.interval = interval(20, () => this.tick());
-  }
-
-  protected unsubscribe(callback: () => void): void {
-    super.unsubscribe(callback);
-    if (
-      this.subscriptions.size == 0 &&
-      this.pauseCount > 0 &&
-      this.interval != null
-    ) {
-      console.warn("Timer was disconnected with active pauses");
-      // clean it up anyway
-      this.pauseCount = 0;
-    }
-  }
-
-  tick() {
-    const now = GLib.get_monotonic_time();
-    if (this.pauseCount > 0) {
-      // timer is paused
-      this.lastTickTime = now;
-      return;
-    }
-    const delta = (now - this.lastTickTime) / 1000;
-    this.timeLeft -= delta;
-
-    if (this.timeLeft <= 0) {
-      this.timeLeft = 0;
-      this.cancel();
-    }
-
-    this.notify();
-    this.lastTickTime = now;
-  }
-
-  cancel() {
-    this.interval?.cancel();
-    this.interval = null;
-  }
-}
+import { PausableTimeout } from "../util";
 
 const notifd = AstalNotifd.get_default();
 
@@ -134,7 +37,6 @@ class NotificationMap implements Subscribable {
     // notifd.ignoreTimeout = true
 
     notifd.connect("notified", (_, id) => {
-      console.log("notified", id);
       this.set(
         id,
         Notification({
@@ -223,11 +125,12 @@ const Notification = ({
   notification: AstalNotifd.Notification;
 }) => {
   console.log("got notification! timeout:", notification.expireTimeout);
-  const timer = new Timer(
+  const timer = new PausableTimeout(
     notification.expireTimeout === -1
       ? DEFAULT_TIMEOUT
       : notification.expireTimeout,
   );
+  const unsub = timer.subscribe(() => notification.dismiss());
 
   /** Invoke an action by its ID, checking if it exists */
   function handleDefaultClick(event: Astal.ClickEvent) {
@@ -256,19 +159,11 @@ const Notification = ({
   return (
     // put the progress bar outside of the padding box so that it can hug the edge
     <eventbox
-      onHover={() => timer.pauseCount++}
-      onHoverLost={() => timer.pauseCount--}
+      onHover={() => timer.addPause()}
+      onHoverLost={() => timer.removePause()}
       onClick={(_eventBox, event) => handleDefaultClick(event)}
       // make sure the timer doesn't try do anything weird later
-      onDestroy={() => timer.cancel()}
-      setup={(self) =>
-        self.hook(timer, () => {
-          if (timer.timeLeft === 0) {
-            // TODO: move into notif center
-            notification.dismiss();
-          }
-        })
-      }
+      onDestroy={() => unsub.unsubscribe()}
     >
       <box vertical={true} vexpand={false} widthRequest={400}>
         <box vertical={true} className="popup-notif-normal" spacing={8}>
@@ -305,12 +200,6 @@ const Notification = ({
             </box>
           )}
         </box>
-
-        <ProgressBar
-          fraction={bind(timer).as(() => {
-            return 1 - timer.timeLeft / timer.timeout;
-          })}
-        />
       </box>
     </eventbox>
   );

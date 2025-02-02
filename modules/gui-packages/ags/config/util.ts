@@ -1,6 +1,21 @@
-import { bind, type Binding, GObject, Variable } from "astal";
+import { type Binding, GObject, Variable, bind } from "astal";
 import { App, Gdk } from "astal/gtk3";
-import { BehaviorSubject, type Observer, type Observable } from "rxjs";
+import {
+  BehaviorSubject,
+  NEVER,
+  type Observable,
+  type Observer,
+  Subject,
+  type Subscribable,
+  Subscription,
+  type Unsubscribable,
+  fromEventPattern,
+  interval,
+  scan,
+  switchMap,
+  timeout,
+  timer,
+} from "rxjs";
 
 /** Composable interface for child/children quirk that TS has problem with */
 export interface ChildrenProps {
@@ -134,6 +149,16 @@ export function observableToGobject<T>(o: Observable<T>, name?: string) {
   );
 }
 
+export function fromGObject<T>(
+  gobject: GObject.Object,
+  signal: string,
+): Observable<T> {
+  return fromEventPattern<T>(
+    (handler) => gobject.connect(signal, handler),
+    (handler, id) => gobject.disconnect(id),
+  );
+}
+
 /**
  * Create a binding for an observable. Use it in jsx.
  * It can have problems if registered multiple times.
@@ -142,6 +167,74 @@ export function bindObservable<T>(o: Observable<T>): Binding<T | undefined> {
   const Obj = observableToGobject(o);
   const inst = Obj.get_default();
   return bind(inst, "value");
+}
+
+/**
+ * Pausable and resumable interval.
+ */
+export class PausableInterval implements Subscribable<number> {
+  private pauseCount$ = new BehaviorSubject(0);
+  private tick$;
+
+  constructor(private intervalMs: number) {
+    this.tick$ = this.pauseCount$.pipe(
+      scan((acc, v) => acc + v, 0),
+      switchMap((pauseCount) =>
+        pauseCount > 0 ? NEVER : interval(this.intervalMs),
+      ),
+    );
+  }
+
+  subscribe(
+    observer: Partial<Observer<number>> | ((n: number) => void),
+  ): Unsubscribable {
+    return this.tick$.subscribe(observer);
+  }
+
+  addPause() {
+    this.pauseCount$.next(1);
+  }
+
+  removePause() {
+    this.pauseCount$.next(-1);
+  }
+}
+
+export class PausableTimeout implements Subscribable<void> {
+  private pauseCount$ = new BehaviorSubject(0);
+  private trigger$ = new Subject<void>();
+  private timeoutSub: Subscription | null = null;
+
+  constructor(private timeoutMs: number) {
+    this.startTimeout();
+  }
+
+  private startTimeout() {
+    if (this.timeoutSub) this.timeoutSub.unsubscribe();
+
+    this.timeoutSub = this.pauseCount$
+      .pipe(
+        scan((acc, v) => acc + v, 0),
+        switchMap((pauseCount) =>
+          pauseCount > 0 ? NEVER : timer(this.timeoutMs),
+        ),
+      )
+      .subscribe(() => {
+        this.trigger$.next();
+      });
+  }
+
+  subscribe(observer: Partial<Observer<void>> | (() => void)): Unsubscribable {
+    return this.trigger$.subscribe(observer);
+  }
+
+  addPause() {
+    this.pauseCount$.next(1);
+  }
+
+  removePause() {
+    this.pauseCount$.next(-1);
+  }
 }
 
 export function scrollDirection(
