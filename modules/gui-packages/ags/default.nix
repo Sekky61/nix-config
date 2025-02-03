@@ -44,6 +44,21 @@
     ydotool
   ];
 in {
+  # environment.systemPackages = let
+  #   ags-bar = inputs.ags.lib.bundle {
+  #     name = "ags-bar";
+  #     inherit pkgs;
+  #     src = pkgs.buildNpmPackage {
+  #       name = "ags-bar";
+  #       src = ./config;
+  #       npmDepsHash = "sha256-Rz+EDStLBYMdDRWrLiARL9MvaiLJODSpHvwpW3mpoxU=";
+  #       # dontBuild = true;
+  #     };
+  #   };
+  # in [
+  #   ags-bar
+  # ];
+
   home-manager.users.${username} = {
     imports = [inputs.ags.homeManagerModules.default];
 

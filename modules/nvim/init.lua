@@ -878,6 +878,7 @@ require("nvim-treesitter.configs").setup({
         "yaml",
         "toml",
         "css",
+        "scss",
         "tsx",
         "csv",
         "diff",
@@ -885,6 +886,7 @@ require("nvim-treesitter.configs").setup({
         "bash",
         "markdown",
         "nix",
+        "angular",
     },
     sync_install = false,
 
@@ -1157,6 +1159,26 @@ mason_lspconfig.setup_handlers({
             settings = servers[server_name],
             filetypes = (servers[server_name] or {}).filetypes,
         })
+    end,
+})
+
+-- Watch out: requires globally (nix) installed ngserver
+local cmd = {
+    "ngserver",
+    "--stdio",
+    "--tsProbeLocations",
+    "./node_modules",
+    "--ngProbeLocations",
+    "./node_modules",
+}
+require("lspconfig").angularls.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = cmd,
+    filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx", "htmlangular" },
+    root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json" }),
+    on_new_config = function(new_config, new_root_dir)
+        new_config.cmd = cmd
     end,
 })
 
