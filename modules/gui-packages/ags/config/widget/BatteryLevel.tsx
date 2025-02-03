@@ -8,19 +8,20 @@ interface BatteryProps {
 }
 
 const BATTERY_WARNINGS = [
-  { level: 5, title: "Critical Battery", body: "PLUG THE CHARGER ALREADY 😩" },
-  { level: 15, title: "Very low battery", body: "You there?" },
-  { level: 20, title: "Low battery", body: "Plug in the charger" },
+  {
+    level: 0.05,
+    title: "Critical Battery",
+    body: "PLUG THE CHARGER ALREADY 😩",
+  },
+  { level: 0.15, title: "Very low battery", body: "You there?" },
+  { level: 0.2, title: "Low battery", body: "Plug in the charger" },
 ] as const;
 
 /** Notify about low battery levels */
 async function lowBatteryMessage() {
   if (bat.charging) return;
   for (const warning of BATTERY_WARNINGS) {
-    if (
-      bat.percentage <= warning.level &&
-      bat.percentage < (notifiedAt ?? 100)
-    ) {
+    if (bat.percentage <= warning.level && bat.percentage < (notifiedAt ?? 1)) {
       notifiedAt = warning.level;
       return sendNotification(warning.title, warning.body, {
         urgency: "critical",

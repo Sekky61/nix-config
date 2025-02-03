@@ -14,6 +14,7 @@
     nodejs_23
     gjs
     bun
+    yarn
     cargo
     go
     gcc

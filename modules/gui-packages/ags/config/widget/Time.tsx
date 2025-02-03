@@ -11,13 +11,14 @@ interface TimeProps {
   horizontalFormat?: string;
 }
 
+const timeBind = bindObservable(timeObservable);
+
 // TODO: Unresolved question: why does as() run twice per update?
 
 export default function Time({
   vertical,
   horizontalFormat = "%H:%M - %A %e.",
 }: TimeProps) {
-  const timeBind = bindObservable(timeObservable);
   // onDestroy={() => timeBind.drop()}>
   return (
     <box>

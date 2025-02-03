@@ -62,6 +62,10 @@ in {
       xwayland # apps that do not work with wayland like spotify rn
     ];
 
+    programs.hyprland.enable = true; # enables xdg-desktop-portal-hyprland
+
+    programs.xwayland.enable = true;
+
     programs.iio-hyprland.enable = true; # screen rotation, todo does not work
 
     home-manager.users.${username} = _: {
@@ -109,7 +113,7 @@ in {
             # paste history init
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
-            # cursor
+            # cursor todo
             "hyprctl setcursor Bibata-Modern-Classic 24"
             # kdeconnect
             "kdeconnect-indicator"

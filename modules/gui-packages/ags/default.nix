@@ -56,6 +56,8 @@ in {
     programs.ags = {
       enable = true;
 
+      # todo npm: https://discord.com/channels/1143610930542944377/1143612651759489054/1315635791208255509
+
       # symlink to ~/.config/ags
       configDir = impurity.link ./config;
 
