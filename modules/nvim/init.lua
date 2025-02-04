@@ -228,7 +228,11 @@ require("lazy").setup({
             local fullscreen_setup = {
                 borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
                 preview = { hide_on_startup = false },
+                winblend = 5,
                 layout_strategy = "flex",
+                path_display = {
+                    shorten = { len = 2, exclude = { 1, -2, -1 } },
+                },
                 layout_config = {
                     flex = { flip_columns = 100 },
                     horizontal = {
@@ -260,7 +264,6 @@ require("lazy").setup({
             ts.setup({
                 defaults = vim.tbl_extend("error", fullscreen_setup, {
                     sorting_strategy = "ascending",
-                    path_display = { "filename_first" },
                     mappings = {
                         -- <C-/> to see all binds
                         -- <C-t> to open in new tab
@@ -269,9 +272,11 @@ require("lazy").setup({
                         n = {
                             ["o"] = require("telescope.actions.layout").toggle_preview,
                             ["<C-c>"] = require("telescope.actions").close,
+                            ["<c-t>"] = require("trouble.sources.telescope").open,
                         },
                         i = {
                             ["<C-h>"] = require("telescope.actions.layout").toggle_preview,
+                            ["<c-t>"] = require("trouble.sources.telescope").open,
                         },
                     },
                 }),
@@ -768,7 +773,7 @@ require("lazy").setup({
                 typescriptreact = js_formatters,
                 javascriptreact = js_formatters,
                 nix = { "alejandra" },
-                html = { "html_beautify" },
+                html = { "prettierd" },
             },
             default_format_opts = {
                 lsp_format = "fallback",
@@ -1606,3 +1611,6 @@ vim.keymap.set("n", "Q", "<Nop>")
 -- Git
 vim.api.nvim_set_keymap("n", "<leader>gc", ':Git commit -m "', { noremap = false })
 vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { noremap = false })
+
+vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Jump to previous quickfix entry" })
+vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Jump to next quickfix entry" })
