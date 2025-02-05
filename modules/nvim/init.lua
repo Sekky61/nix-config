@@ -203,13 +203,37 @@ require("lazy").setup({
             local ts_undo = require("telescope-undo.actions")
             local processes_picker = require("telescope-processes")
 
-            local h_pct = 0.90
-            local w_pct = 0.80
+            local h_pct = 0.95
+            local w_pct = 0.98
             local w_limit = 75
-            local standard_setup = {
+
+            local style_base = {
                 borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-                preview = { hide_on_startup = true },
-                layout_strategy = "vertical",
+                preview = { hide_on_startup = false },
+                winblend = 8,
+            }
+            local behavior_base = {
+                sorting_strategy = "ascending",
+                mappings = {
+                    -- <C-/> to see all binds
+                    -- <C-t> to open in new tab
+                    -- <C-x> to open in split
+                    -- <C-v> to open in vsplit
+                    n = {
+                        ["o"] = require("telescope.actions.layout").toggle_preview,
+                        ["<C-c>"] = require("telescope.actions").close,
+                        ["<c-t>"] = require("trouble.sources.telescope").open,
+                    },
+                    i = {
+                        ["<C-h>"] = require("telescope.actions.layout").toggle_preview,
+                        ["<c-t>"] = require("trouble.sources.telescope").open,
+                        ["<C-Down>"] = require("telescope.actions").cycle_history_next,
+                        ["<C-Up>"] = require("telescope.actions").cycle_history_prev,
+                    },
+                },
+            }
+
+            local standard_setup = {
                 layout_config = {
                     vertical = {
                         mirror = true,
@@ -226,9 +250,6 @@ require("lazy").setup({
                 },
             }
             local fullscreen_setup = {
-                borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-                preview = { hide_on_startup = false },
-                winblend = 5,
                 layout_strategy = "flex",
                 path_display = {
                     shorten = { len = 2, exclude = { 1, -2, -1 } },
@@ -261,25 +282,38 @@ require("lazy").setup({
                     },
                 },
             }
+            local vertical_setup = {
+                layout_strategy = "vertical",
+                path_display = function(opts, path)
+                    local utils = require("telescope.utils")
+                    if path:len() > (vim.api.nvim_win_get_width(0) - 10) then
+                        return utils.transform_path({
+                            path_display = {
+                                shorten = { len = 3, exclude = { 1, -3, -2, -1 } },
+                            },
+                        }, path)
+                    end
+                    return utils.transform_path({
+                        path_display = {
+                            truncate = 2,
+                        },
+                    }, path)
+                end,
+                layout_config = {
+                    mirror = true,
+                    prompt_position = "top",
+                    width = function(_, cols, _)
+                        return math.floor(cols * w_pct)
+                    end,
+                    height = function(_, _, rows)
+                        return math.floor(rows * h_pct)
+                    end,
+                    preview_cutoff = 10,
+                    preview_height = 0.6,
+                },
+            }
             ts.setup({
-                defaults = vim.tbl_extend("error", fullscreen_setup, {
-                    sorting_strategy = "ascending",
-                    mappings = {
-                        -- <C-/> to see all binds
-                        -- <C-t> to open in new tab
-                        -- <C-x> to open in split
-                        -- <C-v> to open in vsplit
-                        n = {
-                            ["o"] = require("telescope.actions.layout").toggle_preview,
-                            ["<C-c>"] = require("telescope.actions").close,
-                            ["<c-t>"] = require("trouble.sources.telescope").open,
-                        },
-                        i = {
-                            ["<C-h>"] = require("telescope.actions.layout").toggle_preview,
-                            ["<c-t>"] = require("trouble.sources.telescope").open,
-                        },
-                    },
-                }),
+                defaults = vim.tbl_extend("error", style_base, vertical_setup, behavior_base),
                 pickers = {
                     find_files = {
                         find_command = {
@@ -777,6 +811,41 @@ require("lazy").setup({
             },
             default_format_opts = {
                 lsp_format = "fallback",
+            },
+        },
+    },
+    ---@type LazySpec
+    {
+        "mikavilpas/yazi.nvim",
+        event = "VeryLazy",
+        keys = {
+            -- 👇 in this section, choose your own keymappings!
+            {
+                "<leader>-",
+                mode = { "n", "v" },
+                "<cmd>Yazi<cr>",
+                desc = "Open yazi at the current file",
+            },
+            {
+                -- Open in the current working directory
+                "<leader>cw",
+                "<cmd>Yazi cwd<cr>",
+                desc = "Open the file manager in nvim's working directory",
+            },
+            {
+                -- NOTE: this requires a version of yazi that includes
+                -- https://github.com/sxyazi/yazi/pull/1305 from 2024-07-18
+                "<c-up>",
+                "<cmd>Yazi toggle<cr>",
+                desc = "Resume the last yazi session",
+            },
+        },
+        ---@type YaziConfig
+        opts = {
+            -- if you want to open yazi instead of netrw, see below for more info
+            open_for_directories = false,
+            keymaps = {
+                show_help = "<f1>",
             },
         },
     },
