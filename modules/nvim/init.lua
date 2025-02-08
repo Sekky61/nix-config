@@ -146,10 +146,58 @@ require("lazy").setup({
         -- See `:help lualine.txt`
         opts = {
             options = {
-                icons_enabled = false,
                 theme = "catppuccin",
                 component_separators = "|",
                 section_separators = "",
+            },
+            sections = {
+                lualine_c = {
+                    function()
+                        local full_path = vim.fn.expand("%:p")
+
+                        -- split the path into parts
+                        local parts = {}
+                        for part in full_path:gmatch("[^/]+") do
+                            table.insert(parts, part)
+                        end
+
+                        -- find 'modules' and get the next directory
+                        for i, part in ipairs(parts) do
+                            if part == "modules" and i < #parts then
+                                return parts[i + 1] -- return the directory after 'modules'
+                            end
+                        end
+
+                        return "" -- return empty if 'modules' not found or no subdirectory after it
+                    end,
+                    function()
+                        local full_path = vim.fn.expand("%:p")
+                        local cwd = vim.fn.getcwd()
+
+                        -- check if the file path starts with the cwd
+                        if full_path:find(cwd, 1, true) then
+                            full_path = full_path:sub(#cwd + 2) -- remove cwd and leading slash
+                        end
+
+                        -- split the path into parts
+                        local parts = {}
+                        for part in full_path:gmatch("[^/]+") do
+                            table.insert(parts, part)
+                        end
+
+                        -- find the starting point (first 'src' and exclude it)
+                        local start_index = 1
+                        for i, part in ipairs(parts) do
+                            if part == "src" then
+                                start_index = i + 1
+                                break
+                            end
+                        end
+
+                        -- reconstruct the trimmed path from after 'src' to the filename
+                        return table.concat(vim.list_slice(parts, start_index, #parts), "/")
+                    end,
+                },
             },
         },
     },
@@ -245,7 +293,6 @@ require("lazy").setup({
                             return math.floor(rows * h_pct)
                         end,
                         preview_cutoff = 10,
-                        preview_height = 0.4,
                     },
                 },
             }
@@ -278,7 +325,6 @@ require("lazy").setup({
                             return math.floor(rows * h_pct)
                         end,
                         preview_cutoff = 10,
-                        preview_height = 0.5,
                     },
                 },
             }
@@ -309,7 +355,6 @@ require("lazy").setup({
                         return math.floor(rows * h_pct)
                     end,
                     preview_cutoff = 10,
-                    preview_height = 0.6,
                 },
             }
             ts.setup({
@@ -1683,3 +1728,10 @@ vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { nor
 
 vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Jump to previous quickfix entry" })
 vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Jump to next quickfix entry" })
+
+vim.keymap.set(
+    "n",
+    "<leader>cb",
+    "<cmd>%bd|e#<cr>",
+    { desc = "[C]lose all [b]uffers but the current one" }
+) -- https://stackoverflow.com/a/42071865/516188
