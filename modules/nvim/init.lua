@@ -24,7 +24,14 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
+js_formatters = { "prettierd$", "prettier", "biome", stop_after_first = true }
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "typescript" },
+    callback = function()
+        vim.opt_local.iskeyword:append("$")
+    end,
+})
 
 -- import plugins
 --
@@ -147,8 +154,8 @@ require("lazy").setup({
         opts = {
             options = {
                 theme = "catppuccin",
-                component_separators = "|",
-                section_separators = "",
+                component_separators = "󰇙",
+                section_separators = { left = "", right = "" },
             },
             sections = {
                 lualine_c = {
@@ -164,7 +171,7 @@ require("lazy").setup({
                         -- find 'modules' and get the next directory
                         for i, part in ipairs(parts) do
                             if part == "modules" and i < #parts then
-                                return parts[i + 1] -- return the directory after 'modules'
+                                return " " .. parts[i + 1] -- return the directory after 'modules'
                             end
                         end
 
@@ -195,7 +202,7 @@ require("lazy").setup({
                         end
 
                         -- reconstruct the trimmed path from after 'src' to the filename
-                        return table.concat(vim.list_slice(parts, start_index, #parts), "/")
+                        return table.concat(vim.list_slice(parts, start_index, #parts), "")
                     end,
                 },
             },
