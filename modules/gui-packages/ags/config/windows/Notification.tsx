@@ -4,7 +4,6 @@ import AstalNotifd from "gi://AstalNotifd";
 import { Variable, bind } from "astal";
 import type { Binding, Subscribable } from "astal/binding";
 import { Astal, type Gtk } from "astal/gtk3";
-import { ProgressBar } from "../widget/ProgressBar";
 import { createEnumMap, PausableTimeout } from "../util";
 
 const notifd = AstalNotifd.get_default();
@@ -13,7 +12,7 @@ const DEFAULT_TIMEOUT = 4000;
 
 // The purpose if this class is to replace Variable<Array<Widget>>
 // with a Map<number, Widget> type in order to track notification widgets
-// by their id, while making it conviniently bindable as an array
+// by their id, while making it conveniently bindable as an array
 class NotificationMap implements Subscribable {
   // the underlying map to keep track of id widget pairs
   private map: Map<number, Gtk.Widget> = new Map();

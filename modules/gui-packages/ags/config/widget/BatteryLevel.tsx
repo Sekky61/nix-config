@@ -8,21 +8,22 @@ interface BatteryProps {
 }
 
 const BATTERY_WARNINGS = [
+  { level: 0.2, title: "Low battery", body: "Plug in the charger" },
+  { level: 0.15, title: "Very low battery", body: "You there?" },
   {
     level: 0.05,
     title: "Critical Battery",
     body: "PLUG THE CHARGER ALREADY 😩",
   },
-  { level: 0.15, title: "Very low battery", body: "You there?" },
-  { level: 0.2, title: "Low battery", body: "Plug in the charger" },
 ] as const;
 
 /** Notify about low battery levels */
 async function lowBatteryMessage() {
   if (bat.charging) return;
-  for (const warning of BATTERY_WARNINGS) {
-    if (bat.percentage <= warning.level && bat.percentage < (notifiedAt ?? 1)) {
-      notifiedAt = warning.level;
+  for (let i = nextNotif; i < BATTERY_WARNINGS.length; i++) {
+    const warning = BATTERY_WARNINGS[i];
+    if (bat.percentage <= warning.level) {
+      nextNotif++;
       return sendNotification(warning.title, warning.body, {
         urgency: "critical",
       });
@@ -31,12 +32,12 @@ async function lowBatteryMessage() {
 }
 
 const bat = AstalBattery.get_default();
-let notifiedAt: number | null = null;
-bat.connect("notify::percentage", (d, v) => {
+let nextNotif = 0;
+bat.connect("notify::percentage", () => {
   lowBatteryMessage();
 });
-bat.connect("notify::charging", (d, v) => {
-  notifiedAt = null;
+bat.connect("notify::charging", () => {
+  nextNotif = 0;
 });
 
 export default function BatteryLevel({ vertical }: BatteryProps) {

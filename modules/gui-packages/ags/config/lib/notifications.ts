@@ -64,21 +64,17 @@ export function createNotifySendCommand(
     args.push(`--category="${category}"`);
   }
   if (options.transient) args.push("--transient");
-  if (options.hints) {
-    options.hints.forEach((hint) => {
-      args.push(`--hint=${hint.type}:${hint.name}:${hint.value}`);
-    });
+  for (const hint of options.hints ?? []) {
+    args.push(`--hint=${hint.type}:${hint.name}:${hint.value}`);
   }
   if (options.printId) args.push("--print-id");
   if (options.replaceId !== undefined)
     args.push(`--replace-id=${options.replaceId}`);
   if (options.wait) args.push("--wait");
-  if (options.actions) {
-    options.actions.forEach((action) => {
-      args.push(
-        `--action=${action.name ? `${action.name}=${action.text}` : action.text}`,
-      );
-    });
+  for (const action of options.actions ?? []) {
+    args.push(
+      `--action=${action.name ? `${action.name}=${action.text}` : action.text}`,
+    );
   }
 
   const formattedSummary = `"${summary.replace(/"/g, '\\"')}"`;
