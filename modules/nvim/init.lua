@@ -414,12 +414,9 @@ require("lazy").setup({
                 tsb.oldfiles,
                 { desc = "[?] Find recently opened files" }
             )
-            vim.keymap.set(
-                "n",
-                "<leader><space>",
-                tsb.buffers,
-                { desc = "[ ] Find existing buffers" }
-            )
+            vim.keymap.set("n", "<leader><space>", function()
+                tsb.buffers({ sort_mru = true })
+            end, { desc = "[ ] Find existing buffers" })
             vim.keymap.set(
                 "n",
                 "<leader>/",
@@ -436,9 +433,12 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>sg", tsb.live_grep, { desc = "[S]earch by [G]rep" })
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
-            vim.keymap.set("n", "<leader>sc", tsb.commands, { desc = "[S]earch [C]ommands" })
+            vim.keymap.set("n", "<leader>sr", tsb.resume, { desc = "[S]earch [R]esume" })
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
+            vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
+            vim.keymap.set("n", "<leader>sx", tsb.marks, { desc = "[S]earch Mar[x]" }) -- <m(LETTER)> to set, <'(LETTER)> to go there
+
             vim.keymap.set("n", "<leader>sm", function()
                 tsb.builtin({ include_extensions = true })
             end, { desc = "[S]earch [M]enu" })
@@ -1137,6 +1137,9 @@ local on_attach = function(client, bufnr)
     if client.name == "ts_ls" then
         client.server_capabilities.documentFormattingProvider = false
     end
+    if client.name == "angularls" then
+        client.server_capabilities.renameProvider = false
+    end
 
     nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
     nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
@@ -1149,8 +1152,14 @@ local on_attach = function(client, bufnr)
     nmap("<leader>ds", tsb.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", tsb.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
+    -- not tested
+    nmap("<leader>cd", vim.lsp.codelens.display, "[C]ode Lens [D]isplay")
+    nmap("<leader>cl", vim.lsp.codelens.refresh, "[C]ode [L]ens Refresh")
+    nmap("<leader>cr", vim.lsp.codelens.run, "[C]ode Lens [R]un")
+
     -- See `:help K` for why this keymap
     nmap("<leader>k", vim.lsp.buf.hover, "Hover Documentation")
+    nmap("<leader>K", vim.lsp.buf.typehierarchy, "Type Hierarchy")
     vim.keymap.set(
         { "n", "i" },
         "<C-K>",
@@ -1233,7 +1242,7 @@ local servers = {
 
     html = { filetypes = { "html", "twig", "hbs" } },
     htmx = {},
-    custom_elements_ls = {},
+    -- custom_elements_ls = {},
     cssls = { filetypes = { "scss", "less", "stylus", "css" } },
     tailwindcss = {},
     angularls = {},
@@ -1696,13 +1705,10 @@ end
 --theme
 vim.cmd.colorscheme("catppuccin-frappe")
 
--- jump to the context when in one
+-- jump to the context (the line on top) when in one
 vim.keymap.set("n", "[k", function()
     require("treesitter-context").go_to_context(vim.v.count1)
 end, { silent = true, desc = "Jump to previous context" })
-
-vim.keymap.set("n", "]g", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 
 -- Move current line up
 vim.api.nvim_set_keymap("n", "<A-up>", ":m-2<CR>==", { noremap = true, silent = true })
