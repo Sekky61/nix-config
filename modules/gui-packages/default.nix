@@ -26,7 +26,8 @@
     # gui
     blueberry # Bluetooth gui
     d-spy
-    kolourpaint
+    # paint
+    # kolourpaint
     nautilus
     icon-library
     dconf-editor

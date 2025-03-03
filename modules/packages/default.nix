@@ -8,7 +8,7 @@
     unzip
     ydotool
     nmap
-    openssl_3_3
+    openssl
     lsof
     ytdownloader
     exif # read metadata of pictures

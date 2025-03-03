@@ -238,6 +238,7 @@ in {
         with ss_flags; [
           region
           clipboard
+          freeze
         ]
       );
 
@@ -722,6 +723,16 @@ in {
           };
           command = {
             params = "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
+          };
+        }
+        {
+          description = "Toggle vertical and horizontal split";
+          bind = {
+            mods = ["SUPER" "SHIFT"];
+            key = "n";
+          };
+          command = {
+            dispatcher = "togglesplit";
           };
         }
         {
