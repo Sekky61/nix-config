@@ -59,7 +59,8 @@ in {
       atuin = {
         enable = true;
         enableBashIntegration = true;
-        daemon.enable = true; # todo sync
+        # Does not work on WSL, todo enable it for sync
+        #daemon.enable = true;
         settings = {
           enter_accept = true;
         };
