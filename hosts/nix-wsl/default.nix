@@ -7,6 +7,9 @@
     ../../modules/terminal.nix
     ../../modules/docker.nix
     ../../modules/dev
+
+    # GUI
+    ../../modules/gui-packages/alacritty.nix
   ];
 
   michal.programs = {
