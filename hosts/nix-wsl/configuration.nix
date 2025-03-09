@@ -174,20 +174,5 @@
   boot.binfmt.emulatedSystems = ["i686-linux" "aarch64-linux"];
   nix.settings.extra-platforms = config.boot.binfmt.emulatedSystems;
 
-  # Boot
-  boot = {
-    tmp.cleanOnBoot = true;
-    supportedFilesystems = ["btrfs" "ext4" "fat32" "ntfs"];
-    loader = {
-      grub = {
-        enable = true;
-        device = "nodev";
-        efiSupport = true;
-        useOSProber = true;
-      };
-      efi.canTouchEfiVariables = true;
-    };
-  };
-
   system.stateVersion = "24.05";
 }
