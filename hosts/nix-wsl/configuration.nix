@@ -20,6 +20,9 @@
   wsl = {
     enable = true;
     defaultUser = username;
+    startMenuLaunchers = true;
+    docker-desktop.enable = true;
+    interop.register = true;
   };
 
   nix.settings = {
