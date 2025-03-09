@@ -17,7 +17,10 @@
     inputs.nixos-wsl.nixosModules.default
   ];
 
-  wsl.enable = true;
+  wsl = {
+    enable = true;
+    defaultUser = username;
+  };
 
   nix.settings = {
     experimental-features = "nix-command flakes";
