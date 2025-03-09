@@ -29,6 +29,7 @@
         hostname = "nix-wsl";
         inherit inputs self lib;
       };
+      system = "x86_64-linux";
       modules = [
         ./common
       ];
