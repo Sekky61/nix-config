@@ -23,6 +23,17 @@
       ];
     };
 
+    nix-wsl = nixosSystem {
+      specialArgs = {
+        username = "michal";
+        hostname = "nix-wsl";
+        inherit inputs self lib;
+      };
+      modules = [
+        ./common
+      ];
+    };
+
     nixpi = nixosSystem {
       specialArgs = {
         username = "pi";
