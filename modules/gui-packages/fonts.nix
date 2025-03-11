@@ -19,7 +19,7 @@
         "Roboto"
         "Noto Color Emoji"
       ];
-      monospace = ["MonaspiceKr Nerd Font Mono"];
+      monospace = ["MonaspiceNe Nerd Font Mono"];
       emoji = ["Noto Color Emoji"];
     };
   };

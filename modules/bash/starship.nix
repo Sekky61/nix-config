@@ -22,6 +22,7 @@
   # username and hostname based color
   host_colors = {
     nix-yoga = "green";
+    nix-wsl = "blue";
     nixpi = "red";
   };
 
@@ -149,7 +150,6 @@ in {
           detect_files = ["build.zig"];
           detect_folders = [".zig-cache"];
         };
-      nix = lang "󱄅" "blue";
     };
   };
 }
