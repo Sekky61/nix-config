@@ -35,5 +35,10 @@
     };
     chrome.enable = true;
     steam.enable = true;
+    alacritty.enable = true;
+    ghostty = {
+      enable = true;
+      default = true;
+    };
   };
 }

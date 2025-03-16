@@ -9,6 +9,8 @@ TEMP_DIR="/tmp"
 RECORDING_FILE="$TEMP_DIR/voice_recording.wav"
 PID_FILE="$TEMP_DIR/voice_recording.pid"
 WHISPER_MODEL="$HOME/whisper/ggml-large-v3-turbo-q5_0.bin"
+# ggml-large-v3-turbo-q5_0.bin
+# ggml-tiny.en-q5_1.bin
 
 # Function to start recording
 start_recording() {

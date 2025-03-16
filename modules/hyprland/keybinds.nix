@@ -11,6 +11,7 @@ with lib; let
   #
   # - SUPER is the Win key
   cfg = config.michal.programs.hyprland.keybinds;
+  defaultTerminal = config.michal.environment.terminal;
 
   oneOrList = T: with types; either T (listOf T);
 
@@ -298,7 +299,7 @@ in {
             mods = ["SUPER"];
             key = "Return";
           };
-          command = {params = "alacritty";};
+          command = {params = defaultTerminal;};
         }
         {
           description = "Launch Browser";
@@ -330,7 +331,7 @@ in {
             mods = ["SUPER" "ALT"];
             key = "E";
           };
-          command = {params = "alacritty -e yazi";};
+          command = {params = "${defaultTerminal} -e yazi";};
         }
         {
           description = "Kill active window";

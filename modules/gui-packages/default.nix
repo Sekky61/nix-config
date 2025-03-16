@@ -6,8 +6,6 @@
   imports = [
     ./obs.nix
     ./fonts.nix
-    ./terminal-gui.nix
-    ./alacritty.nix
     ./kitty.nix
     ./anyrun.nix
     ./remote-desktop.nix
@@ -20,6 +18,7 @@
 
     # With options
     ./steam.nix
+    ./terminal-emulator
   ];
 
   # packages for daily needs
