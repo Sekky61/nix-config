@@ -555,14 +555,6 @@ in {
           description = "Toggle side menu left"; # todo
           bind = {
             mods = ["SUPER"];
-            key = "A";
-          };
-          command = {params = toggleWindow "sideleft";};
-        }
-        {
-          description = "Toggle side menu left"; # todo
-          bind = {
-            mods = ["SUPER"];
             key = "O";
           };
           command = {params = toggleWindow "sideleft";};
@@ -1069,6 +1061,25 @@ in {
             {params = "brightnessctl set 10%-";}
             {params = "ags run-js 'indicator.popup(1);'";}
           ];
+        }
+        {
+          description = "Speech to text (hold and speak)";
+          bind = {
+            mods = ["SUPER"];
+            key = "A";
+          };
+          command = {params = "stt start";};
+        }
+        {
+          description = "Speech to text (hold and speak)";
+          bind = {
+            mods = ["SUPER"];
+            key = "A";
+          };
+          command = {
+            params = "stt stop";
+            flags = ["release"];
+          };
         }
       ];
 

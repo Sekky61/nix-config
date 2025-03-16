@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Voice recording and transcription script
+# Usage: ./stt [start|stop]
+
+# Define paths and variables
+TEMP_DIR="/tmp"
+RECORDING_FILE="$TEMP_DIR/voice_recording.wav"
+PID_FILE="$TEMP_DIR/voice_recording.pid"
+WHISPER_MODEL="$HOME/whisper/ggml-large-v3-turbo-q5_0.bin"
+
+# Function to start recording
+start_recording() {
+    echo "Starting voice recording..."
+    # Start recording in the background
+    rec -c 1 -r 16000 "$RECORDING_FILE" &
+    # Save the PID of the recording process
+    echo $! > "$PID_FILE"
+    echo "Recording started with PID $(cat "$PID_FILE")"
+}
+
+# Function to stop recording and process the audio
+stop_recording() {
+    if [ -f "$PID_FILE" ]; then
+        # Get the PID of the recording process
+        REC_PID=$(cat "$PID_FILE")
+        echo "Stopping recording with PID $REC_PID..."
+        
+        # Kill the recording process
+        kill -15 $REC_PID
+        rm "$PID_FILE"
+        
+        # Wait for the process to fully terminate
+        sleep 0.5
+        
+        # Check if the recording file exists and has content
+        if [ -f "$RECORDING_FILE" ] && [ -s "$RECORDING_FILE" ]; then
+            echo "Processing audio with whisper-cpp..."
+            
+            # Process the audio with whisper-cpp
+            whisper-cpp --output-txt --model "$WHISPER_MODEL" "$RECORDING_FILE"
+            
+            # Extract text from the generated txt file
+            TXT_FILE="${RECORDING_FILE}.txt"
+            
+            if [ -f "$TXT_FILE" ]; then
+                # Get the transcribed text
+                TRANSCRIBED_TEXT=$(cat "$TXT_FILE")
+                
+                # Type the text using ydotool
+                echo "Typing text with ydotool: $TRANSCRIBED_TEXT"
+                ydotool type "$TRANSCRIBED_TEXT"
+                
+                # Clean up the text file
+                rm "$TXT_FILE"
+            else
+                echo "Error: Whisper didn't generate a text file."
+            fi
+        else
+            echo "Error: Recording file not found or empty."
+        fi
+    else
+        echo "No recording process found."
+    fi
+}
+
+# Check command line arguments
+arg=${1:-default}
+case "$arg" in
+    start)
+        start_recording
+        ;;
+    stop)
+        stop_recording
+        ;;
+    *)
+        echo "Usage: $0 [start|stop]"
+        exit 1
+        ;;
+esac
+
+exit 0

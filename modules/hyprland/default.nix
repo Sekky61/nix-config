@@ -107,6 +107,7 @@ in {
             # system tray
             "ags run"
             # wallpaper
+            "ydotoold"
             "swww kill; swww init"
             # hw sensors (screen rotation)
             "iio-hyprland eDP-1"
