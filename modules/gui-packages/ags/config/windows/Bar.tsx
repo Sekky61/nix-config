@@ -32,7 +32,7 @@ export function handleBarRequest(options: BarRequestOptions): string {
   throw new Error(`handleBarRequest: bad request ${JSON.stringify(options)}`);
 }
 
-const barOrientation = Variable<BarOrientation>(BarOrientation.HORIZONTAL);
+const barOrientation = Variable<BarOrientation>(BarOrientation.VERTICAL);
 export const vertical: Variable<boolean> = Variable.derive(
   [barOrientation],
   (bo) => {

@@ -6,7 +6,15 @@ import CheatSheet from "./windows/CheatSheet";
 import SessionWindow from "./windows/Session";
 import { NotificationPopupWindow } from "./windows/Notification";
 
-function requestHandler(request: string, res: (response: any) => void) {
+const AgsRequests = {
+  "bar-vertical": null,
+  "bar-horizontal": null,
+  "bar-toggle": null,
+};
+
+type AgsRequest = keyof typeof AgsRequests;
+
+function requestHandler(request: AgsRequest, res: (response: unknown) => void) {
   let resp: string;
   switch (request) {
     case "bar-vertical":
@@ -18,8 +26,6 @@ function requestHandler(request: string, res: (response: any) => void) {
     case "bar-toggle":
       resp = handleBarRequest({ orientation: BarOrientation.TOGGLE });
       break;
-    default:
-      resp = "unknown command";
   }
   res(resp);
 }
