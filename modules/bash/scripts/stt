@@ -12,6 +12,12 @@ WHISPER_MODEL="$HOME/whisper/ggml-large-v3-turbo-q5_0.bin"
 # ggml-large-v3-turbo-q5_0.bin
 # ggml-tiny.en-q5_1.bin
 
+report() {
+    msg=${1:-stt}
+    echo "$msg"
+    notify-send $msg --urgency=low --expire-time=900 --transient
+}
+
 # Function to start recording
 start_recording() {
     echo "Starting voice recording..."
@@ -20,6 +26,7 @@ start_recording() {
     # Save the PID of the recording process
     echo $! > "$PID_FILE"
     echo "Recording started with PID $(cat "$PID_FILE")"
+    report "Listening..."
 }
 
 # Function to stop recording and process the audio
@@ -57,13 +64,13 @@ stop_recording() {
                 # Clean up the text file
                 rm "$TXT_FILE"
             else
-                echo "Error: Whisper didn't generate a text file."
+                report "Error: Whisper didn't generate a text file."
             fi
         else
-            echo "Error: Recording file not found or empty."
+            report "Error: Recording file not found or empty."
         fi
     else
-        echo "No recording process found."
+        report "No recording process found."
     fi
 }
 

@@ -136,6 +136,11 @@ The `nvim` config (located [here](modules/nvim/init.lua)) contains many useful
 plugins and keybinds with descriptions. The plugins get installed at launch, so
 this is not a pure Nix solution.
 
+### Terminals
+
+Multiple terminals are configured.
+Choose one of them to be the default one (works with keybinds).
+
 ### Backups
 
 [Borg](https://borgbackup.readthedocs.io/en/stable/) ([module](modules/borg.nix)) is used with the cloud solution [BorgBase](https://www.borgbase.com/).
