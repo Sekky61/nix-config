@@ -27,7 +27,7 @@ vim.opt.rtp:prepend(lazypath)
 js_formatters = { "prettierd$", "prettier", "biome", stop_after_first = true }
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "typescript" },
+    pattern = { "typescript", "html" },
     callback = function()
         vim.opt_local.iskeyword:append("$")
     end,
