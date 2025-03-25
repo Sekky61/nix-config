@@ -16,6 +16,7 @@ with lib; let
   '';
 
   browser = config.environment.sessionVariables.BROWSER;
+  defaultTerminal = config.michal.environment.terminal;
 
   myMonitors = {
     laptop = "Samsung Display Corp. 0x4193";
@@ -118,8 +119,9 @@ in {
             "hyprctl setcursor Bibata-Modern-Classic 24"
             # kdeconnect
             "kdeconnect-indicator"
-            # launch browser
+            # launch programs
             "[workspace 1 silent] ${browser}"
+            "[workspace 2 silent] ${defaultTerminal}"
           ];
           general = {
             gaps_in = 2;
