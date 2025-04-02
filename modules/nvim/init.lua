@@ -24,7 +24,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-js_formatters = { "prettierd$", "prettier", "biome", stop_after_first = true }
+js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "typescript", "html" },
@@ -882,7 +882,7 @@ require("lazy").setup({
                 typescriptreact = js_formatters,
                 javascriptreact = js_formatters,
                 nix = { "alejandra" },
-                html = { "prettierd" },
+                html = { "prettierd", "prettier" },
             },
             default_format_opts = {
                 lsp_format = "fallback",
