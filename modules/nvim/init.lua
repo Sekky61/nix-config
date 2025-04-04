@@ -85,6 +85,9 @@ require("lazy").setup({
             "f3fora/cmp-spell",
         },
     },
+    "lukas-reineke/cmp-rg", -- ripgrep in nvim-cmp
+    "jcha0713/cmp-tw2css", -- tailwind classes to css
+    "hrsh7th/cmp-nvim-lsp-document-symbol",
 
     -- Useful plugin to show you pending keybinds.
     {
@@ -1455,8 +1458,9 @@ cmp.setup({
     sources = {
         { name = "nvim_lsp" },
         { name = "luasnip" },
-        { name = "buffer" },
         { name = "path" },
+        { name = "rg" }, -- { name = "buffer" },
+        { name = "cmp-tw2css" },
         {
             name = "spell",
             option = {
@@ -1467,6 +1471,10 @@ cmp.setup({
                 preselect_correct_word = true,
             },
         },
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
     },
 })
 
@@ -1496,13 +1504,102 @@ luasnip.add_snippets("all", {
     }),
 })
 
+-- Angular
+local function typearg(
+    args, -- text from i(2) in this example i.e. { { "456" } }
+    parent, -- parent snippet or parent node
+    user_args -- user_args from opts.user_args
+)
+    return args[1][1]
+end
+
+luasnip.add_snippets("typescript", {
+    -- Computed Signal snippet
+    s("computed", {
+        t("protected readonly "),
+        i(1, "foo"),
+        t("Signal: Signal<"),
+        i(2, "string"),
+        t("> = computed<"),
+        f(
+            typearg,
+            { 2 } -- i(2)
+        ),
+        t({ ">(() => {", "" }),
+        i(3, 'return "";'),
+        t({ "", "});" }),
+    }),
+
+    -- Signal snippet (general signal)
+    s("signal", {
+        t("protected readonly "),
+        i(1, "foo"),
+        t("Signal: WritableSignal<"),
+        i(2, "string"),
+        t("> = signal<"),
+        f(
+            typearg,
+            { 2 } -- i(2)
+        ),
+        t(">("),
+        i(3, '""'),
+        t(");"),
+    }),
+
+    -- Input signal
+    s("inputsignal", {
+        i(1, "foo"),
+        t("Signal: InputSignal<"),
+        i(2, "string"),
+        t("> = input<"),
+        f(
+            typearg,
+            { 2 } -- i(2)
+        ),
+        t(">("),
+        i(3, '""'),
+        t(", { alias: '"),
+        f(
+            typearg,
+            { 1 } -- i(1)
+        ),
+        t("' });"),
+    }),
+
+    -- Output signal
+    s("outputsignal", {
+        t("readonly "),
+        i(1, "foo"),
+        t(": OutputEmitterRef<"),
+        i(2, "void"),
+        t("> = output();"),
+    }),
+
+    -- Inject
+    s("inject", {
+        t("private readonly "),
+        i(1, "foo"),
+        t(": "),
+        i(2, "Service"),
+        t(" = inject("),
+        f(
+            typearg,
+            { 2 } -- i(2)
+        ),
+        t(");"),
+    }),
+
+    -- private readonly generalTrainerRolesApiService: GeneralTrainerRolesApiService = inject(GeneralTrainerRolesApiService);
+})
+
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ "/", "?" }, {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = {
+    sources = cmp.config.sources({
+        { name = "nvim_lsp_document_symbol" }, -- you must start with `/@` for it to show up
+    }, {
         { name = "buffer" },
-        { name = "path" },
-    },
+    }),
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
