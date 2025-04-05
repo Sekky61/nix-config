@@ -1,12 +1,11 @@
-import { bind, Binding } from "astal";
+import { bind, type Binding } from "astal";
 import AstalTray from "gi://AstalTray?version=0.1";
 
 interface TrayProps {
   vertical: Binding<boolean>;
 }
 
-
-export default function SysTray({vertical}: TrayProps) {
+export default function SysTray({ vertical }: TrayProps) {
   const tray = AstalTray.get_default();
 
   return (
