@@ -1,7 +1,6 @@
 {
     "dependencies": {
-        "astal": "/home/michal/.local/share/ags",
-        "rxjs": "^7.8.1"
+        "astal": "/home/michal/.local/share/ags"
     },
     "name": "astal-shell",
     "scripts": {

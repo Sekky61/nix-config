@@ -4,7 +4,7 @@ import AstalNotifd from "gi://AstalNotifd";
 import { Variable, bind } from "astal";
 import type { Binding, Subscribable } from "astal/binding";
 import { Astal, type Gtk } from "astal/gtk3";
-import { createEnumMap, PausableTimeout } from "../util";
+import { createEnumMap } from "../util";
 
 const notifd = AstalNotifd.get_default();
 
@@ -124,11 +124,11 @@ const Notification = ({
 }: {
   notification: AstalNotifd.Notification;
 }) => {
-  const timer = new PausableTimeout(
-    notification.expireTimeout === -1
-      ? DEFAULT_TIMEOUT
-      : notification.expireTimeout,
-  );
+  // const timer = new PausableTimeout(
+  //   notification.expireTimeout === -1
+  //     ? DEFAULT_TIMEOUT
+  //     : notification.expireTimeout,
+  // );
   const urgency = urgencyMap[notification.urgency];
 
   /** Invoke an action by its ID, checking if it exists */
@@ -148,13 +148,13 @@ const Notification = ({
   return (
     // put the progress bar outside of the padding box so that it can hug the edge
     <eventbox
-      onHover={() => timer.addPause()}
-      onHoverLost={() => timer.removePause()}
+      // onHover={() => timer.addPause()}
+      // onHoverLost={() => timer.removePause()}
       onClick={handleDefaultClick}
       // make sure the timer doesn't try do anything weird later
-      setup={(eb) => {
-        eb.hook(timer.triggerAsAstal(), () => notification.dismiss());
-      }}
+      // setup={(eb) => {
+      //   eb.hook(timer.triggerAsAstal(), () => notification.dismiss());
+      // }}
     >
       <box vertical={true} vexpand={false} widthRequest={400}>
         <box vertical={true} className={`popup-notif-${urgency}`} spacing={8}>

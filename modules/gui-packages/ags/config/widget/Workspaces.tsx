@@ -3,30 +3,29 @@ import { EventBox } from "astal/gtk3/widget";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import { scrollDirection } from "../util";
 import { bind, type Binding } from "astal";
-import { filter, map, Subject, throttleTime } from "rxjs";
 
 const hyprland = AstalHyprland.get_default();
 
 const { CENTER, END } = Gtk.Align;
 
-const scrolls = new Subject<Astal.ScrollEvent>();
-
-scrolls
-  .pipe(
-    throttleTime(150),
-    map((e) => {
-      const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
-      if (dir === Gdk.ScrollDirection.RIGHT) {
-        return "+1";
-      }
-      if (dir === Gdk.ScrollDirection.LEFT) {
-        return "-1";
-      }
-      return null;
-    }),
-    filter((dir) => !!dir),
-  )
-  .subscribe((dir) => hyprland.dispatch("workspace", dir));
+// const scrolls = new Subject<Astal.ScrollEvent>();
+//
+// scrolls
+//   .pipe(
+//     throttleTime(150),
+//     map((e) => {
+//       const dir = scrollDirection(e.direction, e.delta_x, e.delta_y);
+//       if (dir === Gdk.ScrollDirection.RIGHT) {
+//         return "+1";
+//       }
+//       if (dir === Gdk.ScrollDirection.LEFT) {
+//         return "-1";
+//       }
+//       return null;
+//     }),
+//     filter((dir) => !!dir),
+//   )
+//   .subscribe((dir) => hyprland.dispatch("workspace", dir));
 
 const idToColor = ["red", "green", "blue"];
 
@@ -54,9 +53,9 @@ export default function Workspaces(props: {
 }) {
   return (
     <EventBox
-      onScroll={(_el, e) => {
-        scrolls.next(e);
-      }}
+    // onScroll={(_el, e) => {
+    //   scrolls.next(e);
+    // }}
     >
       <box vertical={props.vertical} className="">
         {bind(hyprland, "workspaces").as((wss) =>
