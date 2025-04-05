@@ -5,6 +5,7 @@ import { Variable, bind } from "astal";
 import type { Binding, Subscribable } from "astal/binding";
 import { Astal, type Gtk } from "astal/gtk3";
 import { createEnumMap } from "../util";
+import { ProgressTimer } from "../lib/progress-timer";
 
 const notifd = AstalNotifd.get_default();
 
@@ -124,11 +125,14 @@ const Notification = ({
 }: {
   notification: AstalNotifd.Notification;
 }) => {
-  // const timer = new PausableTimeout(
-  //   notification.expireTimeout === -1
-  //     ? DEFAULT_TIMEOUT
-  //     : notification.expireTimeout,
-  // );
+  const timeout =
+    notification.expireTimeout === -1
+      ? DEFAULT_TIMEOUT
+      : notification.expireTimeout;
+  const timer = new ProgressTimer({ duration: timeout });
+  // const doneHandle = timer.connect("done", () => notification.dismiss());
+  timer.start();
+
   const urgency = urgencyMap[notification.urgency];
 
   /** Invoke an action by its ID, checking if it exists */
@@ -148,13 +152,13 @@ const Notification = ({
   return (
     // put the progress bar outside of the padding box so that it can hug the edge
     <eventbox
-      // onHover={() => timer.addPause()}
-      // onHoverLost={() => timer.removePause()}
+      onHover={() => timer.pause()}
+      onHoverLost={() => timer.unpause()}
       onClick={handleDefaultClick}
-      // make sure the timer doesn't try do anything weird later
-      // setup={(eb) => {
-      //   eb.hook(timer.triggerAsAstal(), () => notification.dismiss());
-      // }}
+      setup={(eb) => {
+        // Hook auto disconnects
+        eb.hook(timer, "done", () => notification.dismiss());
+      }}
     >
       <box vertical={true} vexpand={false} widthRequest={400}>
         <box vertical={true} className={`popup-notif-${urgency}`} spacing={8}>
@@ -162,11 +166,7 @@ const Notification = ({
             <circularprogress
               startAt={0.75}
               endAt={0.75}
-              setup={(prog) => {
-                prog.hook(timer.progressAsAstal(), (p, v) => {
-                  prog.value = v;
-                });
-              }}
+              value={bind(timer, "progress")}
             >
               <NotificationIcon notification={notification} />
             </circularprogress>

@@ -59,6 +59,10 @@ in {
   #   ags-bar
   # ];
 
+  environment.systemPackages = with pkgs; [
+    gtk3 # gtk3-icon-browser
+  ];
+
   home-manager.users.${username} = {
     imports = [inputs.ags.homeManagerModules.default];
 
