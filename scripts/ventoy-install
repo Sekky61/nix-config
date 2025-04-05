@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Isos:
+# https://www.hirensbootcd.org/download/
+# Windows 11
+# Nixos live image
+
+usage() {
+  echo "Usage: $0 [--dry-run] [--update] /dev/sdX <iso_or_dir> [<iso_or_dir> ...]"
+  echo
+  echo "Examples:"
+  echo "  $0 /dev/sdX ~/isos /path/to/file.iso"
+  echo "  $0 --dry-run /dev/sdX ~/isos"
+  echo "  $0 --update /dev/sdX ~/isos"
+  exit 1
+}
+
+DRY_RUN=0
+UPDATE_ONLY=0
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    --update)
+      UPDATE_ONLY=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [ $# -lt 2 ]; then
+  usage
+fi
+
+USB_DEV="$1"
+shift
+
+# Collect ISO files from arguments
+ISO_LIST=()
+
+for arg in "$@"; do
+  if [ -d "$arg" ]; then
+    while IFS= read -r -d '' iso; do
+      ISO_LIST+=("$iso")
+    done < <(find "$arg" -maxdepth 1 -type f -iname '*.iso' -print0)
+  elif [ -f "$arg" ]; then
+    ISO_LIST+=("$arg")
+  else
+    echo "Warning: '$arg' is not a file or directory, skipping."
+  fi
+done
+
+if [ ${#ISO_LIST[@]} -eq 0 ]; then
+  echo "No ISO files found to copy."
+  exit 1
+fi
+
+echo "Target device: $USB_DEV"
+echo "ISOs to copy:"
+for iso in "${ISO_LIST[@]}"; do
+  echo "  $iso"
+done
+
+if [ "$DRY_RUN" -eq 1 ]; then
+  echo "Dry run mode enabled. No changes will be made."
+  exit 0
+fi
+
+if [ "$UPDATE_ONLY" -eq 0 ]; then
+  read -rp "This will install Ventoy on $USB_DEV and erase all data. Continue? (yes/no): " confirm
+  if [ "$confirm" != "yes" ]; then
+    echo "Aborted."
+    exit 1
+  fi
+
+  echo "Installing Ventoy to $USB_DEV..."
+  sudo ventoy -i "$USB_DEV"
+else
+  echo "Update mode: skipping Ventoy installation."
+fi
+
+MOUNT_POINT=$(mktemp -d)
+sudo mount "${USB_DEV}1" "$MOUNT_POINT"
+
+for iso in "${ISO_LIST[@]}"; do
+  echo "Copying $iso..."
+  sudo cp -u "$iso" "$MOUNT_POINT/"
+done
+
+sync
+sudo umount "$MOUNT_POINT"
+rmdir "$MOUNT_POINT"
+
+echo "Done."
