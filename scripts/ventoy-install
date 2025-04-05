@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Isos:
+# Isos: todo automate
 # https://www.hirensbootcd.org/download/
 # Windows 11
-# Nixos live image
+# Nixos install image - `nix build .#minimal-iso`
+# Nixos nix-yoga live image - `nix build .#nix-yoga-live`
 
 usage() {
   echo "Usage: $0 [--dry-run] [--update] /dev/sdX <iso_or_dir> [<iso_or_dir> ...]"

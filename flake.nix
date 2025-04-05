@@ -41,6 +41,11 @@
     };
 
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {flake-parts, ...}:

@@ -64,24 +64,6 @@ in {
     hosts
     // impure-hosts
     // {
-      desktopIso = nixosSystem {
-        specialArgs = {inherit inputs;};
-        system = "x86_64-linux";
-        modules = [
-          ../modules/ssh.nix
-          ({
-            pkgs,
-            modulesPath,
-            ...
-          }: {
-            imports = [
-              (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
-            ];
-            environment.systemPackages = [pkgs.neovim];
-          })
-        ];
-      };
-
       minimal-pi = nixosSystem {
         specialArgs = {
           username = "pi";

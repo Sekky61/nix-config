@@ -7,7 +7,8 @@
 with lib; let
   cfg = config.michal.programs.bitwarden;
   # sudo ventoy-web
-  # todo: script to create ventoy usb
+  # or
+  # ./scripts/ventoy-install
 in {
   options.michal.programs.ventoy = {
     enable = mkEnableOption "ventoy";

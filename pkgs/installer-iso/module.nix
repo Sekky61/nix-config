@@ -7,7 +7,6 @@
 }: {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
-    ../../modules/ssh.nix
     # ./../../../hosts/common/modules/nix/nixos.nix
     # ./../../../home/konrad/common/options/ssh-keys.nix
     # ./../../../home/konrad/common/modules/base/ssh-keys.nix
