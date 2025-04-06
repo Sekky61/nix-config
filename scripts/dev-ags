@@ -2,5 +2,4 @@
 set -euo pipefail
 
 ags quit || true # allows fail
-# todo dependant on my dir structure but ./ paths do not work
-ags run --directory ~/Documents/nix-config/modules/gui-packages/ags/config
+ags run --directory modules/gui-packages/ags/config

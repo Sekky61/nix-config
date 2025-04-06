@@ -5,6 +5,8 @@
   impurity,
   ...
 }: let
+  # TODO revise packages
+  # TODO move some to devshell
   astalPkgs = inputs.ags.packages.${pkgs.system};
 
   astalRuntimePkgs = with astalPkgs;
@@ -24,8 +26,8 @@
     ++ pkgsExtra;
 
   pkgsExtra = with pkgs; [
-    pywal
-    sassc
+    pywal # generate colorschemes
+    sassc # sass compiler
     (python311.withPackages (p: [
       p.material-color-utilities
       p.pywayland
@@ -43,25 +45,20 @@
     webp-pixbuf-loader
     ydotool
   ];
-in {
-  # environment.systemPackages = let
-  #   ags-bar = inputs.ags.lib.bundle {
-  #     name = "ags-bar";
-  #     inherit pkgs;
-  #     src = pkgs.buildNpmPackage {
-  #       name = "ags-bar";
-  #       src = ./config;
-  #       npmDepsHash = "sha256-Rz+EDStLBYMdDRWrLiARL9MvaiLJODSpHvwpW3mpoxU=";
-  #       # dontBuild = true;
-  #     };
-  #   };
-  # in [
-  #   ags-bar
-  # ];
 
-  environment.systemPackages = with pkgs; [
-    gtk3 # gtk3-icon-browser
-  ];
+  extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;
+in {
+  environment.systemPackages = let
+    ags-bar = inputs.ags.lib.bundle {
+      inherit pkgs extraPackages;
+      src = ./config;
+      name = "ags-bar";
+    };
+  in
+    with pkgs; [
+      ags-bar
+      gtk3 # icon-library (probably)
+    ];
 
   home-manager.users.${username} = {
     imports = [inputs.ags.homeManagerModules.default];
@@ -69,19 +66,16 @@ in {
     # config generated with `ags init --gtk 3 --directory "./modules/gui-packages/ags/config/"`
 
     # Can be ran (developed) with:
-    # `ags run --directory ~/Documents/nix-config/modules/gui-packages/ags/config`
-    #
-    # - Do not use path relative to CWD
+    # `ags run --directory modules/gui-packages/ags/config`
+    # or
+    # `./scripts/dev-ags`
     programs.ags = {
       enable = true;
-
-      # todo npm: https://discord.com/channels/1143610930542944377/1143612651759489054/1315635791208255509
-
       # symlink to ~/.config/ags
       configDir = impurity.link ./config;
 
       # additional packages to add to gjs's runtime
-      extraPackages = astalRuntimePkgs ++ pkgsExtraAgs;
+      inherit extraPackages;
     };
 
     home.packages = astalRuntimePkgs;
