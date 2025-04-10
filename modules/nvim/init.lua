@@ -1459,7 +1459,9 @@ cmp.setup({
         { name = "nvim_lsp" },
         { name = "luasnip" },
         { name = "path" },
-        { name = "rg" }, -- { name = "buffer" },
+        -- too slow
+        -- { name = "rg" },
+        { name = "buffer" },
         { name = "cmp-tw2css" },
         {
             name = "spell",

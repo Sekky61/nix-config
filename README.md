@@ -177,6 +177,7 @@ Press `Super + /` to open the list of keybindings.
 - class `corner` controls rounding of the top bar
 - Media widget: left click to show detailed controls, middle click to play/pause, right click to next track
 - To debug, I just kill the ags with `ags quit` and then launch it in a shell: `ags run` (or with a `--directory` flag).
+- Look up icons with [icon-browser](https://github.com/Aylur/icon-browser/tree/main)
 
 ### Notes 
 
