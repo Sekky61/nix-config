@@ -39,7 +39,6 @@ in {
       nwg-displays # gui for monitors, wayland
       hyprshot
 
-      fuzzel # app picker
       bemoji # emoji picker
       grim
       slurp

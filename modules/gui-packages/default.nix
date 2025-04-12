@@ -11,6 +11,7 @@
     ./remote-desktop.nix
     ./ags
     ./stt.nix
+    ./fuzzel.nix
 
     ./browser/chrome.nix
     ./browser/firefox.nix

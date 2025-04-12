@@ -13,6 +13,5 @@
     # "ags".source = link ./config/ags;
     "fish".source = link ./config/fish;
     "foot".source = link ./config/foot;
-    "fuzzel".source = link ./config/fuzzel;
   };
 }

@@ -21,5 +21,8 @@
 
     # troubleshooting
     hwinfo
+
+    # Flex
+    fastfetch
   ];
 }

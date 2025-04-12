@@ -291,7 +291,7 @@ in {
             mods = ["SUPER"];
             key = "Space";
           };
-          command = {params = toggleWindow "launcher";};
+          command = {params = "fuzzel";};
         }
         {
           description = "Launch terminal";

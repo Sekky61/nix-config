@@ -91,7 +91,7 @@ in {
         };
       };
     };
-    home-manager.users.${username} = _: {
+    home-manager.users.${username} = {
       # Some of stylix only in Home-manager
       stylix.targets = {
         # Explicitly say what to style. Default is false with autoEnable = false
