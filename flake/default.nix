@@ -8,7 +8,7 @@
   };
 in {
   imports = [
-    # ./checks.nix
+    ./checks.nix
     ./devshells.nix
     ./packages.nix
   ];
@@ -22,6 +22,7 @@ in {
     pkgs,
     ...
   }: {
+    # Runs on save in nvim or with `nix fmt`
     formatter = pkgs.alejandra;
   };
 }

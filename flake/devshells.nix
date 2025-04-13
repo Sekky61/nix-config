@@ -13,7 +13,7 @@
         pkgs.mkShell {
           name = "The devshell";
           meta.description = "Flake development environment";
-          buildInputs = with pkgs; [nixfmt statix nix-fast-build check];
+          buildInputs = with pkgs; [alejandra statix nix-fast-build check];
         };
     };
   };
