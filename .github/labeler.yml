@@ -1,6 +1,15 @@
 modules:
   - changed-files:
       - any-glob-to-any-file: modules/**/*
+nvim:
+  - changed-files:
+      - any-glob-to-any-file: modules/nvim/**/*
+hyprland:
+  - changed-files:
+      - any-glob-to-any-file: modules/hyprland/**/*
+ags:
+  - changed-files:
+      - any-glob-to-any-file: modules/gui-packages/ags/**/*
 secrets:
   - changed-files:
       - any-glob-to-any-file:
