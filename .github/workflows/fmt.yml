@@ -5,11 +5,13 @@ on:
   pull_request:
     paths:
       - "**.nix"
-      - ".github/workflows/check.yml"
+      - ".github/workflows/fmt.yml"
+      - ".github/workflows/prelude.yml"
   push:
     paths:
       - "**.nix"
-      - ".github/workflows/check.yml"
+      - ".github/workflows/fmt.yml"
+      - ".github/workflows/prelude.yml"
 jobs:
   check-formatting:
     name: "Check flake formatting"

@@ -1,0 +1,20 @@
+modules:
+  - changed-files:
+      - any-glob-to-any-file: modules/**/*
+secrets:
+  - changed-files:
+      - any-glob-to-any-file:
+        - modules/sops/**/*
+        - .sops.yaml
+hosts:
+  - changed-files:
+      - any-glob-to-any-file: hosts/**/*
+homes:
+  - changed-files:
+      - any-glob-to-any-file: homes/**/*
+treewide:
+  - changed-files:
+      - any-glob-to-any-file: "*"
+CI:
+  - changed-files:
+      - any-glob-to-any-file: .github/**/*
