@@ -5,6 +5,7 @@ import Bar, { BarOrientation, handleBarRequest } from "./windows/Bar";
 import CheatSheet from "./windows/CheatSheet";
 import SessionWindow from "./windows/Session";
 import { NotificationPopupWindow } from "./windows/Notification";
+import Indicator from "./windows/Indicator";
 
 const AgsRequests = {
   "bar-vertical": null,
@@ -38,6 +39,7 @@ App.start({
     SessionWindow();
     CheatSheet();
     NotificationPopupWindow();
+    Indicator();
   },
   requestHandler,
 });

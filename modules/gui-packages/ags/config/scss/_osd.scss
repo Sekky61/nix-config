@@ -2,7 +2,7 @@
 @use 'material';
 
 // .osd-window {
-    // margin-top: 2.727rem;
+// margin-top: 2.727rem;
 // }
 
 .osd-bg {
@@ -19,7 +19,7 @@
     padding-top: 0.313rem;
 }
 
-.osd-progress {
+.osd-slider {
     min-height: 0.955rem;
     min-width: 0.068rem;
     padding: 0rem;
@@ -34,7 +34,7 @@
         // border: 0.068rem solid material.$onSecondaryContainer;
     }
 
-    progress {
+    highlight {
         @include lib_mixins.fluent_decel;
         min-height: 0.680rem;
         min-width: 0.680rem;
@@ -89,37 +89,64 @@
 .osd-color-primary {
     background-color: material.$primary;
     color: material.$onPrimary;
-    box { background-color: material.$onPrimary; }
+
+    box {
+        background-color: material.$onPrimary;
+    }
 }
+
 .osd-color-primaryContainer {
     background-color: material.$primaryContainer;
     color: material.$onPrimaryContainer;
-    box { background-color: material.$onPrimaryContainer; }
+
+    box {
+        background-color: material.$onPrimaryContainer;
+    }
 }
+
 .osd-color-secondary {
     background-color: material.$secondary;
     color: material.$onSecondary;
-    box { background-color: material.$onSecondary; }
+
+    box {
+        background-color: material.$onSecondary;
+    }
 }
+
 .osd-color-secondaryContainer {
     background-color: material.$secondaryContainer;
     color: material.$onSecondaryContainer;
-    box { background-color: material.$onSecondaryContainer; }
+
+    box {
+        background-color: material.$onSecondaryContainer;
+    }
 }
+
 .osd-color-surfaceVariant {
     background-color: material.$surfaceVariant;
     color: material.$onSurfaceVariant;
-    box { background-color: material.$onSurfaceVariant; }
+
+    box {
+        background-color: material.$onSurfaceVariant;
+    }
 }
+
 .osd-color-surface {
     background-color: material.$surface;
     color: material.$onSurface;
-    box { background-color: material.$onSurface; }
+
+    box {
+        background-color: material.$onSurface;
+    }
 }
+
 .osd-color-background {
     background-color: material.$background;
     color: material.$onBackground;
-    box { background-color: material.$onBackground; }
+
+    box {
+        background-color: material.$onBackground;
+    }
 }
 
 .osd-show {

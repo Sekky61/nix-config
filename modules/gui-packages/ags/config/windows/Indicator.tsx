@@ -1,4 +1,5 @@
 import { App, Astal, type Gdk, Gtk } from "astal/gtk3";
+import OsdIndicators from "../widget/Indicator";
 
 export default function Indicator(gdkmonitor: Gdk.Monitor) {
   const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor;
@@ -6,14 +7,15 @@ export default function Indicator(gdkmonitor: Gdk.Monitor) {
 
   return (
     <window
-      className="indicator"
-      gdkmonitor={gdkmonitor}
-      layer={Astal.Layer.OVERLAY}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
+      name="indicator"
+      namespace="indicator-area"
       anchor={TOP}
-      application={App}
+      layer={Astal.Layer.OVERLAY}
+      visible={true}
     >
-      <box vertical className="osd-window"></box>
+      <box vertical className="osd-window">
+        <OsdIndicators />
+      </box>
     </window>
   );
 }
