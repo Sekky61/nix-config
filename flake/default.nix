@@ -13,10 +13,6 @@ in {
     ./packages.nix
   ];
 
-  # flake = {
-  #   templates = import ./../templates;
-  # };
-
   perSystem = {
     system,
     pkgs,
