@@ -1,5 +1,12 @@
 import { GLib, GObject, Variable, bind, readFile } from "astal";
-import { App, Astal, type ConstructProps, Gtk, Widget, astalify } from "astal/gtk3";
+import {
+  App,
+  Astal,
+  type ConstructProps,
+  Gtk,
+  Widget,
+  astalify,
+} from "astal/gtk3";
 import { toggleWindow } from "../util";
 
 // Set by a derivation. Relative path ~ does not work
@@ -40,7 +47,7 @@ function anyOf(word: string, ...haystack: string[]) {
 const categoryRules = {
   screenshot: (keybind: Keybind) => {
     const cmd = getCommand(keybind).params;
-    return anyOf(cmd, "grimblast", "wf-recorder", "grim");
+    return anyOf(cmd, "record", "hyprshot", "grimblast", "wf-recorder", "grim");
   },
   window: (keybind: Keybind) => {
     const dispatcher = getCommand(keybind).dispatcher;
@@ -137,7 +144,11 @@ function CheatsheetHeader() {
       vertical={true}
       centerWidget={
         <box vertical className="spacing-h-15">
-          <label label="Cheat Sheet" className="txt-title txt" halign={CENTER} />
+          <label
+            label="Cheat Sheet"
+            className="txt-title txt"
+            halign={CENTER}
+          />
         </box>
       }
     />
@@ -159,19 +170,28 @@ interface KeyCategoryProps {
 function KeyCategory({ name, keybinds }: KeyCategoryProps) {
   // Name on top level box is for stack
   return (
-    <box vertical className="cheatsheet-category-container" name={name}>
-      <label label={name} className="cheatsheet-category-title txt" />
-      {keybinds.map((kb) => (
-        <box className="spacing-h-10">
-          <box>
-            {[...getBind(kb).mods, getBind(kb).key].map((k) => (
-              <Key>{k}</Key>
-            ))}
+    <scrollable heightRequest={500}>
+      <box
+        vertical
+        className="cheatsheet-category-container spacing-v-10"
+        name={name}
+      >
+        <label label={name} className="cheatsheet-category-title txt" />
+        {keybinds.map((kb) => (
+          <box className="spacing-h-10">
+            <box>
+              {[...getBind(kb).mods, getBind(kb).key].map((k) => (
+                <Key>{k}</Key>
+              ))}
+            </box>
+            <label
+              label={kb.description}
+              className="txt chearsheet-action txt-small"
+            />
           </box>
-          <label label={kb.description} className="txt chearsheet-action txt-small" />
-        </box>
-      ))}
-    </box>
+        ))}
+      </box>
+    </scrollable>
   );
 }
 
@@ -199,10 +219,14 @@ export default function CheatSheet() {
       setup={(st) => {
         Object.entries(keys.getCategories()).map(([catName, keys]) =>
           // Needs add_titled, not just children
-          st.add_titled(<KeyCategory name={catName} keybinds={keys} />, catName, catName),
+          st.add_titled(
+            <KeyCategory name={catName} keybinds={keys} />,
+            catName,
+            catName,
+          ),
         );
       }}
-    ></stack>
+    />
   ) as Gtk.Stack;
   // todo cannot style the stackswitcher buttons
 
