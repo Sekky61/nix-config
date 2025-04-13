@@ -9,9 +9,8 @@
 in {
   imports = [
     # ./checks.nix
-    # ./devshells.nix
+    ./devshells.nix
     ./packages.nix
-    ../hosts
   ];
 
   # flake = {
@@ -24,9 +23,5 @@ in {
     ...
   }: {
     formatter = pkgs.alejandra;
-
-    devShells = {
-      default = pkgs.mkShell {buildInputs = with pkgs; [nixfmt statix];};
-    };
   };
 }

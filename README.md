@@ -182,4 +182,4 @@ Press `Super + /` to open the list of keybindings.
 ### Notes 
 
 Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
-
+Take a look at [https://github.com/NotAShelf/nyx/tree/main](https://github.com/NotAShelf/nyx/tree/main), a great inspiration.

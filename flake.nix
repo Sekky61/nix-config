@@ -1,6 +1,18 @@
 {
   description = "Michal's NixOS flake";
 
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = [
+        # systems for which you want to build the `perSystem` attributes
+        "x86_64-linux"
+      ];
+      imports = [
+        ./flake
+        ./hosts
+      ];
+    };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
@@ -47,14 +59,4 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs = inputs @ {flake-parts, ...}:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = [
-        # systems for which you want to build the `perSystem` attributes
-        "x86_64-linux"
-        # ...
-      ];
-      imports = [./flake];
-    };
 }
