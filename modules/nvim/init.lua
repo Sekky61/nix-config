@@ -723,6 +723,14 @@ require("lazy").setup({
         -- Github plugin
         "pwntester/octo.nvim",
         opts = {},
+        keys = {
+            {
+                -- To respond to review, open another review
+                "<leader>oc",
+                ":Octo actions<CR>",
+                desc = "Open Octo Github menu",
+            },
+        },
     },
     -- DAP
     {
@@ -1877,12 +1885,6 @@ vim.api.nvim_set_keymap(
     "<leader>gp",
     ":Git push -u origin HEAD<CR>",
     { noremap = false, desc = "Git Push" }
-)
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>oc",
-    ":Octo actions<CR>",
-    { noremap = false, desc = "Open Octo Github menu" }
 )
 
 vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Jump to previous quickfix entry" })
