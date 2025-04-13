@@ -1,3 +1,4 @@
+# Source: https://github.com/NotAShelf/nyx/blob/main/.github/workflows/fmt.yml
 name: Check flake formatting
 on:
   workflow_dispatch:
@@ -19,6 +20,5 @@ jobs:
       command: |
         system=$(nix eval --raw --impure --expr builtins.currentSystem)
 
-        # Evaluate formatting check to verify tree-wide formatting.
         nix-fast-build --skip-cached --no-nom \
-          --flake .#checks."${system}".treefmt
+          --flake .#checks."${system}".fmt-check
