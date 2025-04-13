@@ -35,7 +35,7 @@ jobs:
         with:
           token: "${{ secrets.GH_TOKEN }}"
 
-      - name: Install Nix
+      - name: "Install Nix"
         uses: DeterminateSystems/nix-installer-action@main
 
       - name: "Nix Magic Cache"
