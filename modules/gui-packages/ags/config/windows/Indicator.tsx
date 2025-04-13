@@ -1,7 +1,7 @@
 import { App, Astal, type Gdk, Gtk } from "astal/gtk3";
 import OsdIndicators from "../widget/Indicator";
 
-export default function Indicator(gdkmonitor: Gdk.Monitor) {
+export default function Indicator() {
   const { TOP, LEFT, RIGHT, BOTTOM } = Astal.WindowAnchor;
   const { CENTER, START, END, FILL } = Gtk.Align;
 

@@ -3,6 +3,7 @@ import { type Binding, bind } from "astal";
 import { Gtk } from "astal/gtk3";
 import Brightness from "../services/brightness";
 import { LevelBar } from "./gtk/LevelBar";
+import { IndicatorService, IndicatorTypes } from "../services/indicator";
 
 const { CENTER, END } = Gtk.Align;
 
@@ -32,7 +33,6 @@ function OsdValue({
     v == null || Number.isNaN(v) ? iconWhenDisabled : `${Math.round(v * 100)}`,
   );
   const progressValue = progressBind.as((v) => (Number.isNaN(v) ? 0 : v));
-  console.log("progress", progressValue.get());
 
   return (
     <box vertical hexpand className="osd-bg osd-value" {...props}>
@@ -71,15 +71,17 @@ export default function OsdIndicators() {
   const brightnessProgress = brightnessValue;
   const volumeProgress = volumeValue;
 
+  const indicatorService = IndicatorService.get_default();
+  const selfId = IndicatorTypes.brightnessVolume;
+
   return (
     <revealer
       transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
-      // showClass="osd-show"
-      // hideClass="osd-hide"
       className="osd-show"
-      visible={true}
       setup={(self) => {
-        self.revealChild = true;
+        self.hook(indicatorService, "notify::current-indicator", () => {
+          self.revealChild = selfId === indicatorService.currentIndicator;
+        });
       }}
     >
       <box halign={CENTER} vertical={false} className="spacing-h--10">

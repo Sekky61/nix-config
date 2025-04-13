@@ -1,6 +1,7 @@
 import GObject, { register, property } from "astal/gobject";
 import { monitorFile, readFileAsync } from "astal/file";
 import { exec, execAsync } from "astal/process";
+import { IndicatorService, IndicatorTypes } from "./indicator";
 
 const get = (args: string) => Number(exec(`brightnessctl ${args}`));
 const screen = exec(`bash -c "ls -w1 /sys/class/backlight | head -1"`);
@@ -54,11 +55,13 @@ export default class Brightness extends GObject.Object {
 
     const screenPath = `/sys/class/backlight/${screen}/brightness`;
     const kbdPath = `/sys/class/leds/${kbd}/brightness`;
+    const indicatorService = IndicatorService.get_default();
 
     monitorFile(screenPath, async (f) => {
       const v = await readFileAsync(f);
       this.#screen = Number(v) / this.#screenMax;
       this.notify("screen");
+      indicatorService.show(IndicatorTypes.brightnessVolume);
     });
 
     monitorFile(kbdPath, async (f) => {
