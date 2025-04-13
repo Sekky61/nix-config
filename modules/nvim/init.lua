@@ -700,6 +700,7 @@ require("lazy").setup({
         },
     },
     {
+        -- Git plugin
         "NeogitOrg/neogit",
         dependencies = {
             -- "nvim-lua/plenary.nvim", -- required
@@ -719,6 +720,7 @@ require("lazy").setup({
         },
     },
     {
+        -- Github plugin
         "pwntester/octo.nvim",
         opts = {},
     },
@@ -1863,9 +1865,25 @@ vim.keymap.set("x", "<leader>p", '"_dP')
 -- unmap Q
 vim.keymap.set("n", "Q", "<Nop>")
 
--- Git
-vim.api.nvim_set_keymap("n", "<leader>gc", ':Git commit -m "', { noremap = false })
-vim.api.nvim_set_keymap("n", "<leader>gp", ":Git push -u origin HEAD<CR>", { noremap = false })
+-- Git + Github
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>gc",
+    ':Git commit -m "',
+    { noremap = false, desc = "Git Commit" }
+)
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>gp",
+    ":Git push -u origin HEAD<CR>",
+    { noremap = false, desc = "Git Push" }
+)
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>oc",
+    ":Octo actions<CR>",
+    { noremap = false, desc = "Open Octo Github menu" }
+)
 
 vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Jump to previous quickfix entry" })
 vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Jump to next quickfix entry" })
