@@ -721,6 +721,7 @@ require("lazy").setup({
     },
     {
         -- Github plugin
+        -- Keys: https://github.com/pwntester/octo.nvim?tab=readme-ov-file#-configuration
         "pwntester/octo.nvim",
         opts = {},
         keys = {
