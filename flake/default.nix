@@ -10,15 +10,7 @@ in {
   imports = [
     ./checks.nix
     ./devshells.nix
+    ./formatter.nix
     ./packages.nix
   ];
-
-  perSystem = {
-    system,
-    pkgs,
-    ...
-  }: {
-    # Runs on save in nvim or with `nix fmt`
-    formatter = pkgs.alejandra;
-  };
 }
