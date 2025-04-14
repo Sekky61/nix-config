@@ -13,11 +13,8 @@
     ./stt.nix
     ./fuzzel.nix
 
-    ./browser/chrome.nix
-    ./browser/firefox.nix
-    ./browser/zen.nix
-
     # With options
+    ./browser
     ./steam.nix
     ./terminal-emulator
   ];

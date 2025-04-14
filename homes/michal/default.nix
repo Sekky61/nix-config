@@ -6,7 +6,6 @@
   homeDirectory = "/home/${username}";
 in {
   imports = [
-    # Stuff
     ./dconf.nix
     ./mimelist.nix
     ./theme.nix

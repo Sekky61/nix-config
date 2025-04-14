@@ -20,25 +20,30 @@
     ../../modules/dev
   ];
 
-  michal.programs = {
-    bitwarden.enable = true;
-    ventoy.enable = true;
-    borg.enable = true;
-    polkit.enable = true;
-    ollama = {
-      enable = true;
-      gui = true;
+  michal = {
+    programs = {
+      bitwarden.enable = true;
+      ventoy.enable = true;
+      borg.enable = true;
+      polkit.enable = true;
+      ollama = {
+        enable = true;
+        gui = true;
+      };
+      steam.enable = true;
+      alacritty.enable = true;
+      ghostty = {
+        enable = true;
+        default = true;
+      };
     };
-    zen = {
-      enable = true;
-      default = true;
-    };
-    chrome.enable = true;
-    steam.enable = true;
-    alacritty.enable = true;
-    ghostty = {
-      enable = true;
-      default = true;
+
+    browsers = {
+      zen = {
+        enable = true;
+        default = true;
+      };
+      chrome.enable = true;
     };
   };
 }
