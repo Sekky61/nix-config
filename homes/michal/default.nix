@@ -6,14 +6,10 @@
   homeDirectory = "/home/${username}";
 in {
   imports = [
-    ## Dotfiles (manual)
-    ./dotfiles.nix
-    # Stuff
     ./dconf.nix
     ./mimelist.nix
     ./theme.nix
     ./git.nix
-    ./java.nix
   ];
 
   home = {
@@ -31,17 +27,10 @@ in {
     createDirectories = true;
   };
 
-  # gtk = {
-  #   font = {
-  #     name = "Rubik";
-  #     package = pkgs.google-fonts.override { fonts = [ "Rubik" ]; };
-  #     size = 11;
-  #   };
-  # };
-
   programs = {
     home-manager.enable = true;
   };
+
   # this must be the version at which you have started using home-manager
   home.stateVersion = "23.11";
 }

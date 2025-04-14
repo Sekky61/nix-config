@@ -585,6 +585,7 @@ require("lazy").setup({
 
     {
         -- treesitter context (function header visible on top)
+        -- TODO bugs in Octo PR review?
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
             enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -723,7 +724,9 @@ require("lazy").setup({
         -- Github plugin
         -- Keys: https://github.com/pwntester/octo.nvim?tab=readme-ov-file#-configuration
         "pwntester/octo.nvim",
-        opts = {},
+        opts = {
+            use_local_fs = true, -- right hand side is my actual file with lsp
+        },
         keys = {
             {
                 -- To respond to review, open another review

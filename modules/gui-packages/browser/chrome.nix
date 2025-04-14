@@ -3,16 +3,17 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
-  cfg = config.michal.programs.chrome;
+}: let
+  cfg = config.michal.browsers.chrome;
+  mkBrowserOptions = import ./options.nix;
 in {
-  options.michal.programs.chrome = {
-    enable = mkEnableOption "google chrome browser";
-    default = mkEnableOption "google chrome to be the default browser";
+  options.michal.browsers.chrome = mkBrowserOptions {
+    inherit lib;
+    humanName = "google chrome";
+    execName = "google-chrome";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       libsForQt5.plasma-browser-integration
       google-chrome
@@ -28,9 +29,5 @@ in {
     #
     #   extraOpts.BrowserThemeColor = config.michal.theme.secondaryContainer;
     # };
-
-    environment.sessionVariables = mkIf cfg.default {
-      BROWSER = "google-chrome";
-    };
   };
 }

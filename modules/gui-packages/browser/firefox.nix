@@ -3,22 +3,22 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
-  cfg = config.michal.programs.firefox;
+}: let
+  cfg = config.michal.browsers.firefox;
+  mkBrowserOptions = import ./options.nix;
 in {
-  options.michal.programs.firefox = {
-    enable = mkEnableOption "firefox browser";
-    default = mkEnableOption "firefox to be the default browser";
+  options.michal.browsers.firefox = mkBrowserOptions {
+    inherit lib;
+    execName = "firefox";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.firefox = {
       enable = true;
       nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
     };
 
-    environment.sessionVariables = mkIf cfg.default {
+    environment.sessionVariables = lib.mkIf cfg.default {
       BROWSER = "firefox";
     };
   };

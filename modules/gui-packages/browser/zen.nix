@@ -4,22 +4,18 @@
   inputs,
   pkgs,
   ...
-}:
-with lib; let
-  cfg = config.michal.programs.zen;
+}: let
+  cfg = config.michal.browsers.zen;
+  mkBrowserOptions = import ./options.nix;
 in {
-  options.michal.programs.zen = {
-    enable = mkEnableOption "zen browser";
-    default = mkEnableOption "zen to be the default browser";
+  options.michal.browsers.zen = mkBrowserOptions {
+    inherit lib;
+    execName = "zen";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = [
       inputs.zen-browser.packages."${pkgs.system}".default
     ];
-
-    environment.sessionVariables = mkIf cfg.default {
-      BROWSER = "zen";
-    };
   };
 }
