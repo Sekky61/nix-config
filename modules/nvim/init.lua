@@ -1290,7 +1290,8 @@ local servers = {
     -- htmx = {},
     -- custom_elements_ls = {},
     cssls = { filetypes = { "scss", "less", "stylus", "css" } },
-    tailwindcss = {},
+    -- This rascal kills ram
+    -- tailwindcss = {},
     angularls = {},
     ts_ls = {}, -- wraps tsserver
     biome = {},
@@ -1499,6 +1500,9 @@ local s = luasnip.snippet
 local i = luasnip.insert_node
 local t = luasnip.text_node
 local f = luasnip.function_node
+local d = luasnip.dynamic_node
+local c = luasnip.choice_node
+local sn = luasnip.snippet_node
 local fmt = require("luasnip.extras.fmt").fmt
 
 function get_date()
@@ -1529,6 +1533,19 @@ local function typearg(
     return args[1][1]
 end
 
+local function default_value(args)
+    local type_str = args[1][1]
+    if type_str == "boolean" then
+        return "false"
+    elseif type_str:find("undefined") then
+        return "undefined"
+    elseif type_str:find("null") then
+        return "null"
+    else
+        return ""
+    end
+end
+
 luasnip.add_snippets("typescript", {
     -- Computed Signal snippet
     s("computed", {
@@ -1537,13 +1554,11 @@ luasnip.add_snippets("typescript", {
         t("Signal: Signal<"),
         i(2, "string"),
         t("> = computed<"),
-        f(
-            typearg,
-            { 2 } -- i(2)
-        ),
+        f(typearg, { 2 }),
         t({ ">(() => {", "" }),
-        i(3, 'return "";'),
-        t({ "", "});" }),
+        i(3, "  return "),
+        f(default_value, { 2 }),
+        t({ ";", "});" }),
     }),
 
     -- Signal snippet (general signal)
@@ -1553,32 +1568,24 @@ luasnip.add_snippets("typescript", {
         t("Signal: WritableSignal<"),
         i(2, "string"),
         t("> = signal<"),
-        f(
-            typearg,
-            { 2 } -- i(2)
-        ),
+        f(typearg, { 2 }),
         t(">("),
-        i(3, '""'),
+        f(default_value, { 2 }),
         t(");"),
     }),
 
     -- Input signal
     s("inputsignal", {
+        t("readonly "),
         i(1, "foo"),
         t("Signal: InputSignal<"),
         i(2, "string"),
         t("> = input<"),
-        f(
-            typearg,
-            { 2 } -- i(2)
-        ),
+        f(typearg, { 2 }),
         t(">("),
-        i(3, '""'),
+        f(default_value, { 2 }),
         t(", { alias: '"),
-        f(
-            typearg,
-            { 1 } -- i(1)
-        ),
+        f(typearg, { 1 }),
         t("' });"),
     }),
 
@@ -1592,20 +1599,40 @@ luasnip.add_snippets("typescript", {
     }),
 
     -- Inject
+    -- private readonly generalTrainerRolesApiService: GeneralTrainerRolesApiService = inject(GeneralTrainerRolesApiService);
     s("inject", {
         t("private readonly "),
         i(1, "foo"),
         t(": "),
         i(2, "Service"),
         t(" = inject("),
-        f(
-            typearg,
-            { 2 } -- i(2)
-        ),
+        f(typearg, { 2 }),
         t(");"),
     }),
 
-    -- private readonly generalTrainerRolesApiService: GeneralTrainerRolesApiService = inject(GeneralTrainerRolesApiService);
+    s("enumobj", {
+        t("type "),
+        i(1, "MyEnum"),
+        t("Value = EnumObjectValue<typeof "),
+        f(typearg, { 1 }),
+        t(">;"),
+        t({ "", "", "export const " }),
+        f(typearg, { 1 }),
+        t(" = {"),
+        t({ "", "  " }),
+        i(2),
+        t({ "", "} as const;", "" }),
+        i(0),
+    }),
+
+    s("ngif", {
+        t("@if ("),
+        i(1, "condition"),
+        t({ ") {", "  " }),
+        i(2, "<div></div>"),
+        t({ "", "}" }),
+        i(0),
+    }),
 })
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
