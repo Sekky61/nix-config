@@ -1034,34 +1034,34 @@ in {
         {
           description = "Raise volume";
           bind = {key = "XF86AudioRaiseVolume";};
-          command = [
-            {params = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";}
-            {params = "ags run-js 'indicator.popup(1);'";}
-          ];
+          command = {
+            params = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
+            flags = ["repeat"];
+          };
         }
         {
           description = "Lower volume";
           bind = {key = "XF86AudioLowerVolume";};
-          command = [
-            {params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";}
-            {params = "ags run-js 'indicator.popup(1);'";}
-          ];
+          command = {
+            params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+            flags = ["repeat"];
+          };
         }
         {
           description = "Increase brightness";
           bind = {key = "XF86MonBrightnessUp";};
-          command = [
-            {params = "brightnessctl set +10%";}
-            {params = "ags run-js 'indicator.popup(1);'";}
-          ];
+          command = {
+            params = "brightnessctl set +10%";
+            flags = ["repeat"];
+          };
         }
         {
           description = "Decrease brightness";
           bind = {key = "XF86MonBrightnessDown";};
-          command = [
-            {params = "brightnessctl set 10%-";}
-            {params = "ags run-js 'indicator.popup(1);'";}
-          ];
+          command = {
+            params = "brightnessctl set 10%-";
+            flags = ["repeat"];
+          };
         }
         {
           description = "Speech to text (hold and speak)";
