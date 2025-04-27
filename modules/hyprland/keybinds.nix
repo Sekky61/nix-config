@@ -1,6 +1,4 @@
 {
-  inputs,
-  pkgs,
   lib,
   username,
   config,
@@ -421,11 +419,6 @@ in {
         }
         {
           description = "Screenshot region OCR";
-          bind = {key = "Print";};
-          command = {params = ss_region_clipboard;};
-        }
-        {
-          description = "Screenshot region OCR";
           bind = {
             mods = ["SUPER" "SHIFT"];
             key = "S";
@@ -434,10 +427,13 @@ in {
         }
         {
           description = "Screenshot region to clipboard";
-          bind = {
-            mods = ["SUPER"];
-            key = "S";
-          };
+          bind = [
+            {
+              mods = ["SUPER"];
+              key = "S";
+            }
+            {key = "Print";}
+          ];
           command = {params = ss_region_clipboard;};
         }
         {
@@ -537,36 +533,12 @@ in {
           command = {params = agsRequest "bar-toggle";};
         }
         {
-          description = "Toggle cheatsheet"; # todo
+          description = "Toggle cheatsheet";
           bind = {
             mods = ["SUPER"];
             key = "Slash";
           };
           command = {params = toggleWindow "cheatsheet";};
-        }
-        {
-          description = "Toggle side menu left"; # todo
-          bind = {
-            mods = ["SUPER"];
-            key = "B";
-          };
-          command = {params = toggleWindow "sideleft";};
-        }
-        {
-          description = "Toggle side menu left"; # todo
-          bind = {
-            mods = ["SUPER"];
-            key = "O";
-          };
-          command = {params = toggleWindow "sideleft";};
-        }
-        {
-          description = "Toggle side menu right"; # todo
-          bind = {
-            mods = ["SUPER"];
-            key = "N";
-          };
-          command = {params = toggleWindow "sideright";};
         }
         {
           description = "Set volume to 0%";
@@ -659,17 +631,6 @@ in {
         {
           description = "Show popup via AGS JavaScript"; # todo
           bind = {
-            mods = [];
-            key = "XF86AudioMute";
-          };
-          command = {
-            params = "ags run-js 'indicator.popup(1);'";
-            flags = ["locked"];
-          };
-        }
-        {
-          description = "Show popup via AGS JavaScript"; # todo
-          bind = {
             mods = ["SUPER" "SHIFT"];
             key = "M";
           };
@@ -679,7 +640,7 @@ in {
           };
         }
         {
-          description = "Toggle music controls";
+          description = "Toggle music controls"; # todo
           bind = {
             mods = ["SUPER"];
             key = "M";
@@ -689,7 +650,7 @@ in {
           };
         }
         {
-          description = "Show color scheme";
+          description = "Show color scheme"; # todo
           bind = {
             mods = ["SUPER"];
             key = "Comma";
@@ -699,7 +660,7 @@ in {
           };
         }
         {
-          description = "Test notification";
+          description = "[dev] Test notification";
           bind = {
             mods = ["SUPER" "ALT"];
             key = "F12";
@@ -1084,7 +1045,7 @@ in {
         }
       ];
 
-    home-manager.users.${username} = _: {
+    home-manager.users.${username} = {
       # Make a json with the keybinds available, for example to ags
       home.file = {
         ".config/keybinds.json".text = builtins.toJSON cfg;
