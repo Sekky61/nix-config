@@ -11,4 +11,4 @@ if [ $# -eq 1 ]; then
 fi
 
 # Garbage collect nix store
-nix-collect-garbage --delete-old
+nix-collect-garbage --delete-older-than 10d
