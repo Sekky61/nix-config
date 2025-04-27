@@ -381,15 +381,16 @@
     "more-waita": {
       "flake": false,
       "locked": {
-        "lastModified": 1745197271,
-        "narHash": "sha256-mwTQMtd68ezP7MnO6qAGSELZOuizn3bxIzBAhd1R+fw=",
+        "lastModified": 1742710131,
+        "narHash": "sha256-18jI4hADVHC/WCmMTlA+VBuZ1jNGSxL+lO3GwWDiNoU=",
         "owner": "somepaulo",
         "repo": "MoreWaita",
-        "rev": "7f8c75e5fb9e14645351bb9f461cf944046fa207",
+        "rev": "3a40e0dedd3e363d1cdcab506137949177907c16",
         "type": "github"
       },
       "original": {
         "owner": "somepaulo",
+        "ref": "3a40e0d",
         "repo": "MoreWaita",
         "type": "github"
       }
