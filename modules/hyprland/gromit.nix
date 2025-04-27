@@ -43,14 +43,14 @@
     }
   ];
 
-  home-manager.users.${username} = _: {
+  home-manager.users.${username} = {
     wayland.windowManager.hyprland = {
       settings = {
         windowrule = [
-          "noblur, ^(Gromit-mpx)$"
-          "opacity 1 override, 1 override, ^(Gromit-mpx)$"
-          "noshadow, ^(Gromit-mpx)$"
-          "size 100% 100%, ^(Gromit-mpx)$"
+          "noblur, title:^(Gromit-mpx)$"
+          "opacity 1 override, 1 override, title:^(Gromit-mpx)$"
+          "noshadow, title:^(Gromit-mpx)$"
+          "size 100% 100%, title:^(Gromit-mpx)$"
         ];
         workspace = [
           "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
