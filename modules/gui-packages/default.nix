@@ -7,7 +7,6 @@
     ./obs.nix
     ./fonts.nix
     ./kitty.nix
-    ./anyrun.nix
     ./remote-desktop.nix
     ./ags
     ./stt.nix

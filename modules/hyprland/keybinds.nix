@@ -284,7 +284,7 @@ in {
           command = {params = toggleWindow "session";};
         }
         {
-          description = "Launch application launcher (anyrun)";
+          description = "Launch application launcher";
           bind = {
             mods = ["SUPER"];
             key = "Space";
@@ -499,14 +499,6 @@ in {
           command = {
             params = "hyprlock";
           };
-        }
-        {
-          description = "Launch application launcher";
-          bind = {
-            mods = ["CONTROL" "SUPER"];
-            key = "Slash";
-          };
-          command = {params = "pkill anyrun || anyrun";};
         }
         {
           description = "Reset AGS"; # TODO

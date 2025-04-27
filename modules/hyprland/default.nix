@@ -290,7 +290,6 @@ in {
             "xray 1, .*"
             "noanim, selection"
             "noanim, overview"
-            "noanim, anyrun"
             "blur, eww"
             "ignorealpha 0.8, eww"
             "noanim, noanim"
