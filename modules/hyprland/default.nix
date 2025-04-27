@@ -275,9 +275,9 @@ in {
             "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
           ];
           windowrule = [
-            "noblur,.*" # Disables blur for windows. Substantially improves performance.
-            "float, ^(steam)$"
-            "pin, ^(showmethekey-gtk)$"
+            "noblur, title:.*" # Disables blur for windows. Substantially improves performance.
+            "float, title:^(steam)$"
+            "pin, title:^(showmethekey-gtk)$"
             "float,title:^(Open File)(.*)$"
             "float,title:^(Select a File)(.*)$"
             "float,title:^(Choose wallpaper)(.*)$"
