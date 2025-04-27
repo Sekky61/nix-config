@@ -40,10 +40,6 @@
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
     };
-    anyrun = {
-      url = "github:Kirottu/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
