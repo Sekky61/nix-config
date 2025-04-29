@@ -8,6 +8,7 @@
   # Docker can also be run rootless
   virtualisation.docker = {
     enable = true;
+    enableOnBoot = false;
   };
   # User permissions
   users.users.${username}.extraGroups = ["docker"];

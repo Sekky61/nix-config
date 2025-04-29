@@ -27,8 +27,8 @@
       borg.enable = true;
       polkit.enable = true;
       ollama = {
-        enable = true;
-        gui = true;
+        enable = false;
+        gui = false;
       };
       steam.enable = true;
       alacritty.enable = true;
