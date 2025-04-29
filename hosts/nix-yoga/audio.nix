@@ -1,6 +1,5 @@
 {username, ...}: {
   # Audio
-  hardware.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
     audio.enable = true;
@@ -18,7 +17,7 @@
 
   programs.dconf.enable = true; # Needed for easyeffects
 
-  home-manager.users.${username} = _: {
+  home-manager.users.${username} = {
     services.easyeffects.enable = true;
   };
 }
