@@ -8,6 +8,7 @@
     ./cachix.nix
     ./locale.nix
     ./packages # admin/debug packages
+    ./js-binfmt.nix
 
     # Modules with options
     ./bitwarden.nix
