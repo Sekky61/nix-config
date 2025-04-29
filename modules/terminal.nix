@@ -33,7 +33,7 @@ in {
     ripgrep
     unzip
     fd
-    fzf
+    fzf # needed by a script and nvim telescope plugin
     socat
     jq
     gojq
