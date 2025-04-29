@@ -24,9 +24,6 @@ homes:
 treewide:
   - changed-files:
       - any-glob-to-any-file: "*"
-lockfile:
-  - changed-files:
-      - any-glob-to-any-file: "flake.lock"
 CI:
   - changed-files:
       - any-glob-to-any-file: .github/**/*

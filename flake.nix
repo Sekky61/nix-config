@@ -31,7 +31,7 @@
     };
     more-waita = {
       # Icons
-      url = "github:somepaulo/MoreWaita/3a40e0d"; # Master was not building
+      url = "github:somepaulo/MoreWaita";
       flake = false;
     };
     stylix.url = "github:danth/stylix";
