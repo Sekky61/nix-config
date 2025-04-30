@@ -33,9 +33,6 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- import plugins
---
--- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 require("lazy").setup({
     -- Git related plugins
     "tpope/vim-rhubarb",
@@ -142,7 +139,7 @@ require("lazy").setup({
                 map("n", "<leader>hd", gs.diffthis, "Diff hunk")
                 map("n", "<leader>hD", function()
                     gs.diffthis("~")
-                end)
+                end, "Open diff of the buffer")
             end,
         },
     },
@@ -515,16 +512,6 @@ require("lazy").setup({
         opts = {
             -- add any options here
         },
-        lazy = false,
-    },
-    {
-        "kosayoda/nvim-lightbulb",
-        opts = {
-            autocmd = { enabled = true },
-            number = {
-                enabled = true,
-            },
-        },
     },
     {
         -- Session management. <leader>sm and "session" to get menu of all sessions
@@ -624,6 +611,10 @@ require("lazy").setup({
         event = "VeryLazy",
         lazy = false,
         version = false, -- set this if you want to always pull the latest change
+        cursor_applying_provider = "groq",
+        behaviour = {
+            enable_cursor_planning_mode = true, -- enable cursor planning mode!
+        },
         opts = {
             -- add any opts here
             provider = "groq",
@@ -633,6 +624,7 @@ require("lazy").setup({
                     api_key_name = "GROQ_API_KEY",
                     endpoint = "https://api.groq.com/openai/v1/",
                     model = "llama-3.3-70b-versatile",
+                    max_completion_tokens = 32768,
                 },
                 ollama = {
                     __inherited_from = "openai",
@@ -646,13 +638,15 @@ require("lazy").setup({
         build = "make",
         -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
         dependencies = {
+            "nvim-treesitter/nvim-treesitter",
             "stevearc/dressing.nvim",
             "nvim-lua/plenary.nvim",
             "MunifTanjim/nui.nvim",
             --- The below dependencies are optional,
+            "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
             "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+            "ibhagwan/fzf-lua", -- for file_selector provider fzf
             "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-            "zbirenbaum/copilot.lua", -- for providers='copilot'
             {
                 -- support for image pasting
                 "HakonHarnes/img-clip.nvim",
@@ -910,8 +904,12 @@ require("lazy").setup({
     {
         "mikavilpas/yazi.nvim",
         event = "VeryLazy",
+        dependencies = {
+            -- check the installation instructions at
+            -- https://github.com/folke/snacks.nvim
+            "folke/snacks.nvim",
+        },
         keys = {
-            -- 👇 in this section, choose your own keymappings!
             {
                 "<leader>-",
                 mode = { "n", "v" },
@@ -925,8 +923,6 @@ require("lazy").setup({
                 desc = "Open the file manager in nvim's working directory",
             },
             {
-                -- NOTE: this requires a version of yazi that includes
-                -- https://github.com/sxyazi/yazi/pull/1305 from 2024-07-18
                 "<c-up>",
                 "<cmd>Yazi toggle<cr>",
                 desc = "Resume the last yazi session",
@@ -1344,7 +1340,7 @@ mason_lspconfig.setup_handlers({
     end,
 })
 
--- Watch out: requires globally (nix) installed ngserver
+-- Watch out: requires globally (nix) installed ngserver.
 local cmd = {
     "ngserver",
     "--stdio",
