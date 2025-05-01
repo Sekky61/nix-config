@@ -16,7 +16,10 @@
     bitwarden.enable = true;
     ventoy.enable = true;
     borg.enable = true;
-    alacritty.enable = true;
+    alacritty = {
+      enable = true;
+      default = true;
+    };
     ollama = {
       enable = true;
       gui = true;

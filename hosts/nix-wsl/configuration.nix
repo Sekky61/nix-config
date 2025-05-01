@@ -2,6 +2,7 @@
   inputs,
   pkgs,
   username,
+  lib,
   config,
   ...
 }: {
@@ -179,6 +180,7 @@
   # cross-compilation
   boot.binfmt.emulatedSystems = ["i686-linux" "aarch64-linux"];
   nix.settings.extra-platforms = config.boot.binfmt.emulatedSystems;
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   system.stateVersion = "24.05";
 }
