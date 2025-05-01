@@ -25,15 +25,19 @@ inputs.nixos-generators.nixosGenerate {
         allowUnfree = true;
       };
 
-      michal.programs = {
-        polkit.enable = true;
-        chrome = {
-          enable = true;
-          default = true;
+      michal = {
+        programs = {
+          polkit.enable = true;
+          ghostty = {
+            enable = true;
+            default = true;
+          };
         };
-        ghostty = {
-          enable = true;
-          default = true;
+        browsers = {
+          chrome = {
+            enable = true;
+            default = true;
+          };
         };
       };
 
