@@ -1,6 +1,5 @@
 {
   inputs,
-  system,
   self,
   ...
 }: let

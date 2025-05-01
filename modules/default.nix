@@ -9,6 +9,7 @@
     ./locale.nix
     ./packages # admin/debug packages
     ./js-binfmt.nix
+    ./overlays
 
     # Modules with options
     ./bitwarden.nix
