@@ -13,7 +13,11 @@
       (import ./module.nix)
     ];
     system = "x86_64-linux";
-    inherit specialArgs;
+    specialArgs =
+      specialArgs
+      // {
+        username = "nix-installer-iso";
+      };
   };
 in
   nixosEvaluation.config.system.build.isoImage
