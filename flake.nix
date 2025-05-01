@@ -15,6 +15,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,19 +30,28 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+
     more-waita = {
       # Icons
       url = "github:somepaulo/MoreWaita";
       flake = false;
     };
-    stylix.url = "github:danth/stylix";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    firefox-gnome-theme = {
-      url = "github:rafaelmardojai/firefox-gnome-theme";
-      flake = false;
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master"; # Has no inputs
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
