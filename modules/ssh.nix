@@ -60,14 +60,22 @@ in {
     remoteKeys = filterLines splits;
   in {
     michal.sshKeys = {
-      personal.keys = remoteKeys ++ cfg.personal.extraKeys;
       # todo: also keep the pubkeys around in a file
-      personal.remotes = [
-        {
-          url = "https://github.com/Sekky61.keys";
-          sha256 = "sha256:16mvisd872n4l68kbi76ra9mvr215rhrh2ll4pdga6d13fycpv4i";
-        }
-      ];
+      personal = {
+        remotes = [
+          {
+            url = "https://github.com/Sekky61.keys";
+            sha256 = "sha256:16mvisd872n4l68kbi76ra9mvr215rhrh2ll4pdga6d13fycpv4i";
+          }
+        ];
+        extraKeys = [
+          # nixpi generated key
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFWLVyQyJlHKE7QOMe6Y6A2s87HSOxWl2YYiXE8wK9PS root@nixpi"
+          # nix-yoga generated key
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfacGs1rirkWXU9N7Go7eEdZ/Je5V04h3sPzKkTOKgw root@michalyoga"
+        ];
+      };
+      personal.keys = remoteKeys ++ cfg.personal.extraKeys;
     };
 
     # This is different from home-manager.users
