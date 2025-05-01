@@ -29,7 +29,6 @@
         hostname = "nix-wsl";
         inherit inputs self lib;
       };
-      system = "x86_64-linux";
       modules = [
         ./common
       ];
@@ -41,7 +40,6 @@
         hostname = "nixpi";
         inherit inputs self;
       };
-      system = "aarch64-linux";
       modules = [
         ./common
       ];
