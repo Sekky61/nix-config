@@ -1012,7 +1012,7 @@ vim.o.timeoutlen = 300
 -- vim.o.winborder = "rounded"
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = "menuone,noselect"
+vim.o.completeopt = "menuone,noselect,fuzzy"
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
@@ -1176,8 +1176,7 @@ vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = t
 vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
+-- TODO rebind ]d to ignore notes?
 vim.keymap.set(
     "n",
     "<leader>e",
