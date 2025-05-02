@@ -108,7 +108,8 @@ require("lazy").setup({
                 topdelete = { text = "‾" },
                 changedelete = { text = "~" },
             },
-            current_line_blame = true,
+            -- bad interaction with error-lens
+            -- current_line_blame = true,
             on_attach = function(bufnr)
                 local gs = package.loaded.gitsigns
                 local function map(mode, l, r, desc)
@@ -894,6 +895,7 @@ require("lazy").setup({
                 javascriptreact = js_formatters,
                 nix = { "alejandra" },
                 html = { "prettierd", "prettier" },
+                htmlangular = { "prettierd", "prettier" },
             },
             default_format_opts = {
                 lsp_format = "fallback",
@@ -943,6 +945,22 @@ require("lazy").setup({
         opts = {},
         cmd = { "Typr", "TyprStats" },
     },
+    {
+        "chikko80/error-lens.nvim",
+        event = "BufRead",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+        },
+        opts = {
+            -- your options go here
+            auto_adjust = {
+                enable = true,
+                fallback_bg_color = "#281478", -- mandatory if enable true (e.g. #281478)
+                step = 3, -- inc: colors should be brighter/darker
+                total = 30, -- steps of blender
+            },
+        },
+    },
 }, {})
 
 -- [[ Setting options ]]
@@ -989,6 +1007,9 @@ vim.wo.signcolumn = "yes"
 -- Decrease update time
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
+
+-- Window border (todo once https://github.com/nvim-lua/plenary.nvim/pull/649 is merged)
+-- vim.o.winborder = "rounded"
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
