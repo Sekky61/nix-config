@@ -47,7 +47,15 @@ function anyOf(word: string, ...haystack: string[]) {
 const categoryRules = {
   screenshot: (keybind: Keybind) => {
     const cmd = getCommand(keybind).params;
-    return anyOf(cmd, "record", "hyprshot", "grimblast", "wf-recorder", "grim");
+    return anyOf(
+      cmd,
+      "record",
+      "hyprshot",
+      "grimblast",
+      "wf-recorder",
+      "grim",
+      "hyprpicker",
+    );
   },
   window: (keybind: Keybind) => {
     const dispatcher = getCommand(keybind).dispatcher;
@@ -58,7 +66,7 @@ const categoryRules = {
       "killactive",
       "window",
       "togglesplit",
-      "move",
+      "fullscreen", // "fullscreenstate",
       "resize",
     );
   },
@@ -69,11 +77,17 @@ const categoryRules = {
   launch: (keybind: Keybind) => {
     const dispatcher = getCommand(keybind).dispatcher;
     const cmd = getCommand(keybind).params;
-    return dispatcher === "exec" && anyOf(cmd, "launch", "open");
+    return (
+      (dispatcher === "exec" && anyOf(cmd, "launch", "open", "fuzzel")) ||
+      anyOf(keybind.description, "Launch")
+    );
   },
   system: (keybind: Keybind) => {
     const cmd = getCommand(keybind).params;
-    return anyOf(cmd, "brightnessctl", "hyprlock", "killall");
+    return (
+      anyOf(cmd, "brightnessctl", "hyprlock", "killall") ||
+      anyOf(keybind.description, "volume", "track", "media", "monitor")
+    );
   },
 } as const;
 
