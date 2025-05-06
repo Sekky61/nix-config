@@ -10,5 +10,5 @@ set -euo pipefail
 # ```
 
 # List all custom options. Should be the same for all hosts
-# TODO: list description, type, ...
-nix eval .#nixosConfigurations.nix-yoga.config.michal --json | jq
+# To see more, call ` nix eval ".#nixosConfigurations.nix-yoga.options.michal"` (without --json)
+nix eval --json ".#nixosConfigurations.nix-yoga.options.michal" | jq

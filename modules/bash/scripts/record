@@ -4,6 +4,7 @@ set -euo pipefail
 # `record`
 #
 # A simple script to start/stop screen recording with `wf-recorder`. Outputs recordings to `~/Videos`.
+# TODO: does not support multiple monitors
 #
 # Options:
 # - **`--sound`**: Record a selected area with audio.
@@ -22,7 +23,7 @@ if pgrep wf-recorder > /dev/null; then
     notify-send "Recording Stopped" "Stopped" -a 'record-script.sh' &
     pkill wf-recorder &
 else
-    notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'record-script.sh'
+    notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'record'
     if [[ "$1" == "--sound" ]]; then
         wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$(slurp)" --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
     elif [[ "$1" == "--fullscreen-sound" ]]; then
