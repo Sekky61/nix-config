@@ -109,7 +109,7 @@ require("lazy").setup({
                 changedelete = { text = "~" },
             },
             -- bad interaction with error-lens
-            -- current_line_blame = true,
+            current_line_blame = true,
             on_attach = function(bufnr)
                 local gs = package.loaded.gitsigns
                 local function map(mode, l, r, desc)
@@ -945,22 +945,23 @@ require("lazy").setup({
         opts = {},
         cmd = { "Typr", "TyprStats" },
     },
-    {
-        "chikko80/error-lens.nvim",
-        event = "BufRead",
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-        },
-        opts = {
-            -- your options go here
-            auto_adjust = {
-                enable = true,
-                fallback_bg_color = "#281478", -- mandatory if enable true (e.g. #281478)
-                step = 3, -- inc: colors should be brighter/darker
-                total = 30, -- steps of blender
-            },
-        },
-    },
+    -- todo find alternative
+    -- {
+    --     "chikko80/error-lens.nvim",
+    --     event = "BufRead",
+    --     dependencies = {
+    --         "nvim-telescope/telescope.nvim",
+    --     },
+    --     opts = {
+    --         -- your options go here
+    --         auto_adjust = {
+    --             enable = true,
+    --             fallback_bg_color = "#281478", -- mandatory if enable true (e.g. #281478)
+    --             step = 3, -- inc: colors should be brighter/darker
+    --             total = 30, -- steps of blender
+    --         },
+    --     },
+    -- },
 }, {})
 
 -- [[ Setting options ]]
