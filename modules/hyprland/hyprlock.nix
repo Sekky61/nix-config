@@ -40,7 +40,7 @@ in {
 
         label = [
           {
-            text = "@grok, is this true?";
+            text = "@gork, is this real?";
             color = "rgba(#cad3f5, 1.0)";
             font_family = "Gabarito";
             font_size = 64;
