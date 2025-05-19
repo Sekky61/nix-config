@@ -607,13 +607,6 @@ require("lazy").setup({
         },
     },
 
-    -- efm language server
-    {
-        "creativenull/efmls-configs-nvim",
-        version = "v1.x.x", -- version is optional, but recommended
-        dependencies = { "neovim/nvim-lspconfig" },
-    },
-
     {
         -- treesitter context (function header visible on top)
         -- TODO bugs in Octo PR review?
@@ -913,6 +906,7 @@ require("lazy").setup({
         opts = {
             -- a list of all tools you want to ensure are installed upon start
             -- In practice, put here what lspconfig does not recognise
+            -- Can install anything from https://github.com/mason-org/mason-registry/tree/main/packages
             ensure_installed = {
                 "stylua",
                 "nxls",
@@ -976,6 +970,7 @@ require("lazy").setup({
                 nix = { "alejandra" },
                 html = { "prettierd", "prettier" },
                 htmlangular = { "prettierd", "prettier" },
+                -- todo bash formatting
             },
             default_format_opts = {
                 lsp_format = "fallback",
@@ -1476,45 +1471,6 @@ require("lspconfig").eslint.setup({
         })
     end,
 })
-
--- local lsp_fmt_group = vim.api.nvim_create_augroup("LspFormattingGroup", {})
--- vim.api.nvim_create_autocmd("BufWritePost", {
---     group = lsp_fmt_group,
---     callback = function(ev)
---         local efm = vim.lsp.get_clients({ name = "efm", bufnr = ev.buf })
---
---         if vim.tbl_isempty(efm) then
---             return
---         end
---
---         vim.lsp.buf.format({ name = "efm" })
---     end,
--- })
-
--- mapping of language to formatters/linters
--- local bashate = require("efmls-configs.linters.bashate")
--- local languages = {
---     bash = { bashate },
--- }
---
--- local efmls_config = {
---     filetypes = vim.tbl_keys(languages),
---     settings = {
---         rootMarkers = { ".git/" },
---         languages = languages,
---     },
---     init_options = {
---         documentFormatting = true,
---         documentRangeFormatting = true,
---     },
--- }
---
--- require("lspconfig").efm.setup(vim.tbl_extend("force", efmls_config, {
---     -- Pass your custom lsp config below like on_attach and capabilities
---     --
---     -- on_attach = on_attach,
---     -- capabilities = capabilities,
--- }))
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
