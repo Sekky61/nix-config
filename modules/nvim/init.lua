@@ -1186,6 +1186,103 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" }) -- use <leader>xx instead
 
+local lsp_priority = {
+    rename = {
+        -- JS
+        "angularls",
+        "ts_ls",
+    },
+}
+
+-- rename ----------------------------------------------------------------------
+
+-- https://neovim.io/doc/user/lsp.html#lsp-api
+local lsp_have_feature = {
+    rename = function(client)
+        return client.supports_method("textDocument/rename")
+    end,
+    inlay_hint = function(client)
+        return client.supports_method("textDocument/inlayHint")
+    end,
+}
+
+-- rename ----------------------------------------------------------------------
+
+local function get_lsp_client_names(have_feature)
+    local client_names = {}
+    local attached_clients = vim.lsp.get_clients({ bufnr = 0 })
+    for _, client in ipairs(attached_clients) do
+        if have_feature(client) then
+            table.insert(client_names, client.name)
+        end
+    end
+    return client_names
+end
+
+local function lsp_buf_rename(client_name)
+    vim.lsp.buf.rename(nil, { name = client_name })
+end
+
+local function lsp_buf_rename_use_one(fallback)
+    local client_names = get_lsp_client_names(lsp_have_feature.rename)
+    if #client_names == 1 then
+        lsp_buf_rename(client_names[1])
+        return
+    end
+    if fallback then
+        fallback()
+    end
+end
+
+local function lsp_buf_rename_use_any(fallback)
+    local client_names = get_lsp_client_names(lsp_have_feature.rename)
+    for _, client_name in ipairs(client_names) do
+        lsp_buf_rename(client_name)
+        return
+    end
+    if fallback then
+        fallback()
+    end
+end
+
+local function lsp_buf_rename_use_select(fallback)
+    local client_names = get_lsp_client_names(lsp_have_feature.rename)
+    local prompt = "Select lsp client for rename operation"
+    local function on_choice(client_name)
+        if client_name then
+            lsp_buf_rename(client_name)
+            return
+        end
+        if fallback then
+            fallback()
+        end
+    end
+    vim.ui.select(client_names, { prompt = prompt }, on_choice)
+end
+
+local function lsp_buf_rename_use_priority(fallback)
+    local client_names = get_lsp_client_names(lsp_have_feature.rename)
+    for _, client_priority_name in ipairs(lsp_priority.rename) do
+        for _, client_name in ipairs(client_names) do
+            if client_priority_name == client_name then
+                lsp_buf_rename(client_priority_name)
+                return
+            end
+        end
+    end
+    if fallback then
+        fallback()
+    end
+end
+
+local function lsp_buf_rename_use_priority_or_select()
+    lsp_buf_rename_use_one(function()
+        lsp_buf_rename_use_priority(function()
+            lsp_buf_rename_use_select()
+        end)
+    end)
+end
+
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(client, bufnr)
@@ -1200,11 +1297,11 @@ local on_attach = function(client, bufnr)
     if client.name == "ts_ls" then
         client.server_capabilities.documentFormattingProvider = false
     end
-    if client.name == "angularls" then
-        client.server_capabilities.renameProvider = false
-    end
+    -- if client.name == "angularls" then
+    --     client.server_capabilities.renameProvider = false
+    -- end
 
-    nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+    nmap("<leader>rn", lsp_buf_rename_use_priority_or_select, "[R]e[n]ame")
     nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
     local tsb = require("telescope.builtin")
@@ -1289,10 +1386,22 @@ require("mason-tool-installer").setup({
     },
 })
 
+-- todo
+local eslint_default = require("lspconfig.configs.eslint").default_config
+local function eslint_on_attach(client, bufnr)
+    on_attach(client, bufnr)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        buffer = bufnr,
+        command = "EslintFixAll",
+    })
+end
+local eslint_config = vim.tbl_deep_extend("force", {}, eslint_default, {
+    on_attach = eslint_on_attach,
+})
+
 -- Enable the following language servers
 -- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local servers = {
-
     clangd = {},
     pyright = {},
     rust_analyzer = {},
@@ -1348,38 +1457,17 @@ local mason_lspconfig = require("mason-lspconfig")
 
 mason_lspconfig.setup({
     ensure_installed = vim.tbl_keys(servers),
+    automatic_enable = true,
 })
 
-mason_lspconfig.setup_handlers({
-    function(server_name)
-        require("lspconfig")[server_name].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = servers[server_name],
-            filetypes = (servers[server_name] or {}).filetypes,
-        })
-    end,
-})
-
--- Watch out: requires globally (nix) installed ngserver.
-local cmd = {
-    "ngserver",
-    "--stdio",
-    "--tsProbeLocations",
-    "./node_modules",
-    "--ngProbeLocations",
-    "./node_modules",
-}
-require("lspconfig").angularls.setup({
-    on_attach = on_attach,
+vim.lsp.config("*", {
     capabilities = capabilities,
-    cmd = cmd,
-    filetypes = { "typescript", "html", "typescriptreact", "typescript.tsx", "htmlangular" },
-    root_dir = require("lspconfig").util.root_pattern({ "tsconfig.json" }),
-    on_new_config = function(new_config, new_root_dir)
-        new_config.cmd = cmd
-    end,
+    on_attach = on_attach,
 })
+
+for server_name, config in pairs(servers) do
+    vim.lsp.config(server_name, config)
+end
 
 -- To update: zvm i -D=zls master
 -- It is OS dependent right now
@@ -1397,8 +1485,10 @@ require("lspconfig").zls.setup({
     },
 })
 
+-- still needed for the custom config, idk why
 require("lspconfig").eslint.setup({
     on_attach = function(client, bufnr)
+        on_attach(client, bufnr)
         vim.api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
             command = "EslintFixAll",
