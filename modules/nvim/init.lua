@@ -27,11 +27,60 @@ vim.opt.rtp:prepend(lazypath)
 js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "typescript", "html" },
+    pattern = { "typescript", "htmlangular" },
     callback = function()
         vim.opt_local.iskeyword:append("$")
     end,
 })
+
+-- Enable the following language servers
+-- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
+local servers = {
+    clangd = {},
+    pyright = {},
+    rust_analyzer = {},
+    jsonls = {},
+    nil_ls = {
+        -- nix
+    },
+    gopls = {},
+    omnisharp = {},
+
+    html = { filetypes = { "html", "twig", "hbs" } },
+    -- htmx = {},
+    -- custom_elements_ls = {},
+    cssls = { filetypes = { "scss", "less", "stylus", "css" } },
+    -- This rascal kills ram
+    -- tailwindcss = {},
+    angularls = {},
+    ts_ls = {}, -- wraps tsserver
+    biome = {},
+    astro = {},
+    eslint = {},
+    emmet_ls = {
+        filetypes = {
+            "css",
+            "eruby",
+            "html",
+            "javascript",
+            "javascriptreact",
+            "less",
+            "sass",
+            "scss",
+            "svelte",
+            "pug",
+            "typescriptreact",
+            "vue",
+        },
+    },
+
+    lua_ls = {
+        Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+        },
+    },
+}
 
 require("lazy").setup({
     -- Git related plugins
@@ -46,12 +95,6 @@ require("lazy").setup({
     {
         -- LSP Configuration & Plugins
         "neovim/nvim-lspconfig",
-        dependencies = {
-            -- Automatically install LSPs to stdpath for neovim
-            { "williamboman/mason.nvim", config = true },
-            "williamboman/mason-lspconfig.nvim",
-            "WhoIsSethDaniel/mason-tool-installer.nvim", -- auto install things outside of LSPs
-        },
     },
     {
         -- Useful status updates (right bottom corner)
@@ -838,8 +881,45 @@ require("lazy").setup({
             end
         end,
     },
-    "jay-babu/mason-nvim-dap.nvim",
-    "williamboman/mason.nvim",
+
+    { "williamboman/mason.nvim", opts = {} },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        opts = {
+            ensure_installed = vim.tbl_keys(servers),
+            automatic_enable = true,
+        },
+    },
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        opts = {
+            -- launguages, not adapter names
+            -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
+            ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg", "node2" },
+            automatic_installation = true,
+            handlers = {}, -- The defaults
+            adapters = {
+                codelldb = {
+                    type = "server",
+                    host = "127.0.0.1",
+                    port = 13000, -- 💀 Use the port printed out or specified with `--port`
+                },
+            },
+        },
+    },
+    -- auto install things outside of LSPs
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        opts = {
+            -- a list of all tools you want to ensure are installed upon start
+            -- In practice, put here what lspconfig does not recognise
+            ensure_installed = {
+                "stylua",
+                "nxls",
+                "prettierd",
+            },
+        },
+    },
 
     -- my experiment
     {
@@ -1010,6 +1090,7 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
 -- Window border (todo once https://github.com/nvim-lua/plenary.nvim/pull/649 is merged)
+-- https://github.com/nvim-telescope/telescope.nvim/issues/3436
 -- vim.o.winborder = "rounded"
 
 -- Set completeopt to have a better completion experience
@@ -1186,6 +1267,9 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" }) -- use <leader>xx instead
 
+-- rename LSP priority ----------------------------------------------------------------------
+-- Source: https://github.com/fightingdreamer/dotfiles/blob/54bb8b90b1741f58e02e1911cb6de73d48160247/lua/nv/lua/core/opts_lsp.lua#L93
+
 local lsp_priority = {
     rename = {
         -- JS
@@ -1194,19 +1278,11 @@ local lsp_priority = {
     },
 }
 
--- rename ----------------------------------------------------------------------
-
--- https://neovim.io/doc/user/lsp.html#lsp-api
 local lsp_have_feature = {
     rename = function(client)
         return client.supports_method("textDocument/rename")
     end,
-    inlay_hint = function(client)
-        return client.supports_method("textDocument/inlayHint")
-    end,
 }
-
--- rename ----------------------------------------------------------------------
 
 local function get_lsp_client_names(have_feature)
     local client_names = {}
@@ -1227,17 +1303,6 @@ local function lsp_buf_rename_use_one(fallback)
     local client_names = get_lsp_client_names(lsp_have_feature.rename)
     if #client_names == 1 then
         lsp_buf_rename(client_names[1])
-        return
-    end
-    if fallback then
-        fallback()
-    end
-end
-
-local function lsp_buf_rename_use_any(fallback)
-    local client_names = get_lsp_client_names(lsp_have_feature.rename)
-    for _, client_name in ipairs(client_names) do
-        lsp_buf_rename(client_name)
         return
     end
     if fallback then
@@ -1297,9 +1362,6 @@ local on_attach = function(client, bufnr)
     if client.name == "ts_ls" then
         client.server_capabilities.documentFormattingProvider = false
     end
-    -- if client.name == "angularls" then
-    --     client.server_capabilities.renameProvider = false
-    -- end
 
     nmap("<leader>rn", lsp_buf_rename_use_priority_or_select, "[R]e[n]ame")
     nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
@@ -1318,7 +1380,9 @@ local on_attach = function(client, bufnr)
     nmap("<leader>cr", vim.lsp.codelens.run, "[C]ode Lens [R]un")
 
     -- See `:help K` for why this keymap
-    nmap("<leader>k", vim.lsp.buf.hover, "Hover Documentation")
+    nmap("<leader>k", function()
+        vim.lsp.buf.hover({ border = "rounded", title = " hover " })
+    end, "Hover Documentation")
     nmap("<leader>K", vim.lsp.buf.typehierarchy, "Type Hierarchy")
     vim.keymap.set(
         { "n", "i" },
@@ -1358,34 +1422,6 @@ end, {
     desc = "Re-enable autoformat-on-save",
 })
 
--- DAP
-
-require("mason").setup()
-require("mason-nvim-dap").setup({
-    -- launguages, not adapter names
-    -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
-    ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg", "node2" },
-    automatic_installation = true,
-    handlers = {}, -- The defaults
-    adapters = {
-        codelldb = {
-            type = "server",
-            host = "127.0.0.1",
-            port = 13000, -- 💀 Use the port printed out or specified with `--port`
-        },
-    },
-})
-
-require("mason-tool-installer").setup({
-    -- a list of all tools you want to ensure are installed upon start
-    -- In practice, put here what lspconfig does not recognise
-    ensure_installed = {
-        "stylua",
-        "nxls",
-        "prettierd",
-    },
-})
-
 -- todo
 local eslint_default = require("lspconfig.configs.eslint").default_config
 local function eslint_on_attach(client, bufnr)
@@ -1399,66 +1435,9 @@ local eslint_config = vim.tbl_deep_extend("force", {}, eslint_default, {
     on_attach = eslint_on_attach,
 })
 
--- Enable the following language servers
--- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
-local servers = {
-    clangd = {},
-    pyright = {},
-    rust_analyzer = {},
-    jsonls = {},
-    nil_ls = {
-        -- nix
-    },
-    gopls = {},
-    omnisharp = {},
-
-    html = { filetypes = { "html", "twig", "hbs" } },
-    -- htmx = {},
-    -- custom_elements_ls = {},
-    cssls = { filetypes = { "scss", "less", "stylus", "css" } },
-    -- This rascal kills ram
-    -- tailwindcss = {},
-    angularls = {},
-    ts_ls = {}, -- wraps tsserver
-    biome = {},
-    astro = {},
-    eslint = {},
-    emmet_ls = {
-        filetypes = {
-            "css",
-            "eruby",
-            "html",
-            "javascript",
-            "javascriptreact",
-            "less",
-            "sass",
-            "scss",
-            "svelte",
-            "pug",
-            "typescriptreact",
-            "vue",
-        },
-    },
-
-    lua_ls = {
-        Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-        },
-    },
-}
-
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
--- Ensure the servers above are installed
-local mason_lspconfig = require("mason-lspconfig")
-
-mason_lspconfig.setup({
-    ensure_installed = vim.tbl_keys(servers),
-    automatic_enable = true,
-})
 
 vim.lsp.config("*", {
     capabilities = capabilities,
