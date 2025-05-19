@@ -960,7 +960,7 @@ require("lazy").setup({
                 if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
                     return
                 end
-                return { timeout_ms = 500 }
+                return { timeout_ms = 2000 }
             end,
             formatters_by_ft = {
                 lua = { "stylua" },
@@ -1448,13 +1448,15 @@ for server_name, config in pairs(servers) do
     vim.lsp.config(server_name, config)
 end
 
--- To update: zvm i -D=zls master
--- It is OS dependent right now
-require("lspconfig").zls.setup({
+-- zls is not downloaded by Mason, I want to control the version.
+-- So, get it with a nix flake or `zvm` (zvm i -D=zls master)
+vim.lsp.config("zls", {
+    root_markers = { "zls.json", "build.zig", ".git" },
+    workspace_required = false,
     cmd = { "zls" },
     on_attach = on_attach,
     capabilities = capabilities,
-    filetypes = { "zig" },
+    filetypes = { "zig", "zir" },
     settings = {
         zls = {
             warn_style = true,
@@ -1475,43 +1477,44 @@ require("lspconfig").eslint.setup({
     end,
 })
 
-local bashate = require("efmls-configs.linters.bashate")
-local languages = {
-    bash = { bashate },
-}
+-- local lsp_fmt_group = vim.api.nvim_create_augroup("LspFormattingGroup", {})
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--     group = lsp_fmt_group,
+--     callback = function(ev)
+--         local efm = vim.lsp.get_clients({ name = "efm", bufnr = ev.buf })
+--
+--         if vim.tbl_isempty(efm) then
+--             return
+--         end
+--
+--         vim.lsp.buf.format({ name = "efm" })
+--     end,
+-- })
 
-local lsp_fmt_group = vim.api.nvim_create_augroup("LspFormattingGroup", {})
-vim.api.nvim_create_autocmd("BufWritePost", {
-    group = lsp_fmt_group,
-    callback = function(ev)
-        local efm = vim.lsp.get_clients({ name = "efm", bufnr = ev.buf })
-
-        if vim.tbl_isempty(efm) then
-            return
-        end
-
-        vim.lsp.buf.format({ name = "efm" })
-    end,
-})
-
-local efmls_config = {
-    filetypes = vim.tbl_keys(languages),
-    settings = {
-        rootMarkers = { ".git/" },
-        languages = languages,
-    },
-    init_options = {
-        documentFormatting = true,
-        documentRangeFormatting = true,
-    },
-}
-
-require("lspconfig").efm.setup(vim.tbl_extend("force", efmls_config, {
-    -- Pass your custom lsp config below like on_attach and capabilities
-    --
-    -- on_attach = on_attach,
-    -- capabilities = capabilities,
-}))
+-- mapping of language to formatters/linters
+-- local bashate = require("efmls-configs.linters.bashate")
+-- local languages = {
+--     bash = { bashate },
+-- }
+--
+-- local efmls_config = {
+--     filetypes = vim.tbl_keys(languages),
+--     settings = {
+--         rootMarkers = { ".git/" },
+--         languages = languages,
+--     },
+--     init_options = {
+--         documentFormatting = true,
+--         documentRangeFormatting = true,
+--     },
+-- }
+--
+-- require("lspconfig").efm.setup(vim.tbl_extend("force", efmls_config, {
+--     -- Pass your custom lsp config below like on_attach and capabilities
+--     --
+--     -- on_attach = on_attach,
+--     -- capabilities = capabilities,
+-- }))
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
