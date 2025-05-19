@@ -1460,6 +1460,7 @@ vim.lsp.config("zls", {
         },
     },
 })
+vim.lsp.enable("zls")
 
 -- still needed for the custom config, idk why
 require("lspconfig").eslint.setup({
