@@ -31,7 +31,6 @@
     # tools
     git
     ffmpeg
-    code-cursor
     nixos-generators
     insomnia
     wireshark
@@ -41,9 +40,13 @@
 
     # deps
     glib
+
+    # editors
+    zed-editor
+    code-cursor
   ];
 
-  home-manager.users.${username} = _: {
+  home-manager.users.${username} = {
     programs.vscode = {
       enable = true;
     };
