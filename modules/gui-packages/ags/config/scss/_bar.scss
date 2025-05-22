@@ -90,6 +90,7 @@ $bar_subgroup_bg: material.$surfaceVariant;
     min-width: $bar_ws_width;
     min-height: $bar_ws_width;
     color: color.mix(material.$onBackground, material.$background, 40%);
+
     @if material.$darkmode ==true {
         color: color.mix(material.$onBackground, material.$background, 45%);
     }
@@ -261,17 +262,17 @@ $bar_subgroup_bg: material.$surfaceVariant;
     padding: 0.341rem;
 }
 
-.bar-space-button > box:first-child {
+.bar-space-button>box:first-child {
     @include lib_mixins.full-rounding;
     padding: 0rem 0.682rem;
 }
 
-.bar-space-button:hover > box:first-child,
-.bar-space-button:focus > box:first-child {
+.bar-space-button:hover>box:first-child,
+.bar-space-button:focus>box:first-child {
     background-color: material.$hovercolor;
 }
 
-.bar-space-button:active > box:first-child {
+.bar-space-button:active>box:first-child {
     background-color: material.$activecolor;
 }
 
@@ -281,7 +282,7 @@ $bar_subgroup_bg: material.$surfaceVariant;
     }
 }
 
-.bar-space-area-rightmost > box {
+.bar-space-area-rightmost>box {
     padding-right: 2.386rem;
 }
 
@@ -330,4 +331,37 @@ $bar_subgroup_bg: material.$surfaceVariant;
 
 .bar-util-btn:active {
     background-color: color.mix($bar_subgroup_bg, material.$onSurfaceVariant, 80%);
+}
+
+/* parking lot, todo move */
+
+.mouse-parking {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.mouse-parking:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.mouse-parking.occupied {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+    box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.2);
+}
+
+.parking-icon {
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.mouse-parking:hover .parking-icon {
+    opacity: 1;
 }

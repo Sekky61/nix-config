@@ -6,6 +6,7 @@ import FocusedClient from "../widget/FocusedClient";
 import Time from "../widget/Time";
 import Tray from "../widget/Tray";
 import Workspaces from "../widget/Workspaces";
+import SleepInhibitorWidget from "../widget/SleepInhibitorWidget";
 
 export enum BarOrientation {
   HORIZONTAL = "horizontal",
@@ -102,7 +103,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             valign={bind(vertical).as((v) => (v ? END : CENTER))}
           >
             <BarGroup>
-              <Time vertical={bind(vertical)} />
+              <box
+                vertical={bind(vertical)}
+                hexpand
+                vexpand
+                halign={bind(vertical).as((v) => (v ? CENTER : END))}
+                valign={bind(vertical).as((v) => (v ? END : CENTER))}
+              >
+                <Time vertical={bind(vertical)} />
+                <SleepInhibitorWidget vertical={bind(vertical)}>
+                  <icon icon="system-suspend" />
+
+                  {bind(vertical).as((v) =>
+                    v ? <box /> : <label label="P" />,
+                  )}
+                </SleepInhibitorWidget>
+              </box>
             </BarGroup>
             <Tray vertical={bind(vertical)} />
           </box>
