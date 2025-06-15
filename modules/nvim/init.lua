@@ -53,6 +53,7 @@ local servers = {
     -- This rascal kills ram
     -- tailwindcss = {},
     angularls = {},
+    yamlls = {},
     ts_ls = {}, -- wraps tsserver
     biome = {},
     astro = {},
