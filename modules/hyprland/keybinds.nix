@@ -399,7 +399,7 @@ in {
           command = {params = "bemoji";};
         }
         {
-          description = "Toggle floating mode";
+          description = "Toggle floating mode"; # todo float in all workspaces
           bind = {
             mods = ["SUPER" "ALT"];
             key = "Space";
