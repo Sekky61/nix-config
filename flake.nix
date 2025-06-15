@@ -33,7 +33,9 @@
 
     more-waita = {
       # Icons
-      url = "github:somepaulo/MoreWaita";
+      # PR with fixed symlinks
+      # https://github.com/somepaulo/MoreWaita/pull/335
+      url = "github:somepaulo/MoreWaita?ref=pull/335/head";
       flake = false;
     };
 

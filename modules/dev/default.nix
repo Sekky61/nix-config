@@ -11,7 +11,7 @@
   # packages for development
   environment.systemPackages = with pkgs; [
     # langs
-    nodejs_23
+    nodejs_latest
     gjs
     bun
     yarn
