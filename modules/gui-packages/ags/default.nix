@@ -41,7 +41,7 @@
     python311Packages.pywayland
     pywal
     sassc
-    webkitgtk
+    webkitgtk_6_0
     webp-pixbuf-loader
     ydotool
   ];
