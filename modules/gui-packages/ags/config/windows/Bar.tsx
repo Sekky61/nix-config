@@ -121,9 +121,14 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
               </box>
             </BarGroup>
             <Tray vertical={bind(vertical)} />
+            <Spacer />
           </box>
         }
       />
     </window>
   );
+}
+
+function Spacer() {
+  return <box className="bar-sidespace"> </box>;
 }
