@@ -363,6 +363,14 @@ $bar_subgroup_bg: material.$surfaceVariant;
     transition: opacity 0.2s ease-in-out;
 }
 
+.parking-height {
+    min-height: 2rem;
+}
+
+.parking-width {
+    min-width: 4rem;
+}
+
 .mouse-parking:hover .parking-icon {
     opacity: 1;
 }

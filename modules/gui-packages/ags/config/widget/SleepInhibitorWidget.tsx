@@ -1,11 +1,14 @@
 import type { Binding } from "astal";
 import { SleepInhibitor } from "../services/sleep-inhibitor";
+import { Gtk } from "astal/gtk3";
 
 interface SleepInhibitorProps {
   vertical: Binding<boolean>;
   children?: JSX.Element | JSX.Element[];
   className?: string;
 }
+
+const { CENTER, FILL } = Gtk.Align;
 
 export default function SleepInhibitorWidget({
   vertical,
@@ -27,8 +30,12 @@ export default function SleepInhibitorWidget({
       className={`${className} mouse-parking`}
     >
       <box
+        halign={CENTER}
+        valign={CENTER}
+        homogeneous={true}
         className={vertical.as(
-          (v) => `${v ? "spacing-v-5" : "spacing-h-4"} parking-icon`,
+          (v) =>
+            `${v ? "spacing-v-5 parking-height" : "spacing-h-4 parking-width"} parking-icon`,
         )}
         vertical={vertical}
       >
