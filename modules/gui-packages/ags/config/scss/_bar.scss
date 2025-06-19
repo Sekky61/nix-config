@@ -24,7 +24,8 @@ $bar_subgroup_bg: material.$surfaceVariant;
 }
 
 .bar-sidespace {
-    min-width: 1.5rem;
+    min-width: 1rem;
+    min-height: 1rem;
 }
 
 .bar-group-margin {
@@ -298,7 +299,7 @@ $bar_subgroup_bg: material.$surfaceVariant;
     min-height: 1.032rem;
     min-width: 1.032rem;
     font-size: 1.032rem;
-    padding: 0 0.3rem;
+    padding: 0.3rem 0.3rem;
 }
 
 .bar-statusicons {
@@ -360,6 +361,14 @@ $bar_subgroup_bg: material.$surfaceVariant;
 .parking-icon {
     opacity: 0.7;
     transition: opacity 0.2s ease-in-out;
+}
+
+.parking-height {
+    min-height: 2rem;
+}
+
+.parking-width {
+    min-width: 4rem;
 }
 
 .mouse-parking:hover .parking-icon {
