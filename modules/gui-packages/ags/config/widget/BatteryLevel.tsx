@@ -40,11 +40,11 @@ bat.connect("notify::charging", () => {
   nextNotif = 0;
 });
 
+// todo make the space before % a short space
 export default function BatteryLevel({ vertical }: BatteryProps) {
   return (
     <eventbox
-      onClick={(box, e) => {
-        console.log("click", box, e);
+      onClick={(_box, e) => {
         if (e.button === Astal.MouseButton.PRIMARY) {
           sendNotification(
             `Battery is at ${Math.floor(bat.percentage * 100)}%`,
