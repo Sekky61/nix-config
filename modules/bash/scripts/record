@@ -4,7 +4,7 @@ set -euo pipefail
 # `record`
 #
 # A simple script to start/stop screen recording with `wf-recorder`. Outputs recordings to `~/Videos`.
-# TODO: does not support multiple monitors
+# Supports multiple monitors with fuzzel picker.
 #
 # Options:
 # - **`--sound`**: Record a selected area with audio.
@@ -14,23 +14,69 @@ set -euo pipefail
 #
 # Stops recording if already running.
 
+# Error handler
+handle_error() {
+    local exit_code=$?
+    notify-send "Recording Error" "Script failed with exit code $exit_code" -a 'record' -u critical &
+    exit $exit_code
+}
+
+# Set up error trap
+trap handle_error ERR
+
 getdate() {
     date '+%Y%m%d_%H-%M-%S'
 }
 
-cd ~/Videos || exit
+get_monitor() {
+    # Get available outputs using hyprctl
+    local monitors
+    monitors=$(hyprctl monitors -j | jq -r '.[].name')
+    local monitor_count
+    monitor_count=$(echo "$monitors" | wc -l)
+    
+    if [[ $monitor_count -eq 1 ]]; then
+        echo "$monitors"
+    else
+        # Use fuzzel to pick monitor
+        local selected
+        selected=$(echo "$monitors" | fuzzel --dmenu --prompt "Select monitor: ")
+        if [[ -z "$selected" ]]; then
+            notify-send "Recording Cancelled" "No monitor selected" -a 'record' &
+            exit 1
+        fi
+        echo "$selected"
+    fi
+}
+
+cd ~/Videos || {
+    notify-send "Recording Error" "Cannot access ~/Videos directory" -a 'record' -u critical &
+    exit 1
+}
+
 if pgrep wf-recorder > /dev/null; then
     notify-send "Recording Stopped" "Stopped" -a 'record-script.sh' &
     pkill wf-recorder &
 else
-    notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'record'
-    if [[ "$1" == "--sound" ]]; then
-        wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$(slurp)" --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
-    elif [[ "$1" == "--fullscreen-sound" ]]; then
-        wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
-    elif [[ "$1" == "--fullscreen" ]]; then
-        wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t & disown
+    # Get selected monitor
+    monitor=$(get_monitor)
+    [[ -z "$monitor" ]] && exit 1  # Exit if no monitor selected
+    
+    notify-send "Starting recording" "recording_$(getdate).mp4 on $monitor" -a 'record'
+    
+    if [[ "${1:-}" == "--sound" ]]; then
+        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
+            -o "$monitor" --geometry "$(slurp -o "$monitor")" \
+            --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
+    elif [[ "${1:-}" == "--fullscreen-sound" ]]; then
+        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
+            -o "$monitor" \
+            --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
+    elif [[ "${1:-}" == "--fullscreen" ]]; then
+        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
+            -o "$monitor" & disown
     else 
-        wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$(slurp)" & disown
+        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
+            -o "$monitor" --geometry "$(slurp -o "$monitor")" & disown
     fi
 fi
