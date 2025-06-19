@@ -14,69 +14,151 @@ set -euo pipefail
 #
 # Stops recording if already running.
 
+# Constants
+readonly SCRIPT_NAME="record"
+readonly VIDEO_DIR="$HOME/Videos"
+readonly PIXEL_FORMAT="yuv420p"
+
 # Error handler
 handle_error() {
     local exit_code=$?
-    notify-send "Recording Error" "Script failed with exit code $exit_code" -a 'record' -u critical &
+    notify-send "Recording Error" "Script failed with exit code $exit_code" \
+        -a "$SCRIPT_NAME" -u critical &
     exit $exit_code
 }
 
-# Set up error trap
 trap handle_error ERR
 
-getdate() {
+get_timestamp() {
     date '+%Y%m%d_%H-%M-%S'
 }
 
+get_filename() {
+    echo "./recording_$(get_timestamp).mp4"
+}
+
+get_default_audio_sink() {
+    pactl get-default-sink | sed 's/$/\.monitor/'
+}
+
 get_monitor() {
-    # Get available outputs using hyprctl
-    local monitors
+    local monitors monitor_count selected
+    
+    if ! command -v hyprctl >/dev/null 2>&1; then
+        notify-send "Missing Dependency" "hyprctl not found" -a "$SCRIPT_NAME" -u critical &
+        exit 1
+    fi
+    
     monitors=$(hyprctl monitors -j | jq -r '.[].name')
-    local monitor_count
     monitor_count=$(echo "$monitors" | wc -l)
     
     if [[ $monitor_count -eq 1 ]]; then
         echo "$monitors"
     else
-        # Use fuzzel to pick monitor
-        local selected
-        selected=$(echo "$monitors" | fuzzel --dmenu --prompt "Select monitor: ")
+        selected=$(echo "$monitors" | fuzzel --dmenu --prompt "Select monitor: " || true)
         if [[ -z "$selected" ]]; then
-            notify-send "Recording Cancelled" "No monitor selected" -a 'record' &
+            notify-send "Recording Cancelled" "No monitor selected" -a "$SCRIPT_NAME" &
             exit 1
         fi
         echo "$selected"
     fi
 }
 
-cd ~/Videos || {
-    notify-send "Recording Error" "Cannot access ~/Videos directory" -a 'record' -u critical &
-    exit 1
+start_recording() {
+    local mode="$1"
+    local monitor filename audio_sink
+    
+    monitor=$(get_monitor)
+    filename=$(get_filename)
+    
+    notify-send "Starting recording" "$filename on $monitor" -a "$SCRIPT_NAME"
+    
+    case "$mode" in
+        "area")
+            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
+                -o "$monitor" --geometry "$(slurp -o "$monitor")" & disown
+            ;;
+        "area-sound")
+            audio_sink=$(get_default_audio_sink)
+            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
+                -o "$monitor" --geometry "$(slurp -o "$monitor")" \
+                --audio="$audio_sink" & disown
+            ;;
+        "fullscreen")
+            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
+                -o "$monitor" & disown
+            ;;
+        "fullscreen-sound")
+            audio_sink=$(get_default_audio_sink)
+            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
+                -o "$monitor" --audio="$audio_sink" & disown
+            ;;
+        *)
+            notify-send "Invalid Mode" "Unknown recording mode: $mode" \
+                -a "$SCRIPT_NAME" -u critical &
+            exit 1
+            ;;
+    esac
 }
 
-if pgrep wf-recorder > /dev/null; then
-    notify-send "Recording Stopped" "Stopped" -a 'record-script.sh' &
+stop_recording() {
+    notify-send "Recording Stopped" "Stopped" -a "$SCRIPT_NAME" &
     pkill wf-recorder &
-else
-    # Get selected monitor
-    monitor=$(get_monitor)
-    [[ -z "$monitor" ]] && exit 1  # Exit if no monitor selected
+}
+
+check_dependencies() {
+    local missing_deps=()
     
-    notify-send "Starting recording" "recording_$(getdate).mp4 on $monitor" -a 'record'
+    # todo pactl
+    for cmd in wf-recorder jq hyprctl slurp fuzzel; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            missing_deps+=("$cmd")
+        fi
+    done
     
-    if [[ "${1:-}" == "--sound" ]]; then
-        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
-            -o "$monitor" --geometry "$(slurp -o "$monitor")" \
-            --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
-    elif [[ "${1:-}" == "--fullscreen-sound" ]]; then
-        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
-            -o "$monitor" \
-            --audio=alsa_output.pci-0000_08_00.6.analog-stereo.monitor & disown
-    elif [[ "${1:-}" == "--fullscreen" ]]; then
-        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
-            -o "$monitor" & disown
-    else 
-        wf-recorder --pixel-format yuv420p -f "./recording_$(getdate).mp4" \
-            -o "$monitor" --geometry "$(slurp -o "$monitor")" & disown
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        notify-send "Missing Dependencies" \
+            "Please install: ${missing_deps[*]}" \
+            -a "$SCRIPT_NAME" -u critical &
+        exit 1
     fi
-fi
+}
+
+main() {
+    check_dependencies
+    
+    if [[ ! -d "$VIDEO_DIR" ]]; then
+        notify-send "Directory Error" "Cannot access $VIDEO_DIR" \
+            -a "$SCRIPT_NAME" -u critical &
+        exit 1
+    fi
+    
+    cd "$VIDEO_DIR"
+    
+    if pgrep wf-recorder > /dev/null; then
+        stop_recording
+        return
+    fi
+    
+    case "${1:-}" in
+        "--sound")
+            start_recording "area-sound"
+            ;;
+        "--fullscreen")
+            start_recording "fullscreen"
+            ;;
+        "--fullscreen-sound")
+            start_recording "fullscreen-sound"
+            ;;
+        "")
+            start_recording "area"
+            ;;
+        *)
+            notify-send "Invalid Option" "Unknown option: $1" \
+                -a "$SCRIPT_NAME" -u critical &
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
