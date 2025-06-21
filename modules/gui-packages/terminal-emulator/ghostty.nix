@@ -17,6 +17,12 @@ in {
       programs.ghostty = {
         enable = true;
         enableBashIntegration = true;
+        settings = {
+          # Copy in SSH (OSC52)
+          clipboard-read = "allow";
+          clipboard-write = "allow";
+          copy-on-select = "clipboard";
+        };
       };
     };
 
