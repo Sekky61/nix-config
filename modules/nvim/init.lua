@@ -646,23 +646,24 @@ require("lazy").setup({
     {
         -- LLM
         "yetone/avante.nvim",
+        build = "make",
         event = "VeryLazy",
-        lazy = false,
         version = false, -- set this if you want to always pull the latest change
-        cursor_applying_provider = "groq",
-        behaviour = {
-            enable_cursor_planning_mode = true, -- enable cursor planning mode!
-        },
         opts = {
-            -- add any opts here
             provider = "groq",
-            vendors = {
+            cursor_applying_provider = "groq",
+            behaviour = {
+                enable_cursor_planning_mode = true, -- enable cursor planning mode!
+            },
+            providers = {
                 groq = {
                     __inherited_from = "openai",
                     api_key_name = "GROQ_API_KEY",
                     endpoint = "https://api.groq.com/openai/v1/",
                     model = "llama-3.3-70b-versatile",
-                    max_completion_tokens = 32768,
+                    extra_request_body = {
+                        max_completion_tokens = 32768,
+                    },
                 },
                 ollama = {
                     __inherited_from = "openai",
@@ -1046,6 +1047,9 @@ require("lazy").setup({
 
 -- set the bottom safe area
 vim.opt.scrolloff = 8
+
+-- views can only be fully collapsed with the global statusline
+vim.opt.laststatus = 3
 
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
