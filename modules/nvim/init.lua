@@ -1068,6 +1068,21 @@ vim.o.mouse = "a"
 --  See `:help 'clipboard'`
 vim.o.clipboard = "unnamedplus"
 
+if vim.fn.has("wsl") then
+    vim.g.clipboard = {
+        name = "win_clipboard",
+        copy = {
+            ["+"] = "clip.exe",
+            ["*"] = "clip.exe",
+        },
+        paste = {
+            ["+"] = "powershell.exe Get-Clipboard",
+            ["*"] = "powershell.exe Get-Clipboard",
+        },
+        cache_enabled = 0,
+    }
+end
+
 -- Enable break indent
 vim.o.breakindent = true
 
