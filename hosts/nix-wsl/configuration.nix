@@ -89,14 +89,6 @@
 
   # dconf
   programs = {
-    ssh = {
-      extraConfig = ''
-        Host riscvsim-droplet
-            HostName 164.92.130.132
-            User riscvsim
-            IdentityFile ~/.ssh/id_rsa
-      '';
-    };
     gnupg = {
       # ssh passwords
       agent = {

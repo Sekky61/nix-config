@@ -1066,7 +1066,12 @@ vim.o.mouse = "a"
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = "unnamedplus"
+vim.o.clipboard = "unnamedplus,unnamed"
+
+if vim.fn.has("wsl") == 1 then
+    -- use the OSC52 clipboard provider (SSH usecase)
+    vim.g.clipboard = "osc52"
+end
 
 -- Enable break indent
 vim.o.breakindent = true

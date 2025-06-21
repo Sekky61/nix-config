@@ -13,4 +13,10 @@
 
   # exit node:
   # sudo tailscale up --advertise-exit-node
+
+  # When up, `ssh michal@nix-wsl` should be enough
+  # If you need to access a port (like 4200), running the program on host 0.0.0.0 (not localhost!) should just work
+
+  # HTTPS
+  # You need to generate certs and renew them. In NixOS, I have not figured it out yet
 }

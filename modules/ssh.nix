@@ -86,11 +86,25 @@ in {
       openssh.authorizedKeys.keys = cfg.personal.keys;
     };
 
+    # Client
+    programs.ssh = {
+      extraConfig = ''
+        # Reuse ssh connections to the same host
+        Host *
+          ControlMaster auto
+          ControlPath /tmp/%r@%h:%p
+          ControlPersist yes
+      '';
+    };
+
+    # Server
     services.openssh = {
       enable = true;
-      settings.PasswordAuthentication = false;
-      settings.KbdInteractiveAuthentication = false;
-      settings.X11Forwarding = true;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        X11Forwarding = true;
+      };
 
       # AFAIK not that necessary
       #
@@ -106,6 +120,7 @@ in {
 
     environment.systemPackages = with pkgs; [
       gnome-keyring
+      lemonade # copy, xdg-open over SSH
     ];
 
     services.gnome.gnome-keyring.enable = true;
