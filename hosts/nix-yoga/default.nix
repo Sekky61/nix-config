@@ -8,7 +8,6 @@
     # ../../modules/wifi.nix
 
     # Desktop/gui
-    ./gnome.nix
     ../../modules/gui-packages
     ../../modules/hyprland
     ../../modules/gamedev/godot.nix

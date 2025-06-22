@@ -1,6 +1,6 @@
 {
+  config,
   pkgs,
-  username,
   ...
 }: {
   imports = [
@@ -29,7 +29,6 @@
     d-spy
     # paint
     # kolourpaint
-    nautilus
     icon-library
     dconf-editor
     qt5.qtimageformats
@@ -61,7 +60,21 @@
     showmethekey # show pressed keys
     xorg.xev
 
+    # Nautilus file manager
+    nautilus
+    nautilus-open-any-terminal
     # todo take a look at it
     nautilus-python
   ];
+
+  # Nautilus, continued
+  environment = {
+    sessionVariables = {
+      NAUTILUS_EXTENSION_DIR = "${config.system.path}/lib/nautilus/extensions-4";
+    };
+
+    pathsToLink = [
+      "/share/nautilus-python/extensions"
+    ];
+  };
 }
