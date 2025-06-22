@@ -2,6 +2,8 @@
   lib,
   humanName ? execName,
   execName,
+  package ? null,
+  desktopFileName ? package.meta.desktopFile,
 }:
 with lib; {
   enable = mkEnableOption "${humanName} browser";
@@ -10,8 +12,8 @@ with lib; {
     type = types.str;
     default = execName;
   };
-  desktopFile = mkOption {
+  desktopFileName = mkOption {
     type = types.str;
-    default = "${execName}.desktop";
+    default = desktopFileName;
   };
 }
