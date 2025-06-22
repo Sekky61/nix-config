@@ -5,10 +5,6 @@
 }: let
   homeDirectory = "/home/${username}";
 in {
-  imports = [
-    ./dconf.nix
-  ];
-
   home = {
     inherit username homeDirectory;
     sessionVariables = {

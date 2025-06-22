@@ -1,4 +1,9 @@
-{pkgs, ...}: {
+# Use font-manager to browse
+{
+  pkgs,
+  username,
+  ...
+}: {
   fonts = {
     packages = with pkgs; [
       jetbrains-mono
@@ -9,6 +14,11 @@
       noto-fonts-cjk-sans
       noto-fonts-emoji
       roboto
+      twitter-color-emoji
+      morewaita-icon-theme
+      bibata-cursors
+      rubik
+      lexend
     ];
     fontconfig.defaultFonts = {
       serif = [
@@ -22,5 +32,11 @@
       monospace = ["MonaspiceNe Nerd Font Mono"];
       emoji = ["Noto Color Emoji"];
     };
+  };
+
+  home-manager.users.${username} = {
+    home.packages = with pkgs; [
+      font-manager
+    ];
   };
 }
