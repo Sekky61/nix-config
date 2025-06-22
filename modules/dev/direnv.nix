@@ -1,14 +1,19 @@
-{
-  # load flake development shell on cd
-  programs = {
-    direnv = {
-      enable = true;
-      enableBashIntegration = true;
-      nix-direnv.enable = true;
+{username, ...}: {
+  home-manager.users.${username} = {
+    programs = {
+      # load flake development shell on cd
+      direnv = {
+        enable = true;
+        enableBashIntegration = true;
+        nix-direnv.enable = true;
+      };
+    };
+
+    # Ignore the .envrc file in a git repo
+    programs.git = {
+      ignores = [
+        ".direnv"
+      ];
     };
   };
-
-  # Note: to ignore the .envrc file in a git repo,
-  # add the following to the .git/info/exclude file:
-  # .envrc
 }
