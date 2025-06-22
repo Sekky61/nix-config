@@ -6,6 +6,7 @@
   imports = [
     ./direnv.nix
     ./debugger.nix
+    ./git.nix
   ];
 
   # Of course many of these tools could be project-scoped and not in

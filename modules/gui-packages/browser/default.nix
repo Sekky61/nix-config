@@ -40,10 +40,6 @@ in {
         assertion = lib.length defaultBrowsers <= 1;
         message = "You have more than one default browsers: ${lib.concatStringsSep " " (lib.map (br: br.name) defaultBrowsers)}";
       }
-      {
-        assertion = lib.length defaultBrowsers == 1;
-        message = "You have one default browsers: ${lib.concatStringsSep " " (lib.map (br: br.name) defaultBrowsers)}";
-      }
     ];
   };
 

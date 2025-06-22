@@ -10,6 +10,7 @@
     ./packages # admin/debug packages
     ./js-binfmt.nix
     ./overlays
+    ./xdg.nix
 
     # Modules with options
     ./bitwarden.nix
