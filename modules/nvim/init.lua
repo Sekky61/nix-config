@@ -152,8 +152,8 @@ require("lazy").setup({
                 topdelete = { text = "‾" },
                 changedelete = { text = "~" },
             },
-            -- bad interaction with error-lens
             current_line_blame = true,
+            current_line_blame_formatter = "<author>, <author_time>, <abbrev_sha> -> <summary>",
             on_attach = function(bufnr)
                 local gs = package.loaded.gitsigns
                 local function map(mode, l, r, desc)
@@ -164,10 +164,10 @@ require("lazy").setup({
                 end
 
                 map("n", "[h", function()
-                    gs.nav_hunk("prev")
+                    gs.nav_hunk("prev", { target = "all" })
                 end, "Go to Previous [C]hange")
                 map("n", "]h", function()
-                    gs.nav_hunk("next")
+                    gs.nav_hunk("next", { target = "all" })
                 end, "Go to Next [C]hange")
                 map("n", "<leader>pc", gs.preview_hunk, "[P]review [C]hange")
                 map("n", "<leader>tB", gs.toggle_current_line_blame, "Toggle [B]lame")
