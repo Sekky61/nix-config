@@ -8,51 +8,51 @@
     ./debugger.nix
   ];
 
-  # packages for development
-  environment.systemPackages = with pkgs; [
-    # langs
-    nodejs_latest
-    gjs
-    bun
-    yarn
-    cargo
-    go
-    gcc
-    typescript
-    eslint
-    lua
-    zig
-    gnumake
-    cmake
-    alejandra # nix formatter
-
-    python311Packages.pip
-
-    # tools
-    git
-    ffmpeg
-    nixos-generators
-    insomnia
-    wireshark
-    act # github actions locally
-    mkcert
-    dive # for exploring docker images layers
-
-    # deps
-    glib
-
-    # editors
-    zed-editor
-    code-cursor
-  ];
-
+  # Of course many of these tools could be project-scoped and not in
+  # global scope, but this is convenient
   home-manager.users.${username} = {
-    programs.vscode = {
-      enable = true;
-    };
+    home.packages = with pkgs; [
+      # Languages - JS/TS
+      nodejs_latest
+      typescript
+      eslint
+      yarn
+      gjs
+      bun
+
+      # Languages - Rest
+      cargo
+      go
+      gcc
+      lua
+      zig
+      gnumake
+      cmake
+      alejandra # nix formatter
+      python311Packages.pip
+
+      # CLI tools
+      nixos-generators
+      wireshark
+      insomnia
+      mkcert
+      ffmpeg
+      act # GitHub Actions runner
+      dive # Docker image layer explorer
+      glib # gsettings, gdbus
+
+      # Editors
+      zed-editor
+      code-cursor
+
+      # Utilities
+      graphite-cli # Graphite stacked-PRs helper
+    ];
+
+    programs.vscode.enable = true;
   };
 
-  # localhost https dev
+  # localhost HTTPS development certs
   security.pki.certificateFiles = [
     "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
   ];

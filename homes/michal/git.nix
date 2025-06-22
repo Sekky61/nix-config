@@ -1,4 +1,4 @@
-{lib, ...}: {
+{
   programs.git = {
     enable = true;
     userName = "Sekky61";
@@ -10,15 +10,12 @@
       gpg.format = "ssh";
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       user.signingkey = "~/.ssh/id_ed25519.pub";
-      diff.algorithm = "histogram";
+      diff.algorithm = "histogram"; # Verify with `git config --get diff.algorithm`
       rerere = {
         # reuse recorded resolution
         autoupdate = true;
         enabled = true;
       };
     };
-    ignores = [
-      ".direnv"
-    ];
   };
 }
