@@ -7,9 +7,6 @@
 in {
   imports = [
     ./dconf.nix
-    ./mimelist.nix
-    ./theme.nix
-    ./git.nix
   ];
 
   home = {

@@ -11,6 +11,7 @@
     ./ags
     ./stt.nix
     ./fuzzel.nix
+    ./theme.nix
 
     # With options
     ./browser
