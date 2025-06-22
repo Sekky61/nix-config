@@ -31,6 +31,7 @@
       };
       steam.enable = true;
       alacritty.enable = true;
+      kde-connect.enable = true;
       ghostty = {
         enable = true;
         default = true;

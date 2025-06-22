@@ -14,6 +14,7 @@
     ./theme.nix
 
     # With options
+    ./kde-connect.nix
     ./browser
     ./steam.nix
     ./terminal-emulator
