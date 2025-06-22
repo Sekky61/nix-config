@@ -116,8 +116,6 @@ in {
             "wl-paste --type image --watch cliphist store"
             # cursor todo
             "hyprctl setcursor Bibata-Modern-Classic 24"
-            # kdeconnect
-            "kdeconnect-indicator"
             # launch programs
             "[workspace 1 silent] ${browser}"
             "[workspace 2 silent] ${defaultTerminal}"
