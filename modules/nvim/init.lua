@@ -1304,8 +1304,52 @@ vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = t
 vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
 vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
 
+-- error lens, source: https://github.com/Civitasv/runvim/tree/master
+local signs = {
+    { name = "DiagnosticSignError", text = " " },
+    { name = "DiagnosticSignWarn", text = " " },
+    { name = "DiagnosticSignHint", text = " " },
+    { name = "DiagnosticSignInfo", text = " " },
+}
+for _, sign in ipairs(signs) do
+    -- left side symbols
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+end
+
+vim.diagnostic.config({
+    virtual_text = { prefix = "" },
+    signs = {
+        active = signs,
+    },
+    update_in_insert = true,
+    underline = true,
+    severity_sort = true,
+    float = {
+        focusable = false,
+        style = "minimal",
+        border = "single",
+        source = true,
+        header = "",
+        prefix = "",
+    },
+})
+
 -- Diagnostic keymaps
--- TODO rebind ]d to ignore notes?
+vim.keymap.set("n", "[d", function()
+    vim.diagnostic.jump({
+        count = -1,
+        float = true,
+        severity = { min = vim.diagnostic.severity.WARN },
+    })
+end, { desc = "Jump to previous diagnostic" })
+vim.keymap.set("n", "]d", function()
+    vim.diagnostic.jump({
+        count = 1,
+        float = true,
+        severity = { min = vim.diagnostic.severity.WARN },
+    })
+end, { desc = "Jump to next diagnostic" })
+
 vim.keymap.set(
     "n",
     "<leader>e",
