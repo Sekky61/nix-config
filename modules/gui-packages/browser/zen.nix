@@ -1,8 +1,9 @@
 {
-  config,
-  lib,
+  username,
   inputs,
+  config,
   pkgs,
+  lib,
   ...
 }: let
   cfg = config.michal.browsers.zen;
@@ -15,9 +16,18 @@ in {
     package = zen-package;
   };
 
-  config = lib.mkIf cfg.enable {
-    environment.systemPackages = [
-      zen-package
-    ];
+  config = {
+    home-manager.users.${username} = {
+      imports = [
+        inputs.zen-browser.homeModules.default
+      ];
+
+      programs.zen-browser = {
+        # Use options from firefox:
+        # https://home-manager-options.extranix.com/?query=programs.firefox.&release=master
+        enable = cfg.enable;
+        nativeMessagingHosts = [pkgs.firefoxpwa pkgs.plasma5Packages.plasma-browser-integration];
+      };
+    };
   };
 }
