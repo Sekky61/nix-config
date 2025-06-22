@@ -120,7 +120,6 @@ in {
 
     environment.systemPackages = with pkgs; [
       gnome-keyring
-      lemonade # copy, xdg-open over SSH
     ];
 
     services.gnome.gnome-keyring.enable = true;

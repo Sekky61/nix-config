@@ -20,9 +20,10 @@ in {
     };
 
     home-manager.users.${username} = {
+      # Verify with `xdg-mime query default x-scheme-handler/http`
       xdg.mimeApps = {
         defaultApplications = let
-          browser = defaultBrowser.desktopFile;
+          browser = defaultBrowser.desktopFileName;
         in {
           "default-web-browser" = browser;
           "x-scheme-handler/http" = browser;
@@ -38,6 +39,10 @@ in {
       {
         assertion = lib.length defaultBrowsers <= 1;
         message = "You have more than one default browsers: ${lib.concatStringsSep " " (lib.map (br: br.name) defaultBrowsers)}";
+      }
+      {
+        assertion = lib.length defaultBrowsers == 1;
+        message = "You have one default browsers: ${lib.concatStringsSep " " (lib.map (br: br.name) defaultBrowsers)}";
       }
     ];
   };

@@ -1,4 +1,5 @@
 # Query with `xdg-mime query default image/png`
+# mimeApps settings are also set in browser nix module
 let
   editor = "code.desktop";
   file-manager = "org.gnome.Nautilus.desktop";

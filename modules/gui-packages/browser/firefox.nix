@@ -10,6 +10,7 @@ in {
   options.michal.browsers.firefox = mkBrowserOptions {
     inherit lib;
     execName = "firefox";
+    desktopFileName = pkgs.firefox.desktopItem.name;
   };
 
   config = lib.mkIf cfg.enable {
