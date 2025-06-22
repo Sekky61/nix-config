@@ -315,6 +315,7 @@ require("lazy").setup({
             }
             local behavior_base = {
                 sorting_strategy = "ascending",
+                file_ignore_patterns = { ".git/", ".cache", "%.o", "%.a", "%.out", "%.class" },
                 mappings = {
                     -- <C-/> to see all binds
                     -- <C-t> to open in new tab
