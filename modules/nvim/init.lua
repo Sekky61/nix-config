@@ -54,7 +54,7 @@ local servers = {
     -- tailwindcss = {},
     angularls = {},
     yamlls = {},
-    ts_ls = {}, -- wraps tsserver
+    vtsls = {}, -- typescript server
     biome = {},
     astro = {},
     eslint = {},
@@ -1317,14 +1317,6 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 -- rename LSP priority ----------------------------------------------------------------------
 -- Source: https://github.com/fightingdreamer/dotfiles/blob/54bb8b90b1741f58e02e1911cb6de73d48160247/lua/nv/lua/core/opts_lsp.lua#L93
 
-local lsp_priority = {
-    rename = {
-        -- JS
-        "angularls",
-        "ts_ls",
-    },
-}
-
 local lsp_have_feature = {
     rename = function(client)
         return client.supports_method("textDocument/rename")
@@ -1372,26 +1364,9 @@ local function lsp_buf_rename_use_select(fallback)
     vim.ui.select(client_names, { prompt = prompt }, on_choice)
 end
 
-local function lsp_buf_rename_use_priority(fallback)
-    local client_names = get_lsp_client_names(lsp_have_feature.rename)
-    for _, client_priority_name in ipairs(lsp_priority.rename) do
-        for _, client_name in ipairs(client_names) do
-            if client_priority_name == client_name then
-                lsp_buf_rename(client_priority_name)
-                return
-            end
-        end
-    end
-    if fallback then
-        fallback()
-    end
-end
-
 local function lsp_buf_rename_use_priority_or_select()
     lsp_buf_rename_use_one(function()
-        lsp_buf_rename_use_priority(function()
-            lsp_buf_rename_use_select()
-        end)
+        lsp_buf_rename_use_select()
     end)
 end
 
@@ -1405,13 +1380,29 @@ local on_attach = function(client, bufnr)
         vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
     end
 
-    -- You are banned
-    if client.name == "ts_ls" then
-        client.server_capabilities.documentFormattingProvider = false
-    end
+    -- list any phrases you want to block from code actions (case‐insensitive)
+    local bannedPhrases = {
+        "convert named export",
+        "move to a new file",
+        "generate 'get'",
+        "add missing import",
+    }
+
+    nmap("<leader>ca", function()
+        vim.lsp.buf.code_action({
+            filter = function(action)
+                local title = action.title:lower()
+                for _, phrase in ipairs(bannedPhrases) do
+                    if title:match(phrase) then
+                        return false
+                    end
+                end
+                return true
+            end,
+        })
+    end, "[C]ode [A]ction")
 
     nmap("<leader>rn", lsp_buf_rename_use_priority_or_select, "[R]e[n]ame")
-    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
     local tsb = require("telescope.builtin")
     nmap("gd", tsb.lsp_definitions, "[G]oto [D]efinition") -- jumps directly if only one is found

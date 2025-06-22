@@ -95,7 +95,7 @@ in {
           manager = {
             layout = [
               1
-              4
+              2
               3
             ];
             sort_by = "natural";
