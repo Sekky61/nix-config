@@ -457,7 +457,7 @@ require("lazy").setup({
                 "n",
                 "<leader>?",
                 tsb.oldfiles,
-                { desc = "[?] Find recently opened files" }
+                { desc = "[?x] Find recently opened files" }
             )
             vim.keymap.set("n", "<leader><space>", function()
                 tsb.buffers({ sort_mru = true })
