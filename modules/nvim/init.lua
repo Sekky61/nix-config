@@ -287,6 +287,7 @@ require("lazy").setup({
             "nvim-lua/plenary.nvim",
             "nvim-telescope/telescope-ui-select.nvim",
             "debugloop/telescope-undo.nvim",
+            "fdschmidt93/telescope-egrepify.nvim",
             {
                 -- Fuzzy Finder Algorithm which requires local dependencies to be built.
                 -- Only load if `make` is available. Make sure you have the system
@@ -409,6 +410,7 @@ require("lazy").setup({
                     preview_cutoff = 10,
                 },
             }
+            local egrep_actions = require("telescope._extensions.egrepify.actions")
             ts.setup({
                 defaults = vim.tbl_extend("error", style_base, vertical_setup, behavior_base),
                 pickers = {
@@ -445,23 +447,62 @@ require("lazy").setup({
                             },
                         },
                     }),
+                    egrepify = {
+                        -- intersect tokens in prompt ala "str1.*str2" that ONLY matches
+                        -- if str1 and str2 are consecutively in line with anything in between (wildcard)
+                        AND = true, -- default
+                        permutations = false, -- opt-in to imply AND & match all permutations of prompt tokens
+                        lnum = true, -- default, not required
+                        lnum_hl = "EgrepifyLnum", -- default, not required, links to `Constant`
+                        col = false, -- default, not required
+                        col_hl = "EgrepifyCol", -- default, not required, links to `Constant`
+                        title = true, -- default, not required, show filename as title rather than inline
+                        filename_hl = "EgrepifyFile", -- default, not required, links to `Title`
+                        results_ts_hl = true, -- set to false if you experience latency issues!
+                        -- suffix = long line, see screenshot
+                        -- EXAMPLE ON HOW TO ADD PREFIX!
+                        prefixes = {
+                            -- ADDED ! to invert matches
+                            -- example prompt: ! sorter
+                            -- matches all lines that do not comprise sorter
+                            -- rg --invert-match -- sorter
+                            ["!"] = {
+                                flag = "invert-match",
+                            },
+                            -- HOW TO OPT OUT OF PREFIX
+                            -- ^ is not a default prefix and safe example
+                            ["^"] = false,
+                        },
+                        -- default mappings
+                        mappings = {
+                            i = {
+                                -- toggle prefixes, prefixes is default
+                                ["<C-z>"] = egrep_actions.toggle_prefixes,
+                                -- toggle AND, AND is default, AND matches tokens and any chars in between
+                                ["<C-a>"] = egrep_actions.toggle_and,
+                                -- toggle permutations, permutations of tokens is opt-in
+                                ["<C-r>"] = egrep_actions.toggle_permutations,
+                            },
+                        },
+                    },
                 },
             })
             ts.load_extension("fzf")
             ts.load_extension("undo")
             ts.load_extension("ui-select")
+            ts.load_extension("egrepify")
 
             -- See `:help telescope.builtin`
             local tsb = require("telescope.builtin")
             vim.keymap.set(
                 "n",
-                "<leader>?",
+                "<leader><space>",
                 tsb.oldfiles,
-                { desc = "[?x] Find recently opened files" }
+                { desc = "[ ] Find recently opened files" }
             )
-            vim.keymap.set("n", "<leader><space>", function()
+            vim.keymap.set("n", "<leader>?", function()
                 tsb.buffers({ sort_mru = true })
-            end, { desc = "[ ] Find existing buffers" })
+            end, { desc = "[?] Find existing buffers" })
             vim.keymap.set(
                 "n",
                 "<leader>/",
@@ -479,7 +520,7 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
             vim.keymap.set("n", "<leader>sr", tsb.resume, { desc = "[S]earch [R]esume" })
-            vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling" })
+            vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
             vim.keymap.set("n", "<leader>sx", tsb.marks, { desc = "[S]earch Mar[x]" }) -- <m(LETTER)> to set, <'(LETTER)> to go there. USE CAPITAL LETTERS FOR GLOBAL MARKS!
@@ -514,6 +555,13 @@ require("lazy").setup({
                 "<leader>su",
                 "<cmd>Telescope undo<cr>",
                 { desc = "[S]earch [U]udo" }
+            )
+
+            vim.keymap.set(
+                "n",
+                "<leader>se",
+                "<cmd>Telescope egrepify<cr>",
+                { desc = "[S]earch [E]grepify" }
             )
         end,
     },
