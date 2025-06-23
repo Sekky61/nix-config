@@ -157,34 +157,32 @@ require("lazy").setup({
             on_attach = function(bufnr)
                 local gs = package.loaded.gitsigns
                 local function map(mode, l, r, desc)
-                    opts = opts or {}
-                    opts.buffer = bufnr
-                    opts.desc = desc
-                    vim.keymap.set(mode, l, r, opts)
+                    vim.keymap.set(mode, l, r, {
+                        buffer = bufnr,
+                        desc = "Git: " .. desc,
+                    })
                 end
 
                 map("n", "[h", function()
                     gs.nav_hunk("prev", { target = "all" })
-                end, "Go to Previous [C]hange")
+                end, "Go to Previous [H]unk")
                 map("n", "]h", function()
                     gs.nav_hunk("next", { target = "all" })
-                end, "Go to Next [C]hange")
-                map("n", "<leader>pc", gs.preview_hunk, "[P]review [C]hange")
-                map("n", "<leader>tB", gs.toggle_current_line_blame, "Toggle [B]lame")
-                map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", "Stage hunk")
-                map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", "Reset hunk")
-                map("n", "<leader>hS", gs.stage_buffer, "Stage buffer")
-                map("n", "<leader>ha", gs.stage_hunk, "Stage hunk")
-                map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
-                map("n", "<leader>hR", gs.reset_buffer, "Reset buffer")
-                map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+                end, "Go to Next [H]unk")
+                map("n", "<leader>tb", gs.toggle_current_line_blame, "[T]oggle line [B]lame")
+                map({ "n", "v" }, "<leader>hs", gs.stage_hunk, "[S]tage [H]unk")
+                map({ "n", "v" }, "<leader>hr", gs.reset_hunk, "[R]eset [H]unk")
+                map("n", "<leader>hS", gs.stage_buffer, "[S]tage buffer")
+                map("n", "<leader>hu", gs.undo_stage_hunk, "[H]unk [U]ndo stage")
+                map("n", "<leader>hR", gs.reset_buffer, "[R]eset buffer")
+                map("n", "<leader>hp", gs.preview_hunk, "[H]unk [P]review")
                 map("n", "<leader>hb", function()
                     gs.blame_line({ full = true })
-                end, "Blame line")
-                map("n", "<leader>hd", gs.diffthis, "Diff hunk")
+                end, "[B]lame line")
+                map("n", "<leader>hd", gs.diffthis, "[H]unk [D]iff")
                 map("n", "<leader>hD", function()
                     gs.diffthis("~")
-                end, "Open diff of the buffer")
+                end, "buffer [D]iff")
             end,
         },
     },
@@ -1313,6 +1311,7 @@ local signs = {
 }
 for _, sign in ipairs(signs) do
     -- left side symbols
+    -- todo will be deprecated
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
 end
 
@@ -1686,9 +1685,8 @@ luasnip.add_snippets("typescript", {
         i(1, "foo"),
         t("Signal: Signal<"),
         i(2, "string"),
-        t("> = computed<"),
-        f(typearg, { 2 }),
-        t({ ">(() => {", "" }),
+        t("> = computed"),
+        t({ "(() => {", "" }),
         i(3, "  return "),
         f(default_value, { 2 }),
         t({ ";", "});" }),
@@ -1700,9 +1698,8 @@ luasnip.add_snippets("typescript", {
         i(1, "foo"),
         t("Signal: WritableSignal<"),
         i(2, "string"),
-        t("> = signal<"),
-        f(typearg, { 2 }),
-        t(">("),
+        t("> = signal"),
+        t("("),
         f(default_value, { 2 }),
         t(");"),
     }),
@@ -1713,9 +1710,8 @@ luasnip.add_snippets("typescript", {
         i(1, "foo"),
         t("Signal: InputSignal<"),
         i(2, "string"),
-        t("> = input<"),
-        f(typearg, { 2 }),
-        t(">("),
+        t("> = input"),
+        t("("),
         f(default_value, { 2 }),
         t(", { alias: '"),
         f(typearg, { 1 }),
