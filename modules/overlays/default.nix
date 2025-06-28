@@ -8,7 +8,9 @@
   # - https://nixos-and-flakes.thiscute.world/nixpkgs/overlays
   # - https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages
 
+  # https://nixcademy.com/posts/mastering-nixpkgs-overlays-techniques-and-best-practice/
   nixpkgs.overlays = [
+    (import ./gemini-cli-overlay.nix)
     # # Example:
     # (final: prev: {
     #   steam = prev.steam.override {
