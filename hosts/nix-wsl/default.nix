@@ -12,8 +12,9 @@
     ../../modules/gui-packages/terminal-emulator
   ];
 
-  michal.programs = {
+    michal.programs = {
     bitwarden.enable = true;
+    obs-studio.enable = true;
     ventoy.enable = true;
     borg.enable = true;
     alacritty = {
