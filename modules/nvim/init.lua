@@ -8,6 +8,8 @@ vim.g.maplocalleader = " "
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+local dev_mode = vim.env.DEV_MODE == "1"
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -960,7 +962,7 @@ require("lazy").setup({
     -- my experiment
     {
         "Sekky61/lsp-sample-extractor.nvim",
-        -- dir = "~/Documents/lsp-sample-extractor.nvim",
+        dir = dev_mode and vim.fn.expand("~/Documents/lsp-sample-extractor.nvim") or nil,
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
