@@ -4,13 +4,13 @@
   ...
 }: {
   imports = [
-    ./fonts.nix
     ./ags
     ./stt.nix
     ./fuzzel.nix
     ./theme.nix
 
     # With options
+    ./fonts.nix
     ./options.nix
     ./remote-desktop.nix
     ./obs.nix
