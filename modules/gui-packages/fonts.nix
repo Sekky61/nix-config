@@ -3,10 +3,31 @@
   pkgs,
   username,
   lib,
+  inputs,
   ...
 }:
 with lib; let
   cfg = config.michal.graphical;
+
+  moreWaita = pkgs.stdenv.mkDerivation {
+    name = "MoreWaita";
+    src = inputs.more-waita;
+    installPhase = ''
+      mkdir -p $out/share/icons
+      mv * $out/share/icons
+    '';
+  };
+
+  google-fonts = pkgs.google-fonts.override {
+    fonts = [
+      # Sans
+      "Gabarito"
+      "Lexend"
+      # Serif
+      "Chakra Petch"
+      "Crimson Text"
+    ];
+  };
 in {
   config = mkIf cfg.enable {
     fonts = {
@@ -39,10 +60,44 @@ in {
       };
     };
 
+    stylix.fonts = {
+      serif = {
+        package = pkgs.roboto-serif;
+        name = "Roboto Serif";
+      };
+
+      sansSerif = {
+        package = pkgs.roboto;
+        name = "Roboto";
+      };
+
+      monospace = {
+        package = pkgs.nerd-fonts.monaspace;
+        name = "Monaspace Neon";
+      };
+
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
+
     home-manager.users.${username} = {
       home.packages = with pkgs; [
         font-manager
+        # themes
+        adwaita-qt6
+        adw-gtk3
+        material-symbols
+        google-fonts
+        moreWaita
+        bibata-cursors
       ];
+      home.file = {
+        ".local/share/icons/MoreWaita" = {
+          source = "${moreWaita}/share/icons";
+        };
+      };
     };
   };
 }
