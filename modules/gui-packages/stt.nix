@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  # dependencies for stt script
+  # dependencies for stt script, todo move, make optional
   environment.systemPackages = with pkgs; [
     sox
     ydotool
