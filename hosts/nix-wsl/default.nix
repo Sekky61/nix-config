@@ -12,19 +12,22 @@
     ../../modules/gui-packages/terminal-emulator
   ];
 
-    michal.programs = {
-    bitwarden.enable = true;
-        obs-studio.enable = true;
-    remote-desktop.enable = true;
-    ventoy.enable = true;
-    borg.enable = true;
-    alacritty = {
-      enable = true;
-      default = true;
-    };
-    ollama = {
-      enable = true;
-      gui = true;
+  michal = {
+    graphical.enable = true;
+    programs = {
+      bitwarden.enable = true;
+      obs-studio.enable = true;
+      remote-desktop.enable = true;
+      ventoy.enable = true;
+      borg.enable = true;
+      alacritty = {
+        enable = true;
+        default = true;
+      };
+      ollama = {
+        enable = true;
+        gui = true;
+      };
     };
   };
 }

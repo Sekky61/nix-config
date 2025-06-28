@@ -11,6 +11,7 @@
     ./theme.nix
 
     # With options
+    ./options.nix
     ./remote-desktop.nix
     ./obs.nix
     ./kde-connect.nix
