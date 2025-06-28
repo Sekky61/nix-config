@@ -19,6 +19,7 @@
     ./ollama.nix
     ./theme
     ./impurity.nix
+    ./gamedev
   ];
 
   environment.systemPackages = with pkgs; [

@@ -11,7 +11,6 @@ inputs.nixos-generators.nixosGenerate {
     # Desktop/gui
     ../modules/gui-packages
     ../modules/hyprland
-    ../modules/gamedev/godot.nix
     ../assets
 
     # dev

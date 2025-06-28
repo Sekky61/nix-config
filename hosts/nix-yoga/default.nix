@@ -10,7 +10,6 @@
     # Desktop/gui
     ../../modules/gui-packages
     ../../modules/hyprland
-    ../../modules/gamedev/godot.nix
     ../../assets
 
     # dev
@@ -32,6 +31,7 @@
       steam.enable = true;
       alacritty.enable = true;
       kde-connect.enable = true;
+      godot.enable = true;
       ghostty = {
         enable = true;
         default = true;
