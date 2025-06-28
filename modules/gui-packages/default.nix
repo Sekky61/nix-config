@@ -6,7 +6,6 @@
   imports = [
     ./ags
     ./stt.nix
-    ./theme.nix
 
     # With options
     ./fuzzel.nix
@@ -20,13 +19,9 @@
     ./terminal-emulator
   ];
 
-  # bluetooth
-  services.blueman.enable = true;
-
   # packages for daily needs
   environment.systemPackages = with pkgs; [
     # gui
-    blueberry # Bluetooth gui
     d-spy
     # paint
     # kolourpaint
