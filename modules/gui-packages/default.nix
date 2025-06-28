@@ -6,10 +6,10 @@
   imports = [
     ./ags
     ./stt.nix
-    ./fuzzel.nix
     ./theme.nix
 
     # With options
+    ./fuzzel.nix
     ./fonts.nix
     ./options.nix
     ./remote-desktop.nix
