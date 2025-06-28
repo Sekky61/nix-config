@@ -57,4 +57,8 @@
   security.pki.certificateFiles = [
     "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
   ];
+
+  environment.systemPackages = with pkgs; [
+    gemini-cli # it did not work in home-manager, some collision with eslint
+  ];
 }
