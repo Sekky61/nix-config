@@ -13,6 +13,7 @@
     ./xdg.nix
 
     # Modules with options
+    ./bluetooth.nix
     ./bitwarden.nix
     ./ventoy.nix
     ./borg.nix
