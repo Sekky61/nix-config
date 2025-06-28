@@ -4,16 +4,15 @@
   ...
 }: {
   imports = [
-    ./obs.nix
     ./fonts.nix
-    ./kitty.nix
-    ./remote-desktop.nix
     ./ags
     ./stt.nix
     ./fuzzel.nix
     ./theme.nix
 
     # With options
+    ./remote-desktop.nix
+    ./obs.nix
     ./kde-connect.nix
     ./browser
     ./steam.nix
