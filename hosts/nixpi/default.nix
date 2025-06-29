@@ -7,9 +7,6 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/wifi.nix
-
-    # general admin packages
-    ../../modules/terminal.nix
   ];
 
   # Services

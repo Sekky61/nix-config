@@ -16,4 +16,8 @@
       ];
     };
   };
+
+  environment.shellAliases = {
+    initenvrc = "echo \"use flake\" >> .envrc && direnv allow";
+  };
 }

@@ -4,7 +4,6 @@
     ./configuration.nix
 
     # dev
-    ../../modules/terminal.nix
     ../../modules/docker.nix
     ../../modules/dev
   ];

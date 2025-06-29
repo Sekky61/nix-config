@@ -12,36 +12,26 @@
     then name
     else null;
 in {
-  # This is the base to have at every vm, server or pc
-  imports = [
-    ./nvim
-    ./bash
-  ];
-
   # ---- System Configuration ----
   programs = {
-    htop.enable = true;
     mtr.enable = true; # todo alias (my trace route)
   };
 
   environment.systemPackages = with pkgs; [
-    git
-    gh
-    lazygit
-
     btop
+    jq
+    gojq
     ripgrep
     unzip
     fd
     fzf # needed by a script and nvim telescope plugin
+
+    # Network, utils, todo move
     socat
-    jq
-    gojq
     ethtool # network controls
     traceroute
     whois
     home-assistant-cli
-
     ueberzugpp # image support for terminals
 
     # fancy-motd # greet, welcome message
