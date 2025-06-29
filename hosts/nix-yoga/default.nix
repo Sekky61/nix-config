@@ -47,5 +47,34 @@
       };
       chrome.enable = true;
     };
+
+    monitors = [
+      # Laptop monitor
+      {
+        id = "Samsung Display Corp. 0x4193";
+        width = 2880;
+        height = 1800;
+        refreshRate = 90.0;
+        position = {
+          x = 0;
+          y = 0;
+        };
+        scale = 1.5;
+        transform = 0;
+      }
+      # Desktop monitor
+      {
+        id = "Gigabyte Technology Co. Ltd. G27QC A";
+        width = 1920;
+        height = 1080;
+        refreshRate = 165.0;
+        position = {
+          x = 1920;
+          y = 0;
+        };
+        scale = 1;
+        transform = 0;
+      }
+    ];
   };
 }

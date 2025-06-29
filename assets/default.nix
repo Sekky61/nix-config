@@ -1,9 +1,5 @@
-{
-  home-manager,
-  username,
-  ...
-}: {
-  home-manager.users.${username} = _: {
+{username, ...}: {
+  home-manager.users.${username} = {
     home.file = {
       ".config/wallpapers".source = ./wallpapers;
     };

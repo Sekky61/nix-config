@@ -6,24 +6,17 @@
   ...
 }:
 with lib; let
-  launcher = pkgs.writeShellScriptBin "hypr" ''
-    #!/${pkgs.bash}/bin/bash
-
-    export WLR_NO_HARDWARE_CURSORS=1
-    export _JAVA_AWT_WM_NONREPARENTING=1
-
-    exec ${hyprland_pkg}/bin/Hyprland
-  '';
-
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
-
-  myMonitors = {
-    laptop = "Samsung Display Corp. 0x4193";
-    gigabyte = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
-  };
+  monitors = config.michal.monitors;
 
   rounding = 5; # px
+
+  # Convert monitor config to Hyprland format
+  monitorToHyprland = monitor:
+    if monitor.enabled
+    then "desc:${monitor.id},${toString monitor.width}x${toString monitor.height}@${toString monitor.refreshRate},${toString monitor.position.x}x${toString monitor.position.y},${toString monitor.scale},transform,${toString monitor.transform}"
+    else "desc:${monitor.id},disable";
 in {
   imports = [
     ./keybinds.nix
@@ -97,12 +90,11 @@ in {
             "XCURSOR_SIZE, 32"
             "WLR_NO_HARDWARE_CURSORS, 1"
           ];
-          monitor = [
-            # todo generalize
-            "desc:${myMonitors.laptop},2880x1800@90.0,0x0,1.5,transform,0" # Yoga laptop screen
-            "desc:${myMonitors.gigabyte},1920x1080@165.0,1920x0,1" # desk monitor. scale 1 is big but works best
-            ",preferred,auto,1" # auto
-          ];
+          monitor =
+            map monitorToHyprland monitors
+            ++ [
+              ",preferred,auto,1" # auto
+            ];
           exec-once = [
             # system tray
             "ags run"
