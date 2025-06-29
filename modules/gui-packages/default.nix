@@ -1,6 +1,7 @@
 {
   imports = [
-    ./stt.nix
+    # todo make properly
+    # ./stt.nix
 
     # With options
     ./ags

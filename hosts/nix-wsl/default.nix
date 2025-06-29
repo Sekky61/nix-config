@@ -7,9 +7,6 @@
     ../../modules/terminal.nix
     ../../modules/docker.nix
     ../../modules/dev
-
-    # GUI
-    ../../modules/gui-packages/terminal-emulator
   ];
 
   michal = {
