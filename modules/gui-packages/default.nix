@@ -10,6 +10,7 @@
     ./fonts.nix
     ./fuzzel.nix
     ./kde-connect.nix
+    ./monitors.nix
     ./obs.nix
     ./options.nix
     ./remote-desktop.nix

@@ -22,7 +22,7 @@ in {
   config = mkIf cfg.enable {
     security.polkit.enable = true;
 
-    home-manager.users.${username} = _: {
+    home-manager.users.${username} = {
       home.packages = with pkgs; [
         hyprpolkitagent
       ];
