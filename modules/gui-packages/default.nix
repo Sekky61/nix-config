@@ -1,9 +1,9 @@
 {
   imports = [
-    ./ags
     ./stt.nix
 
     # With options
+    ./ags
     ./apps.nix
     ./browser
     ./fonts.nix

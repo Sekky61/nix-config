@@ -21,6 +21,7 @@
   michal = {
     graphical.enable = true;
     programs = {
+      ags.enable = true;
       bitwarden.enable = true;
       obs-studio.enable = true;
       remote-desktop.enable = true;
