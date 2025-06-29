@@ -1,4 +1,8 @@
-{username, ...}: {
+{
+  username,
+  pkgs,
+  ...
+}: {
   home-manager.users.${username} = {
     programs.git = {
       enable = true;
@@ -25,5 +29,19 @@
         };
       };
     };
+
+    home.packages = with pkgs; [
+      git
+      gh
+      lazygit
+    ];
+  };
+
+  environment.shellAliases = {
+    gitlog = "git log --graph --oneline --decorate";
+    # [f]uzzy [c]heckout
+    fc = "git branch --sort=-committerdate --format='%(refname:short)' | fzf --header 'git checkout' | xargs git checkout";
+    # [f]uzzy [p]pull request
+    fp = "gh pr list | fzf --header 'checkout pr' | awk '{print $(NF-5)}' | xargs git checkout";
   };
 }

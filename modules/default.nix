@@ -11,6 +11,9 @@
     ./js-binfmt.nix
     ./overlays
     ./xdg.nix
+    ./nvim
+    ./bash
+    ./terminal.nix
 
     # Modules with options
     ./gui-packages

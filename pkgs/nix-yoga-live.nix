@@ -13,7 +13,6 @@ inputs.nixos-generators.nixosGenerate {
     ../assets
 
     # dev
-    ../modules/terminal.nix
     ../modules/docker.nix
     ../modules/dev
     ({pkgs, ...}: {
