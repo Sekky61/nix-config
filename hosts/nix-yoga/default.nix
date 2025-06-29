@@ -8,7 +8,6 @@
     # ../../modules/wifi.nix
 
     # Desktop/gui
-    ../../modules/gui-packages
     ../../modules/hyprland
     ../../assets
 

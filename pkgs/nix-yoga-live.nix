@@ -9,7 +9,6 @@ inputs.nixos-generators.nixosGenerate {
     ../hosts/common
 
     # Desktop/gui
-    ../modules/gui-packages
     ../modules/hyprland
     ../assets
 
