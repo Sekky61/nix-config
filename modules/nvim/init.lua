@@ -27,6 +27,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
+-- js_formatters = { "biome", stop_after_first = true }
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "typescript", "htmlangular" },
@@ -35,16 +36,14 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- Enable the following language servers
+-- Override lsp configuration (base is taken from nvim-lspconfig
 -- Link: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local servers = {
     clangd = {},
     pyright = {},
     rust_analyzer = {},
     jsonls = {},
-    nil_ls = {
-        -- nix
-    },
+    nil_ls = {}, -- nix
     gopls = {},
     omnisharp = {},
 
@@ -57,7 +56,9 @@ local servers = {
     angularls = {},
     yamlls = {},
     vtsls = {}, -- typescript server
-    biome = {},
+    biome = {
+        cmd = { "./node_modules/.bin/biome", "lsp-proxy" },
+    },
     astro = {},
     eslint = {},
     emmet_ls = {
@@ -76,7 +77,6 @@ local servers = {
             "vue",
         },
     },
-
     lua_ls = {
         Lua = {
             workspace = { checkThirdParty = false },
@@ -923,8 +923,11 @@ require("lazy").setup({
     {
         "williamboman/mason-lspconfig.nvim",
         opts = {
-            ensure_installed = vim.tbl_keys(servers),
-            automatic_enable = true,
+            ensure_installed = vim.tbl_filter(function(server)
+                -- by relyling on biome from node_modules, it is not used in project where it is not installed
+                return server ~= "biome"
+            end, vim.tbl_keys(servers)),
+            automatic_enable = vim.tbl_keys(servers),
         },
     },
     {
@@ -954,7 +957,8 @@ require("lazy").setup({
             ensure_installed = {
                 "stylua",
                 "nxls",
-                "prettierd",
+                -- by relyling on prettier from node_modules, it is not used in project where it is not installed
+                -- "prettierd",
             },
         },
     },
@@ -986,6 +990,7 @@ require("lazy").setup({
                 function()
                     require("conform").format({ async = true })
                 end,
+
                 mode = "",
                 desc = "Format buffer",
             },
@@ -1007,6 +1012,8 @@ require("lazy").setup({
                 -- You can customize some of the format options for the filetype (:help conform.format)
                 rust = { "rustfmt", lsp_format = "fallback" },
                 -- Conform will run the first available formatter
+                json = { "biome" },
+                jsonc = { "biome" },
                 javascript = js_formatters,
                 typescript = js_formatters,
                 typescriptreact = js_formatters,
@@ -1427,6 +1434,7 @@ local on_attach = function(client, bufnr)
 
     -- list any phrases you want to block from code actions (case‐insensitive)
     local bannedPhrases = {
+        "convert named import",
         "convert named export",
         "move to a new file",
         "generate 'get'",
@@ -1446,6 +1454,22 @@ local on_attach = function(client, bufnr)
             end,
         })
     end, "[C]ode [A]ction")
+
+    if client.name == "biome" then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
+            callback = function()
+                vim.lsp.buf.code_action({
+                    context = {
+                        ---@diagnostic disable-next-line: assign-type-mismatch it works
+                        only = { "source.fixAll.biome" },
+                        diagnostics = {},
+                    },
+                    apply = true,
+                })
+            end,
+        })
+    end
 
     nmap("<leader>rn", lsp_buf_rename_use_priority_or_select, "[R]e[n]ame")
 
@@ -1505,19 +1529,6 @@ end, {
     desc = "Re-enable autoformat-on-save",
 })
 
--- todo
-local eslint_default = require("lspconfig.configs.eslint").default_config
-local function eslint_on_attach(client, bufnr)
-    on_attach(client, bufnr)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        buffer = bufnr,
-        command = "EslintFixAll",
-    })
-end
-local eslint_config = vim.tbl_deep_extend("force", {}, eslint_default, {
-    on_attach = eslint_on_attach,
-})
-
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
@@ -1529,6 +1540,7 @@ vim.lsp.config("*", {
 
 for server_name, config in pairs(servers) do
     vim.lsp.config(server_name, config)
+    vim.lsp.enable(server_name)
 end
 
 -- zls is not downloaded by Mason, I want to control the version.
@@ -1554,10 +1566,12 @@ vim.lsp.enable("zls")
 require("lspconfig").eslint.setup({
     on_attach = function(client, bufnr)
         on_attach(client, bufnr)
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            command = "EslintFixAll",
-        })
+        if client.name == "eslint" then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                buffer = bufnr,
+                command = "EslintFixAll",
+            })
+        end
     end,
 })
 
