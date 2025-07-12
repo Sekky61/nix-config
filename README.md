@@ -1,5 +1,7 @@
 # Nix Config
 
+![Screenshot of nix-yoga](./assets/screenshots/nix-yoga.png)
+
 Welcome. I hope you get inspired here.
 It can be hard to put together a NixOS config, it certainly was for me. This is mainly because you can structure it however you want.
 

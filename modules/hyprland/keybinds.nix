@@ -240,6 +240,11 @@ in {
           freeze
         ]
       );
+      ss_monitor_file = screen (
+        with ss_flags; [
+          monitor
+        ]
+      );
 
       toggleWindow = name: "ags toggle '${name}'";
       agsRequest = cmd: "ags request '${cmd}'";
@@ -435,6 +440,14 @@ in {
             {key = "Print";}
           ];
           command = {params = ss_region_clipboard;};
+        }
+        {
+          description = "Screenshot screen to file";
+          bind = {
+            mods = ["SUPER" "CONTROL"];
+            key = "S";
+          };
+          command = {params = ss_monitor_file;};
         }
         {
           description = "Screenshot region and edit";
