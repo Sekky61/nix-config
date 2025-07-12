@@ -46,6 +46,9 @@
       zed-editor
       code-cursor
 
+      # LLM/AI
+      opencode
+
       # Utilities
       graphite-cli # Graphite stacked-PRs helper
     ];

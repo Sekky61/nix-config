@@ -43,6 +43,7 @@ in {
       qt5.qtimageformats
 
       # games
+      # todo move to gui
       wineWowPackages.waylandFull
       winetricks
       lutris
