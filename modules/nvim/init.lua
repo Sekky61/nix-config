@@ -692,7 +692,7 @@ require("lazy").setup({
         event = "VeryLazy",
         version = false, -- set this if you want to always pull the latest change
         opts = {
-            provider = "groq",
+            provider = "openrouter",
             cursor_applying_provider = "groq",
             behaviour = {
                 enable_cursor_planning_mode = true, -- enable cursor planning mode!
@@ -712,6 +712,12 @@ require("lazy").setup({
                     api_key_name = "",
                     endpoint = "http://127.0.0.1:11434/v1",
                     model = "deepseek-r1:14b",
+                },
+                openrouter = {
+                    __inherited_from = "openai",
+                    endpoint = "https://openrouter.ai/api/v1",
+                    api_key_name = "OPENROUTER_API_KEY",
+                    model = "moonshotai/kimi-k2",
                 },
             },
         },

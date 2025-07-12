@@ -1,6 +1,7 @@
 {
   pkgs,
   username,
+  impurity,
   ...
 }: {
   imports = [
@@ -58,11 +59,16 @@
       opencode = {
         enable = true;
         # Package is overwritten in overlay
-        settings = {
-          # https://opencode.ai/docs/config
-        };
+
+        # Settings have permissions problems, probably need write?
+        # settings = {
+        #   # https://opencode.ai/docs/config
+        #   instructions = ["4.1-Beast.chatmode.md"];
+        # };
       };
     };
+
+    xdg.configFile."opencode/4.1-Beast.chatmode.md".source = impurity.link ./prompts/4.1-Beast.chatmode.md;
   };
 
   # localhost HTTPS development certs
