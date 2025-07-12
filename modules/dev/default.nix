@@ -53,7 +53,16 @@
       graphite-cli # Graphite stacked-PRs helper
     ];
 
-    programs.vscode.enable = true;
+    programs = {
+      vscode.enable = true;
+      opencode = {
+        enable = true;
+        # Package is overwritten in overlay
+        settings = {
+          # https://opencode.ai/docs/config
+        };
+      };
+    };
   };
 
   # localhost HTTPS development certs

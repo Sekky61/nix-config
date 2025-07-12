@@ -59,14 +59,15 @@ in {
 
   config = mkIf cfg.enable {
     environment.systemPackages = let
-      ags-bar = inputs.ags.lib.bundle {
-        inherit pkgs extraPackages;
-        src = ./config;
-        name = "ags-bar";
-      };
+      # TODO fix, ags.lib api changed
+      # ags-bar = inputs.ags.lib.bundle {
+      #   inherit pkgs extraPackages;
+      #   src = ./config;
+      #   name = "ags-bar";
+      # };
     in
       with pkgs; [
-        ags-bar
+        # ags-bar
         gtk3 # icon-library (probably)
       ];
 
