@@ -14,7 +14,7 @@ in {
   config = mkIf cfg.enable {
     programs.obs-studio = {
       enable = true;
-      enableVirtualCamera = true; # should be fixed in new version, in nixpkgs soon: https://github.com/NixOS/nixpkgs/issues/420729
+      enableVirtualCamera = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
         obs-backgroundremoval
