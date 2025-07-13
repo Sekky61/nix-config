@@ -63,7 +63,22 @@
         # Settings have permissions problems, probably need write?
         # settings = {
         #   # https://opencode.ai/docs/config
-        #   instructions = ["4.1-Beast.chatmode.md"];
+        #   instructions = ["{file:./4.1-Beast.chatmode.md}"];
+        #   mcp = {
+        #     mcp-deepwiki = {
+        #       command = ["npx" "-y" "mcp-deepwiki@latest"];
+        #       enabled = true;
+        #       type = "local";
+        #     };
+        #     playwright = {
+        #       command = [
+        #         "npx"
+        #         "@playwright/mcp@latest"
+        #       ];
+        #       enabled = true;
+        #       type = "local";
+        #     };
+        #   };
         # };
       };
     };
