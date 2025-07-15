@@ -14,7 +14,7 @@
     "aarch64-darwin" = "sha256-uk8HQfHCKTAW54rNHZ1Rr0piZzeJdx6i4o0+xKjfFZs=";
     "aarch64-linux" = "sha256-gDQh8gfFKl0rAujtos1XsCUnxC2Vjyq9xH5FLZoNW5s=";
     "x86_64-darwin" = "sha256-H5+qa7vxhwNYRXUo4v8IFUToVXtyXzU3veIqu4idAbU=";
-    "x86_64-linux" = "sha256-1ZxetDrrRdNNOfDOW2uMwMwpEs5S3BLF+SejWcRdtik=";
+    "x86_64-linux" = "sha256-meyPYs3daoebdfiWIuljYbplR0+8qNztmw5huhN33nQ=";
   };
   bun-target = {
     "aarch64-darwin" = "bun-darwin-arm64";
@@ -25,12 +25,12 @@
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "opencode";
-    version = "0.3.5";
+    version = "0.3.8";
     src = fetchFromGitHub {
       owner = "sst";
       repo = "opencode";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-l/V9YHwuIPN73ieMT++enL1O5vecA9L0qBDGr8eRVxY=";
+      hash = "sha256-BvgcXs6aS0+63S0pMf1TnzgMsuaDwUNVnm/zzVImQMk=";
     };
 
     tui = buildGoModule {
@@ -38,7 +38,7 @@ in
       inherit (finalAttrs) version;
       src = "${finalAttrs.src}/packages/tui";
 
-      vendorHash = "sha256-0vf4fOk32BLF9/904W8g+5m0vpe6i6tUFRXqDHVcMIQ=";
+      vendorHash = "sha256-98xfDvlM+0hb6R2uC3cDbLMOe9i6mz4ZrQhZhzAgDAg=";
 
       subPackages = ["cmd/opencode"];
 
@@ -84,7 +84,6 @@ in
          bun install \
            --filter=opencode \
            --force \
-           --frozen-lockfile \
            --no-progress
 
         runHook postBuild
@@ -109,7 +108,7 @@ in
 
     models-dev-data = fetchurl {
       url = "https://models.dev/api.json";
-      sha256 = "sha256-igxQOC+Hz2FnXIW/S4Px9WhRuBhcIQIHO+7U8jHU1TQ=";
+      sha256 = "sha256-zN6yxf3DpVnjBVXqRiQS+XwHaADC7B4soWjXV5DAExI=";
     };
 
     nativeBuildInputs = [bun];
