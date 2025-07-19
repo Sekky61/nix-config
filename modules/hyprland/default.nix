@@ -206,11 +206,14 @@ in {
               "windows, 1, 3, md3_decel, popin 60%"
               "border, 1, 10, default"
               "fade, 1, 2.5, md3_decel"
+
+              # Workspace switching
+              "workspaces, 0" # Instant switch
+              # "workspaces, 1, 7, fluent_decel, slide"
               # "workspaces, 1, 3.5, md3_decel, slide"
-              "workspaces, 1, 7, fluent_decel, slide"
               # "workspaces, 1, 7, fluent_decel, slidefade 15%"
               # "specialWorkspace, 1, 3, md3_decel, slidefadevert 15%"
-              "specialWorkspace, 1, 3, md3_decel, slidevert"
+              # "specialWorkspace, 1, 3, md3_decel, slidevert"
             ];
           };
           misc = {
