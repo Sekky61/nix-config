@@ -124,7 +124,7 @@
   };
 
   # ZRAM
-  # zramSwap.enable = true;
+  zramSwap.enable = true;
   # zramSwap.memoryPercent = 100;
 
   services.printing.enable = true;
