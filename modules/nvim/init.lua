@@ -1687,6 +1687,30 @@ local function typearg(
     return args[1][1]
 end
 
+local function default_type(args, _parent, _old_state, user_args)
+    local name = args[1][1]
+
+    -- allow override via user_arg.default_type, fallback to "string"
+    local fallback = (user_args and user_args.fallback_type) or "string"
+    print("DEBUG: bool_match =", vim.inspect(user_args))
+    -- detect boolean prefixes
+    local prefix = name:match("^is")
+        or name:match("^has")
+        or name:match("^should")
+        or name:match("^can")
+
+    local inferred
+    if prefix then
+        inferred = "boolean"
+    elseif name:match("[Nn]um$") or name:match("[Cc]ount$") then
+        inferred = "number"
+    else
+        inferred = fallback
+    end
+
+    return sn(nil, { i(1, inferred) })
+end
+
 local function default_value(args, _parent, _old_state, _user_arg)
     local type_str = args[1][1]
     local val = type_str == "boolean" and "false"
@@ -1702,7 +1726,7 @@ luasnip.add_snippets("typescript", {
         t("protected readonly "),
         i(1, "foo"),
         t("Signal: Signal<"),
-        i(2, "string"),
+        d(2, default_type, { 1 }),
         t("> = computed"),
         t({ "(() => {", "" }),
         i(3, "  return "),
@@ -1715,7 +1739,7 @@ luasnip.add_snippets("typescript", {
         t("protected readonly "),
         i(1, "foo"),
         t("Signal: WritableSignal<"),
-        i(2, "string"),
+        d(2, default_type, { 1 }),
         t("> = signal"),
         t("("),
         d(3, default_value, { 2 }),
@@ -1727,7 +1751,7 @@ luasnip.add_snippets("typescript", {
         t("readonly "),
         i(1, "foo"),
         t("Signal: InputSignal<"),
-        i(2, "string"),
+        d(2, default_type, { 1 }),
         t("> = input"),
         t("("),
         d(3, default_value, { 2 }),
@@ -1741,7 +1765,7 @@ luasnip.add_snippets("typescript", {
         t("readonly "),
         i(1, "foo"),
         t(": OutputEmitterRef<"),
-        i(2, "void"),
+        d(2, default_type, { 1 }, { user_args = { fallback_type = "void" } }), -- todo fallback does not work
         t("> = output();"),
     }),
 
