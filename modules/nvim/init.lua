@@ -717,7 +717,7 @@ require("lazy").setup({
                     __inherited_from = "openai",
                     endpoint = "https://openrouter.ai/api/v1",
                     api_key_name = "OPENROUTER_API_KEY",
-                    model = "openai/gpt-4.1-mini",
+                    model = "openai/gpt-4.1",
                 },
             },
         },
@@ -1687,17 +1687,13 @@ local function typearg(
     return args[1][1]
 end
 
-local function default_value(args)
+local function default_value(args, _parent, _old_state, _user_arg)
     local type_str = args[1][1]
-    if type_str == "boolean" then
-        return "false"
-    elseif type_str:find("undefined") then
-        return "undefined"
-    elseif type_str:find("null") then
-        return "null"
-    else
-        return ""
-    end
+    local val = type_str == "boolean" and "false"
+        or type_str:find("undefined") and "undefined"
+        or type_str:find("null") and "null"
+        or "''"
+    return sn(nil, { i(1, val) })
 end
 
 luasnip.add_snippets("typescript", {
@@ -1710,7 +1706,7 @@ luasnip.add_snippets("typescript", {
         t("> = computed"),
         t({ "(() => {", "" }),
         i(3, "  return "),
-        f(default_value, { 2 }),
+        d(3, default_value, { 2 }),
         t({ ";", "});" }),
     }),
 
@@ -1722,7 +1718,7 @@ luasnip.add_snippets("typescript", {
         i(2, "string"),
         t("> = signal"),
         t("("),
-        f(default_value, { 2 }),
+        d(3, default_value, { 2 }),
         t(");"),
     }),
 
@@ -1734,7 +1730,7 @@ luasnip.add_snippets("typescript", {
         i(2, "string"),
         t("> = input"),
         t("("),
-        f(default_value, { 2 }),
+        d(3, default_value, { 2 }),
         t(", { alias: '"),
         f(typearg, { 1 }),
         t("' });"),
@@ -1747,6 +1743,19 @@ luasnip.add_snippets("typescript", {
         t(": OutputEmitterRef<"),
         i(2, "void"),
         t("> = output();"),
+    }),
+
+    -- Linked signal
+    s("linkedsignal", {
+        t("protected readonly "),
+        i(1, "foo"),
+        t("Signal: Signal<"),
+        i(2, "string"),
+        t("> = linkedSignal"),
+        t({ "(() => {", "" }),
+        i(3, "  return "),
+        d(4, default_value, { 2 }),
+        t({ ";", "});" }),
     }),
 
     -- Inject
@@ -1783,6 +1792,10 @@ luasnip.add_snippets("typescript", {
         i(2, "<div></div>"),
         t({ "", "}" }),
         i(0),
+    }),
+
+    s("tapconsole", {
+        t("tap(o => console.log('tap o', o)),"),
     }),
 })
 
