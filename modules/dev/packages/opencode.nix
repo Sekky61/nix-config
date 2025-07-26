@@ -14,7 +14,7 @@
     "aarch64-darwin" = "sha256-uk8HQfHCKTAW54rNHZ1Rr0piZzeJdx6i4o0+xKjfFZs=";
     "aarch64-linux" = "sha256-gDQh8gfFKl0rAujtos1XsCUnxC2Vjyq9xH5FLZoNW5s=";
     "x86_64-darwin" = "sha256-H5+qa7vxhwNYRXUo4v8IFUToVXtyXzU3veIqu4idAbU=";
-    "x86_64-linux" = "sha256-meyPYs3daoebdfiWIuljYbplR0+8qNztmw5huhN33nQ=";
+    "x86_64-linux" = "sha256-XIRV1QrgRHnpJyrgK9ITxH61dve7nWfVoCPs3Tc8nuU=";
   };
   bun-target = {
     "aarch64-darwin" = "bun-darwin-arm64";
@@ -108,7 +108,7 @@ in
 
     models-dev-data = fetchurl {
       url = "https://models.dev/api.json";
-      sha256 = "sha256-zN6yxf3DpVnjBVXqRiQS+XwHaADC7B4soWjXV5DAExI=";
+      sha256 = "sha256-cdm4iGilf5+Bo4criZLj4LZ4RvmZ6JWMvmWFpU6PF4E=";
     };
 
     nativeBuildInputs = [bun];
