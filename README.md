@@ -149,6 +149,7 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 1. Create (copy) entry in `hosts` directory. Pick a name for the host.
 2. Use the `hardware-configuration.nix` from the new host
 3. Configure `michal` options as you wish, apply configuration for hardware quirks
+4. For secrets, see the SOPS section
 
 ### AGS Notes
 
