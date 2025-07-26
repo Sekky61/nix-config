@@ -6,6 +6,7 @@ keys:
   - &host_nixpi age1v9yj65nfhw4alw6nrha62dj85ar0edy6haaxg4jl8xxu94d9ls4s6044tx
   - &host_nix_yoga age15hc9vchm2c2z0qurszt9hlj6juvzdpz09etcr3vcftaxvree0e6szjnpwc
   - &host_nix_wsl age1u7rs9uru5ryqczlcrgx9zmc03nswu3g8r0dpy7t88pplgynp5s6sr5h3vs
+  - &host_nix_fw age19nvhqn6rwy933a8agffny3rdqudsj3lcl8rhvkk2v8959c7hhcmsjdhlge
 creation_rules:
   - path_regex: modules/sops/[^/]+\.(yaml|json|env|ini)$
     key_groups:
@@ -15,3 +16,4 @@ creation_rules:
       - *host_nixpi
       - *host_nix_yoga
       - *host_nix_wsl
+      - *host_nix_fw
