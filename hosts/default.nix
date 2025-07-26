@@ -22,6 +22,17 @@
       ];
     };
 
+    nix-fw = nixosSystem {
+      specialArgs = {
+        username = "michal";
+        hostname = "nix-fw";
+        inherit inputs self lib;
+      };
+      modules = [
+        ./common
+      ];
+    };
+
     nix-wsl = nixosSystem {
       specialArgs = {
         username = "michal";
