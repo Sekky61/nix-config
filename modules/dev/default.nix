@@ -81,6 +81,8 @@
         #   };
         # };
       };
+
+      java.enable = true;
     };
 
     xdg.configFile."opencode/4.1-Beast.chatmode.md".source = impurity.link ./prompts/4.1-Beast.chatmode.md;
