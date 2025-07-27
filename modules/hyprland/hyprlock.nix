@@ -19,6 +19,8 @@ in {
         };
         auth = {
           "fingerprint:enabled" = true; # todo enable only sometimes
+          "fingerprint:ready_message" = "Scan fingerprint";
+          "fingerprint:present_message" = "Scanning fingerprint...";
         };
         background = [
           {
@@ -61,6 +63,16 @@ in {
             halign = "center";
             valign = "center";
             position = "0, 75";
+          }
+          {
+            color = "rgba(#b8c0e0, 1.0)";
+            font_family = "Gabarito";
+            font_size = 24;
+            halign = "center";
+            valign = "center";
+            position = "-33%, 0";
+            shadow_passes = 0;
+            text = "$FPRINTPROMPT";
           }
         ];
       };
