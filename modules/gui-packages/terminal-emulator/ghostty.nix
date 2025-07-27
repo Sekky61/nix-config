@@ -22,6 +22,7 @@ in {
           clipboard-read = "allow";
           clipboard-write = "allow";
           copy-on-select = "clipboard";
+          font-size = 14;
         };
       };
     };

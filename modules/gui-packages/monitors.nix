@@ -50,9 +50,9 @@ with lib; let
       };
 
       scale = mkOption {
-        type = types.either types.int types.float;
+        type = types.either (types.either types.int types.float) types.str;
         default = 1;
-        description = "Monitor scale factor";
+        description = "Monitor scale factor (or 'auto')";
         example = 1.5;
       };
 

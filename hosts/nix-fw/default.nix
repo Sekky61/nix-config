@@ -51,7 +51,7 @@
     monitors = [
       # Laptop monitor
       {
-        id = "eDP-1";
+        id = "BOE 0x0BCA";
         width = 2256;
         height = 1504;
         refreshRate = 60.0;
@@ -59,7 +59,7 @@
           x = 0;
           y = 0;
         };
-        scale = 1.5;
+        scale = 1;
         transform = 0;
       }
       # Desktop monitor
