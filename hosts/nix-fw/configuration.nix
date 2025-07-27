@@ -13,10 +13,6 @@
     rocmSupport = true;
   };
 
-  imports = [
-    inputs.nixos-hardware.nixosModules.lenovo-yoga-7-14ARH7-amdgpu
-  ];
-
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
@@ -219,6 +215,15 @@
     #   options snd_hda_intel model=headset-mode
     # '';
   };
+
+  # Framework specific
+
+  # Firmware, run `fwupdmgr update`
+  services.fwupd.enable = true;
+
+  imports = [
+    inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
+  ];
 
   system.stateVersion = "24.05";
 }

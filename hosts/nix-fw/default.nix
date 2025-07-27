@@ -51,10 +51,10 @@
     monitors = [
       # Laptop monitor
       {
-        id = "Samsung Display Corp. 0x4193";
-        width = 2880;
-        height = 1800;
-        refreshRate = 90.0;
+        id = "eDP-1";
+        width = 2256;
+        height = 1504;
+        refreshRate = 60.0;
         position = {
           x = 0;
           y = 0;

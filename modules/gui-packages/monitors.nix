@@ -1,5 +1,6 @@
 {lib, ...}:
 with lib; let
+  # Run `hyprctl monitors` to find out
   monitorModule = types.submodule {
     options = {
       id = mkOption {
