@@ -18,6 +18,7 @@
 
   michal = {
     graphical.enable = true;
+    hyprland.hyprlock.hasFingerprintReader = true;
     programs = {
       ags.enable = true;
       bitwarden.enable = true;

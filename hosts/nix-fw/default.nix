@@ -17,6 +17,7 @@
 
   michal = {
     graphical.enable = true;
+    hasFingerprintReader = true;
     programs = {
       ags.enable = true;
       bitwarden.enable = true;

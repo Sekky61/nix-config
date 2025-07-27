@@ -153,6 +153,7 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 5. Run `hyprctl monitors` and write down the info
 6. You may need to apply theme (dark mode) manually. See the theme script.
 7. Add ssh key identity (ssh-add command)
+8. Create sops private key and add it to the right place: `sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key > ~/.config/sops/age/keys.txt`
 
 ### AGS Notes
 
