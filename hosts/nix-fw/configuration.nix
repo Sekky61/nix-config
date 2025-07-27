@@ -195,25 +195,6 @@
       };
       efi.canTouchEfiVariables = true;
     };
-    # kernelPackages = pkgs.linuxPackages_xanmod_latest;
-    # kernelPatches = [{
-    #   name = "enable RT_FULL";
-    #   patch = null;
-    #   # TODO: add realtime patch: PREEMPT_RT y
-    #   extraConfig = ''
-    #     PREEMPT y
-    #     PREEMPT_BUILD y
-    #     PREEMPT_VOLUNTARY n
-    #     PREEMPT_COUNT y
-    #     PREEMPTION y
-    #   '';
-    # }];
-    # extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
-    # kernelModules = [ "acpi_call" ];
-    # make 3.5mm jack work
-    # extraModprobeConfig = ''
-    #   options snd_hda_intel model=headset-mode
-    # '';
   };
 
   # Framework specific
@@ -224,6 +205,11 @@
   imports = [
     inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
   ];
+
+  # Enrollment: `fprintd-enroll`
+  services.fprintd = {
+    enable = true;
+  };
 
   system.stateVersion = "24.05";
 }

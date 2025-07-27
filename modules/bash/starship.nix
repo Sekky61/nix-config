@@ -24,6 +24,7 @@
     nix-yoga = "green";
     nix-wsl = "blue";
     nixpi = "red";
+    nix-fw = "#61F527"; # Green
   };
 
   theme = config.michal.theme;

@@ -17,6 +17,9 @@ in {
           grace = 10; # Unlock without password up to x seconds after lock
           hide_cursor = true;
         };
+        auth = {
+          "fingerprint:enabled" = true; # todo enable only sometimes
+        };
         background = [
           {
             path = myWallpaper;

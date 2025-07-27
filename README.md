@@ -151,6 +151,8 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 3. Configure `michal` options as you wish, apply configuration for hardware quirks
 4. For secrets, see the SOPS section
 5. Run `hyprctl monitors` and write down the info
+6. You may need to apply theme (dark mode) manually. See the theme script.
+7. Add ssh key identity (ssh-add command)
 
 ### AGS Notes
 

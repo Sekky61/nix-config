@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
     ./configuration.nix
     ./audio.nix
-    ./laptop.nix
     # ../../modules/wifi.nix
 
     # Desktop/gui
