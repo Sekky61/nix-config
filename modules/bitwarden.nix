@@ -45,6 +45,9 @@ in {
     # Usage:
     # - `bwu` - Logs you in/unlocks vault
     # - `bw get password claude.ai`
-    environment.systemPackages = [pkgs.bitwarden-cli];
+
+    home-manager.users.${username} = {
+      home.packages = with pkgs; [bitwarden-cli bitwarden-desktop];
+    };
   };
 }

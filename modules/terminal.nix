@@ -66,6 +66,7 @@ in {
       eza = {
         enable = true;
         enableBashIntegration = true;
+        git = true;
         icons = "auto";
         extraOptions = [
           "--almost-all"

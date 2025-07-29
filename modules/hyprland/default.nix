@@ -61,7 +61,7 @@ in {
 
     programs.iio-hyprland.enable = true; # screen rotation, todo does not work
 
-    home-manager.users.${username} = _: {
+    home-manager.users.${username} = {
       # Optional, hint Electron apps to use Wayland:
       home.sessionVariables.NIXOS_OZONE_WL = "1";
 
