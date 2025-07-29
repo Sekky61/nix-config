@@ -43,7 +43,6 @@
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     zen-browser = {
@@ -61,7 +60,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
