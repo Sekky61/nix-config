@@ -4,16 +4,15 @@
   buildGoModule,
   bun,
   fetchFromGitHub,
-  fetchurl,
+  models-dev,
   nix-update-script,
   testers,
   writableTmpDirAsHomeHook,
 }: let
-  # Source: https://github.com/delafthi/nixpkgs/blob/1f0f25154225df0302adcd7b8110ad2c99e48adc/pkgs/by-name/op/opencode/package.nix
   opencode-node-modules-hash = {
-    "aarch64-darwin" = "sha256-uk8HQfHCKTAW54rNHZ1Rr0piZzeJdx6i4o0+xKjfFZs=";
-    "aarch64-linux" = "sha256-gDQh8gfFKl0rAujtos1XsCUnxC2Vjyq9xH5FLZoNW5s=";
-    "x86_64-darwin" = "sha256-H5+qa7vxhwNYRXUo4v8IFUToVXtyXzU3veIqu4idAbU=";
+    "aarch64-darwin" = "sha256-TAeFDsHGFJnUyp20ec+Rxp4t1FrWKfbtnxsE8PnLS0o=";
+    "aarch64-linux" = "sha256-F056MWf2dNAO21ezEvWg689WUibtz4Q4mcSuDuSY5EM=";
+    "x86_64-darwin" = "sha256-AN1Ha/les1ByJGfVkLDibfxjPouC0tAZ//EN3vDi1Hc=";
     "x86_64-linux" = "sha256-XIRV1QrgRHnpJyrgK9ITxH61dve7nWfVoCPs3Tc8nuU=";
   };
   bun-target = {
@@ -25,12 +24,12 @@
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "opencode";
-    version = "0.3.22";
+    version = "0.3.43";
     src = fetchFromGitHub {
       owner = "sst";
       repo = "opencode";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-yT6uaTEKYb/+A1WhP6AQW0hWMnmS9vlfLn1E57cnzn0=";
+      hash = "sha256-EM44FkMPPkRChuLcNEEK3n4dLc5uqnX7dHROsZXyr58=";
     };
 
     tui = buildGoModule {
@@ -38,7 +37,7 @@ in
       inherit (finalAttrs) version;
       src = "${finalAttrs.src}/packages/tui";
 
-      vendorHash = "sha256-G1vM8wxTTPpB1Oaxz2YI8AkirwG54A9i6Uq5e92ucyY=";
+      vendorHash = "sha256-/YxvM+HZM4aRqcjUiSX0D1DhhMJkmLdh7G4+fPqtnic=";
 
       subPackages = ["cmd/opencode"];
 
@@ -84,6 +83,7 @@ in
          bun install \
            --filter=opencode \
            --force \
+           --frozen-lockfile \
            --no-progress
 
         runHook postBuild
@@ -106,17 +106,15 @@ in
       outputHashMode = "recursive";
     };
 
-    models-dev-data = fetchurl {
-      url = "https://models.dev/api.json";
-      sha256 = "sha256-cdm4iGilf5+Bo4criZLj4LZ4RvmZ6JWMvmWFpU6PF4E=";
-    };
-
-    nativeBuildInputs = [bun];
+    nativeBuildInputs = [
+      bun
+      models-dev
+    ];
 
     patches = [
-      # Patch `packages/opencode/src/provider/models-macro.ts` to load the prefetched `models.dev/api.json`
-      # from the `MODELS_JSON` environment variable instead of fetching it at build time.
-      ./fix-models-macro.patch
+      # Patch `packages/opencode/src/provider/models-macro.ts` to get contents of
+      # `api.json` from the file bundled with `bun build`.
+      ./local-models-dev.patch
     ];
 
     configurePhase = ''
@@ -127,10 +125,11 @@ in
       runHook postConfigure
     '';
 
+    env.MODELS_DEV_API_JSON = "${models-dev}/dist/api.json";
+
     buildPhase = ''
       runHook preBuild
 
-      export MODELS_JSON="$(cat ${finalAttrs.models-dev-data})"
       bun build \
         --define OPENCODE_VERSION="'${finalAttrs.version}'" \
         --compile \
@@ -165,8 +164,6 @@ in
           "tui"
           "--subpackage"
           "node_modules"
-          "--subpackage"
-          "models-dev-data"
         ];
       };
     };
