@@ -31,6 +31,7 @@ in {
       libnotify # notify-send
       showmethekey # show pressed keys
       xorg.xev
+      gnome-control-center # The settings (Win+I)
 
       # theming tools
       gradience
