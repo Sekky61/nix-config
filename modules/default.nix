@@ -14,6 +14,7 @@
     ./nvim
     ./bash
     ./terminal.nix
+    ./battery.nix
 
     # Modules with options
     ./gui-packages

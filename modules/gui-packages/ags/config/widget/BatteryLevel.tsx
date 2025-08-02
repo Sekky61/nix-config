@@ -32,6 +32,7 @@ async function lowBatteryMessage() {
 }
 
 const bat = AstalBattery.get_default();
+console.log('bat', bat, bat.percentage);
 let nextNotif = 0;
 bat.connect("notify::percentage", () => {
   lowBatteryMessage();
@@ -57,7 +58,6 @@ export default function BatteryLevel({ vertical }: BatteryProps) {
           (v) => `${v ? "spacing-v-5" : "spacing-h-4"} txt-onSurfaceVariant`,
         )}
         vertical={vertical}
-        visible={bind(bat, "isPresent")}
       >
         <label
           className="txt-smallie txt-onSurfaceVariant"

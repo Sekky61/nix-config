@@ -87,6 +87,7 @@ in {
         font-manager
         # themes
         adwaita-qt6
+        adwaita-icon-theme
         adw-gtk3
         material-symbols
         google-fonts
