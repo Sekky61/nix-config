@@ -59,7 +59,7 @@
           x = 0;
           y = 0;
         };
-        scale = 1;
+        scale = 1.333333; # It rejects uneven scales
         transform = 0;
       }
       # Desktop monitor
