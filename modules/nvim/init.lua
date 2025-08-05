@@ -1083,23 +1083,23 @@ require("lazy").setup({
         opts = {},
         cmd = { "Typr", "TyprStats" },
     },
-    -- todo find alternative
-    -- {
-    --     "chikko80/error-lens.nvim",
-    --     event = "BufRead",
-    --     dependencies = {
-    --         "nvim-telescope/telescope.nvim",
-    --     },
-    --     opts = {
-    --         -- your options go here
-    --         auto_adjust = {
-    --             enable = true,
-    --             fallback_bg_color = "#281478", -- mandatory if enable true (e.g. #281478)
-    --             step = 3, -- inc: colors should be brighter/darker
-    --             total = 30, -- steps of blender
-    --         },
-    --     },
-    -- },
+    {
+        "dmtrKovalenko/fff.nvim",
+        -- build = "cargo build --release",
+        build = "nix run .#release",
+        opts = {
+            -- pass here all the options
+        },
+        keys = {
+            {
+                "ff", -- try it if you didn't it is a banger keybinding for a picker
+                function()
+                    require("fff").find_files() -- or find_in_git_root() if you only want git files
+                end,
+                desc = "Open file picker",
+            },
+        },
+    },
 }, {})
 
 -- [[ Setting options ]]
