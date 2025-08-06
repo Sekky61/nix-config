@@ -14,7 +14,6 @@
   };
 
   imports = [
-    # inputs.nixos-hardware.nixosModules.lenovo-yoga-7-14ARH7-amdgpu
     inputs.nixos-wsl.nixosModules.default
   ];
 
@@ -59,12 +58,6 @@
     xserver = {
       enable = true;
       displayManager.startx.enable = true;
-      desktopManager.gnome = {
-        enable = true;
-        extraGSettingsOverridePackages = [
-          pkgs.nautilus-open-any-terminal
-        ];
-      };
     };
   };
 

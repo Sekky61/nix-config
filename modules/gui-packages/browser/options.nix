@@ -1,7 +1,7 @@
 {
   lib,
-  humanName ? execName,
   execName,
+  humanName ? execName,
   package ? null,
   desktopFileName ? package.meta.desktopFile,
 }:

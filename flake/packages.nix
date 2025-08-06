@@ -35,8 +35,8 @@
           minimal-iso = import ./../pkgs/installer-iso {inherit pkgs system specialArgs;};
           nix-yoga-live = import ./../pkgs/nix-yoga-live.nix {inherit inputs self lib;};
 
-          minimal-pi-sd-image =
-            (self.nixosConfigurations.minimal-pi.extendModules {inherit modules;}).config.system.build.sdImage;
+          # minimal-pi-sd-image =
+          #   (self.nixosConfigurations.minimal-pi.extendModules {inherit modules;}).config.system.build.sdImage;
 
           nixpi-sd-image =
             (self.nixosConfigurations.nixpi.extendModules {inherit modules;}).config.system.build.sdImage;

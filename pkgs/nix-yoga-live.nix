@@ -23,6 +23,7 @@ inputs.nixos-generators.nixosGenerate {
       };
 
       michal = {
+        graphical.enable = true;
         programs = {
           polkit.enable = true;
           ghostty = {
@@ -31,7 +32,7 @@ inputs.nixos-generators.nixosGenerate {
           };
         };
         browsers = {
-          chrome = {
+          zen = {
             enable = true;
             default = true;
           };

@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   modulesPath,
@@ -8,10 +7,6 @@
 }: {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
-    ../../modules/ssh.nix
-    # ./../../../hosts/common/modules/nix/nixos.nix
-    # ./../../../home/konrad/common/options/ssh-keys.nix
-    # ./../../../home/konrad/common/modules/base/ssh-keys.nix
   ];
 
   nixpkgs = {
@@ -25,9 +20,6 @@
     networkmanager.enable = true;
     wireless.enable = false;
   };
-
-  # needed for updates for now
-  users.users.root.openssh.authorizedKeys.keys = config.michal.sshKeys.personal.keys;
 
   users.groups.${username} = {};
   users.users.${username} = {

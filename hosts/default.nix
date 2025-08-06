@@ -72,25 +72,27 @@ in {
     hosts
     // impure-hosts
     // {
-      minimal-pi = nixosSystem {
-        specialArgs = {
-          username = "pi";
-          hostname = "rpi";
-          inherit inputs;
-        };
-        system = "aarch64-linux";
-        modules = [
-          ../modules/ssh.nix
-          ({username, ...}: {
-            users.users.root.initialPassword = "root";
-            users.users.${username} = {
-              initialPassword = "password";
-              isNormalUser = true;
-              group = "pi";
-            };
-            users.groups.pi = {};
-          })
-        ];
-      };
+      # Sleeping
+      #
+      # minimal-pi = nixosSystem {
+      #   specialArgs = {
+      #     username = "pi";
+      #     hostname = "rpi";
+      #     inherit inputs;
+      #   };
+      #   system = "aarch64-linux";
+      #   modules = [
+      #     ../modules/ssh.nix
+      #     ({username, ...}: {
+      #       users.users.root.initialPassword = "root";
+      #       users.users.${username} = {
+      #         initialPassword = "password";
+      #         isNormalUser = true;
+      #         group = "pi";
+      #       };
+      #       users.groups.pi = {};
+      #     })
+      #   ];
+      # };
     };
 }

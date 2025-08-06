@@ -12,6 +12,7 @@ in {
     inherit lib package;
     humanName = "google chrome";
     execName = "google-chrome";
+    # todo desktopFileName not working
   };
 
   config = lib.mkIf cfg.enable {

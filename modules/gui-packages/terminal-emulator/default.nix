@@ -13,7 +13,8 @@ in {
   ];
 
   options.michal.environment.terminal = mkOption {
-    type = with types; str;
+    type = with types; nullOr str;
+    default = null;
     description = ''
       Default terminal emulator
     '';
