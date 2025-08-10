@@ -49,6 +49,7 @@
 
       # LLM/AI
       opencode
+      lmstudio
 
       # Utilities
       graphite-cli # Graphite stacked-PRs helper
