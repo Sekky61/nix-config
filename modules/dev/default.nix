@@ -44,7 +44,6 @@
       glib # gsettings, gdbus
 
       # Editors
-      zed-editor
       code-cursor
 
       # LLM/AI
@@ -81,6 +80,11 @@
         #     };
         #   };
         # };
+      };
+
+      zed-editor = {
+        enable = true;
+        extensions = ["angular" "nix" "biome"];
       };
 
       java.enable = true;
