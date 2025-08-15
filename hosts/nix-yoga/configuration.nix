@@ -44,7 +44,7 @@
           # F1 to open commands
           # F2 to open sessions
           # F3 to open power menu
-          command = ''${pkgs.greetd.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd Hyprland --kb-command 1 --kb-sessions 2 --kb-power 3'';
+          command = ''${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd Hyprland --kb-command 1 --kb-sessions 2 --kb-power 3'';
           user = "greeter";
         };
       };
