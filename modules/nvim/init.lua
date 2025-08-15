@@ -46,6 +46,7 @@ local servers = {
     nil_ls = {}, -- nix
     gopls = {},
     omnisharp = {},
+    elixirls = {},
 
     html = { filetypes = { "html", "twig", "hbs" } },
     -- htmx = {},
@@ -793,6 +794,21 @@ require("lazy").setup({
                             },
                         },
                     },
+                    -- LM-studio
+                    --
+                    -- openai_compatible = {
+                    --     end_point = "http://localhost:1234/v1/chat/completions",
+                    --     model = "openai/gpt-oss-20b",
+                    --     name = "Gpt-oss-20",
+                    --     optional = {
+                    --         max_tokens = 56,
+                    --         top_p = 0.9,
+                    --         provider = {
+                    --             -- Prioritize throughput for faster completion
+                    --             sort = "throughput",
+                    --         },
+                    --     },
+                    -- },
                 },
                 virtualtext = {
                     auto_trigger_ft = {},
@@ -1125,7 +1141,7 @@ require("lazy").setup({
         },
     },
     {
-        "nvzone/typr",
+        "nvzone/typr", -- tags: typing, fast typing
         dependencies = "nvzone/volt",
         opts = {},
         cmd = { "Typr", "TyprStats" },

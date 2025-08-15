@@ -25,6 +25,14 @@
       hotspot
       poop # todo old version
     ];
+
+    programs.gemini-cli = {
+      enable = true;
+      settings = {
+        vimMode = true;
+        preferredEditor = "nvim";
+      };
+    };
   };
 
   programs.bcc.enable = true; # Dynamic Tracing Tools for Linux
