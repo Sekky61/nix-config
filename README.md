@@ -90,6 +90,9 @@ Theme colors can be derived from the wallpaper, picked, or be based on a color.
 See the `./scripts/theme` script. You must update the configuration for it to take effect.
 
 ### Neovim
+
+Try my nvim. Just run `nix run github:Sekky61/nix-config#nvim`. Just note that it will install plugins to home.
+
 The `nvim` config (located [here](modules/nvim/init.lua)) contains many useful plugins and keybinds with descriptions. The plugins get installed at launch, so this is not a pure Nix solution.
 
 ### Terminals
