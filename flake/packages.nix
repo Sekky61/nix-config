@@ -40,6 +40,21 @@
 
           nixpi-sd-image =
             (self.nixosConfigurations.nixpi.extendModules {inherit modules;}).config.system.build.sdImage;
+
+          nvim = pkgs.stdenv.mkDerivation {
+            pname = "nvim-wrapper";
+            version = "1.0";
+
+            src = ../modules/nvim; # assumes init.lua
+
+            buildInputs = [pkgs.makeWrapper pkgs.neovim];
+
+            installPhase = ''
+              mkdir -p $out/bin
+              makeWrapper ${pkgs.neovim}/bin/nvim $out/bin/nvim \
+                --add-flags "-u $src/init.lua"
+            '';
+          };
         }
       )
       // {

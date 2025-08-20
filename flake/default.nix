@@ -8,6 +8,7 @@
   };
 in {
   imports = [
+    ./apps.nix
     ./checks.nix
     ./devshells.nix
     ./formatter.nix
