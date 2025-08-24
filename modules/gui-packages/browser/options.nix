@@ -3,7 +3,7 @@
   execName,
   humanName ? execName,
   package ? null,
-  desktopFileName ? package.meta.desktopFile,
+  desktopFileName ? package.meta.desktopFileName,
 }:
 with lib; {
   enable = mkEnableOption "${humanName} browser";
