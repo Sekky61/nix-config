@@ -18,7 +18,7 @@ in {
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       package
-      libsForQt5.plasma-browser-integration
+      # kdePackages.plasma-browser-integration
       (pkgs.writeShellScriptBin "google-chrome" "exec -a $0 ${package}/bin/google-chrome-stable $@")
     ];
 

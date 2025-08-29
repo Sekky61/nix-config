@@ -16,7 +16,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.firefox = {
       enable = true;
-      nativeMessagingHosts.packages = [pkgs.plasma5Packages.plasma-browser-integration];
+      # nativeMessagingHosts.packages = [pkgs.kdePackages.plasma-browser-integration];
     };
 
     environment.sessionVariables = lib.mkIf cfg.default {

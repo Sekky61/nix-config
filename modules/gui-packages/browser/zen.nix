@@ -26,7 +26,10 @@ in {
         # Use options from firefox:
         # https://home-manager-options.extranix.com/?query=programs.firefox.&release=master
         enable = cfg.enable;
-        nativeMessagingHosts = [pkgs.firefoxpwa pkgs.plasma5Packages.plasma-browser-integration];
+        nativeMessagingHosts = [
+          pkgs.firefoxpwa
+          # pkgs.kdePackages.plasma-browser-integration
+        ];
       };
     };
   };

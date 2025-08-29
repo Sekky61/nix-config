@@ -29,7 +29,9 @@ in {
   config = {
     environment.systemPackages = with pkgs; [
       # launcher
-      nwg-displays # gui for monitors, wayland
+
+      # todo broken
+      #nwg-displays # gui for monitors, wayland
       hyprshot
 
       bemoji # emoji picker

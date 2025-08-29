@@ -53,7 +53,7 @@ in {
 
       qt = {
         enable = true;
-        platformTheme.name = "kde";
+        platformTheme.name = "kde6";
       };
     };
   };
