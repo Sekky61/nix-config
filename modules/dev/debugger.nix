@@ -28,10 +28,7 @@
 
     programs.gemini-cli = {
       enable = true;
-      settings = {
-        vimMode = true;
-        preferredEditor = "nvim";
-      };
+      # no settings - it forces gemini to auth every time
     };
   };
 

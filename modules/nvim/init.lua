@@ -685,89 +685,9 @@ require("lazy").setup({
             },
         },
     },
+
     { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
-    {
-        -- LLM
-        "yetone/avante.nvim",
-        build = "make",
-        event = "VeryLazy",
-        version = false, -- set this if you want to always pull the latest change
-        opts = {
-            provider = "openrouter",
-            cursor_applying_provider = "groq",
-            behaviour = {
-                enable_cursor_planning_mode = true, -- enable cursor planning mode!
-            },
-            providers = {
-                groq = {
-                    __inherited_from = "openai",
-                    api_key_name = "GROQ_API_KEY",
-                    endpoint = "https://api.groq.com/openai/v1/",
-                    model = "llama-3.3-70b-versatile",
-                    extra_request_body = {
-                        max_completion_tokens = 32768,
-                    },
-                },
-                ollama = {
-                    __inherited_from = "openai",
-                    api_key_name = "",
-                    endpoint = "http://127.0.0.1:11434/v1",
-                    model = "deepseek-r1:14b",
-                },
-                openrouter = {
-                    __inherited_from = "openai",
-                    endpoint = "https://openrouter.ai/api/v1",
-                    api_key_name = "OPENROUTER_API_KEY",
-                    model = "qwen/qwen3-coder",
-                },
-                openrouter_kimi = {
-                    __inherited_from = "openai",
-                    endpoint = "https://openrouter.ai/api/v1",
-                    api_key_name = "OPENROUTER_API_KEY",
-                    model = "moonshotai/kimi-k2",
-                },
-            },
-        },
-        -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-        build = "make",
-        -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-            "stevearc/dressing.nvim",
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            --- The below dependencies are optional,
-            "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-            "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-            "ibhagwan/fzf-lua", -- for file_selector provider fzf
-            "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-            {
-                -- support for image pasting
-                "HakonHarnes/img-clip.nvim",
-                event = "VeryLazy",
-                opts = {
-                    -- recommended settings
-                    default = {
-                        embed_image_as_base64 = false,
-                        prompt_for_file_name = false,
-                        drag_and_drop = {
-                            insert_mode = true,
-                        },
-                        -- required for Windows users
-                        use_absolute_path = true,
-                    },
-                },
-            },
-            {
-                -- Make sure to set this up properly if you have lazy=true
-                "MeanderingProgrammer/render-markdown.nvim",
-                opts = {
-                    file_types = { "markdown", "Avante" },
-                },
-                ft = { "markdown", "Avante" },
-            },
-        },
-    },
+
     {
         -- inline AI autocomplete
         "milanglacier/minuet-ai.nvim",
@@ -830,6 +750,47 @@ require("lazy").setup({
             })
         end,
     },
+
+    {
+        "olimorris/codecompanion.nvim",
+        opts = {
+            strategies = {
+                chat = {
+                    adapter = "a_openrouter",
+                },
+                inline = {
+                    adapter = "a_openrouter",
+                },
+                cmd = {
+                    adapter = "a_openrouter",
+                },
+            },
+            adapters = {
+                http = {
+                    a_openrouter = function()
+                        return require("codecompanion.adapters").extend("openai_compatible", {
+                            env = {
+                                url = "https://openrouter.ai/api",
+                                api_key = "OPENROUTER_API_KEY",
+                                chat_url = "/v1/chat/completions",
+                            },
+                            schema = {
+                                model = {
+                                    -- default = "anthropic/claude-4-sonnet",
+                                    default = "x-ai/grok-code-fast-1",
+                                },
+                            },
+                        })
+                    end,
+                },
+            },
+            -- NOTE: The log_level is in `opts.opts`
+            opts = {
+                log_level = "DEBUG", -- or "TRACE"
+            },
+        },
+    },
+
     {
         "kdheepak/lazygit.nvim",
         lazy = true,
@@ -1354,15 +1315,6 @@ require("nvim-treesitter.configs").setup({
             goto_previous_end = {
                 ["[F"] = "@function.outer",
                 ["[]"] = "@class.outer",
-            },
-        },
-        swap = {
-            enable = true,
-            swap_next = {
-                ["<leader>a"] = "@parameter.inner",
-            },
-            swap_previous = {
-                ["<leader>A"] = "@parameter.inner",
             },
         },
     },
@@ -1923,193 +1875,6 @@ vim.opt.listchars:append("space:⋅")
 -- color the indent
 vim.cmd([[highlight IndentBlanklineIndent1 guifg=#8a8686 gui=nocombine]])
 
--- Avante proompts
-
--- prefil edit window with common scenarios to avoid repeating query and submit immediately
-local prefill_edit_window = function(request)
-    require("avante.api").edit()
-    local code_bufnr = vim.api.nvim_get_current_buf()
-    local code_winid = vim.api.nvim_get_current_win()
-    if code_bufnr == nil or code_winid == nil then
-        return
-    end
-    vim.api.nvim_buf_set_lines(code_bufnr, 0, -1, false, { request })
-    -- Optionally set the cursor position to the end of the input
-    vim.api.nvim_win_set_cursor(code_winid, { 1, #request + 1 })
-    -- Simulate Ctrl+S keypress to submit
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-s>", true, true, true), "v", true)
-end
-
--- NOTE: most templates are inspired from ChatGPT.nvim -> chatgpt-actions.json
-local avante_grammar_correction =
-    "Correct the text to standard English, but keep any code blocks inside intact."
-local avante_keywords = "Extract the main keywords from the following text"
-local avante_code_readability_analysis = [[
-  You must identify any readability issues in the code snippet.
-  Some readability issues to consider:
-  - Unclear naming
-  - Unclear purpose
-  - Very obvious comments
-  - Lack of comments
-  - Long or complex one liners
-  - Too much nesting
-  - Inconsistent naming
-  - Code repetition
-  You may identify additional problems. The user submits a small section of code from a larger file.
-  Only list lines with readability issues, in the format <line_num>|<issue and proposed solution>
-  If there's no issues with code respond with only: <OK>
-]]
-local avante_optimize_code = "Optimize the following code"
-local avante_summarize = "Summarize the following text"
-local avante_translate = "Translate this into english, but keep any code blocks inside intact"
-local avante_explain_code = "Explain the unobvious parts of the following code"
-local avante_complete_code = "Complete the following codes written in " .. vim.bo.filetype
-local avante_document_function = "Add documentation to the following function"
-local avante_fix_bugs =
-    "Fix the bugs inside the following codes if any. Make a note about the bugfix"
-local avante_add_tests = "Implement simple but robust tests for the following code"
-
-local wk = require("which-key")
-wk.add({
-    { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
-    {
-        mode = { "n", "v" },
-        {
-            "<leader>ag",
-            function()
-                require("avante.api").ask({ question = avante_grammar_correction })
-            end,
-            desc = "Grammar Correction(ask)",
-        },
-        {
-            "<leader>ak",
-            function()
-                require("avante.api").ask({ question = avante_keywords })
-            end,
-            desc = "Keywords(ask)",
-        },
-        {
-            "<leader>al",
-            function()
-                require("avante.api").ask({ question = avante_code_readability_analysis })
-            end,
-            desc = "Code Readability Analysis(ask)",
-        },
-        {
-            "<leader>ao",
-            function()
-                require("avante.api").ask({ question = avante_optimize_code })
-            end,
-            desc = "Optimize Code(ask)",
-        },
-        {
-            "<leader>am",
-            function()
-                require("avante.api").ask({ question = avante_summarize })
-            end,
-            desc = "Summarize text(ask)",
-        },
-        {
-            "<leader>an",
-            function()
-                require("avante.api").ask({ question = avante_translate })
-            end,
-            desc = "Translate text(ask)",
-        },
-        {
-            "<leader>ax",
-            function()
-                require("avante.api").ask({ question = avante_explain_code })
-            end,
-            desc = "Explain Code(ask)",
-        },
-        {
-            "<leader>ac",
-            function()
-                require("avante.api").ask({ question = avante_complete_code })
-            end,
-            desc = "Complete Code(ask)",
-        },
-        {
-            "<leader>ad",
-            function()
-                require("avante.api").ask({ question = avante_document_function })
-            end,
-            desc = "Document function(ask)",
-        },
-        {
-            "<leader>ab",
-            function()
-                require("avante.api").ask({ question = avante_fix_bugs })
-            end,
-            desc = "Fix Bugs(ask)",
-        },
-        {
-            "<leader>au",
-            function()
-                require("avante.api").ask({ question = avante_add_tests })
-            end,
-            desc = "Add Tests(ask)",
-        },
-    },
-})
-
-wk.add({
-    { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
-    {
-        mode = { "v" },
-        {
-            "<leader>aG",
-            function()
-                prefill_edit_window(avante_grammar_correction)
-            end,
-            desc = "Grammar Correction",
-        },
-        {
-            "<leader>aK",
-            function()
-                prefill_edit_window(avante_keywords)
-            end,
-            desc = "Keywords",
-        },
-        {
-            "<leader>aO",
-            function()
-                prefill_edit_window(avante_optimize_code)
-            end,
-            desc = "Optimize Code(edit)",
-        },
-        {
-            "<leader>aC",
-            function()
-                prefill_edit_window(avante_complete_code)
-            end,
-            desc = "Complete Code(edit)",
-        },
-        {
-            "<leader>aD",
-            function()
-                prefill_edit_window(avante_document_function)
-            end,
-            desc = "Document function(edit)",
-        },
-        {
-            "<leader>aB",
-            function()
-                prefill_edit_window(avante_fix_bugs)
-            end,
-            desc = "Fix Bugs(edit)",
-        },
-        {
-            "<leader>aU",
-            function()
-                prefill_edit_window(avante_add_tests)
-            end,
-            desc = "Add Tests(edit)",
-        },
-    },
-})
-
 -- debug/dev
 
 -- Pretty print
@@ -2229,3 +1994,17 @@ end
 
 vim.api.nvim_create_user_command("ConvertModelTable", table_convert_popup, {})
 vim.keymap.set({ "n", "v" }, "<leader>ct", table_convert_popup, { expr = true })
+
+vim.keymap.set(
+    { "n", "v" },
+    "<C-a>",
+    "<cmd>CodeCompanionActions<cr>",
+    { noremap = true, silent = true }
+)
+vim.keymap.set(
+    { "n", "v" },
+    "<LocalLeader>a",
+    "<cmd>CodeCompanionChat Toggle<cr>",
+    { noremap = true, silent = true }
+)
+vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
