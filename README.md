@@ -68,6 +68,19 @@ sudo nixos-install --flake github:Sekky61/nix-config#nixpi --root /mnt --no-boot
 ```
 The `--no-bootloader` flag is unverified.
 
+
+### Deployments
+
+Deployments with `deploy-rs` are possible with command such as
+
+```bash
+deploy .#nixpi --skip-checks
+# or with impure due to all the checks of impure hosts
+IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH deploy .#nixpi -- --impure
+```
+
+This command would copy to the target and confirm all went well.
+
 ## Impurity
 
 Each host definition has its complement `$hostname-impure`.

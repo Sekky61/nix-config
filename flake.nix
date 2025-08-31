@@ -2,7 +2,7 @@
   description = "Michal's NixOS flake";
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+    (inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       systems = [
         # systems for which you want to build the `perSystem` attributes
         "x86_64-linux"
@@ -11,6 +11,22 @@
         ./flake
         ./hosts
       ];
+    })
+    // {
+      deploy = {
+        sshUser = "root";
+
+        nodes.nixpi = {
+          hostname = "nixpi";
+          profiles.system = {
+            user = "root";
+            # path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
+
+            # Use deployee system, not the deployer system
+            path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
+          };
+        };
+      };
     };
 
   inputs = {
@@ -69,5 +85,7 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
 }

@@ -1,5 +1,13 @@
-{self, ...}: {
-  perSystem = {pkgs, ...}: {
+{
+  self,
+  inputs,
+  ...
+}: {
+  perSystem = {
+    pkgs,
+    system,
+    ...
+  }: {
     checks = let
       # I dont like that it has to produce output and create a result/ in my project
       fmt-check =
@@ -10,8 +18,12 @@
           alejandra -c .
           mkdir "$out"
         '';
-    in {
-      inherit fmt-check;
-    };
+
+      deploy-checks = (builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib).${system};
+    in
+      {
+        inherit fmt-check;
+      }
+      // deploy-checks;
   };
 }
