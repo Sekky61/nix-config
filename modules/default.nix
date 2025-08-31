@@ -15,6 +15,7 @@
     ./bash
     ./terminal.nix
     ./battery.nix
+    ./network.nix
 
     # Modules with options
     ./gui-packages
