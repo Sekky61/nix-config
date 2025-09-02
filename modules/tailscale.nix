@@ -3,6 +3,7 @@
   username,
   ...
 }: {
+  # Enable Tailscale VPN service with routing features for both client and subnet router
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";

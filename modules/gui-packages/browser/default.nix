@@ -1,3 +1,30 @@
+/*
+  Browser Module
+
+  This module provides a unified interface for configuring multiple web browsers
+  in the NixOS system. It supports Chrome, Firefox, and Zen Browser with consistent
+  configuration options.
+
+  Features:
+  - Install and configure multiple browsers simultaneously
+  - Set a default browser that integrates with system MIME types
+  - Automatic desktop file associations for web protocols
+  - Home Manager integration for user-specific browser settings
+
+  Configuration:
+  - michal.browsers.<browser>.enable: Install and enable the browser
+  - michal.browsers.<browser>.default: Set as the system default browser
+  - Only one browser can be marked as default at a time
+
+  Example:
+  {
+    michal.browsers = {
+      firefox.enable = true;
+      firefox.default = true;
+      chrome.enable = true;
+    };
+  }
+*/
 {
   lib,
   config,
