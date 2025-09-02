@@ -53,6 +53,7 @@ in {
         #daemon.enable = true;
         settings = {
           enter_accept = true;
+          # key_path = config.sops.secrets."atuin_key".path;
         };
       };
       zoxide = {
