@@ -776,7 +776,7 @@ require("lazy").setup({
                             },
                             schema = {
                                 model = {
-                                    default = "openai/gpt-5",
+                                    default = "@preset/groq-kimi-k2",
                                     -- default = "anthropic/claude-4-sonnet",
                                     -- default = "x-ai/grok-code-fast-1",
                                 },
