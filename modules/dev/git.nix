@@ -20,7 +20,7 @@
 
         # More options
         rebase.updateRefs = true;
-        merge.conflictstyle = "zdiff3";
+        merge.conflictstyle = "diff3";
         diff.algorithm = "histogram"; # Verify with `git config --get diff.algorithm`
         rerere = {
           # reuse recorded resolution
@@ -33,8 +33,82 @@
     home.packages = with pkgs; [
       git
       gh
-      lazygit
     ];
+
+    programs.lazygit = {
+      enable = true;
+      settings = {
+        gui = {
+          nerdFontsVersion = "3";
+        };
+        git = {
+          mainBranches = [
+            "master"
+            "main"
+            "develop"
+          ];
+          parseEmoji = true;
+          commitPrefix = [
+            {
+              # add feat: prefix to commit messages
+              pattern = "^[A-Z]+-\\d+-(feat|fix|chore|refactor).*";
+              replace = "$1: ";
+            }
+          ];
+        };
+        update.method = "never";
+        # https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium
+        customCommands = [
+          {
+            key = "G";
+            command = "gh pr view -w {{.SelectedLocalBranch.Name}}";
+            context = "localBranches";
+            description = "Open Github PR in browser";
+          }
+          {
+            key = "G";
+            command = "gh pr view -w";
+            context = "commits";
+            description = "Open Github PR in browser";
+          }
+          {
+            key = "<c-p>";
+            command = "git remote prune {{.SelectedRemote.Name}}";
+            context = "remotes";
+            loadingText = "Pruning...";
+            description = "prune deleted remote branches";
+          }
+          {
+            key = "<c-v>";
+            context = "global";
+            description = "Quick conventional commit";
+            prompts = [
+              {
+                type = "menu";
+                key = "QuickCommit";
+                title = "Choose a quick commit";
+                options = [
+                  {
+                    name = "fix: cr feedback";
+                    value = "fix: cr feedback";
+                  }
+                  {
+                    name = "fix: apply autofix";
+                    value = "fix: apply autofix";
+                  }
+                  {
+                    name = "chore: translations";
+                    value = "chore: translations";
+                  }
+                ];
+              }
+            ];
+            command = "git commit -m '{{.Form.QuickCommit}}'";
+            loadingText = "Creating quick commit...";
+          }
+        ];
+      };
+    };
   };
 
   environment.shellAliases = {
