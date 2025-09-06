@@ -507,14 +507,13 @@ require("lazy").setup({
 
             -- <C-q>    Send all items not filtered to quickfixlist (qflist)
             -- combine with :cdo (apply command to all items in quickfix list)
-            vim.keymap.set("n", "<leader>gf", tsb.git_files, { desc = "Search [G]it [F]iles" })
-            vim.keymap.set("n", "<leader>sf", tsb.find_files, { desc = "[S]earch [F]iles" })
-            vim.keymap.set("n", "<leader>sh", tsb.help_tags, { desc = "[S]earch [H]elp" })
+            vim.keymap.set("n", "ff", tsb.find_files, { desc = "[S]earch [F]iles" })
+            vim.keymap.set("n", "fh", tsb.help_tags, { desc = "[S]earch [H]elp" })
             vim.keymap.set("n", "<leader>sw", tsb.grep_string, { desc = "[S]earch current [W]ord" })
-            vim.keymap.set("n", "<leader>sg", tsb.live_grep, { desc = "[S]earch by [G]rep" })
+            vim.keymap.set("n", "fg", tsb.live_grep, { desc = "[S]earch by [G]rep" })
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
-            vim.keymap.set("n", "<leader>sr", tsb.resume, { desc = "[S]earch [R]esume" })
+            vim.keymap.set("n", "fr", tsb.resume, { desc = "[S]earch [R]esume" })
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
