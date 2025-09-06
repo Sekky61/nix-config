@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   imports = [
     # Truly common, always there
-    ./tailscale.nix
     ./ssh.nix
     ./sops
     ./nix-config.nix
@@ -15,11 +14,10 @@
     ./bash
     ./terminal.nix
     ./battery.nix
-    ./network.nix
 
     # Modules with options
+    ./network
     ./gui-packages
-    ./bluetooth.nix
     ./bitwarden.nix
     ./ventoy.nix
     ./borg.nix

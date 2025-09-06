@@ -3,38 +3,16 @@
   username,
   config,
   ...
-}: let
-  userCfg = config.home-manager.users.${username};
-  programEnabled = name: userCfg.programs.${name}.enable == true;
-  # defined if program name is enabled
-  programAlias = name:
-    if programEnabled name
-    then name
-    else null;
-in {
-  # ---- System Configuration ----
-  programs = {
-    mtr.enable = true; # todo alias (my trace route)
-  };
-
+}: {
   environment.systemPackages = with pkgs; [
-    btop
-    jq
-    gojq
-    ripgrep
-    unzip
-    fd
-    fzf # needed by a script and nvim telescope plugin
-
-    # Network, utils, todo move
-    socat
-    ethtool # network controls
-    traceroute
-    whois
-    home-assistant-cli
+    btop # Resource monitor
+    jq # Pretty-print and work with json
+    ripgrep # fuzzy finder
+    unzip # unzip zip files
+    fd # find
+    fzf # fuzzy finder, needed by a script and nvim telescope plugin
+    home-assistant-cli # smart home
     ueberzugpp # image support for terminals
-
-    # fancy-motd # greet, welcome message
   ];
 
   home-manager.users.${username} = {
@@ -42,7 +20,15 @@ in {
       bash = {
         enable = true;
         enableCompletion = true; # needed for bashIntegrations
-        shellAliases = {
+        shellAliases = let
+          userCfg = config.home-manager.users.${username};
+          programEnabled = name: userCfg.programs.${name}.enable == true;
+          # defined if program name is enabled
+          programAlias = name:
+            if programEnabled name
+            then name
+            else null;
+        in {
           cat = programAlias "bat";
         };
       };
@@ -57,12 +43,16 @@ in {
         };
       };
       zoxide = {
+        # zi for interactive mode
         enable = true;
         enableBashIntegration = true;
       };
       bat = {
         enable = true;
         extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch];
+        config = {
+          style = "-numbers,-grid"; # Do not show line numbers and grid
+        };
       };
       eza = {
         enable = true;
@@ -83,8 +73,8 @@ in {
         enable = true;
         enableBashIntegration = true;
         shellWrapperName = "y";
-        settings.yazi = {
-          manager = {
+        settings = {
+          mgr = {
             layout = [
               1
               2
@@ -100,6 +90,7 @@ in {
           };
 
           preview = {
+            wrap = "yes";
             image_filter = "lanczos3";
             image_quality = 90;
             tab_size = 1;

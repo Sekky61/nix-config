@@ -21,10 +21,10 @@
 
   # username and hostname based color
   host_colors = {
-    nix-yoga = "green";
-    nix-wsl = "blue";
+    nix-yoga = "#61F527"; # Green
+    nix-wsl = "green";
     nixpi = "red";
-    nix-fw = "#61F527"; # Green
+    nix-fw = "blue";
   };
 
   theme = config.michal.theme;
