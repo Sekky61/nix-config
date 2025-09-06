@@ -24,5 +24,8 @@
 
     # Flex
     fastfetch
+
+    # clockify custom packaging
+    clockify-cli
   ];
 }
