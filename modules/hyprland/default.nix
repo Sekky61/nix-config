@@ -147,7 +147,9 @@ in {
             sensitivity = 0.2; # -1 to 1
             # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
             kb_layout = "us,cz";
-            kb_options = "grp:alt_shift_toggle"; # todo this might interfere with alt shift binds
+            # todo what is the first one? this might interfere with alt shift binds
+            # the second one swaps capslock and win key
+            kb_options = "grp:alt_shift_toggle,caps:super";
             numlock_by_default = true;
             repeat_delay = 250;
             repeat_rate = 35;
