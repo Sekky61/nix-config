@@ -6,11 +6,11 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/wifi.nix
   ];
 
   # Services
 
+  michal.wifi.enable = true;
   michal.services = {
     proxy = {
       enable = true;

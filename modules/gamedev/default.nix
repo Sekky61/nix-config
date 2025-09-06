@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{
   imports = [
     # Modules with options
     ./unity.nix
