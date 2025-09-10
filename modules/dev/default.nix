@@ -42,6 +42,7 @@
       act # GitHub Actions runner
       dive # Docker image layer explorer
       glib # gsettings, gdbus
+      tokei # count loc
 
       # Editors
       code-cursor
