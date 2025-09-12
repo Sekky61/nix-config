@@ -8,6 +8,9 @@
     ethtool
     traceroute
     whois
+    nmap
+    dig
+    openssl
   ];
 
   programs = {

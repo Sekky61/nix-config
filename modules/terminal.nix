@@ -13,6 +13,9 @@
     fzf # fuzzy finder, needed by a script and nvim telescope plugin
     home-assistant-cli # smart home
     ueberzugpp # image support for terminals
+
+    # Flex
+    fastfetch
   ];
 
   home-manager.users.${username} = {

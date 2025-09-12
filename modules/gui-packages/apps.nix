@@ -32,6 +32,10 @@ in {
       showmethekey # show pressed keys
       xorg.xev
       gnome-control-center # The settings (Win+I)
+      ydotool # synthetic mouse/keyboard events
+
+      # Apps
+      ytdownloader
 
       # theming tools
       gradience

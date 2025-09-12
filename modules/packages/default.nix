@@ -3,29 +3,23 @@
   # packages for daily needs
   environment.systemPackages = with pkgs; [
     # tools
-    killall
     zip
     unzip
-    ydotool
-    nmap
-    openssl
-    lsof
-    ytdownloader
     exif # read metadata of pictures
+
+    # disk/file
     file
+    lsof # list open files
     libguestfs # mount virtual fs
     parted # partitions
     caligula # TUI for disk imaging
-    dig
     ncdu # disk usage
 
     # troubleshooting
     hwinfo
+    killall
 
-    # Flex
-    fastfetch
-
-    # clockify custom packaging
+    # clockify custom packadged app
     clockify-cli
   ];
 }
