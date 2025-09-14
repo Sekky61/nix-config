@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.michal.programs.bitwarden;
+  cfg = config.michal.programs.ventoy;
   # sudo ventoy-web
   # or
   # ./scripts/ventoy-install
@@ -19,8 +19,9 @@ in {
       ventoy-full
     ];
 
+    # :(
     nixpkgs.config.permittedInsecurePackages = [
-      "ventoy-1.1.05"
+      "ventoy-1.1.07"
     ];
   };
 }
