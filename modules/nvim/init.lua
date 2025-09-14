@@ -289,6 +289,7 @@ require("lazy").setup({
             "nvim-telescope/telescope-ui-select.nvim",
             "debugloop/telescope-undo.nvim",
             "fdschmidt93/telescope-egrepify.nvim",
+            "Marskey/telescope-sg",
             {
                 -- Fuzzy Finder Algorithm which requires local dependencies to be built.
                 -- Only load if `make` is available. Make sure you have the system
@@ -480,12 +481,21 @@ require("lazy").setup({
                             },
                         },
                     },
+                    ast_grep = {
+                        command = {
+                            "ast-grep",
+                            "--json=stream",
+                        },
+                        grep_open_files = false, -- search in opened files
+                        lang = nil, -- string value, specify language for ast-grep `nil` for default
+                    },
                 },
             })
             ts.load_extension("fzf")
             ts.load_extension("undo")
             ts.load_extension("ui-select")
             ts.load_extension("egrepify")
+            ts.load_extension("ast_grep")
 
             -- See `:help telescope.builtin`
             local tsb = require("telescope.builtin")
@@ -507,13 +517,14 @@ require("lazy").setup({
 
             -- <C-q>    Send all items not filtered to quickfixlist (qflist)
             -- combine with :cdo (apply command to all items in quickfix list)
-            vim.keymap.set("n", "ff", tsb.find_files, { desc = "[S]earch [F]iles" })
-            vim.keymap.set("n", "fh", tsb.help_tags, { desc = "[S]earch [H]elp" })
+            vim.keymap.set("n", "ff", tsb.find_files, { desc = "[F]ind [F]iles" })
+            vim.keymap.set("n", "fh", tsb.help_tags, { desc = "[F]ind [H]elp" })
+            vim.keymap.set("n", "fv", "<cmd>Telescope ast_grep<cr>", { desc = "[F]ind [V]AST" })
             vim.keymap.set("n", "<leader>sw", tsb.grep_string, { desc = "[S]earch current [W]ord" })
-            vim.keymap.set("n", "fg", tsb.live_grep, { desc = "[S]earch by [G]rep" })
+            vim.keymap.set("n", "fg", tsb.live_grep, { desc = "[F]ind [G]rep" })
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
-            vim.keymap.set("n", "fr", tsb.resume, { desc = "[S]earch [R]esume" })
+            vim.keymap.set("n", "fr", tsb.resume, { desc = "[F]ind [R]esume" })
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
@@ -776,6 +787,7 @@ require("lazy").setup({
                             schema = {
                                 model = {
                                     default = "@preset/groq-kimi-k2",
+                                    -- default = "qwen/qwen3-next-80b-a3b-instruct",
                                     -- default = "anthropic/claude-4-sonnet",
                                     -- default = "x-ai/grok-code-fast-1",
                                 },

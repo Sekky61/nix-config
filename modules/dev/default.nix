@@ -43,6 +43,7 @@
       dive # Docker image layer explorer
       glib # gsettings, gdbus
       tokei # count loc
+      ast-grep # ast... grep
 
       # Editors
       code-cursor
