@@ -21,7 +21,7 @@
       # Perf
       perf-tools
       gperftools
-      linuxPackages_latest.perf
+      perf
       hotspot
       poop # todo old version
     ];
