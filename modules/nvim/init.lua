@@ -786,9 +786,10 @@ require("lazy").setup({
                             },
                             schema = {
                                 model = {
-                                    default = "@preset/groq-kimi-k2",
+                                    -- default = "@preset/groq-kimi-k2",
                                     -- default = "qwen/qwen3-next-80b-a3b-instruct",
                                     -- default = "anthropic/claude-4-sonnet",
+                                    default = "openai/gpt-5",
                                     -- default = "x-ai/grok-code-fast-1",
                                 },
                             },
