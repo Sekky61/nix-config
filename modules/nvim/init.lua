@@ -214,41 +214,14 @@ require("lazy").setup({
                             table.insert(parts, part)
                         end
 
-                        -- find 'modules' and get the next directory
+                        -- find 'modules' and get the next directory, then append the filename
                         for i, part in ipairs(parts) do
                             if part == "modules" and i < #parts then
-                                return " " .. parts[i + 1] -- return the directory after 'modules'
+                                return " " .. parts[i + 1] .. "" .. parts[#parts] -- prepend the directory after 'modules' to the filename with a fancy separator
                             end
                         end
 
                         return "" -- return empty if 'modules' not found or no subdirectory after it
-                    end,
-                    function()
-                        local full_path = vim.fn.expand("%:p")
-                        local cwd = vim.fn.getcwd()
-
-                        -- check if the file path starts with the cwd
-                        if full_path:find(cwd, 1, true) then
-                            full_path = full_path:sub(#cwd + 2) -- remove cwd and leading slash
-                        end
-
-                        -- split the path into parts
-                        local parts = {}
-                        for part in full_path:gmatch("[^/]+") do
-                            table.insert(parts, part)
-                        end
-
-                        -- find the starting point (first 'src' and exclude it)
-                        local start_index = 1
-                        for i, part in ipairs(parts) do
-                            if part == "src" then
-                                start_index = i + 1
-                                break
-                            end
-                        end
-
-                        -- reconstruct the trimmed path from after 'src' to the filename
-                        return table.concat(vim.list_slice(parts, start_index, #parts), "")
                     end,
                 },
                 lualine_x = {
