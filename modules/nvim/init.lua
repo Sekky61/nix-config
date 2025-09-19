@@ -1881,7 +1881,8 @@ R = function(name)
 end
 
 --theme
-vim.cmd.colorscheme("catppuccin-frappe")
+-- vim.cmd.colorscheme("catppuccin-frappe")
+vim.cmd.colorscheme("catppuccin-macchiato")
 
 -- jump to the context (the line on top) when in one
 vim.keymap.set("n", "[k", function()
