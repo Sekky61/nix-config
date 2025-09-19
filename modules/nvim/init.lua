@@ -699,7 +699,7 @@ require("lazy").setup({
     { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
 
     {
-        -- inline AI autocomplete
+        -- inline AI autocomplete, tabcomplete
         "milanglacier/minuet-ai.nvim",
         -- todo just use setup={} ?
         config = function()
@@ -713,13 +713,14 @@ require("lazy").setup({
                     openai_compatible = {
                         api_key = "OPENROUTER_API_KEY",
                         end_point = "https://openrouter.ai/api/v1/chat/completions",
+                        -- model = "x-ai/grok-code-fast-1", -- cannot figure out how to disable reasoning
+                        -- model = "moonshotai/kimi-k2",
                         model = "mistralai/codestral-2508",
                         name = "Openrouter",
                         optional = {
-                            max_tokens = 56,
+                            max_tokens = 100,
                             top_p = 0.9,
                             provider = {
-                                -- Prioritize throughput for faster completion
                                 sort = "throughput",
                             },
                         },
@@ -1957,3 +1958,11 @@ vim.keymap.set(
     { noremap = true, silent = true }
 )
 vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
+
+-- keybind to call :Minuet virtualtext enable
+vim.keymap.set(
+    "n",
+    "<leader>tm",
+    ":Minuet virtualtext toggle<CR>",
+    { desc = "[T]oggle [M]inuet virtual text" }
+)
