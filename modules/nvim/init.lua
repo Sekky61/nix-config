@@ -251,6 +251,9 @@ require("lazy").setup({
                         return table.concat(vim.list_slice(parts, start_index, #parts), "")
                     end,
                 },
+                lualine_x = {
+                    "grapple",
+                },
             },
         },
     },
@@ -496,6 +499,7 @@ require("lazy").setup({
             ts.load_extension("ui-select")
             ts.load_extension("egrepify")
             ts.load_extension("ast_grep")
+            ts.load_extension("grapple")
 
             -- See `:help telescope.builtin`
             local tsb = require("telescope.builtin")
@@ -525,6 +529,7 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
             vim.keymap.set("n", "fr", tsb.resume, { desc = "[F]ind [R]esume" })
+            vim.keymap.set("n", "ft", "<cmd>Telescope grapple tags<cr>", { desc = "[F]ind [T]ags" })
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
@@ -826,26 +831,6 @@ require("lazy").setup({
         },
     },
     {
-        -- Git plugin
-        "NeogitOrg/neogit",
-        dependencies = {
-            -- "nvim-lua/plenary.nvim", -- required
-            "sindrets/diffview.nvim", -- optional - Diff integration
-            -- Only one of these is needed.
-            -- "nvim-telescope/telescope.nvim", -- optional
-        },
-        config = true,
-        keys = {
-            {
-                "<leader>ng",
-                function()
-                    require("neogit").open({ kind = "vsplit" })
-                end,
-                desc = "Neogit",
-            },
-        },
-    },
-    {
         -- Github plugin
         -- Keys: https://github.com/pwntester/octo.nvim?tab=readme-ov-file#-configuration
         "pwntester/octo.nvim",
@@ -1120,6 +1105,24 @@ require("lazy").setup({
         dependencies = "nvzone/volt",
         opts = {},
         cmd = { "Typr", "TyprStats" },
+    },
+    {
+        "cbochs/grapple.nvim",
+        opts = {
+            scope = "git_branch",
+        },
+        event = { "BufReadPost", "BufNewFile" },
+        cmd = "Grapple",
+        keys = {
+            { "<leader>m", "<cmd>Grapple toggle<cr>", desc = "Grapple toggle tag" },
+            { "<leader>M", "<cmd>Grapple toggle_tags<cr>", desc = "Grapple open tags window" },
+            { "<leader>n", "<cmd>Grapple cycle_tags next<cr>", desc = "Grapple cycle next tag" },
+            {
+                "<leader>p",
+                "<cmd>Grapple cycle_tags prev<cr>",
+                desc = "Grapple cycle previous tag",
+            },
+        },
     },
 }, {})
 
@@ -1961,7 +1964,6 @@ vim.keymap.set(
 )
 vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
--- keybind to call :Minuet virtualtext enable
 vim.keymap.set(
     "n",
     "<leader>tm",
