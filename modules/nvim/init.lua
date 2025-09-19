@@ -1586,16 +1586,18 @@ vim.lsp.config("zls", {
 })
 vim.lsp.enable("zls")
 
--- still needed for the custom config, idk why
-require("lspconfig").eslint.setup({
+local base_on_attach = vim.lsp.config.eslint.on_attach
+vim.lsp.config("eslint", {
     on_attach = function(client, bufnr)
-        on_attach(client, bufnr)
-        if client.name == "eslint" then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                buffer = bufnr,
-                command = "EslintFixAll",
-            })
+        if not base_on_attach then
+            return
         end
+
+        base_on_attach(client, bufnr)
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "LspEslintFixAll",
+        })
     end,
 })
 
