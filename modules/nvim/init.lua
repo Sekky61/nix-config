@@ -1763,6 +1763,18 @@ luasnip.add_snippets("typescript", {
         t(");"),
     }),
 
+    -- toSignal snippet
+    s("tosignal", {
+        t("protected readonly "),
+        i(1, "foo"),
+        t("Signal: Signal<"),
+        d(2, default_type, { 1 }),
+        t("> = toSignal"),
+        t(">("),
+        i(3, "of(null)"),
+        t(");"),
+    }),
+
     -- Input signal
     s("inputsignal", {
         t("readonly "),
@@ -1921,14 +1933,6 @@ vim.keymap.set("x", "<leader>p", '"_dP')
 
 -- unmap Q
 vim.keymap.set("n", "Q", "<Nop>")
-
--- Git + Github
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>gp",
-    ":Git push -u origin HEAD<CR>",
-    { noremap = false, desc = "Git Push" }
-)
 
 vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Jump to previous quickfix entry" })
 vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Jump to next quickfix entry" })
