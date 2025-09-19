@@ -1940,57 +1940,6 @@ vim.keymap.set(
     { desc = "[C]lose all [b]uffers but the current one" }
 ) -- https://stackoverflow.com/a/42071865/516188
 
--- Work
-
-local function table_convert_popup()
-    local input = vim.fn.input("Enter type name: ")
-    if input == "" then
-        return
-    end
-
-    -- Get the selected text
-    local start_pos = vim.fn.getpos("'<")
-    local end_pos = vim.fn.getpos("'>")
-    local bufnr = vim.api.nvim_get_current_buf()
-    local lines = vim.api.nvim_buf_get_lines(bufnr, start_pos[2] - 1, end_pos[2], false)
-    print("lines ")
-    P(start_pos)
-    P(end_pos)
-    P(lines)
-
-    local result = {}
-    for i = 3, #lines do -- skip header rows
-        local prop, dtype, nullable =
-            lines[i]:match("|%s*`(.-)`%s*|%s*<DataType type='(.-)'(%s+nullable)? />")
-        print("prop")
-        print(prop)
-        print(dtype)
-        if prop and dtype then
-            local js_types = {
-                Int = "number",
-                String = "string",
-                Boolean = "boolean",
-            }
-            local js_type = js_types[dtype] or "any"
-            local nullable = nullable_s == "nullable"
-            local create = nullable and "@FieldCreate()\n" or ""
-            table.insert(
-                result,
-                string.format("  @Field()\n%s  [%sProperty.%s]!:%s;", create, input, prop, js_type)
-            )
-        end
-    end
-    P(result)
-
-    -- Insert at cursor position
-    -- vim.api.nvim_buf_set_lines(bufnr, start_pos[2] - 1, end_pos[2], false, result)
-    vim.fn.setreg('"', table.concat(result, "\n")) -- copy to clipboard
-    print("Converted class properties in clipboard")
-end
-
-vim.api.nvim_create_user_command("ConvertModelTable", table_convert_popup, {})
-vim.keymap.set({ "n", "v" }, "<leader>ct", table_convert_popup, { expr = true })
-
 vim.keymap.set(
     { "n", "v" },
     "<C-a>",
