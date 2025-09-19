@@ -789,8 +789,8 @@ require("lazy").setup({
                                     -- default = "@preset/groq-kimi-k2",
                                     -- default = "qwen/qwen3-next-80b-a3b-instruct",
                                     -- default = "anthropic/claude-4-sonnet",
-                                    default = "openai/gpt-5",
-                                    -- default = "x-ai/grok-code-fast-1",
+                                    -- default = "openai/gpt-5",
+                                    default = "x-ai/grok-code-fast-1",
                                 },
                             },
                         })
@@ -1119,23 +1119,6 @@ require("lazy").setup({
         dependencies = "nvzone/volt",
         opts = {},
         cmd = { "Typr", "TyprStats" },
-    },
-    {
-        "dmtrKovalenko/fff.nvim",
-        -- build = "cargo build --release",
-        build = "nix run .#release",
-        opts = {
-            -- pass here all the options
-        },
-        keys = {
-            {
-                "ff", -- try it if you didn't it is a banger keybinding for a picker
-                function()
-                    require("fff").find_files() -- or find_in_git_root() if you only want git files
-                end,
-                desc = "Open file picker",
-            },
-        },
     },
 }, {})
 
