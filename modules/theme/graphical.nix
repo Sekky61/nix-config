@@ -15,7 +15,7 @@ in {
       targets = {
         grub = {
           enable = true;
-          useImage = true;
+          useWallpaper = true;
         };
       };
     };
@@ -53,7 +53,7 @@ in {
 
       qt = {
         enable = true;
-        platformTheme.name = "kde6";
+        platformTheme.name = "kde";
       };
     };
   };

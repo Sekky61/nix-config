@@ -38,7 +38,7 @@ in {
       ytdownloader
 
       # theming tools
-      gradience
+      # gradience - archived upstream
       gnome-tweaks
 
       # paint
