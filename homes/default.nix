@@ -1,5 +1,4 @@
 {
-  config,
   self,
   inputs,
   username,
