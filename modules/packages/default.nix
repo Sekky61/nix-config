@@ -19,7 +19,7 @@
     hwinfo
     killall
 
-    # clockify custom packadged app
-    clockify-cli
+    # clockify custom packaged app
+    nur.repos.lucassabreu.clockify-cli
   ];
 }

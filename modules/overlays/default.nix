@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   lib,
@@ -29,8 +30,6 @@
     #   };
     # })
     # (import ./overlay3)
-    (final: prev: {
-      clockify-cli = prev.callPackage ../../pkgs/clockify-cli.nix {};
-    })
+    inputs.nur.overlays.default
   ];
 }

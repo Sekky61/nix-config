@@ -1,8 +1,4 @@
-{
-  pkgs,
-  username,
-  ...
-}: let
+{username, ...}: let
   homeDirectory = "/home/${username}";
 in {
   home = {
