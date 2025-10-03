@@ -42,14 +42,13 @@
       act # GitHub Actions runner
       dive # Docker image layer explorer
       glib # gsettings, gdbus
-      tokei # count loc
+      tokei # count loc, cloc, kloc, lines of code
       ast-grep # ast... grep
 
       # Editors
       code-cursor
 
       # LLM/AI
-      opencode
       lmstudio
 
       # Utilities
