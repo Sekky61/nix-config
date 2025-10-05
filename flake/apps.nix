@@ -1,9 +1,4 @@
-{
-  specialArgs,
-  inputs,
-  self,
-  ...
-}: {
+{self, ...}: {
   perSystem = {
     pkgs,
     system,

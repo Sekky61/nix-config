@@ -17,7 +17,6 @@
       # Languages - JS/TS
       nodejs_latest
       typescript
-      eslint
       yarn
       gjs
       bun

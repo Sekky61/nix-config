@@ -14,6 +14,9 @@ My config is based on [CirnOS](https://github.com/end-4/CirnOS) ([docs](https://
 
 ## Structure Overview
 
+> [!TIP]
+> `nix flake show` to see all hosts and packages
+
 The configuration starts with definition of hosts (computers) in [`hosts/default.nix`](hosts/default.nix).
 Each `nixosSystem` defines arguments like `username` and `hostname`, which are available in all subsequent *modules*.
 Each [NixOS module](https://nixos.wiki/wiki/NixOS_modules) defines some [configuration options](https://search.nixos.org/options), like [packages](https://search.nixos.org/packages) to install, services to run, or files to include.
