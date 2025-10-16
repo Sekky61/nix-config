@@ -90,6 +90,7 @@ require("lazy").setup({
     -- Git related plugins
     "tpope/vim-rhubarb",
     "https://tpope.io/vim/fugitive.git",
+    { "akinsho/git-conflict.nvim", version = "*", config = true },
 
     -- Detect tabstop and shiftwidth automatically
     "tpope/vim-sleuth",
