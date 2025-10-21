@@ -180,7 +180,9 @@
 
   # Framework specific
 
-  # Firmware, run `fwupdmgr update`
+  # Firmware
+  # `fwupdmgr update`
+  # `fwupdmgr get-devices`
   services.fwupd.enable = true;
 
   imports = [
