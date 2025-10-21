@@ -181,8 +181,9 @@
   # Framework specific
 
   # Firmware
+  # https://github.com/fwupd/fwupd
+  # `fwupdmgr get-updates`
   # `fwupdmgr update`
-  # `fwupdmgr get-devices`
   services.fwupd.enable = true;
 
   imports = [

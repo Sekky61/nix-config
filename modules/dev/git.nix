@@ -2,12 +2,15 @@
   username,
   pkgs,
   ...
-}: {
+}: let
+  vcsEmail = "misa@majer.cz";
+  vcsName = "Sekky61";
+in {
   home-manager.users.${username} = {
     programs.git = {
       enable = true;
-      userName = "Sekky61";
-      userEmail = "misa@majer.cz";
+      userName = vcsName;
+      userEmail = vcsEmail;
       extraConfig = {
         credential.helper = "cache --timeout=3600";
 
@@ -108,6 +111,19 @@
           }
         ];
       };
+    };
+    programs.jujutsu = {
+      enable = true;
+      settings = {
+        user = {
+          email = vcsEmail;
+          name = vcsName;
+        };
+      };
+    };
+    programs.jjui = {
+      # jujutsu tui
+      enable = true;
     };
   };
 
