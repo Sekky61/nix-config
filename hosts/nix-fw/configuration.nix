@@ -104,6 +104,8 @@
   zramSwap.enable = true;
   # zramSwap.memoryPercent = 100;
 
+  # i got to the web interface at http://localhost:631/admin
+  # and when it asked for login i did a michal/mypassword
   services.printing.enable = true;
   services.printing.drivers = [pkgs.gutenprint];
   services.avahi = {
