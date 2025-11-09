@@ -23,8 +23,9 @@
   # programs.virt-manager.enable = true;
   virtualisation = {
     docker.enable = true;
-    virtualbox.host.enable = true;
-    virtualbox.guest.dragAndDrop = true;
+    # todo activation scripts failed and prevented an update
+    # virtualbox.host.enable = true;
+    # virtualbox.guest.dragAndDrop = true;
   };
   users.extraGroups.vboxusers.members = ["michal"];
 

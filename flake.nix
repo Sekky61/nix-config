@@ -43,9 +43,7 @@
     };
 
     ags = {
-      # TODO migrate to ags v3
-      url = "github:Aylur/ags?rev=a6a7a0adb17740f4c34a59902701870d46fbb6a4";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:Aylur/ags";
     };
 
     flake-parts = {

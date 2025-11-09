@@ -38,7 +38,7 @@ in {
         nerd-fonts.droid-sans-mono
         noto-fonts
         noto-fonts-cjk-sans
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         roboto
         twitter-color-emoji
         morewaita-icon-theme
@@ -77,7 +77,7 @@ in {
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
     };

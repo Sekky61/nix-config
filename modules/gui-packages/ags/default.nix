@@ -60,14 +60,45 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = let
       # TODO fix, ags.lib api changed
-      ags-bar = inputs.ags.lib.bundle {
-        inherit pkgs extraPackages;
-        src = ./config;
-        name = "ags-bar";
-      };
+      # ags-bar = inputs.ags.lib.bundle {
+      #   inherit pkgs extraPackages;
+      #   src = ./config;
+      #   name = "ags-bar";
+      # };
+      # ags-bar = pkgs.stdenv.mkDerivation {
+      #   pname = "ags-bar";
+      #
+      #   src = ./config;
+      #
+      #   nativeBuildInputs = with pkgs; [
+      #     wrapGAppsHook3
+      #     gobject-introspection
+      #     ags.packages.${system}.default
+      #   ];
+      #
+      #   buildInputs = [
+      #     pkgs.glib
+      #     pkgs.gjs
+      #     astal.io
+      #     astal.astal4
+      #     # packages like astal.battery or pkgs.libsoup_4
+      #   ];
+      #
+      #   installPhase = ''
+      #     ags bundle app.ts $out/bin/my-shell
+      #   '';
+      #
+      #   preFixup = ''
+      #     gappsWrapperArgs+=(
+      #       --prefix PATH : ${pkgs.lib.makeBinPath [
+      #       # runtime executables
+      #     ]}
+      #     )
+      #   '';
+      # };
     in
       with pkgs; [
-        ags-bar
+        # ags-bar
         gtk3 # icon-library (probably)
       ];
 
