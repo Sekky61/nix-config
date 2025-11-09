@@ -9,17 +9,18 @@ in {
   home-manager.users.${username} = {
     programs.git = {
       enable = true;
-      userName = vcsName;
-      userEmail = vcsEmail;
-      extraConfig = {
+      settings = {
         credential.helper = "cache --timeout=3600";
+        user = {
+          name = vcsName;
+          email = vcsEmail;
+        };
 
         # Signing
         commit.gpgsign = true;
         tag.gpgsign = true;
         gpg.format = "ssh";
         gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
-        user.signingkey = "~/.ssh/id_ed25519.pub";
 
         # More options
         rebase.updateRefs = true;

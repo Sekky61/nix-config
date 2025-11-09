@@ -12,7 +12,7 @@ with lib; let
 
   # TODO revise packages
   # TODO move some to devshell
-  astalPkgs = inputs.ags.packages.${pkgs.system};
+  astalPkgs = inputs.ags.packages.${pkgs.stdenv.hostPlatform.system};
 
   astalRuntimePkgs = with astalPkgs;
     [

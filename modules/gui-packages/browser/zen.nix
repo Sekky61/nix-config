@@ -1,17 +1,17 @@
 /*
-  Zen Browser Configuration
+Zen Browser Configuration
 
-  This module configures Zen Browser, a Firefox-based browser with enhanced features.
-  Zen Browser is installed via an external flake input and configured through Home Manager.
+This module configures Zen Browser, a Firefox-based browser with enhanced features.
+Zen Browser is installed via an external flake input and configured through Home Manager.
 
-  Requirements:
-  - zen-browser flake input must be available
-  - Home Manager must be configured for the user
+Requirements:
+- zen-browser flake input must be available
+- Home Manager must be configured for the user
 
-  Features:
-  - Firefox-compatible configuration options
-  - PWA support through firefoxpwa
-  - KDE Plasma integration (commented out)
+Features:
+- Firefox-compatible configuration options
+- PWA support through firefoxpwa
+- KDE Plasma integration (commented out)
 */
 {
   username,
@@ -24,7 +24,7 @@
   cfg = config.michal.browsers.zen;
   mkBrowserOptions = import ./options.nix;
   # Get the Zen Browser package from the external flake input
-  zen-package = inputs.zen-browser.packages."${pkgs.system}".default;
+  zen-package = inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default;
 in {
   options.michal.browsers.zen = mkBrowserOptions {
     inherit lib;
