@@ -48,7 +48,7 @@
       settings = {
         windowrule = [
           "noblur, title:^(Gromit-mpx)$"
-          "opacity 1 override, 1 override, title:^(Gromit-mpx)$"
+          "opacity 1.0 override 1.0 override, title:^(Gromit-mpx)$"
           "noshadow, title:^(Gromit-mpx)$"
           "size 100% 100%, title:^(Gromit-mpx)$"
         ];
