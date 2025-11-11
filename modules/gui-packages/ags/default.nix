@@ -114,7 +114,7 @@ in {
       programs.ags = {
         enable = true;
         # symlink to ~/.config/ags
-        configDir = impurity.link ./config;
+        configDir = impurity.link ./config-v3;
 
         # additional packages to add to gjs's runtime
         inherit extraPackages;
