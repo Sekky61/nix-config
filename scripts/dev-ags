@@ -2,4 +2,4 @@
 set -euo pipefail
 
 ags quit || true # allows fail
-ags run --directory modules/gui-packages/ags/config
+ags run --directory modules/gui-packages/ags/config --gtk 4
