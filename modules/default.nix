@@ -25,6 +25,7 @@
     ./theme
     ./impurity.nix
     ./gamedev
+    ./waybar
   ];
 
   environment.systemPackages = with pkgs; [

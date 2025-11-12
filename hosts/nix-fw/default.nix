@@ -18,7 +18,8 @@
     graphical.enable = true;
     hasFingerprintReader = true;
     programs = {
-      ags.enable = true;
+      ags.enable = false;
+      waybar.enable = true;
       bitwarden.enable = true;
       obs-studio.enable = true;
       remote-desktop.enable = true;

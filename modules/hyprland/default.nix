@@ -9,6 +9,7 @@ with lib; let
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
   monitors = config.michal.monitors;
+  shouldIncludeAgs = config.michal.programs.ags.enable;
 
   rounding = 5; # px
 
@@ -97,23 +98,27 @@ in {
             ++ [
               ",preferred,auto,1" # auto
             ];
-          exec-once = [
+          exec-once =
+            [
+              # wallpaper
+              "ydotoold"
+              "swww kill; swww init"
+              # hw sensors (screen rotation)
+              "iio-hyprland eDP-1"
+              # paste history init
+              "wl-paste --type text --watch cliphist store"
+              "wl-paste --type image --watch cliphist store"
+              # cursor todo
+              "hyprctl setcursor Bibata-Modern-Classic 24"
+              # launch programs
+              "[workspace 1 silent] ${browser}"
+              "[workspace 2 silent] ${defaultTerminal}"
+            ]
             # system tray
-            "ags run"
-            # wallpaper
-            "ydotoold"
-            "swww kill; swww init"
-            # hw sensors (screen rotation)
-            "iio-hyprland eDP-1"
-            # paste history init
-            "wl-paste --type text --watch cliphist store"
-            "wl-paste --type image --watch cliphist store"
-            # cursor todo
-            "hyprctl setcursor Bibata-Modern-Classic 24"
-            # launch programs
-            "[workspace 1 silent] ${browser}"
-            "[workspace 2 silent] ${defaultTerminal}"
-          ];
+            ++ optional shouldIncludeAgs "ags run";
+          # Waybar is handled by home manager
+          # ++ optional shouldIncludeWaybar "waybar"
+
           general = {
             gaps_in = 2;
             gaps_out = 3;
