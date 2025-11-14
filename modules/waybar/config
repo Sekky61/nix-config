@@ -1,7 +1,7 @@
 { 
   "layer": "top",
-  "height": 35,
-  "margin-top": 10,
+  "height": 30,
+  "margin-top": 2,
   "margin-left": 10,
   "margin-bottom": 0,
   "margin-right": 10,
@@ -141,10 +141,10 @@
     "on-click-right": "pavucontrol"
   },
   "battery": {
-    "bat": "BAT0",
+    "bat": "BAT1",
     "interval": 10,
     "states": {
-      "warning": 30,
+      "warning": 25,
       "critical": 15
     },
     "format": " {icon} {capacity}%",
