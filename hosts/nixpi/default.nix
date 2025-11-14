@@ -6,6 +6,8 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+
+    ../../modules/docker.nix
   ];
 
   # Services
