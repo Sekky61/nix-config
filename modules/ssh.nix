@@ -95,13 +95,15 @@ in {
 
     # Client
     programs.ssh = {
-      extraConfig = ''
-        # Reuse ssh connections to the same host
-        Host *
-          ControlMaster auto
-          ControlPath /tmp/%r@%h:%p
-          ControlPersist yes
-      '';
+      # ControlMaster caused problems with ssh to nixpi - lagging connection
+      #
+      # extraConfig = ''
+      #   # Reuse ssh connections to the same host
+      #   Host *
+      #     ControlMaster auto
+      #     ControlPath /tmp/%r@%h:%p
+      #     ControlPersist yes
+      # '';
     };
 
     # Server
