@@ -62,6 +62,9 @@
     };
   };
 
+  programs.git.enable = true;
+  programs.npm.enable = true;
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nix.settings.trusted-users = ["@wheel"];
   time.timeZone = "Europe/Prague";
