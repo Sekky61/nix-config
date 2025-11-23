@@ -9,6 +9,7 @@
 
   "modules-left": [
     "custom/launcher",
+    "custom/window-name",
     "custom/separator",
     "cpu",
     "memory",
@@ -18,7 +19,7 @@
     "custom/filler",
     "disk",
     "custom/filler",
-    "custom/pacman"
+    "custom/blueberry"
   ],
   "modules-center": ["hyprland/workspaces"],
   "modules-right": [
@@ -45,13 +46,7 @@
         "Paused": "<span foreground='#cdd6f4'> 󰏥 </span>",
       },
     },
-    "custom/uptime": {
-    "format": " {}",
-    "interval": 30,
-    "exec": "$HOME/.local/bin/upt2",
-    "on-click" : "",
-  },
-     "disk": {
+  "disk": {
     "interval": 1,
     "format": "<span color=\"#68b0d6\"> </span> {}%",
     "on-click": "filelight /",
@@ -60,6 +55,7 @@
   "hyprland/workspaces": {
     "all-outputs": true,
     "active-only": false,
+    "separate-outputs": true,
     "on-click": "activate",
     "format": "{icon}",
     "on-scroll-up": "hyprctl dispatch workspace e+1",
@@ -93,11 +89,11 @@
     "format": ""
   },
 
-  "clock": {
-    "format": "<b>{:%I:%M %p }</b>",
-    "format-alt": "<b>{:%a.%d,%b}</b>",
-    "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
-  },
+"clock": {
+  "format": "<b>{:%H:%M}</b>",
+  "format-alt": "<b>{:%a.%d,%b}</b>",
+  "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+},
 
   "cpu": {
     "interval": 10,
@@ -165,26 +161,13 @@
   "custom/window-name": {
     "format": " <b>{}</b>",
     "interval": 1,
-    "exec": "hyprctl activewindow | grep class | awk '{print $2}'"
+    "exec": "hyprctl activewindow -j | jq -r '.initialTitle'"
   },
 
- "custom/pacman": {
-   "format": "  ",
-   "on-click": "blueberry"
- },
-  "custom-pacman-update-icon-background": {
-    "format": ""
+  "custom/blueberry": {
+    "format": "  ",
+    "on-click": "blueberry"
   },
-  "custom/pacman-update-icon": {
-    "format": ""
-  },
-  "custom/pacman-update": {
-    "format": " {}",
-    "interval": 3600,
-    "exec": "checkupdates | wc -l",
-    "signal": 8
-  },
-  "custom/window-icon": {},
 
   "temperature": {
     "thermal-zone": 0,
@@ -192,12 +175,4 @@
     "format-critical": " {temperatureC}°C",
     "format": " {temperatureC}°C"
   },
-
-  "custom/wrap-left": {
-    "format": "<b>[</b>"
-  },
-
-  "custom/wrap-right": {
-    "format": "<b>]</b>"
-  }
 }
