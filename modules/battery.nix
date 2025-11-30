@@ -20,8 +20,8 @@ with lib; let
     ];
 
     text = ''
-      WARN_LEVEL=0.10
-      CRIT_LEVEL=0.05
+      WARN_LEVEL=${toString cfg.warnBatteryLevel}
+      CRIT_LEVEL=${toString cfg.critBatteryLevel}
       LAST_NOTIFIED=-1
 
       echo "Starting Battery Monitor..."
@@ -57,6 +57,24 @@ with lib; let
 in {
   options.michal.services.battery = {
     enable = mkEnableOption "the battery monitoring service";
+
+    enableNotifications = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to send battery level notifications";
+    };
+
+    warnBatteryLevel = mkOption {
+      type = types.float;
+      default = 0.10;
+      description = "Battery level (as fraction) at which to show warning notification";
+    };
+
+    critBatteryLevel = mkOption {
+      type = types.float;
+      default = 0.05;
+      description = "Battery level (as fraction) at which to show critical notification";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -66,7 +84,7 @@ in {
     environment.systemPackages = [batteryMonitorScript];
 
     systemd.user.services.battery-monitor = {
-      enable = true;
+      enable = cfg.enableNotifications;
       description = "Astal Battery Monitoring Daemon";
 
       wantedBy = ["graphical-session.target"];
