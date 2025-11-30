@@ -1,4 +1,11 @@
-{pkgs, ...}: let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.michal.services.battery;
   monitorScriptName = "battery-monitor-service";
 
   batteryMonitorScript = pkgs.writeShellApplication {
@@ -48,22 +55,29 @@
     '';
   };
 in {
-  services.upower.enable = true;
+  options.michal.services.battery = {
+    enable = mkEnableOption "the battery monitoring service";
+  };
 
-  environment.systemPackages = [batteryMonitorScript];
+  config = mkIf cfg.enable {
+    services.upower.enable = true;
 
-  systemd.user.services.battery-monitor = {
-    enable = true;
-    description = "Astal Battery Monitoring Daemon";
+    # Expose it for debug
+    environment.systemPackages = [batteryMonitorScript];
 
-    wantedBy = ["graphical-session.target"];
-    partOf = ["graphical-session.target"];
+    systemd.user.services.battery-monitor = {
+      enable = true;
+      description = "Astal Battery Monitoring Daemon";
 
-    serviceConfig = {
-      ExecStart = "${batteryMonitorScript}/bin/${monitorScriptName}";
-      Restart = "always";
-      RestartSec = "5s";
-      NoNewPrivileges = true;
+      wantedBy = ["graphical-session.target"];
+      partOf = ["graphical-session.target"];
+
+      serviceConfig = {
+        ExecStart = "${batteryMonitorScript}/bin/${monitorScriptName}";
+        Restart = "always";
+        RestartSec = "5s";
+        NoNewPrivileges = true;
+      };
     };
   };
 }

@@ -40,6 +40,10 @@
       };
     };
 
+    services = {
+      battery.enable = true;
+    };
+
     browsers = {
       zen = {
         enable = true;

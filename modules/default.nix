@@ -13,9 +13,9 @@
     ./nvim
     ./bash
     ./terminal.nix
-    ./battery.nix
 
     # Modules with options
+    ./battery.nix
     ./network
     ./gui-packages
     ./bitwarden.nix
