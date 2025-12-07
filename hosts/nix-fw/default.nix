@@ -74,7 +74,7 @@
         height = 1080;
         refreshRate = 165;
         position = {
-          x = 1920;
+          x = 1696; # 1920/1.333, next to laptop monitor, visualize with nwg-displays
           y = 0;
         };
         scale = 1;

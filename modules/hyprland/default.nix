@@ -57,6 +57,7 @@ in {
       libinput # wayland input settings
       libinput-gestures
       xwayland # apps that do not work with wayland like spotify rn
+      nwg-displays # GUI for resolution and monitor placement
     ];
 
     programs.hyprland.enable = true; # enables xdg-desktop-portal-hyprland
