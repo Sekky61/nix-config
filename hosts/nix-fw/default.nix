@@ -58,7 +58,7 @@
         id = "BOE 0x0BCA";
         width = 2256;
         height = 1504;
-        refreshRate = 60.0;
+        refreshRate = 60;
         position = {
           x = 0;
           y = 0;
@@ -68,10 +68,11 @@
       }
       # Desktop monitor
       {
-        id = "Gigabyte Technology Co. Ltd. G27QC A";
+        # Name is description from `hyprctl monitors`
+        id = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
         width = 1920;
         height = 1080;
-        refreshRate = 165.0;
+        refreshRate = 165;
         position = {
           x = 1920;
           y = 0;

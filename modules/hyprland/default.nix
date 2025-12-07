@@ -14,6 +14,7 @@ with lib; let
   rounding = 5; # px
 
   # Convert monitor config to Hyprland format
+  # todo https://wiki.hypr.land/Configuring/Monitors/#monitor-v2
   monitorToHyprland = monitor:
     if monitor.enabled
     then "desc:${monitor.id},${toString monitor.width}x${toString monitor.height}@${toString monitor.refreshRate},${toString monitor.position.x}x${toString monitor.position.y},${toString monitor.scale},transform,${toString monitor.transform}"
