@@ -46,6 +46,7 @@
 
       # Editors
       code-cursor
+      antigravity
 
       # LLM/AI
       lmstudio
