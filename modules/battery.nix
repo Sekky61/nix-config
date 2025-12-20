@@ -20,6 +20,7 @@ with lib; let
     ];
 
     text = ''
+      export LC_ALL=C
       WARN_LEVEL=${toString cfg.warnBatteryLevel}
       CRIT_LEVEL=${toString cfg.critBatteryLevel}
       LAST_NOTIFIED=-1
