@@ -16,6 +16,8 @@ in {
     environment.systemPackages = with pkgs; [
       wirelesstools
       wpa_supplicant
+      # debug wifi
+      iw
     ];
 
     networking = {

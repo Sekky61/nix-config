@@ -98,6 +98,10 @@
       alsa-utils # audio debug (arecord -l)
 
       maven
+
+      # debug wifi
+      wirelesstools
+      iw
     ];
   };
 
