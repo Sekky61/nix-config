@@ -740,13 +740,30 @@ require("lazy").setup({
             })
         end,
     },
-
+    {
+        -- token extraction guide: https://github.com/safzanpirani/cursor.nvim/blob/main/docs/token-extraction.md
+        -- # Everything is from a header of StreamCpp request
+        -- export CURSOR_BEARER_TOKEN="xxx" # bearer xxx auth header
+        -- export X_CURSOR_CLIENT_VERSION="2.1.42"
+        -- export X_REQUEST_ID="xxx"
+        -- export X_SESSION_ID="xxx"
+        -- todo move the client version to nix setup
+        "safzanpirani/cursor.nvim",
+        build = "cd server && npm install",
+        config = function()
+            require("cursor").setup({})
+        end,
+    },
     {
         "olimorris/codecompanion.nvim",
         opts = {
             strategies = {
                 chat = {
-                    adapter = "a_openrouter",
+                    -- adapter = "a_openrouter",
+                    adapter = {
+                        name = "opencode",
+                        model = "google/gemini-3-flash-preview",
+                    },
                 },
                 inline = {
                     adapter = "a_openrouter",
