@@ -47,10 +47,10 @@
     wayland.windowManager.hyprland = {
       settings = {
         windowrule = [
-          "noblur, title:^(Gromit-mpx)$"
-          "opacity 1.0 override 1.0 override, title:^(Gromit-mpx)$"
-          "noshadow, title:^(Gromit-mpx)$"
-          "size 100% 100%, title:^(Gromit-mpx)$"
+          "no_blur on, match:title ^(Gromit-mpx)$"
+          "opacity 1.0, match:title ^(Gromit-mpx)$"
+          "no_shadow on, match:title ^(Gromit-mpx)$"
+          "size 100% 100%, match:title ^(Gromit-mpx)$"
         ];
         workspace = [
           "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"

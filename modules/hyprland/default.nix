@@ -236,7 +236,7 @@ in {
             swallow_regex = "(foot|kitty|allacritty|Alacritty)";
 
             disable_hyprland_logo = true;
-            new_window_takes_over_fullscreen = 2;
+            on_focus_under_fullscreen = 2;
           };
           xwayland = {
             force_zero_scaling = true;
@@ -272,34 +272,19 @@ in {
             "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
           ];
           windowrule = [
-            "noblur, title:.*" # Disables blur for windows. Substantially improves performance.
-            "float, title:^(steam)$"
-            "pin, title:^(showmethekey-gtk)$"
-            "float,title:^(Open File)(.*)$"
-            "float,title:^(Select a File)(.*)$"
-            "float,title:^(Choose wallpaper)(.*)$"
-            "float,title:^(Open Folder)(.*)$"
-            "float,title:^(Save As)(.*)$"
-            "float,title:^(Library)(.*)$ "
+            # Disables blur for windows. Substantially improves performance.
+            "no_blur on, match:title .*"
+            # GTK dev
+            "pin on, match:title ^(showmethekey-gtk)$"
+            "float on, match:title ^(Open File)(.*)$"
+            "float on, match:title ^(Select a File)(.*)$"
+            "float on, match:title ^(Choose wallpaper)(.*)$"
+            "float on, match:title ^(Open Folder)(.*)$"
+            "float on, match:title ^(Save As)(.*)$"
+            "float on, match:title ^(Library)(.*)$ "
           ];
-          windowrulev2 = ["tile,class:(wpsoffice)"];
           layerrule = [
-            "xray 1, .*"
-            "noanim, selection"
-            "noanim, overview"
-            "blur, eww"
-            "ignorealpha 0.8, eww"
-            "noanim, noanim"
-            "blur, noanim"
-            "blur, gtk-layer-shell"
-            "ignorezero, gtk-layer-shell"
-            "blur, launcher"
-            "ignorealpha 0.5, launcher"
-            "blur, notifications"
-            "ignorealpha 0.69, notifications"
-            "blur, session"
-            "noanim, sideright"
-            "noanim, sideleft"
+            "no_anim on, match:namespace waybar"
           ];
           # source = [ # todo
           #   "./hyprland/colors.conf"
