@@ -17,7 +17,9 @@ in {
       enableVirtualCamera = true;
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
+        # todo remove, takes too long to update
         obs-backgroundremoval
+
         obs-pipewire-audio-capture
         obs-vaapi # obs hyprland support
         # droidcam-obs - use phone as a webcam

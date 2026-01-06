@@ -63,6 +63,9 @@
 
       opencode = {
         enable = true;
+        # Plugins:
+        # - https://github.com/NoeFabris/opencode-antigravity-auth
+
         # Package is overwritten in overlay
 
         # Settings have permissions problems, probably need write?
