@@ -24,13 +24,10 @@
   "modules-center": ["hyprland/workspaces"],
   "modules-right": [
     "battery",
-    "custom/dot",
     "backlight",
     "pulseaudio",
-    "custom/dot",
     "custom/separator",
     "network",
-    "custom/dot",
     "clock"
   ], 
   "custom/playerctl": {
@@ -80,9 +77,6 @@
     "spacing": 8
   },
   "custom/filler": {
-    "format": " "
-  },
-  "custom/dot": {
     "format": " "
   },
   "custom/clock-icon": {

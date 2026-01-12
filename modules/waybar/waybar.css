@@ -30,6 +30,10 @@ window#waybar {
         padding-left: 15px;
 }
 
+.modules-right > * {
+        margin-right: 12px;
+}
+
 #custom-launcher {
         font-size: 20px;
         color: #ff005f;
@@ -163,17 +167,6 @@ window#waybar {
 #network {
         color: #c6a0f6;
         margin-right: 10px;
-}
-
-#custom-dot {
-        color: #6e738d;
-        padding-right: 10px;
-}
-
-#custom-dot-alt {
-        color: #a5adcb;
-        padding-left: 10px;
-        padding-right: 10px;
 }
 
 #custom-clock-icon {
