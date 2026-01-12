@@ -19,7 +19,7 @@ in {
         rnote
 
         # tools
-        blender-hip
+        blender # Interacts with `config.rocmSupport = true`
       ];
     };
 
