@@ -285,21 +285,15 @@ require("lazy").setup({
         -- Fuzzy finder (files, lsp, grep, etc) - main navigation plugin
         -- Extensions: fzf, undo, ui-select, egrepify, ast_grep, grapple
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        tag = "v0.2.1",
         dependencies = {
             "nvim-lua/plenary.nvim", -- Lua utilities
             "nvim-telescope/telescope-ui-select.nvim", -- Use Telescope for vim.ui.select
             "debugloop/telescope-undo.nvim", -- Undo tree picker
             "fdschmidt93/telescope-egrepify.nvim", -- Enhanced grep with prefixes
             "Marskey/telescope-sg", -- AST-based search
-            {
-                -- FZF algorithm (native, requires make)
-                "nvim-telescope/telescope-fzf-native.nvim",
-                build = "make",
-                cond = function()
-                    return vim.fn.executable("make") == 1
-                end,
-            },
+            -- FZF algorithm (native, requires make)
+            { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
         },
         config = function()
             local ts = require("telescope")
