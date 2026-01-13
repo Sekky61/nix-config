@@ -87,66 +87,86 @@ local servers = {
 }
 
 require("lazy").setup({
-    -- Git related plugins
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                    GIT & VERSION CONTROL                           ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
+    -- GitHub integration for fugitive
     "tpope/vim-rhubarb",
+    -- Git wrapper for Neovim (:Git commands)
     "https://tpope.io/vim/fugitive.git",
+    -- Conflict resolution UI
     { "akinsho/git-conflict.nvim", version = "*", config = true },
+    -- More git plugins below: gitsigns (line ~149), lazygit (line ~805), octo (line ~825)
 
-    -- Detect tabstop and shiftwidth automatically
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                         UTILITIES                                  ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
+    -- Auto-detect tabstop and shiftwidth
     "tpope/vim-sleuth",
 
-    -- NOTE: This is where your plugins related to LSP can be installed.
-    --  The configuration is done below. Search for lspconfig to find it below.
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                  LSP, COMPLETION & FORMATTING                      ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- LSP Configuration & Plugins
+        -- LSP configuration foundation
         "neovim/nvim-lspconfig",
     },
     {
-        -- Useful status updates (right bottom corner)
+        -- LSP progress UI (bottom right corner)
         "j-hui/fidget.nvim",
         opts = {},
     },
+    -- Snippet engine (also used by nvim-cmp)
     "L3MON4D3/LuaSnip",
     {
-        -- Autocompletion
+        -- Autocompletion engine
         "hrsh7th/nvim-cmp",
         dependencies = {
-            -- Snippet Engine & its associated nvim-cmp source
+            -- Snippet engine & its nvim-cmp source
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
 
-            -- Adds LSP completion capabilities
+            -- LSP completion source
             "hrsh7th/cmp-nvim-lsp",
 
-            -- Adds a number of user-friendly snippets
+            -- Pre-built snippets
             "rafamadriz/friendly-snippets",
 
-            -- Adds words from buffer to completion list
+            -- Buffer words completion
             "hrsh7th/cmp-buffer",
 
-            -- cmdline
+            -- Command line completion
             "hrsh7th/cmp-cmdline",
 
-            -- Spelling
+            -- Spell checking completion
             "f3fora/cmp-spell",
         },
     },
-    "lukas-reineke/cmp-rg", -- ripgrep in nvim-cmp
-    "jcha0713/cmp-tw2css", -- tailwind classes to css
+    -- Ripgrep in completion
+    "lukas-reineke/cmp-rg",
+    -- Tailwind to CSS conversion
+    "jcha0713/cmp-tw2css",
+    -- Document symbols in `/` search
     "hrsh7th/cmp-nvim-lsp-document-symbol",
+    -- More LSP/formatting plugins below: mason (line ~949), conform (line ~1010)
 
-    -- Useful plugin to show you pending keybinds.
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                     KEYBIND HELPERS                                ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- Keybind popup helper
         "folke/which-key.nvim",
         event = "VeryLazy",
         opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
+            -- using default settings
         },
     },
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                    GIT PLUGINS (CONTINUED)                         ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- Adds git related signs to the gutter, as well as utilities for managing changes
+        -- Git signs in gutter + blame + hunk operations
         "lewis6991/gitsigns.nvim",
         opts = {
             -- See `:help gitsigns.txt`
@@ -192,13 +212,15 @@ require("lazy").setup({
         },
     },
 
-    -- Theme
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                      UI & APPEARANCE                               ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
+    -- Color scheme (using macchiato variant - see bottom of file)
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
     {
-        -- Set lualine as statusline
+        -- Status line with custom path display and grapple integration
         "nvim-lualine/lualine.nvim",
-        -- See `:help lualine.txt`
         opts = {
             options = {
                 theme = "catppuccin",
@@ -234,10 +256,8 @@ require("lazy").setup({
     },
 
     {
-        -- Add indentation guides even on blank lines
+        -- Indentation guides (scope highlighting disabled)
         "lukas-reineke/indent-blankline.nvim",
-        -- Enable `lukas-reineke/indent-blankline.nvim`
-        -- See `:help indent_blankline.txt`
         main = "ibl",
         opts = {
             indent = {
@@ -258,20 +278,22 @@ require("lazy").setup({
         },
     },
 
-    -- Fuzzy Finder (files, lsp, etc)
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                    NAVIGATION & SEARCH                             ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- Fuzzy finder (files, lsp, grep, etc) - main navigation plugin
+        -- Extensions: fzf, undo, ui-select, egrepify, ast_grep, grapple
         "nvim-telescope/telescope.nvim",
         branch = "0.1.x",
         dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-telescope/telescope-ui-select.nvim",
-            "debugloop/telescope-undo.nvim",
-            "fdschmidt93/telescope-egrepify.nvim",
-            "Marskey/telescope-sg",
+            "nvim-lua/plenary.nvim", -- Lua utilities
+            "nvim-telescope/telescope-ui-select.nvim", -- Use Telescope for vim.ui.select
+            "debugloop/telescope-undo.nvim", -- Undo tree picker
+            "fdschmidt93/telescope-egrepify.nvim", -- Enhanced grep with prefixes
+            "Marskey/telescope-sg", -- AST-based search
             {
-                -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-                -- Only load if `make` is available. Make sure you have the system
-                -- requirements installed.
+                -- FZF algorithm (native, requires make)
                 "nvim-telescope/telescope-fzf-native.nvim",
                 build = "make",
                 cond = function()
@@ -551,15 +573,19 @@ require("lazy").setup({
         end,
     },
 
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                     CODE INTELLIGENCE                              ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- Highlight, edit, and navigate code
+        -- Syntax parsing with text objects (af/if/ac/ic/ap/ip) and motions (]f/[f/]]/[[)
         "nvim-treesitter/nvim-treesitter",
         dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects",
+            "nvim-treesitter/nvim-treesitter-textobjects", -- Text object motions
         },
         build = ":TSUpdate",
     },
     {
+        -- File tree explorer (always loaded, keybind: <leader>tt)
         "nvim-tree/nvim-tree.lua",
         version = "*",
         lazy = false,
@@ -583,29 +609,28 @@ require("lazy").setup({
             })
         end,
     },
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                    UTILITIES (CONTINUED)                           ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- https://github.com/numToStr/Comment.nvim
-        -- gc{motion}, gcc, gbc
+        -- Code commenting: gc{motion}, gcc, gbc
         "numToStr/Comment.nvim",
-        opts = {
-            -- add any options here
-        },
+        opts = {},
     },
     {
-        -- Session management. <leader>sm and "session" to get menu of all sessions
+        -- Session management (keybind: <leader>sm, suppresses ~/, ~/Documents, ~/Downloads)
         "rmagatti/auto-session",
         lazy = false,
-
-        ---enables autocomplete for opts
-        ---@module "auto-session"
         ---@type AutoSession.Config
         opts = {
             suppressed_dirs = { "~/", "~/Documents", "~/Downloads", "/" },
         },
     },
     {
+        -- Diagnostics/quickfix UI (keybinds: <leader>xx, <leader>xX, <leader>cs, <leader>cl)
         "folke/trouble.nvim",
-        opts = {}, -- for default options, refer to the configuration section for custom setup.
+        opts = {},
         cmd = "Trouble",
         keys = {
             {
@@ -642,8 +667,7 @@ require("lazy").setup({
     },
 
     {
-        -- treesitter context (function header visible on top)
-        -- TODO bugs in Octo PR review?
+        -- Sticky function header (keybind: [k to jump to context)
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
             enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -660,28 +684,35 @@ require("lazy").setup({
             on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
         },
     },
-    -- history tree
+    -- Visual undo history (keybind: <leader>u)
     "mbbill/undotree",
-    -- completions for command line
+    -- Command line completion (duplicate entry, already listed above)
     "hrsh7th/cmp-cmdline",
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                      LUA DEVELOPMENT                               ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- Lua LSP enhancements for Neovim development (ft: lua only)
         "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
+        ft = "lua",
         opts = {
             library = {
-                -- See the configuration section for more details
                 -- Load luvit types when the `vim.uv` word is found
                 { path = "luvit-meta/library", words = { "vim%.uv" } },
             },
         },
     },
+    -- Type definitions for `vim.uv`
+    { "Bilal2453/luvit-meta", lazy = true },
 
-    { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
-
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                    AI & CODE ASSISTANCE                            ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- inline AI autocomplete, tabcomplete
+        -- Inline AI autocomplete (OpenRouter/Codestral, keybinds: <A-A>/<A-a>/<A-z>, toggle: <leader>tm)
+        -- Env: OPENROUTER_API_KEY
         "milanglacier/minuet-ai.nvim",
-        -- todo just use setup={} ?
         config = function()
             require("minuet").setup({
                 provider = "openai_compatible",
@@ -742,13 +773,9 @@ require("lazy").setup({
         end,
     },
     {
-        -- token extraction guide: https://github.com/safzanpirani/cursor.nvim/blob/main/docs/token-extraction.md
-        -- # Everything is from a header of StreamCpp request
-        -- export CURSOR_BEARER_TOKEN="xxx" # bearer xxx auth header
-        -- export X_CURSOR_CLIENT_VERSION="2.1.42"
-        -- export X_REQUEST_ID="xxx"
-        -- export X_SESSION_ID="xxx"
-        -- todo move the client version to nix setup
+        -- Cursor AI integration
+        -- Env: CURSOR_BEARER_TOKEN, X_CURSOR_CLIENT_VERSION, X_REQUEST_ID, X_SESSION_ID
+        -- Token extraction: https://github.com/safzanpirani/cursor.nvim/blob/main/docs/token-extraction.md
         "safzanpirani/cursor.nvim",
         build = "cd server && npm install",
         config = function()
@@ -756,6 +783,9 @@ require("lazy").setup({
         end,
     },
     {
+        -- AI chat/inline assistant (keybinds: <C-a>, <LocalLeader>a, ga)
+        -- Chat: gemini-3-flash-preview, Inline: grok-code-fast-1
+        -- Env: OPENROUTER_API_KEY
         "olimorris/codecompanion.nvim",
         opts = {
             strategies = {
@@ -802,7 +832,11 @@ require("lazy").setup({
         },
     },
 
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                 GIT PLUGINS (CONTINUED)                            ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- LazyGit integration (keybind: <leader>lg)
         "kdheepak/lazygit.nvim",
         lazy = true,
         cmd = {
@@ -823,31 +857,34 @@ require("lazy").setup({
         },
     },
     {
-        -- Github plugin
-        -- Keys: https://github.com/pwntester/octo.nvim?tab=readme-ov-file#-configuration
+        -- GitHub issues/PRs interface (keybind: <leader>oc for actions menu)
+        -- Uses local filesystem for LSP integration
         "pwntester/octo.nvim",
         opts = {
-            use_local_fs = true, -- right hand side is my actual file with lsp
+            use_local_fs = true, -- Use local files with LSP
         },
         keys = {
             {
-                -- To respond to review, open another review
                 "<leader>oc",
                 ":Octo actions<CR>",
                 desc = "Open Octo Github menu",
             },
         },
     },
-    -- DAP
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                      DEBUGGING (DAP)                               ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        -- Source: https://github.com/tjdevries/config.nvim/blob/master/lua/custom/plugins/dap.lua
+        -- Debug Adapter Protocol client
+        -- Keybinds: <leader>bb (breakpoint), <leader>bc (continue), <S-j/k/h/l> (stepping)
+        -- Adapters: codelldb (C/C++/Rust/Zig/Go), node2 (JS/TS with Next.js support)
         "mfussenegger/nvim-dap",
         dependencies = {
-            "leoluz/nvim-dap-go",
-            "rcarriga/nvim-dap-ui",
-            "theHamsta/nvim-dap-virtual-text",
-            "nvim-neotest/nvim-nio",
-            "williamboman/mason.nvim",
+            "leoluz/nvim-dap-go", -- Go debugging
+            "rcarriga/nvim-dap-ui", -- DAP UI
+            "theHamsta/nvim-dap-virtual-text", -- Inline variable values
+            "nvim-neotest/nvim-nio", -- Async I/O
+            "williamboman/mason.nvim", -- Tool installer
         },
         config = function()
             local dap = require("dap")
@@ -946,52 +983,60 @@ require("lazy").setup({
         end,
     },
 
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║              LSP/DAP TOOL INSTALLATION (MASON)                     ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
+    -- LSP/DAP/linter installer
     { "williamboman/mason.nvim", opts = {} },
     {
+        -- Bridge: mason ↔ lspconfig
         "williamboman/mason-lspconfig.nvim",
         opts = {
             ensure_installed = vim.tbl_filter(function(server)
-                -- by relyling on biome from node_modules, it is not used in project where it is not installed
+                -- Biome from node_modules - not used in projects where it's not installed
                 return server ~= "biome"
             end, vim.tbl_keys(servers)),
             automatic_enable = vim.tbl_keys(servers),
         },
     },
     {
+        -- Bridge: mason ↔ nvim-dap
         "jay-babu/mason-nvim-dap.nvim",
         opts = {
-            -- launguages, not adapter names
-            -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
+            -- Languages, not adapter names
             ensure_installed = { "bash", "codelldb", "python", "cppdbg", "js", "javadbg", "node2" },
             automatic_installation = true,
-            handlers = {}, -- The defaults
+            handlers = {},
             adapters = {
                 codelldb = {
                     type = "server",
                     host = "127.0.0.1",
-                    port = 13000, -- 💀 Use the port printed out or specified with `--port`
+                    port = 13000,
                 },
             },
         },
     },
-    -- auto install things outside of LSPs
+    -- Auto-install tools outside of LSPs (e.g., stylua, nxls)
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         opts = {
-            -- a list of all tools you want to ensure are installed upon start
-            -- In practice, put here what lspconfig does not recognise
+            -- Tools that lspconfig doesn't recognize
             -- Can install anything from https://github.com/mason-org/mason-registry/tree/main/packages
             ensure_installed = {
                 "stylua",
                 "nxls",
-                -- by relyling on prettier from node_modules, it is not used in project where it is not installed
+                -- Prettier from node_modules - not used in projects where it's not installed
                 -- "prettierd",
             },
         },
     },
 
-    -- my experiment
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                   CUSTOM/EXPERIMENTAL                              ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- Code sample extraction (keybind: <leader>lx, modes: n/x)
+        -- Dev mode: loads from local directory if DEV_MODE=1
         "Sekky61/lsp-sample-extractor.nvim",
         dir = dev_mode and vim.fn.expand("~/Documents/lsp-sample-extractor.nvim") or nil,
         dependencies = {
@@ -1006,13 +1051,18 @@ require("lazy").setup({
             },
         },
     },
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                  FORMATTING (CONFORM)                              ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        -- Formatting engine (keybind: <leader>f, format-on-save enabled)
+        -- Toggle: :FormatEnable / :FormatDisable
         "stevearc/conform.nvim",
         event = { "BufWritePre" },
         cmd = { "ConformInfo" },
         keys = {
             {
-                -- Customize or remove this keymap to your liking
                 "<leader>f",
                 function()
                     require("conform").format({ async = true })
@@ -1034,11 +1084,8 @@ require("lazy").setup({
             end,
             formatters_by_ft = {
                 lua = { "stylua" },
-                -- Conform will run multiple formatters sequentially
-                python = { "isort", "black" },
-                -- You can customize some of the format options for the filetype (:help conform.format)
+                python = { "isort", "black" }, -- Sequential
                 rust = { "rustfmt", lsp_format = "fallback" },
-                -- Conform will run the first available formatter
                 json = { "biome" },
                 jsonc = { "biome" },
                 javascript = js_formatters,
@@ -1048,20 +1095,22 @@ require("lazy").setup({
                 nix = { "alejandra" },
                 html = { "prettierd", "prettier" },
                 htmlangular = { "prettierd", "prettier" },
-                -- todo bash formatting
             },
             default_format_opts = {
                 lsp_format = "fallback",
             },
         },
     },
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║              NAVIGATION (CONTINUED)                                ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     ---@type LazySpec
     {
+        -- Yazi file manager integration (keybinds: <leader>-, <leader>cw, <c-up>)
         "mikavilpas/yazi.nvim",
         event = "VeryLazy",
         dependencies = {
-            -- check the installation instructions at
-            -- https://github.com/folke/snacks.nvim
             "folke/snacks.nvim",
         },
         keys = {
@@ -1085,20 +1134,27 @@ require("lazy").setup({
         },
         ---@type YaziConfig
         opts = {
-            -- if you want to open yazi instead of netrw, see below for more info
             open_for_directories = false,
             keymaps = {
                 show_help = "<f1>",
             },
         },
     },
+
+    -- ╔════════════════════════════════════════════════════════════════════╗
+    -- ║                UTILITIES (CONTINUED)                               ║
+    -- ╚════════════════════════════════════════════════════════════════════╝
     {
-        "nvzone/typr", -- tags: typing, fast typing
+        -- Typing practice (commands: :Typr, :TyprStats)
+        "nvzone/typr",
         dependencies = "nvzone/volt",
         opts = {},
         cmd = { "Typr", "TyprStats" },
     },
     {
+        -- File tagging/bookmarking (scope: git_branch)
+        -- Keybinds: <leader>m (toggle), <leader>M (window), <leader>n/p (cycle)
+        -- Integrated with lualine and Telescope
         "cbochs/grapple.nvim",
         opts = {
             scope = "git_branch",
