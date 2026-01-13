@@ -31,5 +31,11 @@
     # })
     # (import ./overlay3)
     inputs.nur.overlays.default
+
+
+    (final: prev: {
+      pywhispercpp = prev.callPackage ../packages/pywhispercpp.nix {};
+      hyprwhspr = prev.callPackage ../packages/hyprwhspr.nix {};
+    })
   ];
 }

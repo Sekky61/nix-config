@@ -21,5 +21,9 @@
 
     # clockify custom packaged app
     nur.repos.lucassabreu.clockify-cli
+
+    # custom packages
+    pywhispercpp
+    hyprwhspr
   ];
 }
