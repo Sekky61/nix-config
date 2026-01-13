@@ -106,6 +106,7 @@ require("lazy").setup({
         "j-hui/fidget.nvim",
         opts = {},
     },
+    "L3MON4D3/LuaSnip",
     {
         -- Autocompletion
         "hrsh7th/nvim-cmp",
