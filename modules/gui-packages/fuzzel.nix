@@ -12,13 +12,14 @@ in {
       programs.fuzzel = {
         enable = true;
         settings = {
+          # https://man.archlinux.org/man/fuzzel.ini.5.en#SECTION:_dmenu
           main = {
             terminal = "${defaultTerminal} -e";
-            prompt = ">>  ";
+            prompt = "' ➜  '";
             layer = "overlay";
             match-counter = true;
-            lines = 16;
-            width = 50;
+            lines = 25;
+            width = 60;
           };
 
           # Colors can be set by stylix but there is a HM issue
@@ -33,8 +34,8 @@ in {
           };
 
           border = {
-            radius = 12;
-            width = 2;
+            radius = 20;
+            width = 3;
           };
 
           dmenu = {
