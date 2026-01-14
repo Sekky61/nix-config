@@ -11,7 +11,7 @@ with lib; let
 in {
   config = mkIf cfg.enable {
     stylix = {
-      image = ../../assets/wallpapers/spyxfamily.png;
+      image = ../../assets/wallpapers/saitama.png;
       targets = {
         grub = {
           enable = true;
