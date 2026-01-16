@@ -137,7 +137,6 @@ in {
           };
           gesture = [
             "3, horizontal, workspace"
-            "4, down, dispatcher, exec, fuzzel"
             "4, up, dispatcher, exec, xdg-open https://youtube.com/shorts" # :)
           ];
           binds = {

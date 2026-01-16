@@ -20,6 +20,7 @@
     programs = {
       ags.enable = false;
       waybar.enable = true;
+      walker.enable = true;
       bitwarden.enable = true;
       obs-studio.enable = true;
       remote-desktop.enable = true;

@@ -33,6 +33,7 @@ in {
       xorg.xev
       gnome-control-center # The settings (Win+I)
       ydotool # synthetic mouse/keyboard events
+      fuzzel # gui picker
 
       # Apps
       ytdownloader

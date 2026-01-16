@@ -289,14 +289,6 @@ in {
           command = {params = toggleWindow "session";};
         }
         {
-          description = "Launch application launcher";
-          bind = {
-            mods = ["SUPER"];
-            key = "Space";
-          };
-          command = {params = "fuzzel";};
-        }
-        {
           description = "Launch terminal";
           bind = {
             mods = ["SUPER"];

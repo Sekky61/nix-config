@@ -8,7 +8,6 @@
     ./apps.nix
     ./browser
     ./fonts.nix
-    ./fuzzel.nix
     ./kde-connect.nix
     ./notifications.nix
     ./monitors.nix
@@ -17,5 +16,6 @@
     ./remote-desktop.nix
     ./steam.nix
     ./terminal-emulator
+    ./walker.nix
   ];
 }
