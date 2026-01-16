@@ -5,7 +5,6 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    btop # Resource monitor
     jq # Pretty-print and work with json
     ripgrep # fuzzy finder
     unzip # unzip zip files
