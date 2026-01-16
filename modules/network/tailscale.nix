@@ -9,6 +9,10 @@
     useRoutingFeatures = "both";
   };
 
+  home-manager.users.${username} = {
+    services.tailscale-systray.enable = true;
+  };
+
   # Now login as Sekky61@github using
   # sudo tailscale up/login
 

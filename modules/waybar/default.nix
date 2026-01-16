@@ -15,14 +15,16 @@ in {
     home-manager.users.${username} = {
       programs.waybar = {
         enable = true;
+        settings = {
+          # bar is a made-up key. Can be anything
+          bar = builtins.fromJSON (builtins.readFile ./config.json);
+        };
+        style = ./waybar.css;
         systemd = {
           enable = true;
           # enableInspect = true;
         };
       };
-
-      home.file.".config/waybar/config".source = ./config;
-      home.file.".config/waybar/style.css".source = ./waybar.css;
     };
   };
 }
