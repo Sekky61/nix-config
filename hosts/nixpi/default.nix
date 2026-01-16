@@ -14,6 +14,14 @@
 
   michal.wifi.enable = true;
   michal.services = {
+    tailscale = {
+      enable = true;
+      operator = username;
+      systray.enable = true;
+      exitNode = {
+        enable = true;
+      };
+    };
     proxy = {
       enable = true;
     };

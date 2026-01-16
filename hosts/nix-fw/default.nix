@@ -1,4 +1,4 @@
-{
+{username, ...}: {
   imports = [
     # HW
     ./hardware-configuration.nix
@@ -42,6 +42,14 @@
 
     services = {
       battery.enable = true;
+      tailscale = {
+        enable = true;
+        operator = username;
+        systray.enable = true;
+        exitNode = {
+          enable = true;
+        };
+      };
     };
 
     browsers = {

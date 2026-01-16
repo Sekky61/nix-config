@@ -1,4 +1,4 @@
-{
+{username, ...}: {
   imports = [
     # HW
     ./configuration.nix
@@ -10,6 +10,16 @@
 
   michal = {
     graphical.enable = true;
+    services = {
+      tailscale = {
+        enable = true;
+        operator = username;
+        systray.enable = true;
+        exitNode = {
+          enable = true;
+        };
+      };
+    };
     programs = {
       bitwarden.enable = true;
       remote-desktop.enable = true;
