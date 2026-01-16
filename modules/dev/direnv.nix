@@ -18,6 +18,7 @@
   };
 
   environment.shellAliases = {
+    # Run `initenvrc` script to init direnv for flake usage
     initenvrc = "echo \"use flake\" >> .envrc && direnv allow";
   };
 }
