@@ -47,6 +47,10 @@ in {
     # - `bw get password claude.ai`
 
     home-manager.users.${username} = {
+      programs.rbw = {
+        enable = true;
+      };
+
       home.packages = with pkgs; [bitwarden-cli bitwarden-desktop];
     };
   };
