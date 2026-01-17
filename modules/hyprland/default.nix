@@ -36,7 +36,6 @@ in {
       #nwg-displays # gui for monitors, wayland
       hyprshot
 
-      bemoji # emoji picker
       grim
       slurp
       hyprpicker # color picker

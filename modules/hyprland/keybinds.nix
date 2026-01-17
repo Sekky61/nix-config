@@ -388,14 +388,6 @@ in {
           command = {params = "gnome-system-monitor";};
         }
         {
-          description = "Open emoji picker";
-          bind = {
-            mods = ["SUPER"];
-            key = "Period";
-          };
-          command = {params = "bemoji";};
-        }
-        {
           description = "Toggle floating mode"; # todo float in all workspaces
           bind = {
             mods = ["SUPER" "ALT"];
