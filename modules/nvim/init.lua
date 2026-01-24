@@ -311,7 +311,16 @@ require("lazy").setup({
             }
             local behavior_base = {
                 sorting_strategy = "ascending",
-                file_ignore_patterns = { ".git/", ".cache", "%.o", "%.a", "%.out", "%.class" },
+                file_ignore_patterns = {
+                    -- "node_modules" might not be desirable for LSP pickers
+                    "^.git/",
+                    "^.cache",
+                    -- Often recommended "%.a" Hides `.api.service.ts`. Add a dollar
+                    "%.a$",
+                    "%.o$",
+                    "%.out$",
+                    "%.class$",
+                },
                 mappings = {
                     -- <C-/> to see all binds
                     -- <C-t> to open in new tab
