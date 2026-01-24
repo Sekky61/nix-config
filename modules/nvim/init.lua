@@ -60,6 +60,9 @@ local servers = {
     biome = {
         cmd = { "./node_modules/.bin/biome", "lsp-proxy" },
     },
+    oxlint = {
+        cmd = { "./node_modules/.bin/oxlint", "--lsp" },
+    },
     astro = {},
     eslint = {},
     emmet_ls = {
