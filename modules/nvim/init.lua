@@ -26,7 +26,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-js_formatters = { "prettierd", "prettier", "biome", stop_after_first = true }
+-- The formatters are taken in order. Prettier is often included by tooling though, so
+-- it is further in the back
+js_formatters = { "oxfmt", "prettierd", "prettier", "biome", stop_after_first = true }
 -- js_formatters = { "biome", stop_after_first = true }
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -62,6 +64,9 @@ local servers = {
     },
     oxlint = {
         cmd = { "./node_modules/.bin/oxlint", "--lsp" },
+    },
+    oxfmt = {
+        cmd = { "./node_modules/.bin/oxfmt", "--lsp" },
     },
     astro = {},
     eslint = {},
@@ -999,8 +1004,12 @@ require("lazy").setup({
         "williamboman/mason-lspconfig.nvim",
         opts = {
             ensure_installed = vim.tbl_filter(function(server)
-                -- Biome from node_modules - not used in projects where it's not installed
-                return server ~= "biome"
+                if server == "biome" or server == "oxlint" or server == "oxfmt" then
+                    -- Biome from node_modules - not used in projects where it's not installed
+                    -- In other words, for these servers, use node_modules
+                    return false
+                end
+                return true
             end, vim.tbl_keys(servers)),
             automatic_enable = vim.tbl_keys(servers),
         },
@@ -1092,8 +1101,8 @@ require("lazy").setup({
                 lua = { "stylua" },
                 python = { "isort", "black" }, -- Sequential
                 rust = { "rustfmt", lsp_format = "fallback" },
-                json = { "biome" },
-                jsonc = { "biome" },
+                json = { "oxfmt", "biome" },
+                jsonc = { "oxfmt", "biome" },
                 javascript = js_formatters,
                 typescript = js_formatters,
                 typescriptreact = js_formatters,
