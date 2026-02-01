@@ -39,10 +39,6 @@
         enable = true;
         default = true;
       };
-    };
-
-    services = {
-      battery.enable = true;
       tailscale = {
         enable = true;
         operator = username;
@@ -51,6 +47,10 @@
           enable = true;
         };
       };
+    };
+
+    services = {
+      battery.enable = true;
     };
 
     browsers = {

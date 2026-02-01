@@ -10,7 +10,7 @@
 
   michal = {
     graphical.enable = true;
-    services = {
+    programs = {
       tailscale = {
         enable = true;
         operator = username;
@@ -19,8 +19,6 @@
           enable = true;
         };
       };
-    };
-    programs = {
       bitwarden.enable = true;
       remote-desktop.enable = true;
       ventoy.enable = true;

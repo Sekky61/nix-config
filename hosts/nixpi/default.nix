@@ -14,14 +14,6 @@
 
   michal.wifi.enable = true;
   michal.services = {
-    tailscale = {
-      enable = true;
-      operator = username;
-      systray.enable = true;
-      exitNode = {
-        enable = true;
-      };
-    };
     proxy = {
       enable = true;
     };
@@ -46,6 +38,13 @@
       diningLampId = "ec2b6aba1eb4b926d436dad61c31807b";
       fanId = "c0396ed75d9f83cabe0daf3842a4b1b3";
     };
+  };
+
+  michal.programs.tailscale = {
+    enable = true;
+    operator = username;
+    systray.enable = true;
+    exitNode.enable = true;
   };
 
   # Users

@@ -7,7 +7,7 @@
   inherit (lib) mkEnableOption mkOption mkIf mkAliasOptionModule mkForce;
   inherit (lib) optional getExe;
   inherit (lib.types) str enum nullOr;
-  cfg = config.michal.services.tailscale;
+  cfg = config.michal.programs.tailscale;
 in {
   # Now login as Sekky61@github using
   # sudo tailscale up/login
@@ -21,7 +21,7 @@ in {
   # HTTPS
   # You need to generate certs and renew them. In NixOS, I have not figured it out yet
 
-  options.michal.services.tailscale = {
+  options.michal.programs.tailscale = {
     enable = mkEnableOption "Tailscale";
     systray.enable = mkEnableOption "systray";
     operator = mkOption {
