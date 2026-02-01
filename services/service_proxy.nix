@@ -8,7 +8,9 @@ with builtins;
 with lib; let
   cfg = config.michal.services.proxy;
 
-  allRunningServicesOptions = filterAttrs (n: v: n != "proxy" && v.enable && v.proxy) config.michal.services;
+  allRunningServicesOptions =
+    filterAttrs (n: v: n != "proxy" && (v ? enable && v.enable) && (v ? proxy && v.proxy))
+    config.michal.services;
 
   # https://noogle.dev/f/lib/mapAttrs'
   virtualHosts =
