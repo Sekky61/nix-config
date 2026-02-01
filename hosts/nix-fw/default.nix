@@ -53,6 +53,10 @@
       battery.enable = true;
     };
 
+    network = {
+      cloudflare-warp.enable = true;
+    };
+
     browsers = {
       zen = {
         enable = true;
