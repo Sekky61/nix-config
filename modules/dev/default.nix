@@ -43,6 +43,7 @@
       glib # gsettings, gdbus
       tokei # count loc, cloc, kloc, lines of code
       ast-grep # ast... grep
+      codex
 
       # Editors
       code-cursor
