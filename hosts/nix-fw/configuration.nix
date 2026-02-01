@@ -19,14 +19,6 @@
 
   nix.settings.trusted-users = ["@wheel"];
 
-  # virtualisation
-  # programs.virt-manager.enable = true;
-  virtualisation = {
-    docker.enable = true;
-    # todo activation scripts failed and prevented an update
-    # virtualbox.host.enable = true;
-    # virtualbox.guest.dragAndDrop = true;
-  };
   users.extraGroups.vboxusers.members = ["michal"];
 
   # Increase limits

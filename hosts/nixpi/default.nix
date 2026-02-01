@@ -7,7 +7,7 @@
   imports = [
     ./hardware-configuration.nix
 
-    ../../modules/docker.nix
+    ../../modules/system/docker.nix
   ];
 
   # Services

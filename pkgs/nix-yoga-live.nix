@@ -13,7 +13,7 @@ inputs.nixos-generators.nixosGenerate {
     ../assets
 
     # dev
-    ../modules/docker.nix
+    ../modules/system/docker.nix
     ../modules/dev
     ({pkgs, ...}: {
       isoImage.squashfsCompression = "gzip -Xcompression-level 1";

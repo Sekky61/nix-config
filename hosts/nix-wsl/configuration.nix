@@ -32,12 +32,6 @@
 
   nix.settings.trusted-users = ["@wheel"];
 
-  # virtualisation
-  # programs.virt-manager.enable = true;
-  virtualisation = {
-    docker.enable = true;
-  };
-
   services = {
     spice-vdagentd.enable = true; # protocol for sharing clipboard with VMs
     pcscd.enable = true; # necessary? for gnupg

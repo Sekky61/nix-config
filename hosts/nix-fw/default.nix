@@ -10,7 +10,7 @@
     ../../assets
 
     # dev
-    ../../modules/docker.nix
+    ../../modules/system/docker.nix
     ../../modules/dev
   ];
 
