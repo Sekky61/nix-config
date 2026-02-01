@@ -1032,6 +1032,14 @@ in {
             flags = ["release"];
           };
         }
+        {
+          description = "Launch application launcher";
+          bind = {
+            mods = ["SUPER"];
+            key = "Space";
+          };
+          command = {params = walkerBin;};
+        }
       ];
 
     home-manager.users.${username} = {
