@@ -222,6 +222,7 @@ body {
   gap: 8px;
   flex: 1;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .tree-node__children {
@@ -332,6 +333,29 @@ body {
   white-space: nowrap;
   flex: 1;
   min-width: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Node Declarations
+   ───────────────────────────────────────────────────────────── */
+
+.node-declarations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.node-declaration {
+  color: var(--highlight);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(176, 117, 59, 0.4);
+}
+
+.node-declaration:hover {
+  text-decoration: underline;
 }
 
 /* ─────────────────────────────────────────────────────────────

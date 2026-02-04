@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   buildOptionsTree,
   createIgnoredKeyFilter,
@@ -9,6 +9,8 @@ import {
   type OptionTreeFilter,
   type OptionTree,
 } from './lib/options-tree';
+import { usePageContext } from './PageContext';
+import { extractDeclarationPaths } from './lib/extract-declaration-paths';
 import { getNixOptions, type NixOption } from './lib/nix-options';
 
 // ─────────────────────────────────────────────────────────────
@@ -54,6 +56,35 @@ interface NodeDescriptionProps {
 const NodeDescription = ({ description }: NodeDescriptionProps): JSX.Element | null => {
   if (!description) return null;
   return <span className="node-description">{description}</span>;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Node Declarations Component
+// ─────────────────────────────────────────────────────────────
+
+interface NodeDeclarationsProps {
+  declarations: string[];
+}
+
+const NodeDeclarations = ({ declarations }: NodeDeclarationsProps): JSX.Element | null => {
+  const { buildDeclarationLink } = usePageContext();
+  if (!declarations.length) return null;
+
+  return (
+    <span className="node-declarations">
+      {declarations.map((declaration) => (
+        <a
+          key={declaration}
+          className="node-declaration"
+          href={buildDeclarationLink(declaration)}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {declaration}
+        </a>
+      ))}
+    </span>
+  );
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -108,12 +139,13 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
         value &&
         optionMetaKey in value &&
         isOptionMeta((value as OptionTree)[optionMetaKey]))
-        ? (isOptionMeta(value)
+      ? (isOptionMeta(value)
         ? value
         : ((value as OptionTree)[optionMetaKey] as NixOption))
       : null;
 
   const metaContent = meta ? describeMeta(meta) : null;
+  const declarations = meta ? extractDeclarationPaths(meta) : [];
   const hasChildren = typeof value === 'object' && value && !isOptionMeta(value);
   const childEntries = hasChildren
     ? Object.entries(value as OptionTree).filter(([k]) => k !== optionMetaKey)
@@ -132,6 +164,7 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
           <span className="tree-node__meta">
             <TypeBadge type={metaContent.typeLabel} />
             <NodeDescription description={metaContent.description} />
+            <NodeDeclarations declarations={declarations} />
           </span>
         )}
       </div>
@@ -188,13 +221,9 @@ const OptionsTree = ({ tree }: OptionsTreeProps): JSX.Element => {
 // Stats Component
 // ─────────────────────────────────────────────────────────────
 
-interface StatsProps {
-  total: number;
-  filtered: number;
-  isFiltered: boolean;
-}
-
-const Stats = ({ total, filtered, isFiltered }: StatsProps): JSX.Element => {
+const Stats = (): JSX.Element => {
+  const { stats } = usePageContext();
+  const { total, filtered, isFiltered } = stats;
   return (
     <div className="stats">
       <span className="stats__count">{isFiltered ? filtered : total}</span>
@@ -230,7 +259,7 @@ const countOptions = (node: OptionTree | NixOption): number => {
 // ─────────────────────────────────────────────────────────────
 
 const App = (): JSX.Element => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, setSearchTerm, setStats } = usePageContext();
   const nixOptions = useMemo(() => getNixOptions(), []);
   const optionsTree = useMemo(
     () => (nixOptions ? buildOptionsTree(nixOptions) : {}),
@@ -251,6 +280,10 @@ const App = (): JSX.Element => {
   const totalCount = countOptions(optionsTree);
   const filteredCount = countOptions(filteredTree);
   const isFiltered = searchTerm.trim().length > 0;
+
+  useEffect(() => {
+    setStats({ total: totalCount, filtered: filteredCount, isFiltered });
+  }, [totalCount, filteredCount, isFiltered, setStats]);
 
   if (!nixOptions) {
     return (
@@ -287,7 +320,7 @@ const App = (): JSX.Element => {
               onChange={(event) => setSearchTerm(event.target.value)}
             />
           </div>
-          <Stats total={totalCount} filtered={filteredCount} isFiltered={isFiltered} />
+          <Stats />
         </div>
       </header>
 
