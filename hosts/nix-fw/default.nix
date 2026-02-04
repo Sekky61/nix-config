@@ -1,4 +1,4 @@
-{username, ...}: {
+{ username, ... }: {
   imports = [
     # HW
     ./hardware-configuration.nix
@@ -9,7 +9,6 @@
     ../../modules/hyprland
 
     # dev
-    ../../modules/system/docker.nix
     ../../modules/dev
   ];
 
@@ -18,6 +17,7 @@
     assets.enable = true;
     hasFingerprintReader = true;
     programs = {
+      docker.enable = true;
       ags.enable = false;
       waybar.enable = true;
       walker.enable = true;
@@ -43,13 +43,13 @@
         enable = true;
         operator = username;
         systray.enable = true;
-        exitNode = {enable = true;};
+        exitNode = { enable = true; };
       };
     };
 
-    services = {battery.enable = true;};
+    services = { battery.enable = true; };
 
-    network = {cloudflare-warp.enable = true;};
+    network = { cloudflare-warp.enable = true; };
 
     browsers = {
       zen = {

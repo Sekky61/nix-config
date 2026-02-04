@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   imports = [
     # Truly common, always there
     ./btop.nix
@@ -20,6 +20,8 @@
     ./audio.nix
     ./battery.nix
     ./network
+    ./system/docker.nix
+    ./system/podman.nix
     ./gui-packages
     ./bitwarden.nix
     ./ventoy.nix
@@ -31,7 +33,8 @@
     ./waybar
   ];
 
-  environment.systemPackages = with pkgs; [
-    nix-output-monitor # pretty nixos-switch
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      nix-output-monitor # pretty nixos-switch
+    ];
 }

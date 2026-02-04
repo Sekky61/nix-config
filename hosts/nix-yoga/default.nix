@@ -10,7 +10,6 @@
     ../../modules/hyprland
 
     # dev
-    ../../modules/system/docker.nix
     ../../modules/dev
   ];
 
@@ -18,6 +17,7 @@
     graphical.enable = true;
     assets.enable = true;
     programs = {
+      docker.enable = true;
       ags.enable = true;
       bitwarden.enable = true;
       obs-studio.enable = true;

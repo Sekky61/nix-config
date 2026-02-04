@@ -1,8 +1,4 @@
-{
-  self,
-  inputs,
-  lib,
-}:
+{ self, inputs, lib, }:
 inputs.nixos-generators.nixosGenerate {
   system = "x86_64-linux";
   modules = [
@@ -14,15 +10,16 @@ inputs.nixos-generators.nixosGenerate {
     # dev
     ../modules/system/docker.nix
     ../modules/dev
-    ({pkgs, ...}: {
+    ({ pkgs, ... }: {
       isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 
-      nixpkgs.config = {allowUnfree = true;};
+      nixpkgs.config = { allowUnfree = true; };
 
       michal = {
         graphical.enable = true;
         assets.enable = true;
         programs = {
+          docker.enable = true;
           polkit.enable = true;
           ghostty = {
             enable = true;
@@ -48,7 +45,8 @@ inputs.nixos-generators.nixosGenerate {
               # F1 to open commands
               # F2 to open sessions
               # F3 to open power menu
-              command = "${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd start-hyprland --kb-command 1 --kb-sessions 2 --kb-power 3";
+              command =
+                "${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd start-hyprland --kb-command 1 --kb-sessions 2 --kb-power 3";
               user = "greeter";
             };
           };
@@ -56,7 +54,7 @@ inputs.nixos-generators.nixosGenerate {
         gvfs.enable = true;
         desktopManager.gnome.enable = {
           enable = true;
-          extraGSettingsOverridePackages = [pkgs.nautilus-open-any-terminal];
+          extraGSettingsOverridePackages = [ pkgs.nautilus-open-any-terminal ];
         };
 
         xserver = {
