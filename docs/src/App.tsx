@@ -1,4 +1,4 @@
-import { Link } from 'lucide-react';
+import { ChevronDown, ChevronRight, Github, Link, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   buildOptionsTree,
@@ -12,7 +12,7 @@ import {
 } from './lib/options-tree';
 import { usePageContext } from './PageContext';
 import { extractDeclarationPaths } from './lib/extract-declaration-paths';
-import { getNixOptions, type NixOption } from './lib/nix-options';
+import { getNixOptions, type NixOption, type NixValue } from './lib/nix-options';
 
 // ─────────────────────────────────────────────────────────────
 // Type Badge Component
@@ -111,7 +111,9 @@ const NodeKey = ({ name, hasChildren, isExpanded, onToggle }: NodeKeyProps): JSX
       onClick={hasChildren ? onToggle : undefined}
     >
       {hasChildren && (
-        <span className="node-chevron">{isExpanded ? '▾' : '▸'}</span>
+        <span className="node-chevron" aria-hidden="true">
+          {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        </span>
       )}
       {name}
     </span>
@@ -128,6 +130,8 @@ interface TreeNodeProps {
   path: string;
   depth: number;
   defaultExpanded?: boolean;
+  activePath?: string | null;
+  onSelect?: (option: ActiveOption) => void;
 }
 
 const describeMeta = (meta: NixOption): { typeLabel: string; description: string } => {
@@ -136,7 +140,15 @@ const describeMeta = (meta: NixOption): { typeLabel: string; description: string
   return { typeLabel, description };
 };
 
-const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeNodeProps): JSX.Element => {
+const TreeNode = ({
+  nodeKey,
+  value,
+  path,
+  depth,
+  defaultExpanded = true,
+  activePath,
+  onSelect,
+}: TreeNodeProps): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   const meta =
@@ -157,9 +169,16 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
     ? Object.entries(value as OptionTree).filter(([k]) => k !== optionMetaKey)
     : [];
 
+  const isActive = activePath === path;
+
   return (
     <li className={`tree-node ${depth === 0 ? 'tree-node--root' : ''}`}>
-      <div className="tree-node__header">
+      <div
+        className={`tree-node__header ${
+          meta ? 'tree-node__header--selectable' : ''
+        } ${isActive ? 'tree-node__header--active' : ''}`}
+        onClick={meta ? () => onSelect?.({ path, meta }) : undefined}
+      >
         <NodeKey
           name={nodeKey}
           hasChildren={childEntries.length > 0}
@@ -184,6 +203,8 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
               path={`${path}.${childKey}`}
               depth={depth + 1}
               defaultExpanded={depth < 1}
+              activePath={activePath}
+              onSelect={onSelect}
             />
           ))}
         </ul>
@@ -198,9 +219,11 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
 
 interface OptionsTreeProps {
   tree: OptionTree;
+  activePath?: string | null;
+  onSelect?: (option: ActiveOption) => void;
 }
 
-const OptionsTree = ({ tree }: OptionsTreeProps): JSX.Element => {
+const OptionsTree = ({ tree, activePath, onSelect }: OptionsTreeProps): JSX.Element => {
   const entries = Object.entries(tree);
 
   if (entries.length === 0) {
@@ -217,6 +240,8 @@ const OptionsTree = ({ tree }: OptionsTreeProps): JSX.Element => {
           path={key}
           depth={0}
           defaultExpanded={true}
+          activePath={activePath}
+          onSelect={onSelect}
         />
       ))}
     </ul>
@@ -234,6 +259,121 @@ const Stats = (): JSX.Element => {
     <div className="stats">
       <span className="stats__count">{isFiltered ? filtered : total}</span>
       <span className="stats__label">{isFiltered ? `of ${total}` : 'options'}</span>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────
+// Active Option Panel
+// ─────────────────────────────────────────────────────────────
+
+interface ActiveOption {
+  path: string;
+  meta: NixOption;
+}
+
+interface ActiveOptionPanelProps {
+  activeOption: ActiveOption | null;
+  onClose?: () => void;
+}
+
+const formatNixValue = (value?: NixValue): string => {
+  if (!value) return '—';
+  return value.text || '—';
+};
+
+const ActiveOptionPanel = ({ activeOption, onClose }: ActiveOptionPanelProps): JSX.Element => {
+  const { buildDeclarationLink } = usePageContext();
+
+  if (!activeOption) {
+    return (
+      <div className="active-panel active-panel--empty">
+        <span className="active-panel__eyebrow">Active option</span>
+        <h2>Pick something on the left</h2>
+        <p className="active-panel__description">
+          Click any option name to spotlight its details, defaults, and declaration trail.
+        </p>
+      </div>
+    );
+  }
+
+  const { meta, path } = activeOption;
+  const declarations = extractDeclarationPaths(meta);
+
+  return (
+    <div className="active-panel">
+      <div className="active-panel__header">
+        <div>
+          <span className="active-panel__eyebrow">Active option</span>
+          <h2 className="active-panel__title">{path}</h2>
+        </div>
+        <div className="active-panel__actions">
+          <TypeBadge type={meta.type} />
+          {onClose && (
+            <button
+              type="button"
+              className="active-panel__close"
+              onClick={onClose}
+              aria-label="Close active option"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+      <p className="active-panel__description">
+        {meta.description ? meta.description.trim() : 'No description provided.'}
+      </p>
+      <div className="active-panel__grid">
+        <div className="active-panel__card">
+          <span className="active-panel__label">Default</span>
+          <pre className="active-panel__value">{formatNixValue(meta.default)}</pre>
+        </div>
+        <div className="active-panel__card">
+          <span className="active-panel__label">Example</span>
+          <pre className="active-panel__value">{formatNixValue(meta.example)}</pre>
+        </div>
+        <div className="active-panel__card">
+          <span className="active-panel__label">Read-only</span>
+          <span className="active-panel__value active-panel__value--inline">
+            {meta.readOnly ? 'Yes' : 'No'}
+          </span>
+        </div>
+        <div className="active-panel__card">
+          <span className="active-panel__label">Type</span>
+          <span className="active-panel__value active-panel__value--inline">{meta.type}</span>
+        </div>
+      </div>
+      <div className="active-panel__section">
+        <span className="active-panel__label">Definition path</span>
+        <div className="active-panel__chips">
+          {meta.loc.map((segment) => (
+            <span className="active-panel__chip" key={segment}>
+              {segment}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="active-panel__section">
+        <span className="active-panel__label">Declarations</span>
+        <div className="active-panel__links">
+          {declarations.length === 0 && <span className="active-panel__muted">No declarations found.</span>}
+          {declarations.map((declaration) => (
+            <div key={declaration} className="active-panel__link-group">
+              <span className="active-panel__link-label">{declaration}</span>
+              <a
+                className="active-panel__link"
+                href={buildDeclarationLink(declaration)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Github size={14} />
+                View on GitHub
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -266,6 +406,8 @@ const countOptions = (node: OptionTree | NixOption): number => {
 
 const App = (): JSX.Element => {
   const { searchTerm, setSearchTerm, setStats } = usePageContext();
+  const [activeOption, setActiveOption] = useState<ActiveOption | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const nixOptions = useMemo(() => getNixOptions(), []);
   const optionsTree = useMemo(
     () => (nixOptions ? buildOptionsTree(nixOptions) : {}),
@@ -331,9 +473,36 @@ const App = (): JSX.Element => {
       </header>
 
       <main className="main">
-        <div className="tree-container">
-          <OptionsTree tree={filteredTree} />
-        </div>
+        <section className="pane-left">
+          <div className="tree-container">
+            <OptionsTree
+              tree={filteredTree}
+              activePath={activeOption?.path ?? null}
+              onSelect={(option) => {
+                setActiveOption(option);
+                setIsDrawerOpen(true);
+              }}
+            />
+          </div>
+        </section>
+        <button
+          type="button"
+          className={`drawer-backdrop ${isDrawerOpen ? 'drawer-backdrop--open' : ''}`}
+          onClick={() => {
+            setActiveOption(null);
+            setIsDrawerOpen(false);
+          }}
+          aria-label="Close active option"
+        />
+        <section className={`pane-right ${isDrawerOpen ? 'pane-right--open' : ''}`}>
+          <ActiveOptionPanel
+            activeOption={activeOption}
+            onClose={() => {
+              setActiveOption(null);
+              setIsDrawerOpen(false);
+            }}
+          />
+        </section>
       </main>
     </div>
   );

@@ -6,6 +6,9 @@
   --muted: #594d44;
   --highlight: #b0753b;
   --card: #fffaf3;
+  --panel: #f4efe6;
+  --panel-ink: #231b15;
+  --panel-accent: rgba(176, 117, 59, 0.16);
   --border: rgba(25, 19, 15, 0.15);
   --shadow: rgba(20, 12, 8, 0.12);
 
@@ -52,10 +55,12 @@ body {
 .page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 32px 48px;
+  padding: 10px 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
+  min-height: 100vh;
+  height: 100vh;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -67,10 +72,10 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 16px 24px;
+  padding: 8px 12px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 10px;
   box-shadow: 0 4px 16px var(--shadow);
 }
 
@@ -97,7 +102,7 @@ body {
 .header__controls {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -105,13 +110,13 @@ body {
    ───────────────────────────────────────────────────────────── */
 
 .search__input {
-  width: 280px;
-  padding: 8px 14px;
+  width: 240px;
+  padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.8);
   font-family: 'Space Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--ink);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -158,15 +163,75 @@ body {
 .main {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 10px;
   box-shadow: 0 8px 32px var(--shadow);
   overflow: hidden;
+  display: block;
+  min-height: 0;
+  flex: 1 1 auto;
+  position: relative;
+}
+
+.main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 48%, rgba(176, 117, 59, 0.08) 50%, transparent 52%);
+  pointer-events: none;
+}
+
+.pane-left {
+  position: relative;
+  overflow: auto;
+  padding: 10px 12px 14px;
+  background: linear-gradient(180deg, rgba(255, 250, 243, 0.9) 0%, rgba(255, 255, 255, 0.75) 100%);
+}
+
+.pane-right {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(420px, 92vw);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 3;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: -12px 0 24px rgba(25, 19, 15, 0.18);
+}
+
+.pane-right--open {
+  transform: translateX(0);
+}
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(25, 19, 15, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.drawer-backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pane-right::before {
+  content: '';
+  position: absolute;
+  inset: -30% -10% auto auto;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(176, 117, 59, 0.18), transparent 70%);
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 .tree-container {
-  padding: 16px 20px 24px;
-  max-height: calc(100vh - 160px);
-  overflow: auto;
   container-type: inline-size;
   container-name: tree-pane;
 }
@@ -216,6 +281,20 @@ body {
   gap: 10px;
   padding: 3px 0;
   line-height: 1.4;
+  border-radius: 10px;
+  position: relative;
+}
+
+.tree-node__header--selectable {
+  cursor: pointer;
+}
+
+.tree-node__header--active {
+  background: rgba(176, 117, 59, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(176, 117, 59, 0.2);
+  padding: 6px 8px;
+  margin-left: -8px;
+  margin-right: 8px;
 }
 
 .tree-node__meta {
@@ -257,9 +336,10 @@ body {
 }
 
 .node-chevron {
-  display: inline-block;
-  width: 14px;
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
   color: var(--muted);
   opacity: 0.7;
 }
@@ -338,6 +418,194 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Active Option Panel
+   ───────────────────────────────────────────────────────────── */
+
+.active-panel {
+  position: relative;
+  height: 100%;
+  padding: 12px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--panel-ink);
+  animation: panel-fade 0.4s ease;
+}
+
+.active-panel--empty {
+  justify-content: center;
+  text-align: center;
+}
+
+.active-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.active-panel__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-panel__close {
+  border: 1px solid rgba(176, 117, 59, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--highlight);
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.active-panel__close:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 2px rgba(176, 117, 59, 0.15);
+}
+
+.active-panel__eyebrow {
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.6rem;
+  color: var(--highlight);
+}
+
+.active-panel__title {
+  margin: 6px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.active-panel__description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.active-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.active-panel__card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(176, 117, 59, 0.18);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 72px;
+}
+
+.active-panel__label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.active-panel__value {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+}
+
+.active-panel__value--inline {
+  font-family: 'Source Serif 4', 'Georgia', serif;
+  font-size: 0.95rem;
+}
+
+.active-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.active-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.active-panel__chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(176, 117, 59, 0.18);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+}
+
+.active-panel__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow: hidden;
+}
+
+.active-panel__link-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(176, 117, 59, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.active-panel__link-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--panel-ink);
+  word-break: break-word;
+}
+
+.active-panel__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--highlight);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(176, 117, 59, 0.4);
+  width: fit-content;
+}
+
+.active-panel__link:hover {
+  text-decoration: underline;
+}
+
+.active-panel__muted {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+@keyframes panel-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
    Node Declarations
    ───────────────────────────────────────────────────────────── */
 
@@ -396,6 +664,8 @@ body {
 @media (max-width: 768px) {
   .page {
     padding: 16px;
+    min-height: auto;
+    height: auto;
   }
 
   .header {
@@ -424,9 +694,26 @@ body {
     justify-content: center;
   }
 
-  .tree-container {
-    max-height: none;
-    padding: 12px 14px 18px;
+  .pane-left,
+  .pane-right {
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .pane-left {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pane-right {
+    width: 100%;
+  }
+
+  .active-panel {
+    height: auto;
+  }
+
+  .active-panel__grid {
+    grid-template-columns: 1fr;
   }
 
   .tree-node__header {
