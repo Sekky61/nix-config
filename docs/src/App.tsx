@@ -12,60 +12,208 @@ import {
   type OptionTree,
 } from './lib/options-tree';
 
+// ─────────────────────────────────────────────────────────────
+// Type Badge Component
+// ─────────────────────────────────────────────────────────────
+
+type TypeCategory = 'string' | 'number' | 'boolean' | 'list' | 'attrs' | 'path' | 'function' | 'null' | 'unknown';
+
+const categorizeType = (typeLabel: string): TypeCategory => {
+  const normalized = typeLabel.toLowerCase();
+  if (normalized.includes('string') || normalized.includes('str')) return 'string';
+  if (normalized.includes('int') || normalized.includes('float') || normalized.includes('number')) return 'number';
+  if (normalized.includes('bool')) return 'boolean';
+  if (normalized.includes('list') || normalized.includes('array')) return 'list';
+  if (normalized.includes('attrs') || normalized.includes('set') || normalized.includes('submodule')) return 'attrs';
+  if (normalized.includes('path')) return 'path';
+  if (normalized.includes('function') || normalized.includes('lambda')) return 'function';
+  if (normalized.includes('null')) return 'null';
+  return 'unknown';
+};
+
+interface TypeBadgeProps {
+  type: string;
+}
+
+const TypeBadge = ({ type }: TypeBadgeProps): JSX.Element => {
+  const category = categorizeType(type);
+  return (
+    <span className={`type-badge type-${category}`} title={type}>
+      {type}
+    </span>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────
+// Node Description Component
+// ─────────────────────────────────────────────────────────────
+
+interface NodeDescriptionProps {
+  description: string;
+}
+
+const NodeDescription = ({ description }: NodeDescriptionProps): JSX.Element | null => {
+  if (!description) return null;
+  return <span className="node-description">{description}</span>;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Node Key Component
+// ─────────────────────────────────────────────────────────────
+
+interface NodeKeyProps {
+  name: string;
+  hasChildren: boolean;
+  isExpanded: boolean;
+  onToggle?: () => void;
+}
+
+const NodeKey = ({ name, hasChildren, isExpanded, onToggle }: NodeKeyProps): JSX.Element => {
+  return (
+    <span
+      className={`node-key ${hasChildren ? 'node-key--expandable' : ''}`}
+      onClick={hasChildren ? onToggle : undefined}
+    >
+      {hasChildren && (
+        <span className="node-chevron">{isExpanded ? '▾' : '▸'}</span>
+      )}
+      {name}
+    </span>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────
+// Tree Node Component
+// ─────────────────────────────────────────────────────────────
+
+interface TreeNodeProps {
+  nodeKey: string;
+  value: OptionTree | OptionMeta;
+  path: string;
+  depth: number;
+  defaultExpanded?: boolean;
+}
+
 const describeMeta = (meta: OptionMeta): { typeLabel: string; description: string } => {
   const typeLabel = typeof meta.type === 'string' ? meta.type : 'unknown';
   const description = typeof meta.description === 'string' ? meta.description.trim() : '';
   return { typeLabel, description };
 };
 
-const renderTree = (
-  node: OptionTree | OptionMeta,
-  path: string,
-  depth: number,
-): JSX.Element => {
-  const entries = Object.entries(node);
+const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeNodeProps): JSX.Element => {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  const meta =
+    isOptionMeta(value) ||
+    (typeof value === 'object' &&
+      value &&
+      optionMetaKey in value &&
+      isOptionMeta((value as OptionTree)[optionMetaKey]))
+      ? (isOptionMeta(value)
+        ? value
+        : ((value as OptionTree)[optionMetaKey] as OptionMeta))
+      : null;
+
+  const metaContent = meta ? describeMeta(meta) : null;
+  const hasChildren = typeof value === 'object' && value && !isOptionMeta(value);
+  const childEntries = hasChildren
+    ? Object.entries(value as OptionTree).filter(([k]) => k !== optionMetaKey)
+    : [];
 
   return (
-    <ul className="tree" style={{ marginLeft: depth === 0 ? 0 : 14 }}>
-      {entries.map(([key, value]) => {
-        const itemPath = `${path}.${key}`;
-        const meta =
-          isOptionMeta(value) ||
-            (typeof value === 'object' &&
-              value &&
-              optionMetaKey in value &&
-              isOptionMeta((value as OptionTree)[optionMetaKey]))
-            ? (isOptionMeta(value)
-              ? value
-              : ((value as OptionTree)[optionMetaKey] as OptionMeta))
-            : null;
-        const metaContent = meta ? describeMeta(meta) : null;
+    <li className={`tree-node ${depth === 0 ? 'tree-node--root' : ''}`}>
+      <div className="tree-node__header">
+        <NodeKey
+          name={nodeKey}
+          hasChildren={childEntries.length > 0}
+          isExpanded={isExpanded}
+          onToggle={() => setIsExpanded(!isExpanded)}
+        />
+        {metaContent && (
+          <span className="tree-node__meta">
+            <TypeBadge type={metaContent.typeLabel} />
+            <NodeDescription description={metaContent.description} />
+          </span>
+        )}
+      </div>
+      {childEntries.length > 0 && isExpanded && (
+        <ul className="tree-node__children">
+          {childEntries.map(([childKey, childValue]) => (
+            <TreeNode
+              key={`${path}.${childKey}`}
+              nodeKey={childKey}
+              value={childValue}
+              path={`${path}.${childKey}`}
+              depth={depth + 1}
+              defaultExpanded={depth < 1}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
 
-        return (
-          <li className="tree-item" key={itemPath}>
-            <div className="node-key">{key}</div>
-            {metaContent ? (
-              <p className="node-meta">
-                <strong>{metaContent.typeLabel}</strong>
-                {metaContent.description ? ` — ${metaContent.description}` : ''}
-              </p>
-            ) : null}
-            {typeof value === 'object' && value && !isOptionMeta(value)
-              ? renderTree(value as OptionTree, itemPath, depth + 1)
-              : null}
-          </li>
-        );
-      })}
+// ─────────────────────────────────────────────────────────────
+// Options Tree Component
+// ─────────────────────────────────────────────────────────────
+
+interface OptionsTreeProps {
+  tree: OptionTree;
+}
+
+const OptionsTree = ({ tree }: OptionsTreeProps): JSX.Element => {
+  const entries = Object.entries(tree);
+
+  if (entries.length === 0) {
+    return <p className="empty-state">No matching options. Try a different search.</p>;
+  }
+
+  return (
+    <ul className="tree">
+      {entries.map(([key, value]) => (
+        <TreeNode
+          key={key}
+          nodeKey={key}
+          value={value}
+          path={key}
+          depth={0}
+          defaultExpanded={true}
+        />
+      ))}
     </ul>
   );
 };
+
+// ─────────────────────────────────────────────────────────────
+// Stats Component
+// ─────────────────────────────────────────────────────────────
+
+interface StatsProps {
+  total: number;
+  filtered: number;
+  isFiltered: boolean;
+}
+
+const Stats = ({ total, filtered, isFiltered }: StatsProps): JSX.Element => {
+  return (
+    <div className="stats">
+      <span className="stats__count">{isFiltered ? filtered : total}</span>
+      <span className="stats__label">{isFiltered ? `of ${total}` : 'options'}</span>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────
+// Counter Utility
+// ─────────────────────────────────────────────────────────────
 
 const countOptions = (node: OptionTree | OptionMeta): number => {
   if (isOptionMeta(node)) {
     return 1;
   }
 
-  return Object.values(node).reduce((total, value) => {
+  return Object.values(node).reduce<number>((total, value) => {
     if (isOptionMeta(value)) {
       return total + 1;
     }
@@ -77,6 +225,10 @@ const countOptions = (node: OptionTree | OptionMeta): number => {
     return total;
   }, 0);
 };
+
+// ─────────────────────────────────────────────────────────────
+// Main App Component
+// ─────────────────────────────────────────────────────────────
 
 const App = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -98,58 +250,33 @@ const App = (): JSX.Element => {
   );
   const totalCount = countOptions(optionsTree);
   const filteredCount = countOptions(filteredTree);
-  const status = searchTerm.trim()
-    ? `Showing ${filteredCount} of ${totalCount}`
-    : `${totalCount} total`;
-  const dataSource = 'options-tree.json';
-  const optionCount = `${totalCount} options`;
+  const isFiltered = searchTerm.trim().length > 0;
 
   return (
     <div className="page">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">michal-options-docs</p>
+      <header className="header">
+        <div className="header__title">
+          <span className="header__eyebrow">michal-options-docs</span>
           <h1>Option Explorer</h1>
-          <p className="lead">
-            A lightweight view into the custom Nix options. Generated data is shown as a
-            nested tree so the hierarchy stays intact.
-          </p>
         </div>
-        <div className="hero-card">
-          <p className="label">Data Source</p>
-          <p className="value">{dataSource}</p>
-          <p className="label">Total Options</p>
-          <p className="value">{optionCount}</p>
+        <div className="header__controls">
+          <div className="search">
+            <input
+              className="search__input"
+              type="search"
+              placeholder="Filter options..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+          <Stats total={totalCount} filtered={filteredCount} isFiltered={isFiltered} />
         </div>
       </header>
 
-      <main>
-        <section className="panel">
-          <div className="panel-header">
-            <h2>Options Tree</h2>
-            <div className="panel-actions">
-              <label className="search-label" htmlFor="search-options">
-                Filter options
-              </label>
-              <input
-                className="search-field"
-                id="search-options"
-                type="search"
-                placeholder="Search paths, descriptions, types"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
-              <p className="status">{status}</p>
-            </div>
-          </div>
-          <div className="panel-body" id="tree">
-            {filteredCount === 0 ? (
-              <p className="empty-state">No matching options. Try a different search.</p>
-            ) : (
-              renderTree(filteredTree, 'root', 0)
-            )}
-          </div>
-        </section>
+      <main className="main">
+        <div className="tree-container">
+          <OptionsTree tree={filteredTree} />
+        </div>
       </main>
     </div>
   );
