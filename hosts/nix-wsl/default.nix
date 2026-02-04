@@ -2,13 +2,11 @@
   imports = [
     # HW
     ./configuration.nix
-
-    # dev
-    ../../modules/dev
   ];
 
   michal = {
     graphical.enable = true;
+    dev.enable = true;
     programs = {
       docker.enable = true;
       tailscale = {

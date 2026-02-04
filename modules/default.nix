@@ -22,6 +22,7 @@
     ./network
     ./system/docker.nix
     ./system/podman.nix
+    ./dev
     ./gui-packages
     ./bitwarden.nix
     ./ventoy.nix

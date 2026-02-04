@@ -9,7 +9,6 @@ inputs.nixos-generators.nixosGenerate {
 
     # dev
     ../modules/system/docker.nix
-    ../modules/dev
     ({ pkgs, ... }: {
       isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 
@@ -18,6 +17,7 @@ inputs.nixos-generators.nixosGenerate {
       michal = {
         graphical.enable = true;
         assets.enable = true;
+        dev.enable = true;
         programs = {
           docker.enable = true;
           polkit.enable = true;

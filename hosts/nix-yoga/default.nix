@@ -9,13 +9,12 @@
     # Desktop/gui
     ../../modules/hyprland
 
-    # dev
-    ../../modules/dev
   ];
 
   michal = {
     graphical.enable = true;
     assets.enable = true;
+    dev.enable = true;
     programs = {
       docker.enable = true;
       ags.enable = true;
