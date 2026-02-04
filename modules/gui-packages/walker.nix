@@ -85,8 +85,13 @@ in {
                 prefix = "n";
               }
               {
-                name = "Crates";
+                name = "Rust Crates";
                 url = "https://crates.io/search?q=%TERM%";
+                prefix = "r";
+              }
+              {
+                name = "Chat";
+                url = "https://chat.openai.com/?q=%TERM%";
                 prefix = "c";
               }
             ];
