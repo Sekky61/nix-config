@@ -16,6 +16,7 @@
     ./terminal.nix
 
     # Modules with options
+    ../assets
     ./audio.nix
     ./battery.nix
     ./network

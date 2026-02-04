@@ -8,7 +8,6 @@
 
     # Desktop/gui
     ../../modules/hyprland
-    ../../assets
 
     # dev
     ../../modules/system/docker.nix
@@ -17,6 +16,7 @@
 
   michal = {
     graphical.enable = true;
+    assets.enable = true;
     programs = {
       ags.enable = true;
       bitwarden.enable = true;

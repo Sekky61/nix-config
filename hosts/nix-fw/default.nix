@@ -7,7 +7,6 @@
 
     # Desktop/gui
     ../../modules/hyprland
-    ../../assets
 
     # dev
     ../../modules/system/docker.nix
@@ -16,6 +15,7 @@
 
   michal = {
     graphical.enable = true;
+    assets.enable = true;
     hasFingerprintReader = true;
     programs = {
       ags.enable = false;
@@ -43,19 +43,13 @@
         enable = true;
         operator = username;
         systray.enable = true;
-        exitNode = {
-          enable = true;
-        };
+        exitNode = {enable = true;};
       };
     };
 
-    services = {
-      battery.enable = true;
-    };
+    services = {battery.enable = true;};
 
-    network = {
-      cloudflare-warp.enable = true;
-    };
+    network = {cloudflare-warp.enable = true;};
 
     browsers = {
       zen = {
@@ -87,7 +81,8 @@
         height = 1080;
         refreshRate = 165;
         position = {
-          x = 1696; # 1920/1.333, next to laptop monitor, visualize with nwg-displays
+          x =
+            1696; # 1920/1.333, next to laptop monitor, visualize with nwg-displays
           y = 0;
         };
         scale = 1;
