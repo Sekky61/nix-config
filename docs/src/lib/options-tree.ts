@@ -92,7 +92,10 @@ export const createIgnoredKeyFilter = (ignoredKeys: Set<string>): OptionTreeFilt
     return () => true;
   }
 
-  return (context) => !ignoredKeys.has(context.key);
+  return (context) => {
+    const pathParts = new Set(context.pathParts);
+    return ignoredKeys.isDisjointFrom(pathParts)
+  }
 };
 
 export const createSearchFilter = (query: string): OptionTreeFilter => {

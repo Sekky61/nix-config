@@ -105,10 +105,10 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
 
   const meta =
     isOptionMeta(value) ||
-    (typeof value === 'object' &&
-      value &&
-      optionMetaKey in value &&
-      isOptionMeta((value as OptionTree)[optionMetaKey]))
+      (typeof value === 'object' &&
+        value &&
+        optionMetaKey in value &&
+        isOptionMeta((value as OptionTree)[optionMetaKey]))
       ? (isOptionMeta(value)
         ? value
         : ((value as OptionTree)[optionMetaKey] as OptionMeta))
@@ -236,7 +236,7 @@ const App = (): JSX.Element => {
     () => buildOptionsTree(nixOptions as Record<string, OptionMeta>),
     [],
   );
-  const ignoredKeys = useMemo(() => new Set<string>([]), []);
+  const ignoredKeys = useMemo(() => new Set<string>(['_module']), []);
   const activeFilters = useMemo(() => {
     const filters: OptionTreeFilter[] = [createIgnoredKeyFilter(ignoredKeys)];
     if (searchTerm.trim()) {
