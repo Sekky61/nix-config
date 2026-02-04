@@ -138,6 +138,17 @@ michal.graphical # Enable GUI-based apps
 
 See `./scripts/list-custom-options` for more.
 
+### Custom Options Docs
+Generate JSON docs for the `michal.*` options with:
+
+```bash
+nix build .#michal-options-docs
+```
+
+The output is `result/options.json`. Each key is a full option name and maps to
+metadata like `declarations`, `default` (literalExpression), `description`,
+`example`, `loc` (path list), `readOnly`, and `type`.
+
 ## Secrets Management
 
 Secrets are managed using [sops-nix](https://github.com/Mic92/sops-nix). There is one universal age key for development which is backed up in a password manager.

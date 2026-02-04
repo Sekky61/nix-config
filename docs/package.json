@@ -1,0 +1,25 @@
+{
+  "name": "nix-config",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.11",
+    "vite-react-ssg": "^0.8.9"
+  },
+  "scripts": {
+    "docs:dev": "bunx vite-react-ssg dev",
+    "docs:build": "bunx vite-react-ssg build",
+    "docs:preview": "bunx vite-react-ssg preview",
+    "docs:serve": "bunx serve ./dist --listen 3000",
+    "docs:open": "bunx serve ./dist --listen 3000 --open"
+  }
+}
