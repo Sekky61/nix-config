@@ -16,9 +16,8 @@
     "vite-react-ssg": "^0.8.9"
   },
   "scripts": {
-    "docs:tree": "bun ./michal-options-docs.ts --out ./public/options-tree.json",
-    "docs:dev": "bun run docs:tree && bunx vite-react-ssg dev",
-    "docs:build": "bun run docs:tree && bunx vite-react-ssg build",
+    "docs:dev": "bunx vite-react-ssg dev",
+    "docs:build": "bunx vite-react-ssg build",
     "docs:preview": "bunx vite-react-ssg preview",
     "docs:serve": "bunx serve ./dist --listen 3000",
     "docs:open": "bunx serve ./dist --listen 3000 --open"

@@ -1,29 +1,11 @@
 import nixOptions from '../../result/options.json';
-
-type OptionMeta = Record<string, unknown>;
-interface OptionTree {
-  [key: string]: OptionTree | OptionMeta;
-}
-
-const optionMetaKey = '_option';
-
-const metaKeys = new Set([
-  'declarations',
-  'default',
-  'description',
-  'example',
-  'loc',
-  'readOnly',
-  'type',
-]);
-
-const isOptionMeta = (value: unknown): value is OptionMeta => {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return false;
-  }
-
-  return Object.keys(value).some((key) => metaKeys.has(key));
-};
+import {
+  buildOptionsTree,
+  isOptionMeta,
+  optionMetaKey,
+  type OptionMeta,
+  type OptionTree,
+} from './lib/options-tree';
 
 const describeMeta = (meta: OptionMeta): { typeLabel: string; description: string } => {
   const typeLabel = typeof meta.type === 'string' ? meta.type : 'unknown';
@@ -92,7 +74,7 @@ const countOptions = (node: OptionTree | OptionMeta): number => {
 };
 
 const App = (): JSX.Element => {
-  const optionsTree = nixOptions as OptionTree | OptionMeta;
+  const optionsTree = buildOptionsTree(nixOptions as Record<string, OptionMeta>);
   const status = 'Loaded';
   const dataSource = 'options-tree.json';
   const optionCount = `${countOptions(optionsTree)} options`;
