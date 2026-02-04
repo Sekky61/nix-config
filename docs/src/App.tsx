@@ -1,3 +1,4 @@
+import { Link } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   buildOptionsTree,
@@ -79,8 +80,13 @@ const NodeDeclarations = ({ declarations }: NodeDeclarationsProps): JSX.Element 
           href={buildDeclarationLink(declaration)}
           target="_blank"
           rel="noreferrer"
+          aria-label={declaration}
+          title={declaration}
         >
-          {declaration}
+          <span className="node-declaration__icon" aria-hidden="true">
+            <Link size={14} />
+          </span>
+          <span className="node-declaration__text">{declaration}</span>
         </a>
       ))}
     </span>

@@ -167,6 +167,8 @@ body {
   padding: 16px 20px 24px;
   max-height: calc(100vh - 160px);
   overflow: auto;
+  container-type: inline-size;
+  container-name: tree-pane;
 }
 
 .empty-state {
@@ -349,13 +351,42 @@ body {
 }
 
 .node-declaration {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--highlight);
   text-decoration: none;
   border-bottom: 1px dotted rgba(176, 117, 59, 0.4);
 }
 
+.node-declaration__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
 .node-declaration:hover {
   text-decoration: underline;
+}
+
+@container tree-pane (max-width: 500px) {
+  .tree-node__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .tree-node__meta {
+    width: 100%;
+    padding-left: 14px;
+  }
+
+  .node-description {
+    white-space: normal;
+  }
+
+  .node-declaration__text {
+    display: none;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
