@@ -22,8 +22,6 @@ export interface PageStats {
 }
 
 interface PageContextValue {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
   stats: PageStats;
   setStats: (stats: PageStats) => void;
   linkConfig: LinkConfig;
@@ -70,7 +68,6 @@ interface PageProviderProps {
 }
 
 export const PageProvider = ({ children, linkConfig }: PageProviderProps): JSX.Element => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [stats, setStats] = useState<PageStats>(defaultStats);
   const resolvedLinkConfig = useMemo(
     () => ({ ...defaultLinkConfig, ...linkConfig }),
@@ -84,14 +81,12 @@ export const PageProvider = ({ children, linkConfig }: PageProviderProps): JSX.E
 
   const value = useMemo(
     () => ({
-      searchTerm,
-      setSearchTerm,
       stats,
       setStats,
       linkConfig: resolvedLinkConfig,
       buildDeclarationLink,
     }),
-    [searchTerm, stats, resolvedLinkConfig, buildDeclarationLink],
+    [stats, resolvedLinkConfig, buildDeclarationLink],
   );
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;

@@ -13,6 +13,9 @@ import {
 import { usePageContext } from './PageContext';
 import { extractDeclarationPaths } from './lib/extract-declaration-paths';
 import { getNixOptions, type NixOption, type NixValue } from './lib/nix-options';
+import { useActiveOption, type ActiveOption } from './hooks/use-active-option';
+import { useSearchTerm } from './hooks/use-search-term';
+import { getNodeAtPath, getNodeMeta } from './lib/option-node';
 
 // ─────────────────────────────────────────────────────────────
 // Type Badge Component
@@ -267,11 +270,6 @@ const Stats = (): JSX.Element => {
 // Active Option Panel
 // ─────────────────────────────────────────────────────────────
 
-interface ActiveOption {
-  path: string;
-  meta: NixOption;
-}
-
 interface ActiveOptionPanelProps {
   activeOption: ActiveOption | null;
   optionsTree: OptionTree;
@@ -282,26 +280,6 @@ interface ActiveOptionPanelProps {
 const formatNixValue = (value?: NixValue): string => {
   if (!value) return '—';
   return value.text || '—';
-};
-
-const getNodeMeta = (node: OptionTree | NixOption | null): NixOption | null => {
-  if (!node) return null;
-  if (isOptionMeta(node)) return node;
-  if (typeof node === 'object' && optionMetaKey in node && isOptionMeta((node as OptionTree)[optionMetaKey])) {
-    return (node as OptionTree)[optionMetaKey] as NixOption;
-  }
-  return null;
-};
-
-const getNodeAtPath = (tree: OptionTree, segments: string[]): OptionTree | NixOption | null => {
-  let current: OptionTree | NixOption = tree;
-  for (const segment of segments) {
-    if (!current || isOptionMeta(current) || typeof current !== 'object') return null;
-    const next = (current as OptionTree)[segment];
-    if (!next) return null;
-    current = next as OptionTree | NixOption;
-  }
-  return current;
 };
 
 interface ActiveOptionBreadcrumbsProps {
@@ -567,14 +545,15 @@ const countOptions = (node: OptionTree | NixOption): number => {
 // ─────────────────────────────────────────────────────────────
 
 const App = (): JSX.Element => {
-  const { searchTerm, setSearchTerm, setStats } = usePageContext();
-  const [activeOption, setActiveOption] = useState<ActiveOption | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { setStats } = usePageContext();
+  const { searchTerm, setSearchTerm } = useSearchTerm();
   const nixOptions = useMemo(() => getNixOptions(), []);
   const optionsTree = useMemo(
     () => (nixOptions ? buildOptionsTree(nixOptions) : {}),
     [nixOptions],
   );
+  const { activeOption, setActiveOption } = useActiveOption(optionsTree);
+  const isDrawerOpen = activeOption !== null;
   const ignoredKeys = useMemo(() => new Set<string>(['_module']), []);
   const activeFilters = useMemo(() => {
     const filters: OptionTreeFilter[] = [createIgnoredKeyFilter(ignoredKeys)];
@@ -642,7 +621,6 @@ const App = (): JSX.Element => {
               activePath={activeOption?.path ?? null}
               onSelect={(option) => {
                 setActiveOption(option);
-                setIsDrawerOpen(true);
               }}
             />
           </div>
@@ -652,7 +630,6 @@ const App = (): JSX.Element => {
           className={`drawer-backdrop ${isDrawerOpen ? 'drawer-backdrop--open' : ''}`}
           onClick={() => {
             setActiveOption(null);
-            setIsDrawerOpen(false);
           }}
           aria-label="Close active option"
         />
@@ -662,11 +639,9 @@ const App = (): JSX.Element => {
             optionsTree={optionsTree}
             onClose={() => {
               setActiveOption(null);
-              setIsDrawerOpen(false);
             }}
             onSelect={(option) => {
               setActiveOption(option);
-              setIsDrawerOpen(true);
             }}
           />
         </section>
