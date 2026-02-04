@@ -1,9 +1,14 @@
 import nixOptions from '../../result/options.json';
+import { useMemo, useState } from 'react';
 import {
   buildOptionsTree,
+  createIgnoredKeyFilter,
+  createSearchFilter,
+  filterOptionsTree,
   isOptionMeta,
   optionMetaKey,
   type OptionMeta,
+  type OptionTreeFilter,
   type OptionTree,
 } from './lib/options-tree';
 
@@ -74,10 +79,30 @@ const countOptions = (node: OptionTree | OptionMeta): number => {
 };
 
 const App = (): JSX.Element => {
-  const optionsTree = buildOptionsTree(nixOptions as Record<string, OptionMeta>);
-  const status = 'Loaded';
+  const [searchTerm, setSearchTerm] = useState('');
+  const optionsTree = useMemo(
+    () => buildOptionsTree(nixOptions as Record<string, OptionMeta>),
+    [],
+  );
+  const ignoredKeys = useMemo(() => new Set<string>([]), []);
+  const activeFilters = useMemo(() => {
+    const filters: OptionTreeFilter[] = [createIgnoredKeyFilter(ignoredKeys)];
+    if (searchTerm.trim()) {
+      filters.push(createSearchFilter(searchTerm));
+    }
+    return filters;
+  }, [ignoredKeys, searchTerm]);
+  const filteredTree = useMemo(
+    () => filterOptionsTree(optionsTree, activeFilters),
+    [activeFilters, optionsTree],
+  );
+  const totalCount = countOptions(optionsTree);
+  const filteredCount = countOptions(filteredTree);
+  const status = searchTerm.trim()
+    ? `Showing ${filteredCount} of ${totalCount}`
+    : `${totalCount} total`;
   const dataSource = 'options-tree.json';
-  const optionCount = `${countOptions(optionsTree)} options`;
+  const optionCount = `${totalCount} options`;
 
   return (
     <div className="page">
@@ -102,10 +127,27 @@ const App = (): JSX.Element => {
         <section className="panel">
           <div className="panel-header">
             <h2>Options Tree</h2>
-            <p className="status">{status}</p>
+            <div className="panel-actions">
+              <label className="search-label" htmlFor="search-options">
+                Filter options
+              </label>
+              <input
+                className="search-field"
+                id="search-options"
+                type="search"
+                placeholder="Search paths, descriptions, types"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+              <p className="status">{status}</p>
+            </div>
           </div>
           <div className="panel-body" id="tree">
-            {optionsTree ? renderTree(optionsTree, 'root', 0) : null}
+            {filteredCount === 0 ? (
+              <p className="empty-state">No matching options. Try a different search.</p>
+            ) : (
+              renderTree(filteredTree, 'root', 0)
+            )}
           </div>
         </section>
       </main>
