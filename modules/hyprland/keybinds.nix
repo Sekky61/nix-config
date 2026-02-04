@@ -2,6 +2,7 @@
   lib,
   username,
   config,
+  pkgs,
   ...
 }:
 with lib; let
@@ -1038,7 +1039,7 @@ in {
             mods = ["SUPER"];
             key = "Space";
           };
-          command = {params = walkerBin;};
+          command = {params = "${pkgs.walker}/bin/walker";};
         }
       ];
 

@@ -38,6 +38,12 @@
       diningLampId = "ec2b6aba1eb4b926d436dad61c31807b";
       fanId = "c0396ed75d9f83cabe0daf3842a4b1b3";
     };
+    n8n = {
+      enable = true;
+      port = 1300;
+      proxy = true;
+      subdomain = "n8n";
+    };
   };
 
   michal.programs.tailscale = {
@@ -48,6 +54,10 @@
   };
 
   # Users
+
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   users.users.${username} = {
     isNormalUser = true;
