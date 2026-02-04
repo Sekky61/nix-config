@@ -304,23 +304,117 @@ const getNodeAtPath = (tree: OptionTree, segments: string[]): OptionTree | NixOp
   return current;
 };
 
-const getSiblingKeys = (tree: OptionTree, segments: string[], index: number): string[] => {
-  if (index < 0 || index >= segments.length) return [];
-  const parentSegments = segments.slice(0, index);
-  const parentNode = parentSegments.length ? getNodeAtPath(tree, parentSegments) : tree;
-  if (!parentNode || isOptionMeta(parentNode) || typeof parentNode !== 'object') return [];
-  return Object.keys(parentNode as OptionTree).filter((key) => key !== optionMetaKey);
-};
-
 interface ActiveOptionBreadcrumbsProps {
   path: string;
   optionsTree: OptionTree;
   onSelect?: (option: ActiveOption) => void;
 }
 
+interface BreadcrumbOption {
+  label: string;
+  path: string;
+  meta: NixOption | null;
+  isActive: boolean;
+  children: BreadcrumbOption[];
+}
+
+interface BreadcrumbDropdownProps {
+  label: string;
+  hasDropdown: boolean;
+  isOpen: boolean;
+  options: BreadcrumbOption[];
+  onToggle: () => void;
+  onSelect?: (option: ActiveOption) => void;
+  onClose: () => void;
+}
+
+interface BreadcrumbMenuProps {
+  options: BreadcrumbOption[];
+  isSubmenu?: boolean;
+  onSelect?: (option: ActiveOption) => void;
+  onClose: () => void;
+}
+
+const BreadcrumbMenu = ({ options, isSubmenu = false, onSelect, onClose }: BreadcrumbMenuProps): JSX.Element => {
+  return (
+    <div className={`breadcrumb-menu ${isSubmenu ? 'breadcrumb-menu--sub' : ''}`} role="menu">
+      {options.map((option) => (
+        <div key={option.path} className="breadcrumb-menu__item-wrapper">
+          <button
+            type="button"
+            role="menuitem"
+            className={`breadcrumb-menu__item ${option.isActive ? 'breadcrumb-menu__item--active' : ''}`}
+            onClick={() => {
+              if (!option.meta || option.isActive) return;
+              onSelect?.({ path: option.path, meta: option.meta });
+              onClose();
+            }}
+          >
+            <span>{option.label}</span>
+            {option.children.length > 0 && <ChevronRight size={12} className="breadcrumb-menu__chevron" />}
+          </button>
+          {option.children.length > 0 && (
+            <BreadcrumbMenu options={option.children} isSubmenu={true} onSelect={onSelect} onClose={onClose} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const BreadcrumbDropdown = ({
+  label,
+  hasDropdown,
+  isOpen,
+  options,
+  onToggle,
+  onSelect,
+  onClose,
+}: BreadcrumbDropdownProps): JSX.Element => {
+  return (
+    <>
+      <button
+        type="button"
+        className="breadcrumb-button"
+        onClick={() => {
+          if (!hasDropdown) return;
+          onToggle();
+        }}
+        aria-expanded={isOpen}
+        disabled={!hasDropdown}
+      >
+        <span className="breadcrumb-label">{label}</span>
+        {hasDropdown && <ChevronDown size={12} aria-hidden="true" />}
+      </button>
+      {hasDropdown && isOpen && <BreadcrumbMenu options={options} onSelect={onSelect} onClose={onClose} />}
+    </>
+  );
+};
+
 const ActiveOptionBreadcrumbs = ({ path, optionsTree, onSelect }: ActiveOptionBreadcrumbsProps): JSX.Element => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const segments = useMemo(() => path.split('.').filter(Boolean), [path]);
+
+  const buildBreadcrumbOptions = (
+    node: OptionTree | NixOption | null,
+    parentSegments: string[],
+  ): BreadcrumbOption[] => {
+    if (!node || isOptionMeta(node) || typeof node !== 'object') return [];
+
+    return Object.keys(node as OptionTree)
+      .filter((key) => key !== optionMetaKey)
+      .map((key) => {
+        const currentSegments = [...parentSegments, key];
+        const currentNode = (node as OptionTree)[key] as OptionTree | NixOption;
+        return {
+          label: key,
+          path: currentSegments.join('.'),
+          meta: getNodeMeta(currentNode),
+          isActive: segments.join('.') === currentSegments.join('.'),
+          children: buildBreadcrumbOptions(currentNode, currentSegments),
+        };
+      });
+  };
 
   useEffect(() => {
     setOpenIndex(null);
@@ -330,59 +424,23 @@ const ActiveOptionBreadcrumbs = ({ path, optionsTree, onSelect }: ActiveOptionBr
     <div className="active-panel__breadcrumbs" aria-label="Option path">
       <span className="breadcrumb-root">/</span>
       {segments.map((segment, index) => {
-        const siblings = getSiblingKeys(optionsTree, segments, index);
-        const hasDropdown = siblings.length > 1;
-        const siblingOptions = siblings.map((sibling) => {
-          const candidateSegments = [...segments];
-          candidateSegments[index] = sibling;
-          const candidatePath = candidateSegments.join('.');
-          const candidateNode = getNodeAtPath(optionsTree, candidateSegments);
-          return {
-            label: sibling,
-            path: candidatePath,
-            meta: getNodeMeta(candidateNode),
-            isActive: sibling === segment,
-          };
-        });
+        const parentSegments = segments.slice(0, index);
+        const parentNode = parentSegments.length ? getNodeAtPath(optionsTree, parentSegments) : optionsTree;
+        const siblingOptions = buildBreadcrumbOptions(parentNode, parentSegments);
+        const hasDropdown = siblingOptions.length > 1;
 
         return (
           <div className="breadcrumb-item" key={`${segment}-${index}`}>
             {index > 0 && <span className="breadcrumb-separator">/</span>}
-            <button
-              type="button"
-              className="breadcrumb-button"
-              onClick={() => {
-                if (!hasDropdown) return;
-                setOpenIndex(openIndex === index ? null : index);
-              }}
-              aria-expanded={openIndex === index}
-              disabled={!hasDropdown}
-            >
-              <span className="breadcrumb-label">{segment}</span>
-              {hasDropdown && <ChevronDown size={12} aria-hidden="true" />}
-            </button>
-            {hasDropdown && openIndex === index && (
-              <div className="breadcrumb-menu" role="menu">
-                {siblingOptions.map((option) => (
-                  <button
-                    key={option.path}
-                    type="button"
-                    role="menuitem"
-                    className={`breadcrumb-menu__item ${
-                      option.isActive ? 'breadcrumb-menu__item--active' : ''
-                    }`}
-                    onClick={() => {
-                      if (!option.meta || option.isActive) return;
-                      onSelect?.({ path: option.path, meta: option.meta });
-                      setOpenIndex(null);
-                    }}
-                    disabled={!option.meta || option.isActive}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            <BreadcrumbDropdown
+              label={segment}
+              hasDropdown={hasDropdown}
+              isOpen={openIndex === index}
+              options={siblingOptions}
+              onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+              onSelect={onSelect}
+              onClose={() => setOpenIndex(null)}
+            />
           </div>
         );
       })}

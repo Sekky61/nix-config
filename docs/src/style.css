@@ -505,6 +505,19 @@ body {
   z-index: 5;
 }
 
+.breadcrumb-menu__item-wrapper {
+  position: relative;
+}
+
+.breadcrumb-menu__item-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 10px;
+  height: 100%;
+}
+
 .breadcrumb-menu__item {
   border: 1px solid transparent;
   background: transparent;
@@ -515,6 +528,11 @@ body {
   font-size: 0.7rem;
   color: var(--panel-ink);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
 }
 
 .breadcrumb-menu__item:hover {
@@ -529,6 +547,26 @@ body {
 .breadcrumb-menu__item--active {
   background: rgba(176, 117, 59, 0.2);
   border-color: rgba(176, 117, 59, 0.35);
+}
+
+.breadcrumb-menu__chevron {
+  opacity: 0.6;
+}
+
+.breadcrumb-menu--sub {
+  top: 0;
+  left: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 6;
+}
+
+.breadcrumb-menu__item-wrapper:hover > .breadcrumb-menu--sub {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
 }
 
 .active-panel__header {
