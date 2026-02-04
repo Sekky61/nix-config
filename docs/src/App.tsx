@@ -1,4 +1,3 @@
-import nixOptions from '../../result/options.json';
 import { useMemo, useState } from 'react';
 import {
   buildOptionsTree,
@@ -11,6 +10,7 @@ import {
   type OptionTreeFilter,
   type OptionTree,
 } from './lib/options-tree';
+import { getNixOptions } from './lib/nix-options';
 
 // ─────────────────────────────────────────────────────────────
 // Type Badge Component
@@ -232,9 +232,10 @@ const countOptions = (node: OptionTree | OptionMeta): number => {
 
 const App = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
+  const nixOptions = useMemo(() => getNixOptions(), []);
   const optionsTree = useMemo(
-    () => buildOptionsTree(nixOptions as Record<string, OptionMeta>),
-    [],
+    () => (nixOptions ? buildOptionsTree(nixOptions) : {}),
+    [nixOptions],
   );
   const ignoredKeys = useMemo(() => new Set<string>(['_module']), []);
   const activeFilters = useMemo(() => {
@@ -251,6 +252,24 @@ const App = (): JSX.Element => {
   const totalCount = countOptions(optionsTree);
   const filteredCount = countOptions(filteredTree);
   const isFiltered = searchTerm.trim().length > 0;
+
+  if (!nixOptions) {
+    return (
+      <div className="page">
+        <header className="header">
+          <div className="header__title">
+            <span className="header__eyebrow">michal-options-docs</span>
+            <h1>Option Explorer</h1>
+          </div>
+        </header>
+        <main className="main">
+          <p className="empty-state">
+            Failed to load options.json. Check the console for details.
+          </p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
