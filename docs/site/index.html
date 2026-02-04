@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Michal Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Space+Mono:wght@400;700&display=swap"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">michal-options-docs</p>
+          <h1>Option Explorer</h1>
+          <p class="lead">
+            A lightweight view into the custom Nix options. Generated data is shown
+            as a nested tree so the hierarchy stays intact.
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="label">Data Source</p>
+          <p class="value" id="data-source">Loading…</p>
+          <p class="label">Total Options</p>
+          <p class="value" id="option-count">—</p>
+        </div>
+      </header>
+
+      <main>
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Options Tree</h2>
+            <p id="status" class="status">Preparing data…</p>
+          </div>
+          <div class="panel-body" id="tree"></div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./app.ts"></script>
+  </body>
+</html>

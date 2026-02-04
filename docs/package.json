@@ -1,0 +1,15 @@
+{
+  "name": "nix-config",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^20.11.30"
+  },
+  "scripts": {
+    "docs:build": "bun run docs:tree && bun build ./site/index.html --outdir ./dist",
+    "docs:tree": "bun ./michal-options-docs.ts --out ./site/options-tree.json",
+    "docs:serve": "bunx serve ./dist --listen 3000",
+    "docs:open": "bunx serve ./dist --listen 3000 --open",
+    "docs:dev": "bun run docs:build && bun run docs:open"
+  }
+}
