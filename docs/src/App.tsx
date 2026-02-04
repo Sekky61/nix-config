@@ -6,11 +6,10 @@ import {
   filterOptionsTree,
   isOptionMeta,
   optionMetaKey,
-  type OptionMeta,
   type OptionTreeFilter,
   type OptionTree,
 } from './lib/options-tree';
-import { getNixOptions } from './lib/nix-options';
+import { getNixOptions, type NixOption } from './lib/nix-options';
 
 // ─────────────────────────────────────────────────────────────
 // Type Badge Component
@@ -88,13 +87,13 @@ const NodeKey = ({ name, hasChildren, isExpanded, onToggle }: NodeKeyProps): JSX
 
 interface TreeNodeProps {
   nodeKey: string;
-  value: OptionTree | OptionMeta;
+  value: OptionTree | NixOption;
   path: string;
   depth: number;
   defaultExpanded?: boolean;
 }
 
-const describeMeta = (meta: OptionMeta): { typeLabel: string; description: string } => {
+const describeMeta = (meta: NixOption): { typeLabel: string; description: string } => {
   const typeLabel = typeof meta.type === 'string' ? meta.type : 'unknown';
   const description = typeof meta.description === 'string' ? meta.description.trim() : '';
   return { typeLabel, description };
@@ -109,9 +108,9 @@ const TreeNode = ({ nodeKey, value, path, depth, defaultExpanded = true }: TreeN
         value &&
         optionMetaKey in value &&
         isOptionMeta((value as OptionTree)[optionMetaKey]))
-      ? (isOptionMeta(value)
+        ? (isOptionMeta(value)
         ? value
-        : ((value as OptionTree)[optionMetaKey] as OptionMeta))
+        : ((value as OptionTree)[optionMetaKey] as NixOption))
       : null;
 
   const metaContent = meta ? describeMeta(meta) : null;
@@ -208,7 +207,7 @@ const Stats = ({ total, filtered, isFiltered }: StatsProps): JSX.Element => {
 // Counter Utility
 // ─────────────────────────────────────────────────────────────
 
-const countOptions = (node: OptionTree | OptionMeta): number => {
+const countOptions = (node: OptionTree | NixOption): number => {
   if (isOptionMeta(node)) {
     return 1;
   }

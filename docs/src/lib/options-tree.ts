@@ -1,7 +1,8 @@
-export type OptionMeta = Record<string, unknown>;
+import type { NixOption, NixOptions } from './nix-options';
 
+// todo delete?
 export interface OptionTree {
-  [key: string]: OptionTree | OptionMeta;
+  [key: string]: OptionTree | NixOption;
 }
 
 export const optionMetaKey = '_option';
@@ -16,7 +17,7 @@ export const optionMetaKeys = new Set([
   'type',
 ]);
 
-export const isOptionMeta = (value: unknown): value is OptionMeta => {
+export const isOptionMeta = (value: unknown): value is NixOption => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return false;
   }
@@ -28,8 +29,8 @@ export interface OptionFilterContext {
   key: string;
   path: string;
   depth: number;
-  node: OptionTree | OptionMeta;
-  meta: OptionMeta | null;
+  node: OptionTree | NixOption;
+  meta: NixOption | null;
   parent: OptionTree | null;
   ancestors: string[];
   pathParts: string[];
@@ -41,7 +42,7 @@ export interface OptionFilterContext {
 
 export type OptionTreeFilter = (context: OptionFilterContext) => boolean;
 
-const insertOption = (tree: OptionTree, pathParts: string[], meta: OptionMeta): void => {
+const insertOption = (tree: OptionTree, pathParts: string[], meta: NixOption): void => {
   let current = tree;
 
   for (let index = 0; index < pathParts.length; index += 1) {
@@ -72,7 +73,7 @@ const insertOption = (tree: OptionTree, pathParts: string[], meta: OptionMeta): 
   }
 };
 
-export const buildOptionsTree = (options: Record<string, OptionMeta>): OptionTree => {
+export const buildOptionsTree = (options: NixOptions): OptionTree => {
   const tree: OptionTree = {};
 
   for (const [fullName, meta] of Object.entries(options)) {
@@ -82,7 +83,7 @@ export const buildOptionsTree = (options: Record<string, OptionMeta>): OptionTre
   return tree;
 };
 
-const resolveMeta = (node: OptionTree): OptionMeta | null => {
+const resolveMeta = (node: OptionTree): NixOption | null => {
   const meta = node[optionMetaKey];
   return isOptionMeta(meta) ? meta : null;
 };
@@ -126,11 +127,11 @@ export const filterOptionsTree = (tree: OptionTree, filters: OptionTreeFilter[])
 
   const filterEntry = (
     key: string,
-    value: OptionTree | OptionMeta,
+    value: OptionTree | NixOption,
     parent: OptionTree | null,
     ancestors: string[],
     depth: number,
-  ): OptionTree | OptionMeta | null => {
+  ): OptionTree | NixOption | null => {
     const pathParts = [...ancestors, key];
     const path = pathParts.join('.');
 

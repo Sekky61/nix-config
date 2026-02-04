@@ -3,8 +3,8 @@ import rawOptions from '../../../result/options.json';
 
 const nixValueSchema = type({
   text: 'string',
-  "_type": 'string',
-})
+  _type: 'string',
+});
 
 export type NixValue = typeof nixValueSchema.inferOut;
 
@@ -15,9 +15,9 @@ const optionMetaSchema = type({
    * "/nix/store/m1xfiylyaik91g6s5wj5nydd435kalhq-source/modules/audio.nix"
    */
   declarations: 'string[]',
-  "default?": nixValueSchema,
+  'default?': nixValueSchema,
   description: 'string?',
-  "example?": nixValueSchema,
+  'example?': nixValueSchema,
   loc: 'string[]',
   readOnly: 'boolean',
   type: 'string',
@@ -37,6 +37,5 @@ export const getNixOptions = () => {
     console.error('Failed to validate options.json payload.', parsed);
     return null;
   }
-  console.log('parsed', parsed);
   return parsed;
 };
