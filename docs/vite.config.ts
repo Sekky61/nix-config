@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 
 const base = process.env.BASE_PATH ?? '/';
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
-const optionsPath = path.resolve(currentDir, '../../result/options.json');
+const optionsPath = path.resolve(currentDir, '../result/options.json');
 
 if (!fs.existsSync(optionsPath)) {
   throw new Error(
