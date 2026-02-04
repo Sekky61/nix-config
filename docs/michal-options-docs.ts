@@ -4,7 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 type OptionMeta = Record<string, unknown>;
-type OptionTree = Record<string, OptionMeta | OptionTree>;
+interface OptionTree {
+  [key: string]: OptionMeta | OptionTree;
+}
 
 const optionMetaKeys = new Set([
   'declarations',
