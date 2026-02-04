@@ -274,7 +274,9 @@ interface ActiveOption {
 
 interface ActiveOptionPanelProps {
   activeOption: ActiveOption | null;
+  optionsTree: OptionTree;
   onClose?: () => void;
+  onSelect?: (option: ActiveOption) => void;
 }
 
 const formatNixValue = (value?: NixValue): string => {
@@ -282,7 +284,118 @@ const formatNixValue = (value?: NixValue): string => {
   return value.text || '—';
 };
 
-const ActiveOptionPanel = ({ activeOption, onClose }: ActiveOptionPanelProps): JSX.Element => {
+const getNodeMeta = (node: OptionTree | NixOption | null): NixOption | null => {
+  if (!node) return null;
+  if (isOptionMeta(node)) return node;
+  if (typeof node === 'object' && optionMetaKey in node && isOptionMeta((node as OptionTree)[optionMetaKey])) {
+    return (node as OptionTree)[optionMetaKey] as NixOption;
+  }
+  return null;
+};
+
+const getNodeAtPath = (tree: OptionTree, segments: string[]): OptionTree | NixOption | null => {
+  let current: OptionTree | NixOption = tree;
+  for (const segment of segments) {
+    if (!current || isOptionMeta(current) || typeof current !== 'object') return null;
+    const next = (current as OptionTree)[segment];
+    if (!next) return null;
+    current = next as OptionTree | NixOption;
+  }
+  return current;
+};
+
+const getSiblingKeys = (tree: OptionTree, segments: string[], index: number): string[] => {
+  if (index < 0 || index >= segments.length) return [];
+  const parentSegments = segments.slice(0, index);
+  const parentNode = parentSegments.length ? getNodeAtPath(tree, parentSegments) : tree;
+  if (!parentNode || isOptionMeta(parentNode) || typeof parentNode !== 'object') return [];
+  return Object.keys(parentNode as OptionTree).filter((key) => key !== optionMetaKey);
+};
+
+interface ActiveOptionBreadcrumbsProps {
+  path: string;
+  optionsTree: OptionTree;
+  onSelect?: (option: ActiveOption) => void;
+}
+
+const ActiveOptionBreadcrumbs = ({ path, optionsTree, onSelect }: ActiveOptionBreadcrumbsProps): JSX.Element => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const segments = useMemo(() => path.split('.').filter(Boolean), [path]);
+
+  useEffect(() => {
+    setOpenIndex(null);
+  }, [path]);
+
+  return (
+    <div className="active-panel__breadcrumbs" aria-label="Option path">
+      <span className="breadcrumb-root">/</span>
+      {segments.map((segment, index) => {
+        const siblings = getSiblingKeys(optionsTree, segments, index);
+        const hasDropdown = siblings.length > 1;
+        const siblingOptions = siblings.map((sibling) => {
+          const candidateSegments = [...segments];
+          candidateSegments[index] = sibling;
+          const candidatePath = candidateSegments.join('.');
+          const candidateNode = getNodeAtPath(optionsTree, candidateSegments);
+          return {
+            label: sibling,
+            path: candidatePath,
+            meta: getNodeMeta(candidateNode),
+            isActive: sibling === segment,
+          };
+        });
+
+        return (
+          <div className="breadcrumb-item" key={`${segment}-${index}`}>
+            {index > 0 && <span className="breadcrumb-separator">/</span>}
+            <button
+              type="button"
+              className="breadcrumb-button"
+              onClick={() => {
+                if (!hasDropdown) return;
+                setOpenIndex(openIndex === index ? null : index);
+              }}
+              aria-expanded={openIndex === index}
+              disabled={!hasDropdown}
+            >
+              <span className="breadcrumb-label">{segment}</span>
+              {hasDropdown && <ChevronDown size={12} aria-hidden="true" />}
+            </button>
+            {hasDropdown && openIndex === index && (
+              <div className="breadcrumb-menu" role="menu">
+                {siblingOptions.map((option) => (
+                  <button
+                    key={option.path}
+                    type="button"
+                    role="menuitem"
+                    className={`breadcrumb-menu__item ${
+                      option.isActive ? 'breadcrumb-menu__item--active' : ''
+                    }`}
+                    onClick={() => {
+                      if (!option.meta || option.isActive) return;
+                      onSelect?.({ path: option.path, meta: option.meta });
+                      setOpenIndex(null);
+                    }}
+                    disabled={!option.meta || option.isActive}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const ActiveOptionPanel = ({
+  activeOption,
+  optionsTree,
+  onClose,
+  onSelect,
+}: ActiveOptionPanelProps): JSX.Element => {
   const { buildDeclarationLink } = usePageContext();
 
   if (!activeOption) {
@@ -302,6 +415,7 @@ const ActiveOptionPanel = ({ activeOption, onClose }: ActiveOptionPanelProps): J
 
   return (
     <div className="active-panel">
+      <ActiveOptionBreadcrumbs path={path} optionsTree={optionsTree} onSelect={onSelect} />
       <div className="active-panel__header">
         <div>
           <span className="active-panel__eyebrow">Active option</span>
@@ -342,16 +456,6 @@ const ActiveOptionPanel = ({ activeOption, onClose }: ActiveOptionPanelProps): J
         <div className="active-panel__card">
           <span className="active-panel__label">Type</span>
           <span className="active-panel__value active-panel__value--inline">{meta.type}</span>
-        </div>
-      </div>
-      <div className="active-panel__section">
-        <span className="active-panel__label">Definition path</span>
-        <div className="active-panel__chips">
-          {meta.loc.map((segment) => (
-            <span className="active-panel__chip" key={segment}>
-              {segment}
-            </span>
-          ))}
         </div>
       </div>
       <div className="active-panel__section">
@@ -497,9 +601,14 @@ const App = (): JSX.Element => {
         <section className={`pane-right ${isDrawerOpen ? 'pane-right--open' : ''}`}>
           <ActiveOptionPanel
             activeOption={activeOption}
+            optionsTree={optionsTree}
             onClose={() => {
               setActiveOption(null);
               setIsDrawerOpen(false);
+            }}
+            onSelect={(option) => {
+              setActiveOption(option);
+              setIsDrawerOpen(true);
             }}
           />
         </section>
