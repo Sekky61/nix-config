@@ -285,11 +285,11 @@ a {
 .main {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(320px, 1.2fr) minmax(320px, 0.9fr);
+  grid-template-columns: minmax(320px, 1fr);
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    'rail rail'
-    'left right';
+    'rail'
+    'left';
   gap: 0;
   min-height: 0;
   flex: 1 1 auto;
@@ -356,17 +356,41 @@ a {
 }
 
 .pane-right {
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(520px, 42vw);
   overflow: hidden;
   padding: 0;
   background: linear-gradient(160deg, rgba(18, 27, 24, 0.98), rgba(6, 10, 9, 0.85));
   border-left: 1px solid var(--border-soft);
-  animation: rise-in 0.6s ease 0.2s both;
-  grid-area: right;
+  box-shadow: -24px 0 50px rgba(5, 7, 6, 0.7);
+  transform: translateX(100%);
+  transition: transform 0.32s ease;
+  z-index: 20;
 }
 
 .drawer-backdrop {
-  display: none;
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 6, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.3s ease;
+  z-index: 19;
+}
+
+.pane-right--open {
+  transform: translateX(0);
+}
+
+.drawer-backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .pane-right::before {
@@ -980,35 +1004,11 @@ a {
   }
 
   .pane-right {
-    position: absolute;
-    inset: 0 0 0 auto;
-    width: min(440px, 92vw);
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    z-index: 3;
-    border-left: none;
-  }
-
-  .pane-right--open {
-    transform: translateX(0);
-  }
-
-  .drawer-backdrop {
-    display: block;
-    position: absolute;
     inset: 0;
-    background: rgba(5, 7, 6, 0.6);
-    opacity: 0;
-    pointer-events: none;
-    border: none;
-    padding: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-  }
-
-  .drawer-backdrop--open {
-    opacity: 1;
-    pointer-events: auto;
+    width: 100%;
+    height: 100%;
+    border-left: none;
+    border-radius: 0;
   }
 
   .active-panel {
