@@ -577,10 +577,15 @@ const App = (): JSX.Element => {
   if (!nixOptions) {
     return (
       <div className="page">
-        <header className="header">
-          <div className="header__title">
-            <span className="header__eyebrow">michal-options-docs</span>
-            <h1>Option Explorer</h1>
+        <header className="hero">
+          <div className="hero__brand">
+            <span className="hero__kicker">michal-options-docs</span>
+            <h1>Options Atlas</h1>
+            <p>Scan the system, pin the details, trace every declaration.</p>
+          </div>
+          <div className="hero__status">
+            <span className="hero__chip">Index offline</span>
+            <span className="hero__timestamp">Awaiting options.json</span>
           </div>
         </header>
         <main className="main">
@@ -594,26 +599,49 @@ const App = (): JSX.Element => {
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="header__title">
-          <span className="header__eyebrow">michal-options-docs</span>
-          <h1>Option Explorer</h1>
+      <header className="hero">
+        <div className="hero__brand">
+          <span className="hero__kicker">michal-options-docs</span>
+          <h1>Options Atlas</h1>
+          <p>Scan the system, pin the details, trace every declaration.</p>
         </div>
-        <div className="header__controls">
+        <div className="hero__controls">
           <div className="search">
+            <label className="search__label" htmlFor="option-search">
+              Filter
+            </label>
             <input
+              id="option-search"
               className="search__input"
               type="search"
-              placeholder="Filter options..."
+              placeholder="Type to filter options"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
             />
           </div>
           <Stats />
         </div>
+        <div className="hero__status" aria-label="Index status">
+          <span className="hero__status-dot" aria-hidden="true" />
+          Live index
+        </div>
       </header>
 
       <main className="main">
+        <section className="rail">
+          <div className="rail__card">
+            <span className="rail__label">Signal</span>
+            <div className="rail__value">/options</div>
+          </div>
+          <div className="rail__card">
+            <span className="rail__label">Scope</span>
+            <div className="rail__value">system</div>
+          </div>
+          <div className="rail__card">
+            <span className="rail__label">Search depth</span>
+            <div className="rail__value">recursive</div>
+          </div>
+        </section>
         <section className="pane-left">
           <div className="tree-container">
             <OptionsTree
