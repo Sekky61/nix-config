@@ -3,16 +3,19 @@
     # HW
     ./hardware-configuration.nix
     ./configuration.nix
-    ./audio.nix
 
     # Desktop/gui
     ../../modules/hyprland
   ];
 
   michal = {
-    graphical.enable = true;
+    audio = {
+      enable = true;
+      guiTools = true;
+    };
     assets.enable = true;
     dev.enable = true;
+    graphical.enable = true;
     hasFingerprintReader = true;
     programs = {
       docker.enable = true;
