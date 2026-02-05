@@ -177,9 +177,8 @@ const TreeNode = ({
   return (
     <li className={`tree-node ${depth === 0 ? 'tree-node--root' : ''}`}>
       <div
-        className={`tree-node__header ${
-          meta ? 'tree-node__header--selectable' : ''
-        } ${isActive ? 'tree-node__header--active' : ''}`}
+        className={`tree-node__header ${meta ? 'tree-node__header--selectable' : ''
+          } ${isActive ? 'tree-node__header--active' : ''}`}
         onClick={meta ? () => onSelect?.({ path, meta }) : undefined}
       >
         <NodeKey
@@ -540,12 +539,21 @@ const countOptions = (node: OptionTree | NixOption): number => {
   }, 0);
 };
 
+const formatCount = (value: number): string => value.toLocaleString();
+
+const resolveIssuesUrl = (githubBaseUrl?: string): string | null => {
+  if (!githubBaseUrl) return null;
+  const normalized = githubBaseUrl.replace(/\/+$/, '');
+  const repoRoot = normalized.replace(/\/(blob|tree)\/.+$/, '');
+  return `${repoRoot}/issues`;
+};
+
 // ─────────────────────────────────────────────────────────────
 // Main App Component
 // ─────────────────────────────────────────────────────────────
 
 const App = (): JSX.Element => {
-  const { setStats } = usePageContext();
+  const { setStats, linkConfig } = usePageContext();
   const { searchTerm, setSearchTerm } = useSearchTerm();
   const nixOptions = useMemo(() => getNixOptions(), []);
   const optionsTree = useMemo(
@@ -569,6 +577,8 @@ const App = (): JSX.Element => {
   const totalCount = countOptions(optionsTree);
   const filteredCount = countOptions(filteredTree);
   const isFiltered = searchTerm.trim().length > 0;
+  const topLevelCount = useMemo(() => Object.keys(optionsTree).length, [optionsTree]);
+  const issuesUrl = useMemo(() => resolveIssuesUrl(linkConfig.githubBaseUrl), [linkConfig.githubBaseUrl]);
 
   useEffect(() => {
     setStats({ total: totalCount, filtered: filteredCount, isFiltered });
@@ -579,7 +589,7 @@ const App = (): JSX.Element => {
       <div className="page">
         <header className="hero">
           <div className="hero__brand">
-            <span className="hero__kicker">michal-options-docs</span>
+            <span className="hero__kicker">nix-config docs</span>
             <h1>Options Atlas</h1>
             <p>Scan the system, pin the details, trace every declaration.</p>
           </div>
@@ -601,7 +611,7 @@ const App = (): JSX.Element => {
     <div className="page">
       <header className="hero">
         <div className="hero__brand">
-          <span className="hero__kicker">michal-options-docs</span>
+          <span className="hero__kicker">nix-config docs</span>
           <h1>Options Atlas</h1>
           <p>Scan the system, pin the details, trace every declaration.</p>
         </div>
@@ -621,25 +631,29 @@ const App = (): JSX.Element => {
           </div>
           <Stats />
         </div>
-        <div className="hero__status" aria-label="Index status">
-          <span className="hero__status-dot" aria-hidden="true" />
-          Live index
-        </div>
       </header>
 
       <main className="main">
         <section className="rail">
           <div className="rail__card">
-            <span className="rail__label">Signal</span>
-            <div className="rail__value">/options</div>
+            <span className="rail__label">Total options</span>
+            <div className="rail__value">{formatCount(totalCount)}</div>
           </div>
           <div className="rail__card">
-            <span className="rail__label">Scope</span>
-            <div className="rail__value">system</div>
+            <span className="rail__label">Top-level groups</span>
+            <div className="rail__value">{formatCount(topLevelCount)}</div>
           </div>
           <div className="rail__card">
-            <span className="rail__label">Search depth</span>
-            <div className="rail__value">recursive</div>
+            <span className="rail__label">GitHub issues</span>
+            <div className="rail__value">
+              {issuesUrl ? (
+                <a href={issuesUrl} target="_blank" rel="noreferrer">
+                  Report a problem
+                </a>
+              ) : (
+                'Unavailable'
+              )}
+            </div>
           </div>
         </section>
         <section className="pane-left">

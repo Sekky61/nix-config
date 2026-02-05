@@ -363,7 +363,9 @@ a {
   width: min(520px, 42vw);
   overflow: hidden;
   padding: 0;
-  background: linear-gradient(160deg, rgba(18, 27, 24, 0.98), rgba(6, 10, 9, 0.85));
+  background: radial-gradient(circle at 15% 15%, rgba(198, 255, 46, 0.18), transparent 55%),
+    radial-gradient(circle at 85% 20%, rgba(39, 240, 195, 0.12), transparent 50%),
+    linear-gradient(170deg, rgba(11, 16, 14, 0.98), rgba(6, 10, 9, 0.92));
   border-left: 1px solid var(--border-soft);
   box-shadow: -24px 0 50px rgba(5, 7, 6, 0.7);
   transform: translateX(100%);
@@ -394,13 +396,7 @@ a {
 }
 
 .pane-right::before {
-  content: '';
-  position: absolute;
-  inset: -30% -20% auto auto;
-  width: 80%;
-  height: 70%;
-  background: radial-gradient(circle, rgba(198, 255, 46, 0.2), transparent 70%);
-  pointer-events: none;
+  content: none;
 }
 
 .tree-container {
