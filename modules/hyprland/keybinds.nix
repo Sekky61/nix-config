@@ -73,9 +73,23 @@ with lib; let
         default = "";
       };
       flags = mkOption {
-        type = with types; listOf (enum ["locked" "release" "longPress" "repeat" "nonConsuming" "mouse" "transparent" "ignoreMods" "separate" "description" "bypassInhibit"]);
+        type = with types;
+          listOf (enum [
+            "locked"
+            "release"
+            "longPress"
+            "repeat"
+            "nonConsuming"
+            "mouse"
+            "transparent"
+            "ignoreMods"
+            "separate"
+            "description"
+            "bypassInhibit"
+          ]);
         default = [];
-        description = ''          A list of optional flags for the binding. [Docs](https://wiki.hyprland.org/Configuring/Binds/#bind-flags)
+        description = ''
+          A list of optional flags for the binding. [Docs](https://wiki.hyprland.org/Configuring/Binds/#bind-flags)
 
           l -> locked, will also work when an input inhibitor (e.g. a lockscreen) is active.
           r -> release, will trigger on release of a key.
@@ -149,8 +163,7 @@ with lib; let
   in
     builtins.concatStringsSep "" (map (f: table.${f}) flags);
 
-  cross = f: arr1: arr2:
-    lib.concatLists (map (x: map (y: (f x y)) arr2) arr1);
+  cross = f: arr1: arr2: lib.concatLists (map (x: map (y: (f x y)) arr2) arr1);
 
   # decompress arrays of binds and commands. Now there are surely no arrays
   expandBind = kb:
@@ -163,20 +176,31 @@ with lib; let
   expandedBinds = builtins.concatLists (map expandBind cfg);
 
   # Get flags of a keybind including those implicitly set
-  getFlags = kb: kb.command.flags ++ optionals (kb.description != "") ["description"];
+  getFlags = kb:
+    kb.command.flags ++ optionals (kb.description != "") ["description"];
 
   # Format a bind line. Example: "Super+Shift, up, movewindow, u"
   keybindLine = kb: let
     mods = lib.concatStringsSep " + " kb.bind.mods;
   in
-    lib.concatStringsSep ", " [mods kb.bind.key kb.description kb.command.dispatcher kb.command.params];
+    lib.concatStringsSep ", " [
+      mods
+      kb.bind.key
+      kb.description
+      kb.command.dispatcher
+      kb.command.params
+    ];
 
-  bindsByFlag = builtins.groupBy (kb: constructFlags (getFlags kb)) expandedBinds;
-  binds = mapAttrs' (flags: kbs: nameValuePair "bind${flags}" (map keybindLine kbs)) bindsByFlag;
+  bindsByFlag =
+    builtins.groupBy (kb: constructFlags (getFlags kb)) expandedBinds;
+  binds =
+    mapAttrs' (flags: kbs: nameValuePair "bind${flags}" (map keybindLine kbs))
+    bindsByFlag;
 in {
   # Define the option
   options.michal.programs.hyprland.keybinds = mkOption {
-    type = with types; listOf keybindModule; # todo study why adding attrsOf fails
+    type = with types;
+      listOf keybindModule; # todo study why adding attrsOf fails
     default = [];
     description = ''
       A list of key bindings for Hyprland. Each binding is an attribute set
@@ -208,7 +232,9 @@ in {
     # Perform some checks
     assertions = [
       {
-        assertion = builtins.all (kb: (builtins.match ".*,.*" kb.description) == null) cfg;
+        assertion =
+          builtins.all (kb: (builtins.match ".*,.*" kb.description) == null)
+          cfg;
         message = "config.michal.programs.hyprland.keybinds[].description must not contain a comma.";
       }
       {
@@ -228,24 +254,9 @@ in {
         stdout = "--raw";
       };
       screen = flagArr: toString (["hyprshot"] ++ flagArr);
-      ss_region_stdout = screen (
-        with ss_flags; [
-          region
-          stdout
-        ]
-      );
-      ss_region_clipboard = screen (
-        with ss_flags; [
-          region
-          clipboard
-          freeze
-        ]
-      );
-      ss_monitor_file = screen (
-        with ss_flags; [
-          monitor
-        ]
-      );
+      ss_region_stdout = screen (with ss_flags; [region stdout]);
+      ss_region_clipboard = screen (with ss_flags; [region clipboard freeze]);
+      ss_monitor_file = screen (with ss_flags; [monitor]);
 
       toggleWindow = name: "ags toggle '${name}'";
       agsRequest = cmd: "ags request '${cmd}'";
@@ -365,12 +376,44 @@ in {
           command = {params = "systemctl poweroff";};
         }
         {
+          description = "Set power profile: performance";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "1";
+          };
+          command = {
+            params = "powerprofilesctl set performance && notify-send 'Power profile' 'Performance' -a 'Power Profiles'";
+          };
+        }
+        {
+          description = "Set power profile: balanced";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "2";
+          };
+          command = {
+            params = "powerprofilesctl set balanced && notify-send 'Power profile' 'Balanced' -a 'Power Profiles'";
+          };
+        }
+        {
+          description = "Set power profile: power saver";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "3";
+          };
+          command = {
+            params = "powerprofilesctl set power-saver && notify-send 'Power profile' 'Power Saver' -a 'Power Profiles'";
+          };
+        }
+        {
           description = "Open system settings";
           bind = {
             mods = ["SUPER"];
             key = "I";
           };
-          command = {params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';};
+          command = {
+            params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
+          };
         }
         {
           description = "Open volume control";
@@ -413,7 +456,9 @@ in {
             mods = ["SUPER" "SHIFT"];
             key = "S";
           };
-          command = {params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";};
+          command = {
+            params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
+          };
         }
         {
           description = "Screenshot region to clipboard";
@@ -480,7 +525,9 @@ in {
             mods = ["SUPER"];
             key = "V";
           };
-          command = {params = "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy";};
+          command = {
+            params = "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy";
+          };
         }
         {
           description = "Lock screen";
@@ -494,9 +541,7 @@ in {
               key = "L";
             }
           ];
-          command = {
-            params = "hyprlock";
-          };
+          command = {params = "hyprlock";};
         }
         {
           description = "Reset AGS"; # TODO
@@ -675,9 +720,7 @@ in {
             mods = ["SUPER" "SHIFT"];
             key = "n";
           };
-          command = {
-            dispatcher = "togglesplit";
-          };
+          command = {dispatcher = "togglesplit";};
         }
         {
           description = "Move window left";
