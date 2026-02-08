@@ -51,6 +51,7 @@ in {
         # Editors
         code-cursor
         antigravity
+        # opencode-desktop # gui for opencode, comes from opencode input
 
         # LLM/AI
         lmstudio

@@ -97,5 +97,10 @@
       url = "github:abenz1267/walker";
       inputs.elephant.follows = "elephant";
     };
+
+    opencode = {
+      url = "github:anomalyco/opencode/v1.1.53";
+      # todo share flake
+    };
   };
 }
