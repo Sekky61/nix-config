@@ -36,5 +36,6 @@
     (final: _prev: {
       inherit (inputs.opencode.packages.${final.stdenv.hostPlatform.system}) opencode;
     })
+    inputs.claude-code.overlays.default
   ];
 }

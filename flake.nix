@@ -102,5 +102,9 @@
       url = "github:anomalyco/opencode/v1.1.53";
       # todo share flake
     };
+
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+    };
   };
 }
