@@ -96,6 +96,8 @@ in {
         };
 
         codex.enable = true;
+        claude-code.enable = true;
+        # todo skills
 
         zed-editor = {
           enable = true;
