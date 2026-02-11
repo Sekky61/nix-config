@@ -795,17 +795,13 @@ require("lazy").setup({
     },
     {
         -- AI chat/inline assistant (keybinds: <C-a>, <LocalLeader>a, ga)
-        -- Chat: gemini-3-flash-preview, Inline: grok-code-fast-1
+        -- Chat: opencode (claude-sonnet-4), Inline: grok-code-fast-1
         -- Env: OPENROUTER_API_KEY
         "olimorris/codecompanion.nvim",
         opts = {
             strategies = {
                 chat = {
-                    -- adapter = "a_openrouter",
-                    adapter = {
-                        name = "opencode",
-                        model = "google/gemini-3-flash-preview",
-                    },
+                    adapter = "opencode",
                 },
                 inline = {
                     adapter = "a_openrouter",
