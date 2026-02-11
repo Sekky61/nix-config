@@ -31,11 +31,7 @@
     # })
     # (import ./overlay3)
     inputs.nur.overlays.default
-    # todo https://github.com/anomalyco/opencode/pull/12643
-    # inputs.opencode.overlays.default
-    (final: _prev: {
-      inherit (inputs.opencode.packages.${final.stdenv.hostPlatform.system}) opencode;
-    })
+    inputs.opencode.overlays.default
     inputs.claude-code.overlays.default
   ];
 }

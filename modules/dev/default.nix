@@ -51,6 +51,7 @@ in {
         # Editors
         code-cursor
         antigravity
+        # todo not working rn
         # opencode-desktop # gui for opencode, comes from opencode input
 
         # LLM/AI
@@ -60,43 +61,48 @@ in {
         graphite-cli # Graphite stacked-PRs helper
       ];
 
+      # cc
+      programs.bash.shellAliases.cc = "claude";
+      programs.claude-code.enable = true;
+
+      # Opencode
+      programs.bash.shellAliases.oc = "opencode";
+      programs.opencode = {
+        enable = true;
+        # Plugins:
+        # - https://github.com/NoeFabris/opencode-antigravity-auth
+
+        # Package is overwritten in overlay
+
+        # Settings have permissions problems, probably need write?
+        # settings = {
+        #   # https://opencode.ai/docs/config
+        #   instructions = ["{file:./4.1-Beast.chatmode.md}"];
+        #   mcp = {
+        #     mcp-deepwiki = {
+        #       command = ["npx" "-y" "mcp-deepwiki@latest"];
+        #       enabled = true;
+        #       type = "local";
+        #     };
+        #     playwright = {
+        #       command = [
+        #         "npx"
+        #         "@playwright/mcp@latest"
+        #       ];
+        #       enabled = true;
+        #       type = "local";
+        #     };
+        #   };
+        # };
+      };
+
       programs = {
         vscode = {
           enable = true;
           # profiles are mutually exclusive with manual installation of extensions
         };
 
-        opencode = {
-          enable = true;
-          # Plugins:
-          # - https://github.com/NoeFabris/opencode-antigravity-auth
-
-          # Package is overwritten in overlay
-
-          # Settings have permissions problems, probably need write?
-          # settings = {
-          #   # https://opencode.ai/docs/config
-          #   instructions = ["{file:./4.1-Beast.chatmode.md}"];
-          #   mcp = {
-          #     mcp-deepwiki = {
-          #       command = ["npx" "-y" "mcp-deepwiki@latest"];
-          #       enabled = true;
-          #       type = "local";
-          #     };
-          #     playwright = {
-          #       command = [
-          #         "npx"
-          #         "@playwright/mcp@latest"
-          #       ];
-          #       enabled = true;
-          #       type = "local";
-          #     };
-          #   };
-          # };
-        };
-
         codex.enable = true;
-        claude-code.enable = true;
         # todo skills
 
         zed-editor = {
