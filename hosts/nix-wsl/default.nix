@@ -8,7 +8,10 @@
     graphical.enable = true;
     dev.enable = true;
     programs = {
+      claude-code.enable = true;
+      codex.enable = true;
       docker.enable = true;
+      opencode.enable = true;
       tailscale = {
         enable = true;
         operator = username;

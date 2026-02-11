@@ -11,7 +11,15 @@ with lib; let
 in {
   options.michal.dev = {enable = mkEnableOption "development tools";};
 
-  imports = [./direnv.nix ./debugger.nix ./git.nix];
+  imports = [
+    ./debugger.nix
+    ./direnv.nix
+    ./git.nix
+    # Agents
+    ./codex.nix
+    ./claude-code.nix
+    ./opencode.nix
+  ];
 
   config = mkIf cfg.enable {
     # Of course many of these tools could be project-scoped and not in
@@ -61,49 +69,11 @@ in {
         graphite-cli # Graphite stacked-PRs helper
       ];
 
-      # cc
-      programs.bash.shellAliases.cc = "claude";
-      programs.claude-code.enable = true;
-
-      # Opencode
-      programs.bash.shellAliases.oc = "opencode";
-      programs.opencode = {
-        enable = true;
-        # Plugins:
-        # - https://github.com/NoeFabris/opencode-antigravity-auth
-
-        # Package is overwritten in overlay
-
-        # Settings have permissions problems, probably need write?
-        # settings = {
-        #   # https://opencode.ai/docs/config
-        #   instructions = ["{file:./4.1-Beast.chatmode.md}"];
-        #   mcp = {
-        #     mcp-deepwiki = {
-        #       command = ["npx" "-y" "mcp-deepwiki@latest"];
-        #       enabled = true;
-        #       type = "local";
-        #     };
-        #     playwright = {
-        #       command = [
-        #         "npx"
-        #         "@playwright/mcp@latest"
-        #       ];
-        #       enabled = true;
-        #       type = "local";
-        #     };
-        #   };
-        # };
-      };
-
       programs = {
         vscode = {
           enable = true;
           # profiles are mutually exclusive with manual installation of extensions
         };
-
-        codex.enable = true;
-        # todo skills
 
         zed-editor = {
           enable = true;

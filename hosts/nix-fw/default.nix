@@ -18,8 +18,11 @@
     graphical.enable = true;
     hasFingerprintReader = true;
     programs = {
+      claude-code.enable = true;
+      codex.enable = true;
       docker.enable = true;
       ags.enable = false;
+      opencode.enable = true;
       waybar.enable = true;
       walker.enable = true;
       bitwarden.enable = true;

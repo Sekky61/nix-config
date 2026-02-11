@@ -8,7 +8,6 @@
 
     # Desktop/gui
     ../../modules/hyprland
-
   ];
 
   michal = {
@@ -16,10 +15,13 @@
     assets.enable = true;
     dev.enable = true;
     programs = {
+      claude-code.enable = true;
+      codex.enable = true;
       docker.enable = true;
       ags.enable = true;
       bitwarden.enable = true;
       obs-studio.enable = true;
+      opencode.enable = true;
       remote-desktop.enable = true;
       ventoy.enable = true;
       borg.enable = true;
