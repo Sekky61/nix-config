@@ -1444,14 +1444,6 @@ vim.keymap.set("n", "]d", function()
     })
 end, { desc = "Jump to next diagnostic" })
 
-vim.keymap.set(
-    "n",
-    "<leader>e",
-    vim.diagnostic.open_float,
-    { desc = "Open floating diagnostic message" }
-)
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" }) -- use <leader>xx instead
-
 -- rename LSP priority ----------------------------------------------------------------------
 -- Source: https://github.com/fightingdreamer/dotfiles/blob/54bb8b90b1741f58e02e1911cb6de73d48160247/lua/nv/lua/core/opts_lsp.lua#L93
 
@@ -1583,6 +1575,11 @@ local on_attach = function(client, bufnr)
         vim.lsp.buf.signature_help,
         { desc = "Signature Documentation" }
     )
+
+    nmap("<leader>e", function()
+        vim.diagnostic.open_float({ border = "rounded", title = " hover ", focusable = true })
+    end, "Open floating diagnostic message")
+    nmap("<leader>q", vim.diagnostic.setloclist, "Open diagnostics list") -- use <leader>xx instead
 
     -- Lesser used LSP functionality
     nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
