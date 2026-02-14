@@ -1,11 +1,16 @@
-{ username, lib, pkgs, ... }: {
-  imports = [ ./hardware-configuration.nix ];
+{
+  username,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [./hardware-configuration.nix];
 
   # Services
 
   michal.wifi.enable = true;
   michal.services = {
-    proxy = { enable = true; };
+    proxy = {enable = true;};
     homepage = {
       enable = true;
       port = 1270;
@@ -43,10 +48,11 @@
   };
 
   michal.programs.docker.enable = true;
+  # michal.programs.podman.enable = true;
 
   # Users
 
-  nixpkgs.config = { allowUnfree = true; };
+  nixpkgs.config = {allowUnfree = true;};
 
   users.users.${username} = {
     isNormalUser = true;
@@ -55,7 +61,7 @@
       "wheel" # sudo
     ];
   };
-  users.groups.pi = { };
+  users.groups.pi = {};
 
   users.users.root.initialPassword = "root";
 
@@ -71,19 +77,19 @@
   programs.git.enable = true;
   programs.npm.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "@wheel" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = ["@wheel"];
   time.timeZone = "Europe/Prague";
 
   networking.firewall.enable = false; # todo
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [22 80 443];
 
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [ pkgs.wireless-regdb ];
+    firmware = [pkgs.wireless-regdb];
   };
 
-  hardware = { bluetooth.enable = true; };
+  hardware = {bluetooth.enable = true;};
 
   system.stateVersion = lib.mkDefault "25.05";
 }

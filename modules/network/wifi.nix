@@ -34,7 +34,7 @@ in {
         enable = true;
         interfaces = ["wlan0"];
         secretsFile = config.sops.secrets.wireless.path;
-        userControlled.enable = true;
+        userControlled = true;
       };
     };
   };
