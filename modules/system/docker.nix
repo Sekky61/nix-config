@@ -11,7 +11,10 @@ in {
   options.michal.programs.docker = {enable = mkEnableOption "Docker";};
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [docker-compose];
+    environment.systemPackages = with pkgs; [
+      dive # Docker image layer explorer
+      docker-compose
+    ];
 
     # Docker can also be run rootless
     virtualisation.docker = {

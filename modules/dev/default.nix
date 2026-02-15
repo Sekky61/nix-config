@@ -51,7 +51,6 @@ in {
         mkcert
         ffmpeg
         act # GitHub Actions runner
-        dive # Docker image layer explorer
         glib # gsettings, gdbus
         tokei # count loc, cloc, kloc, lines of code
         ast-grep # ast... grep
