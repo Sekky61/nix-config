@@ -47,7 +47,7 @@
   },
   "disk": {
     "interval": 1,
-    "format": "<span color=\"#68b0d6\"> </span> {}%",
+    "format": "<span color=\"#68b0d6\"></span>\u2003{}% ",
     "on-click": "filelight /",
     "on-click-right": "filelight /home/"
   },
