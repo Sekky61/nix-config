@@ -33,7 +33,7 @@
       fanId = "c0396ed75d9f83cabe0daf3842a4b1b3";
     };
     n8n = {
-      enable = true;
+      enable = false; # todo
       port = 1300;
       proxy = true;
       subdomain = "n8n";
