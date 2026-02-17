@@ -25,5 +25,11 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel
 
 ## Additional Rules
 
+- `michal-unstable` usage:
+  - Prefer `pkgs` by default for system packages and stable/shared tooling.
+  - Use `michal-unstable` for fast-moving daily coding tools that benefit from newer versions (e.g. `code-cursor`, `graphite-cli`, similar editor/AI/dev CLI tools). Fast-moving software
+  - Keep scope narrow: only pull specific packages from `michal-unstable`, do not switch whole modules/services to it.
+  - Access it via pkgs (`pkgs.michal-unstable`)
+
 - Cursor rules: none
 - Copilot instructions: none

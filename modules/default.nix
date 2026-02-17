@@ -1,4 +1,9 @@
-{ pkgs, ... }: {
+{
+  pkgs,
+  inputs,
+  config,
+  ...
+}: {
   imports = [
     # Truly common, always there
     ./btop.nix
@@ -34,8 +39,12 @@
     ./waybar
   ];
 
-  environment.systemPackages = with pkgs;
-    [
-      nix-output-monitor # pretty nixos-switch
-    ];
+  environment.systemPackages = with pkgs; [
+    nix-output-monitor # pretty nixos-switch
+  ];
+
+  _module.args.spicyPkgs = import inputs.nixpkgs-spicy {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    inherit (config.nixpkgs) config;
+  };
 }

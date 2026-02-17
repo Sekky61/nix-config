@@ -33,5 +33,13 @@
     inputs.nur.overlays.default
     inputs.opencode.overlays.default
     inputs.claude-code.overlays.default
+
+    (final: _: {
+      # this allows you to access `pkgs.michal-unstable` anywhere in your config
+      michal-unstable = import inputs.nixpkgs-spicy {
+        inherit (final.stdenv.hostPlatform) system;
+        inherit (final) config;
+      };
+    })
   ];
 }

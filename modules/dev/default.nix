@@ -55,17 +55,15 @@ in {
         tokei # count loc, cloc, kloc, lines of code
         ast-grep # ast... grep
 
-        # Editors
-        code-cursor
-        antigravity
+        michal-unstable.code-cursor
+        michal-unstable.antigravity
+        michal-unstable.graphite-cli # Graphite stacked-PRs helper
+
         # todo not working rn
         # opencode-desktop # gui for opencode, comes from opencode input
 
         # LLM/AI
         lmstudio
-
-        # Utilities
-        graphite-cli # Graphite stacked-PRs helper
       ];
 
       programs = {

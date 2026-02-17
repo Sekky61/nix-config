@@ -2,17 +2,13 @@
   description = "Michal's NixOS flake";
 
   outputs = inputs:
-    (inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+    (inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         # systems for which you want to build the `perSystem` attributes
         "x86_64-linux"
       ];
-      imports = [
-        ./flake
-        ./hosts
-      ];
-    })
-    // {
+      imports = [ ./flake ./hosts ];
+    }) // {
       deploy = {
         sshUser = "root";
 
@@ -23,7 +19,8 @@
             # path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
 
             # Use deployee system, not the deployer system
-            path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
+            path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos
+              inputs.self.nixosConfigurations.nixpi;
           };
         };
       };
@@ -31,6 +28,8 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    nixpkgs-spicy.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -42,9 +41,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = {
-      url = "github:Aylur/ags";
-    };
+    ags = { url = "github:Aylur/ags"; };
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -103,8 +100,6 @@
       # todo share flake
     };
 
-    claude-code = {
-      url = "github:sadjow/claude-code-nix";
-    };
+    claude-code = { url = "github:sadjow/claude-code-nix"; };
   };
 }
