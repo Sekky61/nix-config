@@ -2,6 +2,7 @@
   lib,
   config,
   username,
+  pkgs,
   ...
 }:
 with lib; let
@@ -11,9 +12,16 @@ in {
   options.michal.programs.opencode = {enable = mkEnableOption "Opencode";};
 
   config = mkMerge [
-    (mkIf dev_cfg.enable {michal.programs.opencode.enable = mkDefault true;})
+    (mkIf dev_cfg.enable {
+      michal.programs.opencode.enable = mkDefault true;
+    })
 
     (mkIf cfg.enable {
+      # todo not working rn
+      # environment.systemPackages = with pkgs; [
+      #   opencode-desktop
+      # ];
+
       home-manager.users.${username} = {
         programs.bash.shellAliases.oc = "opencode";
         programs.opencode = {

@@ -59,9 +59,6 @@ in {
         michal-unstable.antigravity
         michal-unstable.graphite-cli # Graphite stacked-PRs helper
 
-        # todo not working rn
-        # opencode-desktop # gui for opencode, comes from opencode input
-
         # LLM/AI
         lmstudio
       ];
