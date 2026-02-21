@@ -13,7 +13,7 @@ in {
     description = "Whether the host has a fingerprint reader.";
   };
 
-  config = {
+  config = lib.mkIf cfg.hyprland.enable {
     # Hyprlock is the lockscreen handling for hyprland
     # Hypridle manages automatic locking
 
@@ -125,9 +125,7 @@ in {
       };
 
       wayland.windowManager.hyprland = {
-        settings = {
-          exec-once = ["hypridle"];
-        };
+        settings = {exec-once = ["hypridle"];};
       };
     };
   };

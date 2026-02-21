@@ -1,16 +1,18 @@
 {
-  pkgs,
+  config,
   username,
   lib,
   ...
 }: {
-  home-manager.users.${username} = _: {
-    services.hyprpaper = {
-      enable = true;
-      settings = {
-        ipc = "on";
-        splash = false;
-        # Wallpaper is set from stylix
+  config = lib.mkIf config.michal.hyprland.enable {
+    home-manager.users.${username} = {
+      services.hyprpaper = {
+        enable = true;
+        settings = {
+          ipc = "on";
+          splash = false;
+          # Wallpaper is set from stylix
+        };
       };
     };
   };

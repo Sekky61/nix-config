@@ -37,6 +37,7 @@
     ./impurity.nix
     ./gamedev
     ./waybar
+    ./hyprland
   ];
 
   environment.systemPackages = with pkgs; [

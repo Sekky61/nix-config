@@ -228,7 +228,7 @@ in {
     ];
   };
 
-  config = {
+  config = mkIf config.michal.hyprland.enable {
     # Perform some checks
     assertions = [
       {
@@ -1080,15 +1080,15 @@ in {
             mods = ["SUPER"];
             key = "V";
           };
-          command = {params = "${pkgs.walker}/bin/walker --provider clipboard";};
+          command = {
+            params = "${pkgs.walker}/bin/walker --provider clipboard";
+          };
         }
       ];
 
     home-manager.users.${username} = {
       # Make a json with the keybinds available, for example to ags
-      home.file = {
-        ".config/keybinds.json".text = builtins.toJSON cfg;
-      };
+      home.file = {".config/keybinds.json".text = builtins.toJSON cfg;};
 
       # Add only binds here, rest of config is elsewhere
       wayland.windowManager.hyprland.settings = binds;

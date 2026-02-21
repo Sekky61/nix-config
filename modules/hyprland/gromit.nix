@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   pkgs,
   username,
   ...
@@ -7,54 +9,56 @@
   #
   # - TODO the drawing area is probably cropped due to monitor scaling
 
-  environment.systemPackages = with pkgs; [
-    gromit-mpx # Draw on screen
-  ];
+  config = lib.mkIf config.michal.hyprland.enable {
+    environment.systemPackages = with pkgs; [
+      gromit-mpx # Draw on screen
+    ];
 
-  michal.programs.hyprland.keybinds = [
-    {
-      description = "Toggle drawing to screen"; # TODO toggle off does not work (kill it with super+q)
-      bind = {key = "F7";};
-      command = {
-        dispatcher = "togglespecialworkspace";
-        params = "gromit";
-      };
-    }
-    {
-      description = "Clear drawing";
-      bind = {
-        mods = ["SHIFT"];
-        key = "F7";
-      };
-      command = {params = "gromit-mpx --clear";};
-    }
-    {
-      description = "Drawing: Undo";
-      bind = {key = "F6";};
-      command = {params = "gromit-mpx --undo";};
-    }
-    {
-      description = "Drawing: Redo";
-      bind = {
-        mods = ["SHIFT"];
-        key = "F6";
-      };
-      command = {params = "gromit-mpx --redo";};
-    }
-  ];
+    michal.programs.hyprland.keybinds = [
+      {
+        description = "Toggle drawing to screen"; # TODO toggle off does not work (kill it with super+q)
+        bind = {key = "F7";};
+        command = {
+          dispatcher = "togglespecialworkspace";
+          params = "gromit";
+        };
+      }
+      {
+        description = "Clear drawing";
+        bind = {
+          mods = ["SHIFT"];
+          key = "F7";
+        };
+        command = {params = "gromit-mpx --clear";};
+      }
+      {
+        description = "Drawing: Undo";
+        bind = {key = "F6";};
+        command = {params = "gromit-mpx --undo";};
+      }
+      {
+        description = "Drawing: Redo";
+        bind = {
+          mods = ["SHIFT"];
+          key = "F6";
+        };
+        command = {params = "gromit-mpx --redo";};
+      }
+    ];
 
-  home-manager.users.${username} = {
-    wayland.windowManager.hyprland = {
-      settings = {
-        windowrule = [
-          "no_blur on, match:title ^(Gromit-mpx)$"
-          "opacity 1.0, match:title ^(Gromit-mpx)$"
-          "no_shadow on, match:title ^(Gromit-mpx)$"
-          "size 100% 100%, match:title ^(Gromit-mpx)$"
-        ];
-        workspace = [
-          "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
-        ];
+    home-manager.users.${username} = {
+      wayland.windowManager.hyprland = {
+        settings = {
+          windowrule = [
+            "no_blur on, match:title ^(Gromit-mpx)$"
+            "opacity 1.0, match:title ^(Gromit-mpx)$"
+            "no_shadow on, match:title ^(Gromit-mpx)$"
+            "size 100% 100%, match:title ^(Gromit-mpx)$"
+          ];
+          workspace = [
+            "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
+          ];
+        };
       };
     };
   };

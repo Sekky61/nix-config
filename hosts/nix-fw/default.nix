@@ -3,9 +3,6 @@
     # HW
     ./hardware-configuration.nix
     ./configuration.nix
-
-    # Desktop/gui
-    ../../modules/hyprland
   ];
 
   michal = {
@@ -16,6 +13,7 @@
     assets.enable = true;
     dev.enable = true;
     graphical.enable = true;
+    hyprland.enable = true;
     hasFingerprintReader = true;
     programs = {
       claude-code.enable = true;

@@ -5,13 +5,11 @@
     ./configuration.nix
     ./audio.nix
     ./laptop.nix
-
-    # Desktop/gui
-    ../../modules/hyprland
   ];
 
   michal = {
     graphical.enable = true;
+    hyprland.enable = true;
     assets.enable = true;
     dev.enable = true;
     programs = {

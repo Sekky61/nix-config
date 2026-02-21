@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.michal.programs.polkit;
+  hyprlandEnabled = config.michal.hyprland.enable;
   inherit (lib) mkEnableOption mkIf mkOption types optional;
 in {
   # Polkit popup (ssh key auth)
@@ -19,7 +20,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && hyprlandEnabled) {
     security.polkit.enable = true;
 
     home-manager.users.${username} = {

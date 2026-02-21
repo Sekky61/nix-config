@@ -4,9 +4,6 @@ inputs.nixos-generators.nixosGenerate {
   modules = [
     ../hosts/common
 
-    # Desktop/gui
-    ../modules/hyprland
-
     # dev
     ../modules/system/docker.nix
     ({ pkgs, ... }: {
@@ -16,6 +13,7 @@ inputs.nixos-generators.nixosGenerate {
 
       michal = {
         graphical.enable = true;
+        hyprland.enable = true;
         assets.enable = true;
         dev.enable = true;
         programs = {

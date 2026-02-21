@@ -6,6 +6,7 @@
   ...
 }:
 with lib; let
+  cfg = config.michal.hyprland;
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
   monitors = config.michal.monitors;
@@ -17,7 +18,11 @@ with lib; let
   # todo https://wiki.hypr.land/Configuring/Monitors/#monitor-v2
   monitorToHyprland = monitor:
     if monitor.enabled
-    then "desc:${monitor.id},${toString monitor.width}x${toString monitor.height}@${toString monitor.refreshRate},${toString monitor.position.x}x${toString monitor.position.y},${toString monitor.scale},transform,${toString monitor.transform}"
+    then "desc:${monitor.id},${toString monitor.width}x${
+      toString monitor.height
+    }@${toString monitor.refreshRate},${toString monitor.position.x}x${
+      toString monitor.position.y
+    },${toString monitor.scale},transform,${toString monitor.transform}"
     else "desc:${monitor.id},disable";
 in {
   imports = [
@@ -28,7 +33,11 @@ in {
     ./auth.nix
   ];
 
-  config = {
+  options.michal.hyprland = {
+    enable = mkEnableOption "Hyprland desktop configuration";
+  };
+
+  config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       # launcher
 
