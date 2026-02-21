@@ -36,6 +36,9 @@
       "home/longitude" = {};
       "home/latitude" = {};
       "atuin_key" = {};
+      "personal_email" = {
+        owner = config.users.users.${username}.name;
+      };
 
       "private_keys/id_ed25519" = {
         path = "${config.users.users.${username}.home}/.ssh/id_ed25519";

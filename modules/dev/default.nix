@@ -55,6 +55,8 @@ in {
         tokei # count loc, cloc, kloc, lines of code
         ast-grep # ast... grep
 
+        gcr # gcr-viewer, inspect certificates
+
         michal-unstable.code-cursor
         michal-unstable.antigravity
         michal-unstable.graphite-cli # Graphite stacked-PRs helper

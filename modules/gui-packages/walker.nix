@@ -52,7 +52,7 @@ in {
                 provider = "bluetooth";
               }
               {
-                prefix = "|";
+                prefix = "*";
                 provider = "bitwarden";
               } # bw needs newer version
             ];
@@ -61,40 +61,46 @@ in {
 
         # Configure elephant through walker's elephant option
         # This integrates with the elephant service and triggers automatic restarts
+        # That means, if you change something about bitwarden, that might not trigger and restart is needed
         elephant = {
-          provider.websearch.settings = {
-            # Show each search engine as a separate item instead of as actions
-            # This allows you to see all engines when typing your query
-            engines_as_actions = false;
+          provider = {
+            bitwarden.settings = {
+              name_pretty = "MyBitwarden";
+            };
+            websearch.settings = {
+              # Show each search engine as a separate item instead of as actions
+              # This allows you to see all engines when typing your query
+              engines_as_actions = false;
 
-            entries = [
-              {
-                default = true;
-                name = "DuckDuckGo";
-                url = "https://duckduckgo.com/?q=%TERM%";
-                prefix = "d";
-              }
-              {
-                name = "GitHub";
-                url = "https://github.com/search?q=%TERM%";
-                prefix = "g";
-              }
-              {
-                name = "Nix packages";
-                url = "https://search.nixos.org/packages?channel=unstable&query=%TERM%";
-                prefix = "n";
-              }
-              {
-                name = "Rust Crates";
-                url = "https://crates.io/search?q=%TERM%";
-                prefix = "r";
-              }
-              {
-                name = "Chat";
-                url = "https://chat.openai.com/?q=%TERM%";
-                prefix = "c";
-              }
-            ];
+              entries = [
+                {
+                  default = true;
+                  name = "DuckDuckGo";
+                  url = "https://duckduckgo.com/?q=%TERM%";
+                  prefix = "d";
+                }
+                {
+                  name = "GitHub";
+                  url = "https://github.com/search?q=%TERM%";
+                  prefix = "g";
+                }
+                {
+                  name = "Nix packages";
+                  url = "https://search.nixos.org/packages?channel=unstable&query=%TERM%";
+                  prefix = "n";
+                }
+                {
+                  name = "Rust Crates";
+                  url = "https://crates.io/search?q=%TERM%";
+                  prefix = "r";
+                }
+                {
+                  name = "Chat";
+                  url = "https://chat.openai.com/?q=%TERM%";
+                  prefix = "c";
+                }
+              ];
+            };
           };
         };
       };

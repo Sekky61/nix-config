@@ -34,6 +34,7 @@ with lib; let
       ${bw} sync
     }
   '';
+  sops_templates = config.sops.templates;
 in {
   options.michal.programs.bitwarden = {
     enable = mkEnableOption "the bitwarden cli client";
@@ -46,10 +47,28 @@ in {
     # - `bwu` - Logs you in/unlocks vault
     # - `bw get password claude.ai`
 
-    home-manager.users.${username} = {
+    sops.templates."rbw_config.json" = {
+      owner = config.users.users.${username}.name;
+      content = ''
+        {
+          "email":"${config.sops.placeholder.personal_email}","pinentry":"${pkgs.pinentry-gnome3}/bin/pinentry"
+        }
+      '';
+    };
+
+    home-manager.users.${username} = {config, ...}: {
       programs.rbw = {
         enable = true;
+        # Needs
+        # ```
+        # rbw register
+        # # First input client id, then secret
+        # rbw login
+        # # Now it needs the master password
+        # ```
       };
+
+      xdg.configFile."rbw/config.json".source = config.lib.file.mkOutOfStoreSymlink sops_templates."rbw_config.json".path;
 
       home.packages = with pkgs; [bitwarden-cli bitwarden-desktop];
     };
