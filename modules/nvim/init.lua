@@ -10,6 +10,9 @@ vim.g.loaded_netrwPlugin = 1
 
 local dev_mode = vim.env.DEV_MODE == "1"
 
+-- TS LSP - toggle to change
+local ts_lsp_server = "tsgo"
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -58,7 +61,13 @@ local servers = {
     -- tailwindcss = {},
     angularls = {},
     yamlls = {},
-    vtsls = {}, -- typescript server
+    vtsls = {
+        -- typescript server
+        enabled = ts_lsp_server == "vtsls",
+    },
+    tsgo = {
+        enabled = ts_lsp_server == "tsgo",
+    }, -- typescript server, new
     biome = {
         cmd = { "./node_modules/.bin/biome", "lsp-proxy" },
     },
@@ -93,6 +102,20 @@ local servers = {
         },
     },
 }
+
+local function server_is_enabled(config)
+    return config.enabled ~= false
+end
+
+local function enabled_server_names()
+    local names = {}
+    for name, config in pairs(servers) do
+        if server_is_enabled(config) then
+            table.insert(names, name)
+        end
+    end
+    return names
+end
 
 require("lazy").setup({
     -- ╔════════════════════════════════════════════════════════════════════╗
@@ -1007,7 +1030,7 @@ require("lazy").setup({
                 end
                 return true
             end, vim.tbl_keys(servers)),
-            automatic_enable = vim.tbl_keys(servers),
+            automatic_enable = enabled_server_names(),
         },
     },
     {
@@ -1623,7 +1646,9 @@ vim.lsp.config("*", {
 
 for server_name, config in pairs(servers) do
     vim.lsp.config(server_name, config)
-    vim.lsp.enable(server_name)
+    if server_is_enabled(config) then
+        vim.lsp.enable(server_name)
+    end
 end
 
 -- zls is not downloaded by Mason, I want to control the version.

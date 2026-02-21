@@ -31,5 +31,3 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel
   - Keep scope narrow: only pull specific packages from `michal-unstable`, do not switch whole modules/services to it.
   - Access it via pkgs (`pkgs.michal-unstable`)
 
-- Cursor rules: none
-- Copilot instructions: none
