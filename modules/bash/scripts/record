@@ -5,6 +5,7 @@ readonly SCRIPT_NAME='record'
 readonly VIDEO_DIR="${HOME}/Videos"
 readonly CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}"
 readonly LOG_FILE="${CACHE_DIR}/record.log"
+readonly STATE_FILE="${CACHE_DIR}/record.state"
 readonly PIXEL_FORMAT='yuv420p'
 
 notify() {
@@ -35,20 +36,80 @@ Options:
   --sound             Record selected area with audio
   --fullscreen        Record full monitor without audio
   --fullscreen-sound  Record full monitor with audio
+  --status            Print whether recording is active
   -h, --help          Show this help and exit
 EOF
 }
 
-get_timestamp() {
-  date '+%Y%m%d_%H-%M-%S'
+get_date_stamp() {
+  date '+%Y_%m_%d'
+}
+
+random_words() {
+  local -a adjectives=(
+    amber brisk calm clever dusty eager fancy gentle hidden icy jolly kind lively
+    misty nimble orbit primal quiet rapid solar tidy urban vivid windy young zesty
+  )
+  local -a nouns=(
+    anchor beacon cedar comet delta ember forest harbor island junction kettle
+    meadow north owl pepper quartz river summit thunder valley willow zephyr
+  )
+
+  printf '%s_%s\n' \
+    "${adjectives[RANDOM % ${#adjectives[@]}]}" \
+    "${nouns[RANDOM % ${#nouns[@]}]}"
 }
 
 get_output_file() {
-  printf '%s/recording_%s.mp4\n' "$VIDEO_DIR" "$(get_timestamp)"
+  local base words candidate
+  local suffix=1
+
+  words="$(random_words)"
+  base="$(get_date_stamp)_recording_${words}"
+  candidate="${VIDEO_DIR}/${base}.mp4"
+
+  while [[ -e "$candidate" ]]; do
+    candidate="${VIDEO_DIR}/${base}_${suffix}.mp4"
+    suffix=$((suffix + 1))
+  done
+
+  printf '%s\n' "$candidate"
 }
 
 has_running_recording() {
   pgrep -x wf-recorder >/dev/null 2>&1
+}
+
+save_state() {
+  local output_file="$1"
+  local pid="$2"
+  printf 'output_file=%q\npid=%q\n' "$output_file" "$pid" >"$STATE_FILE"
+}
+
+clear_state() {
+  rm -f "$STATE_FILE"
+}
+
+load_state_file() {
+  local output_file=''
+  local pid=''
+
+  if [[ -f "$STATE_FILE" ]]; then
+    # shellcheck source=/dev/null
+    source "$STATE_FILE"
+  fi
+
+  printf '%s\n' "$output_file"
+}
+
+running_output_file_from_process() {
+  local process_line path
+  process_line="$(pgrep -a -x wf-recorder | sed -n '1p' || true)"
+
+  if [[ "$process_line" =~ [[:space:]]-f[[:space:]]([^[:space:]]+) ]]; then
+    path="${BASH_REMATCH[1]}"
+    printf '%s\n' "$path"
+  fi
 }
 
 default_audio_monitor() {
@@ -117,23 +178,41 @@ check_dependencies() {
 }
 
 stop_recording() {
+  local output_file
+
   if ! has_running_recording; then
+    clear_state
     notify normal 'Recording' 'No active recording found'
     return
+  fi
+
+  output_file="$(load_state_file)"
+  if [[ -z "$output_file" ]]; then
+    output_file="$(running_output_file_from_process || true)"
   fi
 
   pkill -INT -x wf-recorder || true
 
   for _ in {1..40}; do
     if ! has_running_recording; then
-      notify normal 'Recording Stopped' 'Saved video file'
+      clear_state
+      if [[ -n "$output_file" ]]; then
+        notify normal 'Recording Stopped' "Saved ${output_file##*/}"
+      else
+        notify normal 'Recording Stopped' 'Saved video file'
+      fi
       return
     fi
     sleep 0.1
   done
 
   pkill -TERM -x wf-recorder || true
-  notify low 'Recording Stopped' 'Forced stop after timeout'
+  clear_state
+  if [[ -n "$output_file" ]]; then
+    notify low 'Recording Stopped' "Forced stop, file: ${output_file##*/}"
+  else
+    notify low 'Recording Stopped' 'Forced stop after timeout'
+  fi
 }
 
 start_recording() {
@@ -178,7 +257,31 @@ start_recording() {
     die "wf-recorder failed to start. See ${LOG_FILE}"
   fi
 
+  save_state "$output_file" "$pid"
+
   notify normal 'Recording Started' "${output_file##*/} on ${monitor}"
+}
+
+print_status() {
+  local output_file
+
+  if has_running_recording; then
+    output_file="$(load_state_file)"
+    if [[ -z "$output_file" ]]; then
+      output_file="$(running_output_file_from_process || true)"
+    fi
+
+    if [[ -n "$output_file" ]]; then
+      printf 'live: %s\n' "${output_file##*/}"
+    else
+      printf 'live\n'
+    fi
+    return 0
+  fi
+
+  clear_state
+  printf 'idle\n'
+  return 1
 }
 
 parse_mode() {
@@ -207,6 +310,11 @@ main() {
 
   if [[ "${1:-}" == '-h' || "${1:-}" == '--help' ]]; then
     usage
+    return
+  fi
+
+  if [[ "${1:-}" == '--status' ]]; then
+    print_status
     return
   fi
 
