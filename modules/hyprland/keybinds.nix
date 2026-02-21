@@ -520,16 +520,6 @@ in {
           command = {params = "hyprpicker -a";};
         }
         {
-          description = "Clipboard history";
-          bind = {
-            mods = ["SUPER"];
-            key = "V";
-          };
-          command = {
-            params = "pkill fuzzel || cliphist list | fuzzel --dmenu | cliphist decode | wl-copy";
-          };
-        }
-        {
           description = "Lock screen";
           bind = [
             {
@@ -1083,6 +1073,14 @@ in {
             key = "Space";
           };
           command = {params = "${pkgs.walker}/bin/walker";};
+        }
+        {
+          description = "Clipboard history";
+          bind = {
+            mods = ["SUPER"];
+            key = "V";
+          };
+          command = {params = "${pkgs.walker}/bin/walker --provider clipboard";};
         }
       ];
 

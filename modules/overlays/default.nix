@@ -35,6 +35,10 @@
     inputs.claude-code.overlays.default
 
     (final: _: {
+      walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
+    })
+
+    (final: _: {
       # this allows you to access `pkgs.michal-unstable` anywhere in your config
       michal-unstable = import inputs.nixpkgs-spicy {
         inherit (final.stdenv.hostPlatform) system;
