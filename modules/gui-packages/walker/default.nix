@@ -35,7 +35,8 @@ in {
       # | %      | bookmarks |
       # | !      | todo      |
       # | ;      | provider list |
-      # | |      | bitwarden |
+      # | *      | bitwarden |
+      # | (      | keybinds |
 
       programs.walker = {
         enable = true;
@@ -57,7 +58,7 @@ in {
               }
               {
                 prefix = "("; # todo
-                provider = "keybinds";
+                provider = "menus:keybinds";
               }
             ];
           };
