@@ -54,7 +54,11 @@ in {
               {
                 prefix = "*";
                 provider = "bitwarden";
-              } # bw needs newer version
+              }
+              {
+                prefix = "("; # todo
+                provider = "keybinds";
+              }
             ];
           };
         };
@@ -63,6 +67,10 @@ in {
         # This integrates with the elephant service and triggers automatic restarts
         # That means, if you change something about bitwarden, that might not trigger and restart is needed
         elephant = {
+          provider.menus.lua = {
+            # `walker --provider menus:keybinds`
+            keybinds = builtins.readFile ./walker/keybinds.lua;
+          };
           provider = {
             bitwarden.settings = {
               name_pretty = "MyBitwarden";
@@ -130,6 +138,22 @@ in {
           key = "V";
         };
         command = {params = "${walkerBin} --provider clipboard";};
+      }
+      {
+        description = "Clipboard history";
+        bind = {
+          mods = ["SUPER"];
+          key = "V";
+        };
+        command = {params = "${walkerBin} --provider clipboard";};
+      }
+      {
+        description = "Show keybinds menu";
+        bind = {
+          mods = ["SUPER" "SHIFT"];
+          key = "K";
+        };
+        command = {params = "${walkerBin} --provider menus:keybinds";};
       }
     ];
   };
