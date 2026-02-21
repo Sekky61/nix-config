@@ -4,8 +4,12 @@ Icon = "applications-other"
 Cache = true
 HideFromProviderlist = false
 Description = "loaded from ~/.config/keybinds.json"
-Action = "notify-send Missing"
+Actions = {
+    launch = "sh -lc %VALUE%",
+}
 SearchName = true
+
+-- verify with `lua -e "dofile('modules/gui-packages/walker/keybinds.lua'); for _,e in ipairs(GetEntries()) do print((e.Text or '') .. ' | ' .. (e.Subtext or '') .. ' | ' .. (e.Value or '')) end"`
 
 local function shell_quote(value)
     return "'" .. value:gsub("'", "'\\''") .. "'"
@@ -54,10 +58,24 @@ function GetEntries()
                 subtext = subtext .. " -> " .. dispatcher
             end
 
+            local launch_cmd = ""
+            if params ~= "" then
+                if dispatcher == "" or dispatcher == "exec" then
+                    launch_cmd = params
+                else
+                    launch_cmd = "hyprctl dispatch " .. dispatcher .. " " .. params
+                end
+            end
+
+            local launch_value = ""
+            if launch_cmd ~= "" then
+                launch_value = shell_quote(launch_cmd)
+            end
+
             table.insert(entries, {
                 Text = title,
                 Subtext = subtext,
-                Value = params,
+                Value = launch_value,
             })
         end
     end
