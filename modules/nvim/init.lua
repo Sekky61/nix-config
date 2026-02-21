@@ -563,6 +563,7 @@ require("lazy").setup({
             vim.keymap.set("n", "ft", "<cmd>Telescope grapple tags<cr>", { desc = "[F]ind [T]ags" })
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
+            vim.keymap.set("n", "<leader>sh", tsb.help_tags, { desc = "[S]earch [H]help" })
             vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
             vim.keymap.set("n", "<leader>sx", tsb.marks, { desc = "[S]earch Mar[x]" }) -- <m(LETTER)> to set, <'(LETTER)> to go there. USE CAPITAL LETTERS FOR GLOBAL MARKS!
 
@@ -818,7 +819,6 @@ require("lazy").setup({
     },
     {
         -- AI chat/inline assistant (keybinds: <C-a>, <LocalLeader>a, ga)
-        -- Chat: opencode (claude-sonnet-4), Inline: grok-code-fast-1
         -- Env: OPENROUTER_API_KEY
         "olimorris/codecompanion.nvim",
         opts = {
@@ -845,10 +845,7 @@ require("lazy").setup({
                             schema = {
                                 model = {
                                     -- default = "@preset/groq-kimi-k2",
-                                    -- default = "qwen/qwen3-next-80b-a3b-instruct",
-                                    -- default = "anthropic/claude-4-sonnet",
-                                    -- default = "openai/gpt-5",
-                                    default = "x-ai/grok-code-fast-1",
+                                    default = "moonshotai/kimi-k2.5",
                                 },
                             },
                         })
