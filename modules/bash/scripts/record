@@ -1,164 +1,225 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# `record`
-#
-# A simple script to start/stop screen recording with `wf-recorder`. Outputs recordings to `~/Videos`.
-# Supports multiple monitors with fuzzel picker.
-#
-# Options:
-# - **`--sound`**: Record a selected area with audio.
-# - **`--fullscreen`**: Record the full screen (no audio).
-# - **`--fullscreen-sound`**: Record the full screen with audio.
-# - *No option*: Record a selected area (no audio).
-#
-# Stops recording if already running.
+readonly SCRIPT_NAME='record'
+readonly VIDEO_DIR="${HOME}/Videos"
+readonly CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}"
+readonly LOG_FILE="${CACHE_DIR}/record.log"
+readonly PIXEL_FORMAT='yuv420p'
 
-# Constants
-readonly SCRIPT_NAME="record"
-readonly VIDEO_DIR="$HOME/Videos"
-readonly PIXEL_FORMAT="yuv420p"
+notify() {
+  local urgency="$1"
+  local title="$2"
+  local body="$3"
 
-# Error handler
-handle_error() {
-    local exit_code=$?
-    notify-send "Recording Error" "Script failed with exit code $exit_code" \
-        -a "$SCRIPT_NAME" -u critical &
-    exit $exit_code
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send "$title" "$body" -a "$SCRIPT_NAME" -u "$urgency"
+  fi
 }
 
-trap handle_error ERR
+die() {
+  local message="$1"
+  notify critical 'Recording Error' "$message"
+  printf '%s\n' "${SCRIPT_NAME}: ${message}" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'EOF'
+Usage: record [OPTION]
+
+Start or stop a wf-recorder screen recording.
+If a recording is already running, this command stops it.
+
+Options:
+  --sound             Record selected area with audio
+  --fullscreen        Record full monitor without audio
+  --fullscreen-sound  Record full monitor with audio
+  -h, --help          Show this help and exit
+EOF
+}
 
 get_timestamp() {
-    date '+%Y%m%d_%H-%M-%S'
+  date '+%Y%m%d_%H-%M-%S'
 }
 
-get_filename() {
-    echo "./recording_$(get_timestamp).mp4"
+get_output_file() {
+  printf '%s/recording_%s.mp4\n' "$VIDEO_DIR" "$(get_timestamp)"
 }
 
-get_default_audio_sink() {
-    pactl get-default-sink | sed 's/$/\.monitor/'
+has_running_recording() {
+  pgrep -x wf-recorder >/dev/null 2>&1
 }
 
-get_monitor() {
-    local monitors monitor_count selected
-    
-    if ! command -v hyprctl >/dev/null 2>&1; then
-        notify-send "Missing Dependency" "hyprctl not found" -a "$SCRIPT_NAME" -u critical &
-        exit 1
-    fi
-    
-    monitors=$(hyprctl monitors -j | jq -r '.[].name')
-    monitor_count=$(echo "$monitors" | wc -l)
-    
-    if [[ $monitor_count -eq 1 ]]; then
-        echo "$monitors"
-    else
-        selected=$(echo "$monitors" | fuzzel --dmenu --prompt "Select monitor: " || true)
-        if [[ -z "$selected" ]]; then
-            notify-send "Recording Cancelled" "No monitor selected" -a "$SCRIPT_NAME" &
-            exit 1
-        fi
-        echo "$selected"
-    fi
+default_audio_monitor() {
+  local sink
+  sink="$(pactl get-default-sink 2>/dev/null || true)"
+  [[ -n "$sink" ]] || die 'Could not determine default PulseAudio sink'
+  printf '%s.monitor\n' "$sink"
 }
 
-start_recording() {
-    local mode="$1"
-    local monitor filename audio_sink
-    
-    monitor=$(get_monitor)
-    filename=$(get_filename)
-    
-    notify-send "Starting recording" "$filename on $monitor" -a "$SCRIPT_NAME"
-    
-    case "$mode" in
-        "area")
-            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
-                -o "$monitor" --geometry "$(slurp -o "$monitor")" & disown
-            ;;
-        "area-sound")
-            audio_sink=$(get_default_audio_sink)
-            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
-                -o "$monitor" --geometry "$(slurp -o "$monitor")" \
-                --audio="$audio_sink" & disown
-            ;;
-        "fullscreen")
-            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
-                -o "$monitor" & disown
-            ;;
-        "fullscreen-sound")
-            audio_sink=$(get_default_audio_sink)
-            wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$filename" \
-                -o "$monitor" --audio="$audio_sink" & disown
-            ;;
-        *)
-            notify-send "Invalid Mode" "Unknown recording mode: $mode" \
-                -a "$SCRIPT_NAME" -u critical &
-            exit 1
-            ;;
-    esac
+select_monitor() {
+  local selected
+  local -a monitors
+
+  mapfile -t monitors < <(hyprctl monitors -j | jq -r '.[].name')
+
+  if [[ ${#monitors[@]} -eq 0 ]]; then
+    die 'No monitors reported by hyprctl'
+  fi
+
+  if [[ ${#monitors[@]} -eq 1 ]]; then
+    printf '%s\n' "${monitors[0]}"
+    return
+  fi
+
+  selected="$(printf '%s\n' "${monitors[@]}" | walker --dmenu --placeholder 'Select monitor' || true)"
+  if [[ -z "$selected" ]]; then
+    notify normal 'Recording Cancelled' 'No monitor selected'
+    exit 130
+  fi
+
+  printf '%s\n' "$selected"
 }
 
-stop_recording() {
-    notify-send "Recording Stopped" "Stopped" -a "$SCRIPT_NAME" &
-    pkill wf-recorder &
+select_geometry() {
+  local monitor="$1"
+  local geometry
+
+  geometry="$(slurp -o "$monitor" 2>/dev/null || true)"
+  if [[ -z "$geometry" ]]; then
+    notify normal 'Recording Cancelled' 'No area selected'
+    exit 130
+  fi
+
+  printf '%s\n' "$geometry"
 }
 
 check_dependencies() {
-    local missing_deps=()
-    
-    # todo pactl
-    for cmd in wf-recorder jq hyprctl slurp fuzzel; do
-        if ! command -v "$cmd" >/dev/null 2>&1; then
-            missing_deps+=("$cmd")
-        fi
-    done
-    
-    if [[ ${#missing_deps[@]} -gt 0 ]]; then
-        notify-send "Missing Dependencies" \
-            "Please install: ${missing_deps[*]}" \
-            -a "$SCRIPT_NAME" -u critical &
-        exit 1
+  local mode="$1"
+  local -a required=(wf-recorder jq hyprctl slurp walker)
+  local -a missing=()
+  local cmd
+
+  if [[ "$mode" == 'area-sound' || "$mode" == 'fullscreen-sound' ]]; then
+    required+=(pactl)
+  fi
+
+  for cmd in "${required[@]}"; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+      missing+=("$cmd")
     fi
+  done
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    die "Missing dependencies: ${missing[*]}"
+  fi
+}
+
+stop_recording() {
+  if ! has_running_recording; then
+    notify normal 'Recording' 'No active recording found'
+    return
+  fi
+
+  pkill -INT -x wf-recorder || true
+
+  for _ in {1..40}; do
+    if ! has_running_recording; then
+      notify normal 'Recording Stopped' 'Saved video file'
+      return
+    fi
+    sleep 0.1
+  done
+
+  pkill -TERM -x wf-recorder || true
+  notify low 'Recording Stopped' 'Forced stop after timeout'
+}
+
+start_recording() {
+  local mode="$1"
+  local monitor output_file geometry audio_monitor pid
+  local -a cmd
+
+  mkdir -p "$VIDEO_DIR" "$CACHE_DIR"
+
+  monitor="$(select_monitor)"
+  output_file="$(get_output_file)"
+
+  cmd=(wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$output_file" -o "$monitor")
+
+  case "$mode" in
+    area)
+      geometry="$(select_geometry "$monitor")"
+      cmd+=(--geometry "$geometry")
+      ;;
+    area-sound)
+      geometry="$(select_geometry "$monitor")"
+      audio_monitor="$(default_audio_monitor)"
+      cmd+=(--geometry "$geometry" --audio="$audio_monitor")
+      ;;
+    fullscreen)
+      ;;
+    fullscreen-sound)
+      audio_monitor="$(default_audio_monitor)"
+      cmd+=(--audio="$audio_monitor")
+      ;;
+    *)
+      die "Invalid recording mode: ${mode}"
+      ;;
+  esac
+
+  nohup "${cmd[@]}" >>"$LOG_FILE" 2>&1 &
+  pid=$!
+  disown "$pid" 2>/dev/null || true
+
+  sleep 0.2
+  if ! kill -0 "$pid" >/dev/null 2>&1; then
+    die "wf-recorder failed to start. See ${LOG_FILE}"
+  fi
+
+  notify normal 'Recording Started' "${output_file##*/} on ${monitor}"
+}
+
+parse_mode() {
+  case "${1:-}" in
+    '')
+      printf '%s\n' 'area'
+      ;;
+    --sound)
+      printf '%s\n' 'area-sound'
+      ;;
+    --fullscreen)
+      printf '%s\n' 'fullscreen'
+      ;;
+    --fullscreen-sound)
+      printf '%s\n' 'fullscreen-sound'
+      ;;
+    *)
+      usage >&2
+      die "Unknown option: ${1}"
+      ;;
+  esac
 }
 
 main() {
-    check_dependencies
-    
-    if [[ ! -d "$VIDEO_DIR" ]]; then
-        notify-send "Directory Error" "Cannot access $VIDEO_DIR" \
-            -a "$SCRIPT_NAME" -u critical &
-        exit 1
-    fi
-    
-    cd "$VIDEO_DIR"
-    
-    if pgrep wf-recorder > /dev/null; then
-        stop_recording
-        return
-    fi
-    
-    case "${1:-}" in
-        "--sound")
-            start_recording "area-sound"
-            ;;
-        "--fullscreen")
-            start_recording "fullscreen"
-            ;;
-        "--fullscreen-sound")
-            start_recording "fullscreen-sound"
-            ;;
-        "")
-            start_recording "area"
-            ;;
-        *)
-            notify-send "Invalid Option" "Unknown option: $1" \
-                -a "$SCRIPT_NAME" -u critical &
-            exit 1
-            ;;
-    esac
+  local mode
+
+  if [[ "${1:-}" == '-h' || "${1:-}" == '--help' ]]; then
+    usage
+    return
+  fi
+
+  mode="$(parse_mode "${1:-}")"
+
+  check_dependencies "$mode"
+
+  if has_running_recording; then
+    stop_recording
+    return
+  fi
+
+  start_recording "$mode"
 }
 
 main "$@"
