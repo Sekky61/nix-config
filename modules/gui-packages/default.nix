@@ -16,6 +16,6 @@
     ./remote-desktop.nix
     ./steam.nix
     ./terminal-emulator
-    ./walker.nix
+    ./walker
   ];
 }

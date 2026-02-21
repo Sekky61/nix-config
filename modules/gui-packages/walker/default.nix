@@ -69,7 +69,7 @@ in {
         elephant = {
           provider.menus.lua = {
             # `walker --provider menus:keybinds`
-            keybinds = builtins.readFile ./walker/keybinds.lua;
+            keybinds = builtins.readFile ./keybinds.lua;
           };
           provider = {
             bitwarden.settings = {
