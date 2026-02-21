@@ -108,6 +108,23 @@ in {
       };
     };
 
-    # todo move keybind here
+    michal.programs.hyprland.keybinds = [
+      {
+        description = "Launch application launcher";
+        bind = {
+          mods = ["SUPER"];
+          key = "Space";
+        };
+        command = {params = walkerBin;};
+      }
+      {
+        description = "Clipboard history";
+        bind = {
+          mods = ["SUPER"];
+          key = "V";
+        };
+        command = {params = "${walkerBin} --provider clipboard";};
+      }
+    ];
   };
 }
