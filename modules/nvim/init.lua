@@ -11,7 +11,7 @@ vim.g.loaded_netrwPlugin = 1
 local dev_mode = vim.env.DEV_MODE == "1"
 
 -- TS LSP - toggle to change
-local ts_lsp_server = "tsgo"
+local ts_lsp_server = "vtsls"
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
