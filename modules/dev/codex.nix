@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   username,
   ...
@@ -14,7 +15,10 @@ in {
     (mkIf dev_cfg.enable {michal.programs.codex.enable = mkDefault true;})
 
     (mkIf cfg.enable {
-      home-manager.users.${username}.programs.codex.enable = true;
+      home-manager.users.${username}.programs.codex = {
+        enable = true;
+        package = pkgs.michal-unstable.codex;
+      };
     })
   ];
 }
