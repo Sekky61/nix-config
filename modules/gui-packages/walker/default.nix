@@ -57,7 +57,7 @@ in {
                 provider = "bitwarden";
               }
               {
-                prefix = "("; # todo
+                prefix = "(";
                 provider = "menus:keybinds";
               }
             ];
@@ -131,14 +131,6 @@ in {
           key = "Space";
         };
         command = {params = walkerBin;};
-      }
-      {
-        description = "Clipboard history";
-        bind = {
-          mods = ["SUPER"];
-          key = "V";
-        };
-        command = {params = "${walkerBin} --provider clipboard";};
       }
       {
         description = "Clipboard history";
