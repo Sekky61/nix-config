@@ -344,9 +344,10 @@ require("lazy").setup({
                 sorting_strategy = "ascending",
                 file_ignore_patterns = {
                     -- "node_modules" might not be desirable for LSP pickers
+                    -- todo do not ignore .agents, .claude
                     "^.git/",
                     "^.cache",
-                    -- Often recommended "%.a" Hides `.api.service.ts`. Add a dollar
+                    -- Often recommended "%.a" hides `.api.service.ts`. Add a dollar!
                     "%.a$",
                     "%.o$",
                     "%.out$",

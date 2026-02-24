@@ -2,15 +2,19 @@
 
 ![Screenshot of nix-yoga](./assets/screenshots/nix-yoga.png)
 
-Welcome. I hope you get inspired here.
+Welcome to my dotfiles. I hope you get inspired here.
 It can be hard to put together a NixOS config, it certainly was for me. This is mainly because you can structure it however you want.
 
-My config is based on [CirnOS](https://github.com/end-4/CirnOS) ([docs](https://end-4.github.io/dots-hyprland-wiki/en/i-i/02usage/)), [erictossell's flake](https://github.com/erictossell/nixflakes) and [konradmalik's dotfiles](https://github.com/konradmalik/dotfiles/tree/main), go and give them a star!
+My config is based on
+- [CirnOS](https://github.com/end-4/CirnOS) ([docs](https://end-4.github.io/dots-hyprland-wiki/en/i-i/02usage/))
+- [erictossell's flake](https://github.com/erictossell/nixflakes)
+- [konradmalik's dotfiles](https://github.com/konradmalik/dotfiles/tree/main)
+And more. Go and give them a star!
 
 ## Quick Links
 
-- [Neovim config](modules/nvim/init.lua)
-- [Hyprland config](modules/hyprland/)
+- [Neovim config](modules/nvim/init.lua) - try it with `nix run github:Sekky61/nix-config#nvim`
+- [Hyprland config](modules/hyprland/) - I am proud of my keybinds config
 
 ## Structure Overview
 
@@ -22,11 +26,12 @@ Each `nixosSystem` defines arguments like `username` and `hostname`, which are a
 Each [NixOS module](https://nixos.wiki/wiki/NixOS_modules) defines some [configuration options](https://search.nixos.org/options), like [packages](https://search.nixos.org/packages) to install, services to run, or files to include.
 My modules are mixed with home-manager, which I use to manage files in home.
 
-I also define some *services*, which allow me to easily host them.
+I also define some [services](services/default.nix), which allow me to easily host them.
 
 ## Installation
 
 The flake includes my hardware configuration, so you would need to create your host in `hosts/`.
+Use AI and the `new-host` skill to start.
 
 ```bash
 git clone https://github.com/Sekky61/nix-config && cd nix-config
@@ -34,13 +39,11 @@ sudo nixos-rebuild switch --flake ".#hostname"
 ```
 (substitute your `hostname`)
 
-or use the prepared script:
-
-```bash
-./scripts/update [--hostname=<hostname>] [--remote] [--impure]
-```
+Use the prepared `./scripts/update` or `nh os switch .` provided in dev shell.
 
 ### Raspberry PI, ISO and Installers
+
+I am not happy with the state of rpi, tbh its not that easy.
 
 Installing on a new machine requires generating `hardware-configuration.nix` and adding it to the flake. You need to get the machine running with Nix, generate the configuration, and then you can use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere) or update via ssh.
 
@@ -93,26 +96,23 @@ To use it, run `./scripts/update --impure`.
 
 ## Key Features
 
-### Greetd
-Uses `tuigreet`, on login launches Hyprland.
-
 ### Hyprland
-The window manager. See shortcuts with `Super+/`.
-Launches Chrome on startup. Uses Ags/astal bar.
+The window manager. See shortcuts with `walker --provider menus:keybinds`.
+Launches Chrome on startup.
 
 ### Theme
-The wallpaper is set in `hyprpaper.nix`.
-Theme colors can be derived from the wallpaper, picked, or be based on a color.
-See the `./scripts/theme` script. You must update the configuration for it to take effect.
+The wallpaper is set in `graphical.nix`.
 
 ### Neovim
-
 Try my nvim. Just run `nix run github:Sekky61/nix-config#nvim`. Just note that it will install plugins to home.
 
-The `nvim` config (located [here](modules/nvim/init.lua)) contains many useful plugins and keybinds with descriptions. The plugins get installed at launch, so this is not a pure Nix solution.
+The `nvim` [config](modules/nvim/init.lua)) contains many useful plugins and keybinds with descriptions.
+The plugins get installed at launch, so this is not a pure Nix solution.
 
 ### Terminals
-Multiple terminals are configured. Choose one of them to be the default one (works with keybinds).
+Multiple terminals are [configured](modules/gui-packages/terminal-emulator/default.nix).
+Choose one of them to be the default one (works with keybinds).
+I use [bash](modules/bash/default.nix) only.
 
 ### Backups
 [Borg](https://borgbackup.readthedocs.io/en/stable/) ([module](modules/borg.nix)) is used with the cloud solution [BorgBase](https://www.borgbase.com/). There is a daily backup with some weekly and monthly retention.
@@ -128,7 +128,7 @@ You may need to change permissions on the destination: `sudo chown -R michal:use
 To unmount: `sudo borg umount ./mount`.
 
 ### Custom Options
-The modules are gradually becoming configurable via the `michal` namespace. The other features are selectively imported by hosts as modules.
+The modules are configurable via the `michal` option namespace.
 
 ```nix
 michal.programs # Programs that might be not desired everywhere
@@ -136,9 +136,11 @@ michal.services # Long running services like Home assistant
 michal.graphical # Enable GUI-based apps
 ```
 
-See `./scripts/list-custom-options` for more.
+See `./scripts/list-custom-options` or open the docs hosted on Github pages.
 
-### Custom Options Docs
+### Building custom Options Docs
+
+See the github action that builds them for up to date build steps.
 Generate JSON docs for the `michal.*` options with:
 
 ```bash
@@ -148,6 +150,10 @@ nix build .#michal-options-docs
 The output is `result/options.json`. Each key is a full option name and maps to
 metadata like `declarations`, `default` (literalExpression), `description`,
 `example`, `loc` (path list), `readOnly`, and `type`.
+
+### Other
+
+- `tuigreet`, launching Hyprland on login
 
 ## Secrets Management
 
@@ -180,8 +186,8 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 2. Use the `hardware-configuration.nix` from the new host
 3. Configure `michal` options as you wish, apply configuration for hardware quirks
 4. For secrets, see the SOPS section
-5. Run `hyprctl monitors` and write down the info
-6. You may need to apply theme (dark mode) manually. See the theme script.
+5. Run `hyprctl monitors` and write down the info about displays
+6. You may need to apply theme (dark mode) manually. See the theme script
 7. Add ssh key identity (ssh-add command)
 8. Create sops private key and add it to the right place: `sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key > ~/.config/sops/age/keys.txt`
 9. `atuin login` and `atuin sync`. Find the key in sops.
@@ -194,11 +200,7 @@ cd modules/gui-packages/ags/config
 npm i
 ```
 
-- Press `Super + /` to open the list of keybindings.
-- See the [AGS docs](https://aylur.github.io/ags/) and [GJS docs](https://gjs.guide/).
-- The `corner-black` class makes a fake rounded screen.
-- The `corner` class controls the rounding of the top bar.
-- Media widget: left-click for detailed controls, middle-click to play/pause, right-click for the next track.
+- See the [AGS docs](https://aylur.github.io/ags/) and [GJS docs](https://gjs.guide/), todo astal docs.
 - To debug, kill ags with `ags quit` and then launch it in a shell: `ags` (or with a `--directory` flag).
 - Look up icons with [icon-browser](https://github.com/Aylur/icon-browser/tree/main).
 - Use `ags inspect` as an inspector.
