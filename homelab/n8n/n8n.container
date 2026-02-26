@@ -1,0 +1,23 @@
+[Unit]
+Description=n8n workflow automation
+Wants=network-online.target
+Wants=homelab-network.service
+After=network-online.target
+After=homelab-network.service
+
+[Container]
+ContainerName=n8n
+Image=docker.n8n.io/n8nio/n8n:latest
+EnvironmentFile=%h/.config/containers/systemd/n8n.env
+UserNS=keep-id
+Volume=__N8N_DATA_DIR__:/home/node/.n8n:Z
+Network=homelab.network
+PublishPort=5678:5678
+AutoUpdate=registry
+
+[Service]
+Restart=on-failure
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
