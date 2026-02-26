@@ -21,21 +21,28 @@ When to run `install-quadlets.sh`:
 When to restart containers:
 
 - Restart `n8n` after changing `~/.config/containers/systemd/n8n.env`.
+- Restart `openclaw` after changing `~/.config/containers/systemd/openclaw.env`.
 - Restart after running install script (safe habit, even if it already started).
 - Command: `systemctl --user restart n8n.service`
+- Command: `systemctl --user restart openclaw.service`
 
 How to check if it is working:
 
 - Status: `systemctl --user status n8n.service --no-pager`
 - Logs: `journalctl --user -u n8n.service -n 100 --no-pager`
 - Open UI: `http://localhost:5678`
+- Status: `systemctl --user status openclaw.service --no-pager`
+- Logs: `journalctl --user -u openclaw.service -n 100 --no-pager`
+- Open UI: `http://localhost:18789`
 
 Day-to-day update flow:
 
 1. `git pull`
 2. `./homelab/scripts/install-quadlets.sh`
 3. `systemctl --user restart n8n.service`
-4. `systemctl --user status n8n.service --no-pager`
+4. `systemctl --user restart openclaw.service`
+5. `systemctl --user status n8n.service --no-pager`
+6. `systemctl --user status openclaw.service --no-pager`
 
 ## Persistence (what survives restarts)
 
@@ -64,6 +71,8 @@ Rule of thumb for backups:
 
 - `n8n/n8n.container` - n8n service definition
 - `n8n/n8n.env.example` - environment template for n8n
+- `openclaw/openclaw.container` - OpenClaw service definition
+- `openclaw/openclaw.env.example` - environment template for OpenClaw
 - `networks/homelab.network` - shared podman network
 - `scripts/install-quadlets.sh` - install/copy into Quadlet directory
 - `data/` - local persistent state (gitignored)
@@ -71,14 +80,17 @@ Rule of thumb for backups:
 ## Quick start
 
 1. Prepare directories and env:
-   - `mkdir -p homelab/data/n8n ~/.config/containers/systemd`
+   - `mkdir -p homelab/data/n8n homelab/data/openclaw ~/.config/containers/systemd`
    - `cp homelab/n8n/n8n.env.example ~/.config/containers/systemd/n8n.env`
+   - `cp homelab/openclaw/openclaw.env.example ~/.config/containers/systemd/openclaw.env`
 2. Install quadlet files:
    - `./homelab/scripts/install-quadlets.sh`
-3. Start n8n:
+3. Start services:
    - `systemctl --user start n8n.service`
+   - `systemctl --user start openclaw.service`
 4. Open:
    - `http://localhost:5678`
+   - `http://localhost:18789`
 
 ## Environment variables
 
@@ -96,15 +108,20 @@ Common vars in `n8n.env`:
 - `N8N_SECURE_COOKIE`: set `false` for local HTTP testing, set `true` when behind HTTPS.
 - `EXECUTIONS_DATA_PRUNE` / `EXECUTIONS_DATA_MAX_AGE`: execution retention policy.
 
+Common vars in `openclaw.env`:
+
+- `OPENCLAW_GATEWAY_TOKEN`: required token for Control UI access.
+- `GROQ_API_KEY` / `OPENAI_API_KEY` / `OLLAMA_API_KEY`: optional provider credentials.
+
 ## How `~/.config/containers/systemd` works
 
 - For rootless Quadlet, systemd reads unit definitions from `~/.config/containers/systemd` (your user-level config, not repo-managed by default).
 - In this repo, `homelab/*.container` and `homelab/*.network` are source files; `./homelab/scripts/install-quadlets.sh` copies rendered files into `~/.config/containers/systemd`.
-- Expect `~/.config/containers/systemd/n8n.container` and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
-- Expect `~/.config/containers/systemd/n8n.env` to be preserved after first creation (script only creates it if missing).
+- Expect `~/.config/containers/systemd/n8n.container`, `~/.config/containers/systemd/openclaw.container`, and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
+- Expect `~/.config/containers/systemd/n8n.env` and `~/.config/containers/systemd/openclaw.env` to be preserved after first creation (script only creates them if missing).
 - After install, script runs `systemctl --user daemon-reload` and enables/starts services so changes are picked up.
 - The network unit is started (not enabled) because Quadlet may generate it as transient; this avoids `...is transient or generated` errors.
-- On some systems, `n8n.service` is also treated as generated/transient and cannot be enabled; the script falls back to `start` so install still succeeds.
+- On some systems, service units are treated as generated/transient and cannot be enabled; the script falls back to `start` so install still succeeds.
 
 What to sync and how often:
 
@@ -118,7 +135,9 @@ Recommended update flow:
 1. `git pull`
 2. `./homelab/scripts/install-quadlets.sh`
 3. `systemctl --user restart n8n.service`
-4. `systemctl --user status n8n.service`
+4. `systemctl --user restart openclaw.service`
+5. `systemctl --user status n8n.service`
+6. `systemctl --user status openclaw.service`
 
 ## Common commands
 
@@ -126,6 +145,10 @@ Recommended update flow:
 - `journalctl --user -u n8n.service -n 100 --no-pager`
 - `systemctl --user restart n8n.service`
 - `systemctl --user stop n8n.service`
+- `systemctl --user status openclaw.service`
+- `journalctl --user -u openclaw.service -n 100 --no-pager`
+- `systemctl --user restart openclaw.service`
+- `systemctl --user stop openclaw.service`
 
 ## Notes
 
