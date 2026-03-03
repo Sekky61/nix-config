@@ -5,6 +5,9 @@
     ./configuration.nix
   ];
 
+  michal.programs.podman.enable = true;
+  # docker.enable = true;
+
   michal = {
     audio = {
       enable = true;
@@ -18,7 +21,6 @@
     programs = {
       claude-code.enable = true;
       codex.enable = true;
-      docker.enable = true;
       ags.enable = false;
       opencode.enable = true;
       waybar.enable = true;
