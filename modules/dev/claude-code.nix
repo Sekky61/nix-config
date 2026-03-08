@@ -10,7 +10,7 @@ with lib; let
   dev_cfg = config.michal.dev;
 
   cc-notification-script = pkgs.writeShellScriptBin "cc-notification-script" ''
-    sound_file=${../../assets/sounds/sheep.mp3}
+    sound_file=${../../assets/sounds/wiwiwi.mp3}
     notify-send 'CC'
     if [[ -f "$sound_file" ]]; then
       paplay "$sound_file"
