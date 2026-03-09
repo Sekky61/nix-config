@@ -50,6 +50,14 @@ in {
           git = {
             mainBranches = ["master" "main" "develop"];
             parseEmoji = true;
+            pagers = [
+              {
+                pager = ''
+                  delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+                '';
+                colorArg = "always";
+              }
+            ];
             commitPrefix = [
               {
                 # add feat: prefix to commit messages
@@ -111,6 +119,15 @@ in {
           ];
         };
       };
+
+      programs.delta = {
+        enable = true;
+        enableGitIntegration = true;
+        enableJujutsuIntegration = true;
+      };
+
+      # JJ
+
       programs.jujutsu = {
         enable = true;
         settings = {
