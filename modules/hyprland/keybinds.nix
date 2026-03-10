@@ -648,7 +648,8 @@ in {
             mods = ["SUPER"];
             key = "Z";
           };
-          command = {params = "handy --toggle-transcription";};
+          # First cancel the recording, then start recording again.
+          command = {params = "handy --cancel; handy --toggle-transcription";};
         }
         {
           description = "Handy push to talk";
