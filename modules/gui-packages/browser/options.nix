@@ -24,8 +24,8 @@ Generated Options:
   package ? null,
   desktopFileName ? (
     if package == null
-    then null
-    else package.meta.desktopFileName or null
+    then "${execName}.desktop"
+    else package.meta.desktopFileName or "${execName}.desktop"
   ),
 }:
 with lib; {

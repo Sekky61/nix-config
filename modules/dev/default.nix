@@ -42,7 +42,7 @@ in {
         gnumake
         cmake
         alejandra # nix formatter
-        python311Packages.pip
+        python3Packages.pip
 
         # CLI tools
         nixos-generators

@@ -30,7 +30,7 @@ in {
       yad # Dialogs
       libnotify # notify-send
       showmethekey # show pressed keys
-      xorg.xev
+      xev
       gnome-control-center # The settings (Win+I)
       ydotool # synthetic mouse/keyboard events
       wtype # The same as ydotool, required by different apps
@@ -51,7 +51,7 @@ in {
 
       # games
       # todo move to gui
-      wineWowPackages.waylandFull
+      wineWow64Packages.waylandFull
       winetricks
       lutris
       parsec-bin

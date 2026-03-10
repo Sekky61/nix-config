@@ -14,7 +14,7 @@ in {
     guiTools = mkOption {
       type = types.bool;
       default = true;
-      description = "Install GUI audio tools (pavucontrol, qpwgraph, helvum)";
+      description = "Install GUI audio tools (pavucontrol, qpwgraph, crosspipe)";
     };
   };
 
@@ -38,7 +38,7 @@ in {
       ++ lib.lists.optionals cfg.guiTools [
         pavucontrol
         qpwgraph
-        helvum
+        crosspipe
         pulseaudio
         pulsemixer
       ];
