@@ -33,7 +33,7 @@ in {
       xev
       gnome-control-center # The settings (Win+I)
       ydotool # synthetic mouse/keyboard events
-      wtype # The same as ydotool, required by different apps
+      wtype # The same as ydotool, required by different apps (handy, walker)
       fuzzel # gui picker
 
       # Apps

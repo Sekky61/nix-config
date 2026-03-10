@@ -28,7 +28,7 @@ Features:
 in {
   options.michal.browsers.zen = mkBrowserOptions {
     inherit lib;
-    execName = "zen";
+    execName = "zen-beta";
     package = zen-package;
   };
 

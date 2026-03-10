@@ -1,6 +1,11 @@
-{ config, pkgs, lib, username, ... }:
-with lib;
-let
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  ...
+}:
+with lib; let
   cfg = config.michal.hyprland;
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
@@ -12,14 +17,13 @@ let
   # Convert monitor config to Hyprland format
   # todo https://wiki.hypr.land/Configuring/Monitors/#monitor-v2
   monitorToHyprland = monitor:
-    if monitor.enabled then
-      "desc:${monitor.id},${toString monitor.width}x${
-        toString monitor.height
-      }@${toString monitor.refreshRate},${toString monitor.position.x}x${
-        toString monitor.position.y
-      },${toString monitor.scale},transform,${toString monitor.transform}"
-    else
-      "desc:${monitor.id},disable";
+    if monitor.enabled
+    then "desc:${monitor.id},${toString monitor.width}x${
+      toString monitor.height
+    }@${toString monitor.refreshRate},${toString monitor.position.x}x${
+      toString monitor.position.y
+    },${toString monitor.scale},transform,${toString monitor.transform}"
+    else "desc:${monitor.id},disable";
 in {
   imports = [
     ./keybinds.nix
@@ -79,19 +83,17 @@ in {
         name = "Settings";
         comment = "Gnome Control Center";
         icon = "org.gnome.Settings";
-        exec =
-          "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome-control-center}/bin/gnome-control-center";
-        categories = [ "X-Preferences" ];
+        exec = "env XDG_CURRENT_DESKTOP=gnome ${pkgs.gnome-control-center}/bin/gnome-control-center";
+        categories = ["X-Preferences"];
         terminal = false;
       };
 
       wayland.windowManager.hyprland = {
         enable = true;
 
-        plugins = with pkgs;
-          [
-            # hyprlandPlugins.<plugin>
-          ];
+        plugins = with pkgs; [
+          # hyprlandPlugins.<plugin>
+        ];
 
         settings = {
           env = [
@@ -102,25 +104,30 @@ in {
             "XCURSOR_SIZE, 32"
             "WLR_NO_HARDWARE_CURSORS, 1"
           ];
-          monitor = map monitorToHyprland monitors ++ [
-            ",preferred,auto,1" # auto
-          ];
-          exec-once = [
-            # wallpaper
-            "ydotoold"
-            "swww kill; swww init"
-            # hw sensors (screen rotation)
-            "iio-hyprland eDP-1"
-            # paste history init
-            "wl-paste --type text --watch cliphist store"
-            "wl-paste --type image --watch cliphist store"
-            # cursor todo
-            "hyprctl setcursor Bibata-Modern-Classic 24"
-            # launch programs
-            "[workspace 1 silent] ${browser}"
-            "[workspace 2 silent] ${defaultTerminal}"
-          ]
-          # system tray
+          monitor =
+            map monitorToHyprland monitors
+            ++ [
+              ",preferred,auto,1" # auto
+            ];
+          exec-once =
+            [
+              # wallpaper
+              "ydotoold"
+              "swww kill; swww init"
+              # hw sensors (screen rotation)
+              "iio-hyprland eDP-1"
+              # paste history init
+              "wl-paste --type text --watch cliphist store"
+              "wl-paste --type image --watch cliphist store"
+              # cursor todo
+              "hyprctl setcursor Bibata-Modern-Classic 24"
+              # launch programs
+              # :
+              "[workspace 1 silent] ${browser}"
+              "[workspace 2 silent] ${defaultTerminal}"
+              "handy --start-hidden"
+            ]
+            # system tray
             ++ optional shouldIncludeAgs "ags run";
           # Waybar is handled by home manager
           # ++ optional shouldIncludeWaybar "waybar"
@@ -129,11 +136,14 @@ in {
             gaps_in = 2;
             gaps_out = 3;
             gaps_workspaces = 50;
-            layout = "dwindle";
+            layout = "master";
             resize_on_border = true; # click and drag on border to resize
             border_size = 1;
             #"col.active_border" = "rgba(38bdf8ee)";
             #"col.inactive_border" = "rgba(0369a1cc)";
+          };
+          master = {
+            mfact = 0.7;
           };
           dwindle = {
             preserve_split = true;
@@ -143,7 +153,7 @@ in {
             "3, horizontal, workspace"
             "4, up, dispatcher, exec, xdg-open https://youtube.com/shorts" # :)
           ];
-          binds = { scroll_event_delay = 0; };
+          binds = {scroll_event_delay = 0;};
           input = {
             sensitivity = 0.2; # -1 to 1
             # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
@@ -240,7 +250,7 @@ in {
             disable_hyprland_logo = true;
             on_focus_under_fullscreen = 2;
           };
-          xwayland = { force_zero_scaling = true; };
+          xwayland = {force_zero_scaling = true;};
           bind = [
             # "Super, S, togglespecialworkspace,"
             # "Control+Super, S, togglespecialworkspace,"
@@ -256,7 +266,8 @@ in {
           ];
           bindm = [
             "Super, mouse:272, movewindow" # left click to move window
-            "Super, Z, movewindow"
+            # occupied, todo
+            # "Super, Z, movewindow"
             "Super, mouse:273, resizewindow" # right click to resize window
           ];
           bindle = [
@@ -281,7 +292,7 @@ in {
             "float on, match:title ^(Save As)(.*)$"
             "float on, match:title ^(Library)(.*)$ "
           ];
-          layerrule = [ "no_anim on, match:namespace waybar" ];
+          layerrule = ["no_anim on, match:namespace waybar"];
           # source = [ # todo
           #   "./hyprland/colors.conf"
           # ];

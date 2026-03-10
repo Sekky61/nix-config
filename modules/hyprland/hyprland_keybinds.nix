@@ -1,11 +1,15 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 with lib; {
   config = mkIf config.michal.hyprland.enable {
     michal.programs.hyprland.keybinds = [
       {
         description = "Toggle floating mode"; # todo float in all workspaces
         bind = {
-          mods = [ "SUPER" "ALT" ];
+          mods = ["SUPER" "ALT"];
           key = "Space";
         };
         command = {
@@ -16,15 +20,18 @@ with lib; {
       {
         description = "Toggle vertical and horizontal split";
         bind = {
-          mods = [ "SUPER" "SHIFT" ];
+          mods = ["SUPER" "SHIFT"];
           key = "n";
         };
-        command = { dispatcher = "togglesplit"; };
+        command = {
+          dispatcher = "layoutmsg";
+          params = "togglesplit";
+        };
       }
       {
         description = "Move window left";
         bind = {
-          mods = [ "SUPER" "SHIFT" ];
+          mods = ["SUPER" "SHIFT"];
           key = "Left";
         };
         command = {
@@ -35,7 +42,7 @@ with lib; {
       {
         description = "Move window right";
         bind = {
-          mods = [ "SUPER" "SHIFT" ];
+          mods = ["SUPER" "SHIFT"];
           key = "Right";
         };
         command = {
@@ -46,7 +53,7 @@ with lib; {
       {
         description = "Move window up";
         bind = {
-          mods = [ "SUPER" "SHIFT" ];
+          mods = ["SUPER" "SHIFT"];
           key = "Up";
         };
         command = {
@@ -57,7 +64,7 @@ with lib; {
       {
         description = "Move window down";
         bind = {
-          mods = [ "SUPER" "SHIFT" ];
+          mods = ["SUPER" "SHIFT"];
           key = "Down";
         };
         command = {
@@ -69,11 +76,11 @@ with lib; {
         description = "Move focus left";
         bind = [
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Left";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "BracketLeft";
           }
         ];
@@ -86,11 +93,11 @@ with lib; {
         description = "Move focus right";
         bind = [
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Right";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "BracketRight";
           }
         ];
@@ -102,7 +109,7 @@ with lib; {
       {
         description = "Move focus up";
         bind = {
-          mods = [ "SUPER" ];
+          mods = ["SUPER"];
           key = "Up";
         };
         command = {
@@ -113,7 +120,7 @@ with lib; {
       {
         description = "Move focus down";
         bind = {
-          mods = [ "SUPER" ];
+          mods = ["SUPER"];
           key = "Down";
         };
         command = {
@@ -125,19 +132,19 @@ with lib; {
         description = "Switch to next workspace";
         bind = [
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "Right";
           }
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "BracketRight";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Page_Down";
           }
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "Page_Down";
           }
         ];
@@ -150,19 +157,19 @@ with lib; {
         description = "Switch to previous workspace";
         bind = [
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "Left";
           }
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "BracketLeft";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Page_Up";
           }
           {
-            mods = [ "CONTROL" "SUPER" ];
+            mods = ["CONTROL" "SUPER"];
             key = "Page_Up";
           }
         ];
@@ -173,10 +180,12 @@ with lib; {
       }
       {
         description = "Switch to workspace 5 above";
-        bind = [{
-          mods = [ "CONTROL" "SUPER" ];
-          key = "Up";
-        }];
+        bind = [
+          {
+            mods = ["CONTROL" "SUPER"];
+            key = "Up";
+          }
+        ];
         command = {
           dispatcher = "workspace";
           params = "-5";
@@ -184,10 +193,12 @@ with lib; {
       }
       {
         description = "Switch to workspace 5 below";
-        bind = [{
-          mods = [ "CONTROL" "SUPER" ];
-          key = "Down";
-        }];
+        bind = [
+          {
+            mods = ["CONTROL" "SUPER"];
+            key = "Down";
+          }
+        ];
         command = {
           dispatcher = "workspace";
           params = "+5";
@@ -197,23 +208,23 @@ with lib; {
         description = "Move to next workspace";
         bind = [
           {
-            mods = [ "SUPER" "ALT" ];
+            mods = ["SUPER" "ALT"];
             key = "Page_Down";
           }
           {
-            mods = [ "SUPER" "SHIFT" ];
+            mods = ["SUPER" "SHIFT"];
             key = "Page_Down";
           }
           {
-            mods = [ "CONTROL" "SUPER" "SHIFT" ];
+            mods = ["CONTROL" "SUPER" "SHIFT"];
             key = "Right";
           }
           {
-            mods = [ "SUPER" "SHIFT" ];
+            mods = ["SUPER" "SHIFT"];
             key = "mouse_down";
           }
           {
-            mods = [ "SUPER" "ALT" ];
+            mods = ["SUPER" "ALT"];
             key = "mouse_up";
           }
         ];
@@ -226,23 +237,23 @@ with lib; {
         description = "Move to previous workspace";
         bind = [
           {
-            mods = [ "SUPER" "ALT" ];
+            mods = ["SUPER" "ALT"];
             key = "Page_Up";
           }
           {
-            mods = [ "SUPER" "SHIFT" ];
+            mods = ["SUPER" "SHIFT"];
             key = "Page_Up";
           }
           {
-            mods = [ "CONTROL" "SUPER" "SHIFT" ];
+            mods = ["CONTROL" "SUPER" "SHIFT"];
             key = "Left";
           }
           {
-            mods = [ "SUPER" "SHIFT" ];
+            mods = ["SUPER" "SHIFT"];
             key = "mouse_up";
           }
           {
-            mods = [ "SUPER" "ALT" ];
+            mods = ["SUPER" "ALT"];
             key = "mouse_down";
           }
         ];
@@ -254,7 +265,7 @@ with lib; {
       {
         description = "Fullscreen without topbar";
         bind = {
-          mods = [ "SUPER" ];
+          mods = ["SUPER"];
           key = "F";
         };
         command = {
@@ -265,7 +276,7 @@ with lib; {
       {
         description = "Fullscreen";
         bind = {
-          mods = [ "SUPER" ];
+          mods = ["SUPER"];
           key = "D";
         };
         command = {
@@ -276,7 +287,7 @@ with lib; {
       {
         description = "Fullscreen state toggle";
         bind = {
-          mods = [ "SUPER" "ALT" ];
+          mods = ["SUPER" "ALT"];
           key = "F";
         };
         command = {
@@ -288,36 +299,36 @@ with lib; {
         description = "Move split left";
         bind = [
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Minus";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Semicolon";
           }
         ];
         command = {
-          dispatcher = "splitratio";
-          params = "-0.1";
-          flags = [ "repeat" ];
+          dispatcher = "layoutmsg";
+          params = "mfact -0.1";
+          flags = ["repeat"];
         };
       }
       {
         description = "Move split right";
         bind = [
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Equal";
           }
           {
-            mods = [ "SUPER" ];
+            mods = ["SUPER"];
             key = "Apostrophe";
           }
         ];
         command = {
-          dispatcher = "splitratio";
-          params = "0.1";
-          flags = [ "repeat" ];
+          dispatcher = "layoutmsg";
+          params = "mfact +0.1";
+          flags = ["repeat"];
         };
       }
     ];
