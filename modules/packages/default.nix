@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   # todo rename to debug/admin
   # packages for daily needs
   environment.systemPackages = with pkgs; [
@@ -21,5 +21,7 @@
 
     # clockify custom packaged app
     nur.repos.lucassabreu.clockify-cli
+
+    handy
   ];
 }

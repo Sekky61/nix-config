@@ -329,6 +329,27 @@
         "type": "gitlab"
       }
     },
+    "handy": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772509355,
+        "narHash": "sha256-4jV0LIAhq5bvYSQS7IHJv+4eQBbwC8P6s3nRnE+buP0=",
+        "owner": "xilec",
+        "repo": "Handy",
+        "rev": "e7038c7fdb7bdde912f4bfe98bd28c6f80698205",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xilec",
+        "ref": "fix/nix-update-hashes",
+        "repo": "Handy",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -639,6 +660,7 @@
         "deploy-rs": "deploy-rs",
         "elephant": "elephant",
         "flake-parts": "flake-parts",
+        "handy": "handy",
         "home-manager": "home-manager",
         "more-waita": "more-waita",
         "nixos-generators": "nixos-generators",

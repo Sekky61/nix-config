@@ -36,6 +36,7 @@
 
     (final: _: {
       walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
+      handy = inputs.handy.packages.${pkgs.stdenv.system}.handy;
     })
 
     (final: _: {

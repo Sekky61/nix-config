@@ -1,6 +1,10 @@
-{ lib, username, config, ... }:
-with lib;
-let
+{
+  lib,
+  username,
+  config,
+  ...
+}:
+with lib; let
   # Define all binds for Hyprland
   #
   # - SUPER is the Win key
@@ -10,7 +14,11 @@ let
   oneOrList = T: with types; either T (listOf T);
 
   # One key combination
-  keyModule = types.submodule ({ config, name, ... }: {
+  keyModule = types.submodule ({
+    config,
+    name,
+    ...
+  }: {
     options = {
       enable = mkOption {
         type = with types; bool;
@@ -19,10 +27,10 @@ let
         example = false;
       };
       mods = mkOption {
-        type = with types; listOf (enum [ "SUPER" "SHIFT" "CONTROL" "ALT" ]);
+        type = with types; listOf (enum ["SUPER" "SHIFT" "CONTROL" "ALT"]);
         description = "A list of modifier keys.";
-        example = [ "SUPER" "SHIFT" ];
-        default = [ ];
+        example = ["SUPER" "SHIFT"];
+        default = [];
       };
       key = mkOption {
         type = with types; str;
@@ -39,7 +47,11 @@ let
   });
 
   # One command (dispatcher and params)
-  commandModule = types.submodule ({ config, name, ... }: {
+  commandModule = types.submodule ({
+    config,
+    name,
+    ...
+  }: {
     options = {
       enable = mkOption {
         type = with types; bool;
@@ -74,7 +86,7 @@ let
             "description"
             "bypassInhibit"
           ]);
-        default = [ ];
+        default = [];
         description = ''
           A list of optional flags for the binding. [Docs](https://wiki.hyprland.org/Configuring/Binds/#bind-flags)
 
@@ -90,33 +102,34 @@ let
           d -> has description, will allow you to write a description for your bind. (Note: implicitly true, cannot be disabled, do not add it.)
           p -> bypassInhibit, bypasses the app's requests to inhibit keybinds.
         '';
-        example = [ "repeat" ];
+        example = ["repeat"];
       };
     };
   });
 
   # Typedef for a keybind
   # Guide: https://nlewo.github.io/nixos-manual-sphinx/development/option-types.xml.html
-  keybindModule = types.submodule ({ config, name, ... }: {
+  keybindModule = types.submodule ({
+    config,
+    name,
+    ...
+  }: {
     options = {
       description = mkOption {
         type = with types; str;
         default = "";
-        description =
-          "An optional description of the binding. Must not include comma.";
+        description = "An optional description of the binding. Must not include comma.";
         example = "Launch Firefox";
       };
       bind = mkOption {
         type = oneOrList keyModule;
-        description =
-          "A keybind (or a list of them) that triggers the command.";
+        description = "A keybind (or a list of them) that triggers the command.";
         example = "exec";
         default = "";
       };
       command = mkOption {
         type = oneOrList commandModule;
-        description =
-          "A command (or a list of them) to execute on each of the binds.";
+        description = "A command (or a list of them) to execute on each of the binds.";
         example = "exec";
         default = "";
       };
@@ -132,22 +145,22 @@ let
   # Conversion functions
 
   # Create the flag suffix. Example: [ "locked" "repeat" ] => "lr"
-  constructFlags = flags:
-    let
-      table = {
-        "locked" = "l";
-        "release" = "r";
-        "longPress" = "o";
-        "repeat" = "e";
-        "nonConsuming" = "n";
-        "mouse" = "m";
-        "transparent" = "t";
-        "ignoreMods" = "i";
-        "separate" = "s";
-        "description" = "d"; # No description
-        "bypassInhibit" = "p";
-      };
-    in builtins.concatStringsSep "" (map (f: table.${f}) flags);
+  constructFlags = flags: let
+    table = {
+      "locked" = "l";
+      "release" = "r";
+      "longPress" = "o";
+      "repeat" = "e";
+      "nonConsuming" = "n";
+      "mouse" = "m";
+      "transparent" = "t";
+      "ignoreMods" = "i";
+      "separate" = "s";
+      "description" = "d"; # No description
+      "bypassInhibit" = "p";
+    };
+  in
+    builtins.concatStringsSep "" (map (f: table.${f}) flags);
 
   cross = f: arr1: arr2: lib.concatLists (map (x: map (y: (f x y)) arr2) arr1);
 
@@ -163,12 +176,13 @@ let
 
   # Get flags of a keybind including those implicitly set
   getFlags = kb:
-    kb.command.flags ++ optionals (kb.description != "") [ "description" ];
+    kb.command.flags ++ optionals (kb.description != "") ["description"];
 
   # Format a bind line. Example: "Super+Shift, up, movewindow, u"
-  keybindLine = kb:
-    let mods = lib.concatStringsSep " + " kb.bind.mods;
-    in lib.concatStringsSep ", " [
+  keybindLine = kb: let
+    mods = lib.concatStringsSep " + " kb.bind.mods;
+  in
+    lib.concatStringsSep ", " [
       mods
       kb.bind.key
       kb.description
@@ -186,29 +200,31 @@ in {
   options.michal.programs.hyprland.keybinds = mkOption {
     type = with types;
       listOf keybindModule; # todo study why adding attrsOf fails
-    default = [ ];
+    default = [];
     description = ''
       A list of key bindings for Hyprland. Each binding is an attribute set
       with attributes such as `mods`, `key`, `dispatcher`, `params`, and `flags`.
     '';
-    example = [{
-      description = "Lock screen";
-      bind = [
-        {
-          mods = [ "SUPER" ];
-          key = "L";
-        }
-        {
-          mods = [ "SUPER" "SHIFT" ];
-          key = "L";
-        }
-      ];
-      command = {
-        params = "hyprlock";
-        dispatcher = "exec";
-        flags = [ ];
-      };
-    }];
+    example = [
+      {
+        description = "Lock screen";
+        bind = [
+          {
+            mods = ["SUPER"];
+            key = "L";
+          }
+          {
+            mods = ["SUPER" "SHIFT"];
+            key = "L";
+          }
+        ];
+        command = {
+          params = "hyprlock";
+          dispatcher = "exec";
+          flags = [];
+        };
+      }
+    ];
   };
 
   config = mkIf config.michal.hyprland.enable {
@@ -218,13 +234,11 @@ in {
         assertion =
           builtins.all (kb: (builtins.match ".*,.*" kb.description) == null)
           cfg;
-        message =
-          "config.michal.programs.hyprland.keybinds[].description must not contain a comma.";
+        message = "config.michal.programs.hyprland.keybinds[].description must not contain a comma.";
       }
       {
         assertion = builtins.all (kb: allUnique (getFlags kb)) expandedBinds;
-        message =
-          "config.michal.programs.hyprland.keybinds[].command.flags have a duplicate.";
+        message = "config.michal.programs.hyprland.keybinds[].command.flags have a duplicate.";
       }
     ];
 
@@ -238,407 +252,420 @@ in {
         freeze = "--freeze";
         stdout = "--raw";
       };
-      screen = flagArr: toString ([ "hyprshot" ] ++ flagArr);
-      ss_region_stdout = screen (with ss_flags; [ region stdout ]);
-      ss_region_clipboard = screen (with ss_flags; [ region clipboard freeze ]);
-      ss_monitor_file = screen (with ss_flags; [ monitor ]);
+      screen = flagArr: toString (["hyprshot"] ++ flagArr);
+      ss_region_stdout = screen (with ss_flags; [region stdout]);
+      ss_region_clipboard = screen (with ss_flags; [region clipboard freeze]);
+      ss_monitor_file = screen (with ss_flags; [monitor]);
 
       toggleWindow = name: "ags toggle '${name}'";
       agsRequest = cmd: "ags request '${cmd}'";
 
-      workspaceBinds = num:
-        let n = toString num;
-        in [
-          {
-            description = "Toggle Session Menu (shutdown or restart)";
-            bind = {
-              mods = [ "SUPER" ];
-              key = n;
-            };
-            command = {
-              dispatcher = "workspace";
-              params = n;
-            };
-          }
-          {
-            description = "Toggle Session Menu (shutdown or restart)";
-            bind = {
-              mods = [ "SUPER" "SHIFT" ];
-              key = n;
-            };
-            command = {
-              dispatcher = "movetoworkspacesilent";
-              params = n;
-            };
-          }
-        ];
+      workspaceBinds = num: let
+        n = toString num;
+      in [
+        {
+          description = "Toggle Session Menu (shutdown or restart)";
+          bind = {
+            mods = ["SUPER"];
+            key = n;
+          };
+          command = {
+            dispatcher = "workspace";
+            params = n;
+          };
+        }
+        {
+          description = "Toggle Session Menu (shutdown or restart)";
+          bind = {
+            mods = ["SUPER" "SHIFT"];
+            key = n;
+          };
+          command = {
+            dispatcher = "movetoworkspacesilent";
+            params = n;
+          };
+        }
+      ];
 
       allWorkspaceBinds = concatLists (map workspaceBinds (range 1 9));
-    in allWorkspaceBinds ++ [
-      {
-        description = "Toggle Session Menu (shutdown or restart)";
-        bind = {
-          mods = [ "CONTROL" "ALT" ];
-          key = "Delete";
-        };
-        command = { params = toggleWindow "session"; };
-      }
-      {
-        description = "Launch terminal";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "Return";
-        };
-        command = { params = defaultTerminal; };
-      }
-      {
-        description = "Launch Browser";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "W";
-        };
-        command = { params = config.environment.sessionVariables.BROWSER; };
-      }
-      {
-        description = "Launch VSCode";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "C";
-        };
-        command = { params = "code --password-store=gnome"; };
-      }
-      {
-        description = "Launch file manager";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "E";
-        };
-        command = { params = "nautilus --new-window"; };
-      }
-      {
-        description = "Launch terminal file manager";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "E";
-        };
-        command = { params = "${defaultTerminal} -e yazi"; };
-      }
-      {
-        description = "Kill active window";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "Q";
-        };
-        command = {
-          dispatcher = "killactive";
-          params = "";
-        };
-      }
-      {
-        description = "Select window to kill"; # TODO not working
-        bind = {
-          mods = [ "SHIFT" "SUPER" "ALT" ];
-          key = "Q";
-        };
-        command = { params = "hyprctl kill"; };
-      }
-      {
-        description =
-          "Launch logout menu"; # TODO not working, also wlogout might not be installed
-        bind = {
-          mods = [ "CONTROL" "SHIFT" "ALT" ];
-          key = "Delete";
-        };
-        command = { params = "pkill wlogout || wlogout -p layer-shell"; };
-      }
-      {
-        description = "Power off system"; # TODO not working
-        bind = {
-          mods = [ "CONTROL" "SHIFT" "ALT" "SUPER" ];
-          key = "Delete";
-        };
-        command = { params = "systemctl poweroff"; };
-      }
-      {
-        description = "Set power profile: performance";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "1";
-        };
-        command = {
-          params =
-            "powerprofilesctl set performance && notify-send 'Power profile' 'Performance' -a 'Power Profiles'";
-        };
-      }
-      {
-        description = "Set power profile: balanced";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "2";
-        };
-        command = {
-          params =
-            "powerprofilesctl set balanced && notify-send 'Power profile' 'Balanced' -a 'Power Profiles'";
-        };
-      }
-      {
-        description = "Set power profile: power saver";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "3";
-        };
-        command = {
-          params =
-            "powerprofilesctl set power-saver && notify-send 'Power profile' 'Power Saver' -a 'Power Profiles'";
-        };
-      }
-      {
-        description = "Open system settings";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "I";
-        };
-        command = {
-          params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
-        };
-      }
-      {
-        description = "Open system monitor";
-        bind = {
-          mods = [ "CONTROL" "SHIFT" ];
-          key = "Escape";
-        };
-        command = { params = "gnome-system-monitor"; };
-      }
-      {
-        description = "Toggle on-screen keyboard"; # todo not reimplemented
-        bind = {
-          mods = [ "SUPER" ];
-          key = "K";
-        };
-        command = { params = toggleWindow "osk"; };
-      }
-      {
-        description = "Screenshot region OCR";
-        bind = {
-          mods = [ "SUPER" "SHIFT" ];
-          key = "S";
-        };
-        command = {
-          params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
-        };
-      }
-      {
-        description = "Screenshot region to clipboard";
-        bind = [
-          {
-            mods = [ "SUPER" ];
+    in
+      allWorkspaceBinds
+      ++ [
+        {
+          description = "Toggle Session Menu (shutdown or restart)";
+          bind = {
+            mods = ["CONTROL" "ALT"];
+            key = "Delete";
+          };
+          command = {params = toggleWindow "session";};
+        }
+        {
+          description = "Launch terminal";
+          bind = {
+            mods = ["SUPER"];
+            key = "Return";
+          };
+          command = {params = defaultTerminal;};
+        }
+        {
+          description = "Launch Browser";
+          bind = {
+            mods = ["SUPER"];
+            key = "W";
+          };
+          command = {params = config.environment.sessionVariables.BROWSER;};
+        }
+        {
+          description = "Launch VSCode";
+          bind = {
+            mods = ["SUPER"];
+            key = "C";
+          };
+          command = {params = "code --password-store=gnome";};
+        }
+        {
+          description = "Launch file manager";
+          bind = {
+            mods = ["SUPER"];
+            key = "E";
+          };
+          command = {params = "nautilus --new-window";};
+        }
+        {
+          description = "Launch terminal file manager";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "E";
+          };
+          command = {params = "${defaultTerminal} -e yazi";};
+        }
+        {
+          description = "Kill active window";
+          bind = {
+            mods = ["SUPER"];
+            key = "Q";
+          };
+          command = {
+            dispatcher = "killactive";
+            params = "";
+          };
+        }
+        {
+          description = "Select window to kill"; # TODO not working
+          bind = {
+            mods = ["SHIFT" "SUPER" "ALT"];
+            key = "Q";
+          };
+          command = {params = "hyprctl kill";};
+        }
+        {
+          description = "Launch logout menu"; # TODO not working, also wlogout might not be installed
+          bind = {
+            mods = ["CONTROL" "SHIFT" "ALT"];
+            key = "Delete";
+          };
+          command = {params = "pkill wlogout || wlogout -p layer-shell";};
+        }
+        {
+          description = "Power off system"; # TODO not working
+          bind = {
+            mods = ["CONTROL" "SHIFT" "ALT" "SUPER"];
+            key = "Delete";
+          };
+          command = {params = "systemctl poweroff";};
+        }
+        {
+          description = "Set power profile: performance";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "1";
+          };
+          command = {
+            params = "powerprofilesctl set performance && notify-send 'Power profile' 'Performance' -a 'Power Profiles'";
+          };
+        }
+        {
+          description = "Set power profile: balanced";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "2";
+          };
+          command = {
+            params = "powerprofilesctl set balanced && notify-send 'Power profile' 'Balanced' -a 'Power Profiles'";
+          };
+        }
+        {
+          description = "Set power profile: power saver";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "3";
+          };
+          command = {
+            params = "powerprofilesctl set power-saver && notify-send 'Power profile' 'Power Saver' -a 'Power Profiles'";
+          };
+        }
+        {
+          description = "Open system settings";
+          bind = {
+            mods = ["SUPER"];
+            key = "I";
+          };
+          command = {
+            params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
+          };
+        }
+        {
+          description = "Open system monitor";
+          bind = {
+            mods = ["CONTROL" "SHIFT"];
+            key = "Escape";
+          };
+          command = {params = "gnome-system-monitor";};
+        }
+        {
+          description = "Toggle on-screen keyboard"; # todo not reimplemented
+          bind = {
+            mods = ["SUPER"];
+            key = "K";
+          };
+          command = {params = toggleWindow "osk";};
+        }
+        {
+          description = "Screenshot region OCR";
+          bind = {
+            mods = ["SUPER" "SHIFT"];
             key = "S";
-          }
-          { key = "Print"; }
-        ];
-        command = { params = ss_region_clipboard; };
-      }
-      {
-        description = "Screenshot screen to file";
-        bind = {
-          mods = [ "SUPER" "CONTROL" ];
-          key = "S";
-        };
-        command = { params = ss_monitor_file; };
-      }
-      {
-        description = "Screenshot region and edit";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "S";
-        };
-        command = { params = "${ss_region_stdout} | swappy -f -"; };
-      }
-      {
-        description = "Screen recording";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "R";
-        };
-        command = { params = "record"; };
-      }
-      {
-        description = "Fullscreen recording";
-        bind = {
-          mods = [ "CONTROL" "ALT" ];
-          key = "R";
-        };
-        command = { params = "record --fullscreen"; };
-      }
-      {
-        description = "Fullscreen recording with audio";
-        bind = {
-          mods = [ "SUPER" "SHIFT" "ALT" ];
-          key = "R";
-        };
-        command = { params = "record --fullscreen-sound"; };
-      }
-      {
-        description = "Color picker";
-        bind = {
-          mods = [ "SUPER" "SHIFT" ];
-          key = "C";
-        };
-        command = { params = "hyprpicker -a"; };
-      }
-      {
-        description = "Lock screen";
-        bind = [
-          {
-            mods = [ "SUPER" ];
+          };
+          command = {
+            params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
+          };
+        }
+        {
+          description = "Screenshot region to clipboard";
+          bind = [
+            {
+              mods = ["SUPER"];
+              key = "S";
+            }
+            {key = "Print";}
+          ];
+          command = {params = ss_region_clipboard;};
+        }
+        {
+          description = "Screenshot screen to file";
+          bind = {
+            mods = ["SUPER" "CONTROL"];
+            key = "S";
+          };
+          command = {params = ss_monitor_file;};
+        }
+        {
+          description = "Screenshot region and edit";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "S";
+          };
+          command = {params = "${ss_region_stdout} | swappy -f -";};
+        }
+        {
+          description = "Screen recording";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "R";
+          };
+          command = {params = "record";};
+        }
+        {
+          description = "Fullscreen recording";
+          bind = {
+            mods = ["CONTROL" "ALT"];
+            key = "R";
+          };
+          command = {params = "record --fullscreen";};
+        }
+        {
+          description = "Fullscreen recording with audio";
+          bind = {
+            mods = ["SUPER" "SHIFT" "ALT"];
+            key = "R";
+          };
+          command = {params = "record --fullscreen-sound";};
+        }
+        {
+          description = "Color picker";
+          bind = {
+            mods = ["SUPER" "SHIFT"];
+            key = "C";
+          };
+          command = {params = "hyprpicker -a";};
+        }
+        {
+          description = "Lock screen";
+          bind = [
+            {
+              mods = ["SUPER"];
+              key = "L";
+            }
+            {
+              mods = ["SUPER" "SHIFT"];
+              key = "L";
+            }
+          ];
+          command = {params = "hyprlock";};
+        }
+        {
+          description = "Reset AGS"; # TODO
+          bind = {
+            mods = ["CONTROL" "SUPER"];
+            key = "R";
+          };
+          command = {params = "ags quit; ags run &";};
+        }
+        {
+          description = "Toggle launcher";
+          bind = {
+            mods = ["SUPER"];
+            key = "Tab";
+          };
+          command = {params = toggleWindow "launcher";};
+        }
+        {
+          description = "Toggle between horizontal and vertical bar";
+          bind = {
+            mods = ["SUPER"];
+            key = "T";
+          };
+          command = {params = agsRequest "bar-toggle";};
+        }
+        {
+          description = "Toggle cheatsheet";
+          bind = {
+            mods = ["SUPER"];
+            key = "Slash";
+          };
+          command = {params = toggleWindow "cheatsheet";};
+        }
+        {
+          description = "Suspend system"; # With a delay
+          bind = {
+            mods = ["SUPER" "SHIFT"];
             key = "L";
-          }
-          {
-            mods = [ "SUPER" "SHIFT" ];
-            key = "L";
-          }
-        ];
-        command = { params = "hyprlock"; };
-      }
-      {
-        description = "Reset AGS"; # TODO
-        bind = {
-          mods = [ "CONTROL" "SUPER" ];
-          key = "R";
-        };
-        command = { params = "ags quit; ags run &"; };
-      }
-      {
-        description = "Toggle launcher";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "Tab";
-        };
-        command = { params = toggleWindow "launcher"; };
-      }
-      {
-        description = "Toggle between horizontal and vertical bar";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "T";
-        };
-        command = { params = agsRequest "bar-toggle"; };
-      }
-      {
-        description = "Toggle cheatsheet";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "Slash";
-        };
-        command = { params = toggleWindow "cheatsheet"; };
-      }
-      {
-        description = "Suspend system"; # With a delay
-        bind = {
-          mods = [ "SUPER" "SHIFT" ];
-          key = "L";
-        };
-        command = {
-          params = "sleep 0.1 && systemctl suspend";
-          flags = [ "locked" ];
-        };
-      }
-      {
-        description = "Show popup via AGS JavaScript"; # todo
-        bind = {
-          mods = [ "SUPER" "SHIFT" ];
-          key = "M";
-        };
-        command = {
-          params = "ags run-js 'indicator.popup(1);'";
-          flags = [ "locked" ];
-        };
-      }
-      {
-        description = "Toggle music controls"; # todo
-        bind = {
-          mods = [ "SUPER" ];
-          key = "M";
-        };
-        command = {
-          params =
-            "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
-        };
-      }
-      {
-        description = "Show color scheme"; # todo
-        bind = {
-          mods = [ "SUPER" ];
-          key = "Comma";
-        };
-        command = {
-          params =
-            "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
-        };
-      }
-      {
-        description = "[dev] Test notification";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "F12";
-        };
-        command = {
-          params =
-            "notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'";
-        };
-      }
-      {
-        description = "Urgent notification";
-        bind = {
-          mods = [ "SUPER" "ALT" ];
-          key = "Equal";
-        };
-        command = {
-          params =
-            "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
-        };
-      }
-      {
-        description = "Increase brightness";
-        bind = { key = "XF86MonBrightnessUp"; };
-        command = {
-          params = "brightnessctl set +10%";
-          flags = [ "repeat" ];
-        };
-      }
-      {
-        description = "Decrease brightness";
-        bind = { key = "XF86MonBrightnessDown"; };
-        command = {
-          params = "brightnessctl set 10%-";
-          flags = [ "repeat" ];
-        };
-      }
-      {
-        description = "Speech to text (hold and speak)";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "A";
-        };
-        command = { params = "stt start"; };
-      }
-      {
-        description = "Speech to text (hold and speak)";
-        bind = {
-          mods = [ "SUPER" ];
-          key = "A";
-        };
-        command = {
-          params = "stt stop";
-          flags = [ "release" ];
-        };
-      }
-    ];
+          };
+          command = {
+            params = "sleep 0.1 && systemctl suspend";
+            flags = ["locked"];
+          };
+        }
+        {
+          description = "Show popup via AGS JavaScript"; # todo
+          bind = {
+            mods = ["SUPER" "SHIFT"];
+            key = "M";
+          };
+          command = {
+            params = "ags run-js 'indicator.popup(1);'";
+            flags = ["locked"];
+          };
+        }
+        {
+          description = "Toggle music controls"; # todo
+          bind = {
+            mods = ["SUPER"];
+            key = "M";
+          };
+          command = {
+            params = "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
+          };
+        }
+        {
+          description = "Show color scheme"; # todo
+          bind = {
+            mods = ["SUPER"];
+            key = "Comma";
+          };
+          command = {
+            params = "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
+          };
+        }
+        {
+          description = "[dev] Test notification";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "F12";
+          };
+          command = {
+            params = "notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'";
+          };
+        }
+        {
+          description = "Urgent notification";
+          bind = {
+            mods = ["SUPER" "ALT"];
+            key = "Equal";
+          };
+          command = {
+            params = "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
+          };
+        }
+        {
+          description = "Increase brightness";
+          bind = {key = "XF86MonBrightnessUp";};
+          command = {
+            params = "brightnessctl set +10%";
+            flags = ["repeat"];
+          };
+        }
+        {
+          description = "Decrease brightness";
+          bind = {key = "XF86MonBrightnessDown";};
+          command = {
+            params = "brightnessctl set 10%-";
+            flags = ["repeat"];
+          };
+        }
+        {
+          description = "Speech to text (hold and speak)";
+          bind = {
+            mods = ["SUPER"];
+            key = "A";
+          };
+          command = {params = "stt start";};
+        }
+        {
+          description = "Speech to text (hold and speak)";
+          bind = {
+            mods = ["SUPER"];
+            key = "A";
+          };
+          command = {
+            params = "stt stop";
+            flags = ["release"];
+          };
+        }
+        {
+          description = "Handy push to talk";
+          bind = {
+            mods = ["SUPER"];
+            key = "Z";
+          };
+          command = {params = "handy --toggle-transcription";};
+        }
+        {
+          description = "Handy push to talk";
+          bind = {
+            mods = ["SUPER"];
+            key = "Z";
+          };
+          command = {
+            params = "handy --toggle-transcription";
+            flags = ["release"];
+          };
+        }
+      ];
 
     home-manager.users.${username} = {
       # Make a json with the keybinds available, for example to ags
-      home.file = { ".config/keybinds.json".text = builtins.toJSON cfg; };
+      home.file = {".config/keybinds.json".text = builtins.toJSON cfg;};
 
       # Add only binds here, rest of config is elsewhere
       wayland.windowManager.hyprland.settings = binds;

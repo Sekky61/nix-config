@@ -2,13 +2,14 @@
   description = "Michal's NixOS flake";
 
   outputs = inputs:
-    (inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+    (inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       systems = [
         # systems for which you want to build the `perSystem` attributes
         "x86_64-linux"
       ];
-      imports = [ ./flake ./hosts ];
-    }) // {
+      imports = [./flake ./hosts];
+    })
+    // {
       deploy = {
         sshUser = "root";
 
@@ -19,7 +20,8 @@
             # path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
 
             # Use deployee system, not the deployer system
-            path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos
+            path =
+              inputs.deploy-rs.lib.aarch64-linux.activate.nixos
               inputs.self.nixosConfigurations.nixpi;
           };
         };
@@ -41,7 +43,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = { url = "github:Aylur/ags"; };
+    ags = {url = "github:Aylur/ags";};
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -100,6 +102,14 @@
       # todo share flake
     };
 
-    claude-code = { url = "github:sadjow/claude-code-nix"; };
+    claude-code = {url = "github:sadjow/claude-code-nix";};
+
+    handy = {
+      # todo
+      # https://github.com/mike7d7/dotfiles/blob/8f9747e44c624f6bd0eb5d7e8cf28891cc810ab0/flake.nix#L20
+      # https://github.com/cjpais/Handy/pull/948
+      url = "github:xilec/Handy/fix/nix-update-hashes";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }
