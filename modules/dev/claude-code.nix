@@ -13,7 +13,7 @@ with lib; let
     sound_file=${../../assets/sounds/wiwiwi.mp3}
     notify-send 'CC'
     if [[ -f "$sound_file" ]]; then
-      paplay "$sound_file"
+      nohup paplay "$sound_file" >/dev/null 2>&1 &
     fi
   '';
 in {
