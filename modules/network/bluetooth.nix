@@ -14,7 +14,7 @@ in {
       [
       ]
       ++ lib.lists.optionals graphical [
-        blueberry # Bluetooth gui
+        blueman # Bluetooth gui
       ];
   };
 }

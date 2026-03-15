@@ -18,7 +18,7 @@
     "custom/filler",
     "disk",
     "custom/filler",
-    "custom/blueberry"
+    "custom/blueman"
   ],
   "modules-center": [
     "hyprland/workspaces"
@@ -182,9 +182,9 @@
     "interval": 1,
     "exec": "hyprctl activewindow -j | jq -r '.initialTitle'"
   },
-  "custom/blueberry": {
+  "custom/blueman": {
     "format": "  ",
-    "on-click": "blueberry"
+    "on-click": "blueman"
   },
   "temperature": {
     "thermal-zone": 0,
