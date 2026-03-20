@@ -32,6 +32,24 @@ in {
         programs.claude-code = {
           enable = true;
           settings = {
+            "permissions" = {
+              "allow" = [
+                "Bash(grep:*)"
+                "Bash(find:*)"
+                "Bash(ls:*)"
+                "Bash(cat:*)"
+                "Bash(head:*)"
+                "Bash(tail:*)"
+                "Bash(echo:*)"
+                "Bash(pwd)"
+                "Bash(which:*)"
+                "Bash(git status)"
+                "Bash(git status:*)"
+                "Bash(git add:*)"
+                "Bash(git log:*)"
+                "Bash(git diff:*)"
+              ];
+            };
             hooks = let
               notify-hook = [
                 {
