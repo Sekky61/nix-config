@@ -99,7 +99,7 @@
 
     opencode = {
       url = "github:anomalyco/opencode";
-      # todo share flake
+      inputs.nixpkgs.follows = "nixpkgs-spicy";
     };
 
     claude-code = {url = "github:sadjow/claude-code-nix";};
