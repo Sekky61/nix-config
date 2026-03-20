@@ -43,6 +43,7 @@ in {
         cmake
         alejandra # nix formatter
         python3Packages.pip
+        python315
 
         # CLI tools
         nixos-generators
