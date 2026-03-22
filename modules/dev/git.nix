@@ -46,6 +46,23 @@ in {
         };
         gh-dash = {
           enable = true;
+          settings = {
+            prSections = [
+              {
+                title = "My Pull Requests";
+                filters = "is:open author:@me";
+                layout.author.hidden = true;
+              }
+              {
+                title = "Needs My Review";
+                filters = "is:open label:action:review  -author:@me";
+              }
+              {
+                title = "Involved";
+                filters = "is:open involves:@me -author:@me";
+              }
+            ];
+          };
         };
       };
 
