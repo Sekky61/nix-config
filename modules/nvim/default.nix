@@ -18,4 +18,8 @@ in {
       defaultEditor = true;
     };
   };
+
+  environment.shellAliases = {
+    v = "nvim";
+  };
 }
