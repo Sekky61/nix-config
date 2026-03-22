@@ -41,9 +41,15 @@ in {
             };
           };
         };
+        gh = {
+          enable = true;
+        };
+        gh-dash = {
+          enable = true;
+        };
       };
 
-      home.packages = with pkgs; [git gh];
+      home.packages = with pkgs; [git];
 
       programs.lazygit = {
         enable = true;

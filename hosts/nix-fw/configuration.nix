@@ -68,6 +68,42 @@
       libraries = with pkgs; [
         # Add any missing dynamic libraries for unpackaged programs
         # here, NOT in environment.systemPackages
+
+        # for android studio emulator
+        glibc
+        libcxx
+        libGL
+        libpulseaudio
+        libtiff
+        libuuid
+        zlib
+        libbsd
+        ncurses5
+      gh
+        libdrm
+        stdenv.cc.cc
+        expat
+        freetype
+        nss
+        nspr
+        alsa-lib
+        waylandpp.lib
+        libx11
+        libxext
+        libxdamage
+        libxfixes
+        libxcb
+        libxcomposite
+        libxcursor
+        libxi
+        libxrender
+        libxtst
+        libice
+        libsm
+        libxkbfile
+        libxshmfence
+        pkgsi686Linux.glibc
+        libpng
       ];
     };
   };
@@ -79,7 +115,6 @@
       bash
       fish
       git
-      gh
       qemu
       quickemu
       # home-manager
