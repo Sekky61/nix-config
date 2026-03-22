@@ -7,6 +7,7 @@ readonly CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}"
 readonly LOG_FILE="${CACHE_DIR}/record.log"
 readonly STATE_FILE="${CACHE_DIR}/record.state"
 readonly PIXEL_FORMAT='yuv420p'
+readonly DISABLE_DMABUF='1'
 
 notify() {
   local urgency="$1"
@@ -226,6 +227,10 @@ start_recording() {
   output_file="$(get_output_file)"
 
   cmd=(wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$output_file" -o "$monitor")
+
+  if [[ "$DISABLE_DMABUF" == '1' ]]; then
+    cmd+=(--no-dmabuf)
+  fi
 
   case "$mode" in
     area)
