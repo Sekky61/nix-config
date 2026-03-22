@@ -49,7 +49,10 @@ in {
         };
       };
 
-      home.packages = with pkgs; [git];
+      home.packages = with pkgs; [
+        git
+        worktrunk
+      ];
 
       programs.lazygit = {
         enable = true;
@@ -159,5 +162,12 @@ in {
       fp = "gh pr list | fzf --header 'checkout pr' | awk '{print $(NF-5)}' | xargs git checkout";
       lg = "lazygit";
     };
+
+    # Worktrunk shell integration (enables wt switch to change directory)
+    programs.bash.interactiveShellInit = ''
+      if command -v wt &>/dev/null; then
+        eval "$(wt config shell init bash 2>/dev/null)"
+      fi
+    '';
   };
 }

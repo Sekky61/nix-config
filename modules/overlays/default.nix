@@ -46,5 +46,9 @@
         inherit (final) config;
       };
     })
+
+    (final: prev: {
+      worktrunk = inputs.worktrunk.packages.${pkgs.stdenv.system}.default;
+    })
   ];
 }
