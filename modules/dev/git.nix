@@ -11,32 +11,34 @@
 in {
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
-      programs.git = {
-        enable = true;
-        signing = {
-          format = "ssh";
-          signByDefault = true;
-          key = "~/.ssh/id_ed25519";
-        };
-        settings = {
-          credential.helper = "cache --timeout=3600";
-          user = {
-            name = vcsName;
-            email = vcsEmail;
+      programs = {
+        git = {
+          enable = true;
+          signing = {
+            format = "ssh";
+            signByDefault = true;
+            key = "~/.ssh/id_ed25519";
           };
+          settings = {
+            credential.helper = "cache --timeout=3600";
+            user = {
+              name = vcsName;
+              email = vcsEmail;
+            };
 
-          # Signing
-          commit.gpgsign = true;
-          tag.gpgsign = true;
+            # Signing
+            commit.gpgsign = true;
+            tag.gpgsign = true;
 
-          # More options
-          rebase.updateRefs = true;
-          merge.conflictstyle = "diff3";
-          diff.algorithm = "histogram"; # Verify with `git config --get diff.algorithm`
-          rerere = {
-            # reuse recorded resolution
-            autoupdate = true;
-            enabled = true;
+            # More options
+            rebase.updateRefs = true;
+            merge.conflictstyle = "diff3";
+            diff.algorithm = "histogram"; # Verify with `git config --get diff.algorithm`
+            rerere = {
+              # reuse recorded resolution
+              autoupdate = true;
+              enabled = true;
+            };
           };
         };
       };
