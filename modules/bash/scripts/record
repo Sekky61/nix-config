@@ -42,7 +42,7 @@ EOF
 }
 
 get_date_stamp() {
-  date '+%Y_%m_%d'
+  date '+%Y_%m_%d_%H_%M'
 }
 
 random_words() {
