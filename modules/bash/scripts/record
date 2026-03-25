@@ -6,8 +6,7 @@ readonly VIDEO_DIR="${HOME}/Videos"
 readonly CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}"
 readonly LOG_FILE="${CACHE_DIR}/record.log"
 readonly STATE_FILE="${CACHE_DIR}/record.state"
-readonly PIXEL_FORMAT='yuv420p'
-readonly DISABLE_DMABUF='1'
+readonly RECORDER_BIN='gpu-screen-recorder'
 
 notify() {
   local urgency="$1"
@@ -30,7 +29,7 @@ usage() {
   cat <<'EOF'
 Usage: record [OPTION]
 
-Start or stop a wf-recorder screen recording.
+Start or stop a GPU Screen Recorder capture.
 If a recording is already running, this command stops it.
 
 Options:
@@ -77,8 +76,38 @@ get_output_file() {
   printf '%s\n' "$candidate"
 }
 
+load_state_pid() {
+  local pid=''
+
+  if [[ -f "$STATE_FILE" ]]; then
+    # shellcheck source=/dev/null
+    source "$STATE_FILE"
+  fi
+
+  printf '%s\n' "$pid"
+}
+
+is_recorder_pid() {
+  local pid="$1"
+  local cmdline
+
+  [[ -n "$pid" ]] || return 1
+  kill -0 "$pid" >/dev/null 2>&1 || return 1
+  [[ -r "/proc/${pid}/cmdline" ]] || return 1
+
+  cmdline="$(tr '\0' ' ' <"/proc/${pid}/cmdline" 2>/dev/null || true)"
+  [[ "$cmdline" =~ (^|[[:space:]]|/)${RECORDER_BIN}([[:space:]]|$) ]]
+}
+
 has_running_recording() {
-  pgrep -x wf-recorder >/dev/null 2>&1
+  local pid
+
+  pid="$(load_state_pid)"
+  if is_recorder_pid "$pid"; then
+    return 0
+  fi
+
+  pgrep -f "(^|/)${RECORDER_BIN}([[:space:]]|$)" >/dev/null 2>&1
 }
 
 save_state() {
@@ -105,19 +134,16 @@ load_state_file() {
 
 running_output_file_from_process() {
   local process_line path
-  process_line="$(pgrep -a -x wf-recorder | sed -n '1p' || true)"
+  process_line="$(pgrep -a -f "(^|/)${RECORDER_BIN}([[:space:]]|$)" | sed -n '1p' || true)"
 
-  if [[ "$process_line" =~ [[:space:]]-f[[:space:]]([^[:space:]]+) ]]; then
+  if [[ "$process_line" =~ [[:space:]]-o[[:space:]]([^[:space:]]+) ]]; then
     path="${BASH_REMATCH[1]}"
     printf '%s\n' "$path"
   fi
 }
 
 default_audio_monitor() {
-  local sink
-  sink="$(pactl get-default-sink 2>/dev/null || true)"
-  [[ -n "$sink" ]] || die 'Could not determine default PulseAudio sink'
-  printf '%s.monitor\n' "$sink"
+  printf '%s\n' 'default_output'
 }
 
 select_monitor() {
@@ -148,7 +174,7 @@ select_geometry() {
   local monitor="$1"
   local geometry
 
-  geometry="$(slurp -o "$monitor" 2>/dev/null || true)"
+  geometry="$(slurp -o -f '%wx%h+%x+%y' "$monitor" 2>/dev/null || true)"
   if [[ -z "$geometry" ]]; then
     notify normal 'Recording Cancelled' 'No area selected'
     exit 130
@@ -159,13 +185,9 @@ select_geometry() {
 
 check_dependencies() {
   local mode="$1"
-  local -a required=(wf-recorder jq hyprctl slurp walker)
+  local -a required=(gpu-screen-recorder jq hyprctl slurp walker)
   local -a missing=()
   local cmd
-
-  if [[ "$mode" == 'area-sound' || "$mode" == 'fullscreen-sound' ]]; then
-    required+=(pactl)
-  fi
 
   for cmd in "${required[@]}"; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
@@ -179,7 +201,7 @@ check_dependencies() {
 }
 
 stop_recording() {
-  local output_file
+  local output_file pid
 
   if ! has_running_recording; then
     clear_state
@@ -192,7 +214,12 @@ stop_recording() {
     output_file="$(running_output_file_from_process || true)"
   fi
 
-  pkill -INT -x wf-recorder || true
+  pid="$(load_state_pid)"
+  if is_recorder_pid "$pid"; then
+    kill -INT "$pid" >/dev/null 2>&1 || true
+  else
+    pkill -INT -f "(^|/)${RECORDER_BIN}([[:space:]]|$)" || true
+  fi
 
   for _ in {1..40}; do
     if ! has_running_recording; then
@@ -207,7 +234,12 @@ stop_recording() {
     sleep 0.1
   done
 
-  pkill -TERM -x wf-recorder || true
+  pid="$(load_state_pid)"
+  if is_recorder_pid "$pid"; then
+    kill -TERM "$pid" >/dev/null 2>&1 || true
+  else
+    pkill -TERM -f "(^|/)${RECORDER_BIN}([[:space:]]|$)" || true
+  fi
   clear_state
   if [[ -n "$output_file" ]]; then
     notify low 'Recording Stopped' "Forced stop, file: ${output_file##*/}"
@@ -226,27 +258,24 @@ start_recording() {
   monitor="$(select_monitor)"
   output_file="$(get_output_file)"
 
-  cmd=(wf-recorder --pixel-format "$PIXEL_FORMAT" -f "$output_file" -o "$monitor")
-
-  if [[ "$DISABLE_DMABUF" == '1' ]]; then
-    cmd+=(--no-dmabuf)
-  fi
+  cmd=(gpu-screen-recorder -o "$output_file")
 
   case "$mode" in
     area)
       geometry="$(select_geometry "$monitor")"
-      cmd+=(--geometry "$geometry")
+      cmd+=(-w region -region "$geometry")
       ;;
     area-sound)
       geometry="$(select_geometry "$monitor")"
       audio_monitor="$(default_audio_monitor)"
-      cmd+=(--geometry "$geometry" --audio="$audio_monitor")
+      cmd+=(-w region -region "$geometry" -a "$audio_monitor")
       ;;
     fullscreen)
+      cmd+=(-w "$monitor")
       ;;
     fullscreen-sound)
       audio_monitor="$(default_audio_monitor)"
-      cmd+=(--audio="$audio_monitor")
+      cmd+=(-w "$monitor" -a "$audio_monitor")
       ;;
     *)
       die "Invalid recording mode: ${mode}"
@@ -259,7 +288,7 @@ start_recording() {
 
   sleep 0.2
   if ! kill -0 "$pid" >/dev/null 2>&1; then
-    die "wf-recorder failed to start. See ${LOG_FILE}"
+    die "${RECORDER_BIN} failed to start. See ${LOG_FILE}"
   fi
 
   save_state "$output_file" "$pid"

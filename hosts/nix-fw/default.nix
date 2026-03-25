@@ -26,6 +26,7 @@
       waybar.enable = true;
       walker.enable = true;
       bitwarden.enable = true;
+      gpu-screen-recorder.enable = true;
       obs-studio.enable = true;
       remote-desktop.enable = true;
       ventoy.enable = true;

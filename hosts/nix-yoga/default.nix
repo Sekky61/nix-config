@@ -18,6 +18,7 @@
       docker.enable = true;
       ags.enable = true;
       bitwarden.enable = true;
+      gpu-screen-recorder.enable = true;
       obs-studio.enable = true;
       opencode.enable = true;
       remote-desktop.enable = true;

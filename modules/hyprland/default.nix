@@ -62,7 +62,6 @@ in {
       wayshot
       wlsunset
       wl-clipboard
-      wf-recorder
       libinput # wayland input settings
       libinput-gestures
       xwayland # apps that do not work with wayland like spotify rn
@@ -142,9 +141,7 @@ in {
             #"col.active_border" = "rgba(38bdf8ee)";
             #"col.inactive_border" = "rgba(0369a1cc)";
           };
-          master = {
-            mfact = 0.7;
-          };
+          master = {mfact = 0.7;};
           dwindle = {
             preserve_split = true;
             smart_resizing = false;

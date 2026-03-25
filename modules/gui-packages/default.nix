@@ -8,6 +8,7 @@
     ./apps.nix
     ./browser
     ./fonts.nix
+    ./gpu-screen-recorder.nix
     ./kde-connect.nix
     ./notifications.nix
     ./monitors.nix
