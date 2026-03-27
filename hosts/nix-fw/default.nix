@@ -6,7 +6,7 @@
   ];
 
   michal.programs.podman.enable = true;
-  # docker.enable = true;
+  # michal.programs.docker.enable = true;
 
   michal = {
     audio = {

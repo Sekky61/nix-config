@@ -70,6 +70,7 @@
         # here, NOT in environment.systemPackages
 
         # for android studio emulator
+        # might not be needed
         glibc
         libcxx
         libGL
@@ -79,7 +80,6 @@
         zlib
         libbsd
         ncurses5
-      gh
         libdrm
         stdenv.cc.cc
         expat
