@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly SERVICES=(n8n openclaw)
+
+usage() {
+  cat <<'EOF'
+Usage: homelab-autostart on|off|status
+
+Commands:
+  on      Enable autostart for homelab services
+  off     Disable autostart for homelab services
+  status  Show current autostart state
+EOF
+}
+
+require_command() {
+  local cmd="$1"
+
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    echo "Error: required command '${cmd}' not found in PATH" >&2
+    exit 1
+  fi
+}
+
+unit_file_state() {
+  local service_name="$1"
+  systemctl --user show -p UnitFileState --value "${service_name}.service" 2>/dev/null || true
+}
+
+toggle_service() {
+  local mode="$1"
+  local service_name="$2"
+  local state
+
+  state="$(unit_file_state "${service_name}")"
+
+  case "${mode}" in
+    on)
+      case "${state}" in
+        generated|transient|static)
+          printf '%s: cannot enable autostart (%s)\n' "${service_name}" "${state:-unknown}"
+          ;;
+        enabled|enabled-runtime|linked|linked-runtime|alias)
+          printf '%s: autostart already enabled (%s)\n' "${service_name}" "${state}"
+          ;;
+        *)
+          systemctl --user enable "${service_name}.service"
+          printf '%s: autostart enabled\n' "${service_name}"
+          ;;
+      esac
+      ;;
+    off)
+      case "${state}" in
+        enabled|enabled-runtime|linked|linked-runtime|alias)
+          systemctl --user disable "${service_name}.service"
+          printf '%s: autostart disabled\n' "${service_name}"
+          ;;
+        generated|transient|static)
+          printf '%s: cannot disable autostart (%s)\n' "${service_name}" "${state:-unknown}"
+          ;;
+        *)
+          printf '%s: autostart already disabled (%s)\n' "${service_name}" "${state:-unknown}"
+          ;;
+      esac
+      ;;
+    status)
+      printf '%s: %s\n' "${service_name}" "${state:-unknown}"
+      ;;
+  esac
+}
+
+main() {
+  local mode="${1:-status}"
+
+  require_command systemctl
+
+  case "${mode}" in
+    on|off|status)
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Error: unknown command '${mode}'" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+
+  if ! systemctl --user show-environment >/dev/null 2>&1; then
+    echo 'Error: user systemd is not available; run this as a logged-in user session' >&2
+    exit 1
+  fi
+
+  for service_name in "${SERVICES[@]}"; do
+    toggle_service "${mode}" "${service_name}"
+  done
+}
+
+main "$@"

@@ -120,7 +120,9 @@ Common vars in `openclaw.env`:
 - Expect `~/.config/containers/systemd/n8n.container`, `~/.config/containers/systemd/openclaw.container`, and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
 - Expect `~/.config/containers/systemd/n8n.env` and `~/.config/containers/systemd/openclaw.env` to be preserved after first creation (script only creates them if missing).
 - After install, script runs `systemctl --user daemon-reload` and starts services so changes are picked up.
-- Autostart is disabled by default. To enable it, run install with `HOMELAB_AUTOSTART_SERVICES=true`.
+- Install keeps the current autostart state by default.
+- To change autostart during install, run `./homelab/scripts/install-quadlets.sh --autostart on` or `./homelab/scripts/install-quadlets.sh --autostart off`.
+- For day-to-day toggling, use `homelab-autostart on`, `homelab-autostart off`, or `homelab-autostart status`.
 - The network unit is started (not enabled) because Quadlet may generate it as transient; this avoids `...is transient or generated` errors.
 - On some systems, service units are treated as generated/transient and cannot be enabled; the script falls back to `start` so install still succeeds.
 

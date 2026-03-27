@@ -6,12 +6,74 @@ homelab_dir="$(cd "${script_dir}/.." && pwd)"
 quadlet_dir="${HOME}/.config/containers/systemd"
 n8n_data_dir="${homelab_dir}/data/n8n"
 openclaw_data_dir="${homelab_dir}/data/openclaw"
-autostart_services="${HOMELAB_AUTOSTART_SERVICES:-false}"
+autostart_mode="${HOMELAB_AUTOSTART_SERVICES:-keep}"
 
 log() {
   local message="$1"
   printf '[%s] %s\n' "$(date +%H:%M:%S)" "${message}"
 }
+
+usage() {
+  cat <<'EOF'
+Usage: install-quadlets.sh [--autostart on|off|keep] [-h|--help]
+
+Options:
+  --autostart on     Enable homelab service autostart
+  --autostart off    Disable homelab service autostart
+  --autostart keep   Leave current autostart state unchanged (default)
+  -h, --help         Show this help and exit
+
+Environment:
+  HOMELAB_AUTOSTART_SERVICES=on|off|keep
+  HOMELAB_AUTOSTART_SERVICES=true|false
+EOF
+}
+
+normalize_autostart_mode() {
+  local value="$1"
+
+  case "${value}" in
+    true|on|enable|enabled)
+      printf 'on\n'
+      ;;
+    false|off|disable|disabled)
+      printf 'off\n'
+      ;;
+    keep|"")
+      printf 'keep\n'
+      ;;
+    *)
+      echo "Error: invalid autostart mode '${value}'" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --autostart)
+      [[ $# -ge 2 ]] || {
+        echo "Error: --autostart requires a value" >&2
+        usage >&2
+        exit 1
+      }
+      autostart_mode="$2"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Error: unknown argument '$1'" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+autostart_mode="$(normalize_autostart_mode "${autostart_mode}")"
 
 require_command() {
   local cmd="$1"
@@ -35,30 +97,36 @@ configure_and_start_service() {
 
   unit_file_state="$(systemctl --user show -p UnitFileState --value "${service_name}.service" 2>/dev/null || true)"
 
-  if [[ "${autostart_services}" == "true" ]]; then
-    case "${unit_file_state}" in
-      generated|transient|static)
-        log "${service_name}.service has UnitFileState='${unit_file_state}'; skipping enable"
-        ;;
-      *)
-        log "Enabling ${service_name}.service"
-        systemctl --user enable "${service_name}.service"
-        ;;
-    esac
-  else
-    case "${unit_file_state}" in
-      enabled|enabled-runtime|linked|linked-runtime|alias)
-        log "Disabling ${service_name}.service autostart"
-        systemctl --user disable "${service_name}.service"
-        ;;
-      generated|transient|static)
-        log "${service_name}.service has UnitFileState='${unit_file_state}'; skipping disable"
-        ;;
-      *)
-        log "${service_name}.service autostart already disabled (${unit_file_state:-unknown})"
-        ;;
-    esac
-  fi
+  case "${autostart_mode}" in
+    on)
+      case "${unit_file_state}" in
+        generated|transient|static)
+          log "${service_name}.service has UnitFileState='${unit_file_state}'; skipping enable"
+          ;;
+        *)
+          log "Enabling ${service_name}.service"
+          systemctl --user enable "${service_name}.service"
+          ;;
+      esac
+      ;;
+    off)
+      case "${unit_file_state}" in
+        enabled|enabled-runtime|linked|linked-runtime|alias)
+          log "Disabling ${service_name}.service autostart"
+          systemctl --user disable "${service_name}.service"
+          ;;
+        generated|transient|static)
+          log "${service_name}.service has UnitFileState='${unit_file_state}'; skipping disable"
+          ;;
+        *)
+          log "${service_name}.service autostart already disabled (${unit_file_state:-unknown})"
+          ;;
+      esac
+      ;;
+    keep)
+      log "Leaving ${service_name}.service autostart unchanged (${unit_file_state:-unknown})"
+      ;;
+  esac
 
   log "Starting ${service_name}.service (first start may take longer while image is pulled)"
   systemctl --user start --no-block "${service_name}.service"
@@ -104,7 +172,7 @@ if ! systemctl --user show-environment >/dev/null 2>&1; then
   exit 1
 fi
 
-log "Service autostart toggle: HOMELAB_AUTOSTART_SERVICES=${autostart_services}"
+log "Service autostart mode: ${autostart_mode}"
 
 log "Preparing directories"
 mkdir -p "${quadlet_dir}" "${n8n_data_dir}" "${openclaw_data_dir}"
