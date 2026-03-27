@@ -181,6 +181,14 @@ require("lazy").setup({
     "hrsh7th/cmp-nvim-lsp-document-symbol",
     -- More LSP/formatting plugins below: mason (line ~949), conform (line ~1010)
 
+    {
+        "tadmccorkle/markdown.nvim",
+        ft = "markdown", -- or 'event = "VeryLazy"'
+        opts = {
+            -- configuration here or empty for defaults
+        },
+    },
+
     -- ╔════════════════════════════════════════════════════════════════════╗
     -- ║                     KEYBIND HELPERS                                ║
     -- ╚════════════════════════════════════════════════════════════════════╝
