@@ -1,0 +1,60 @@
+{
+  "$schema": "https://www.schemastore.org/tsconfig.json",
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "moduleDetection": "force",
+    "composite": true,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "exactOptionalPropertyTypes": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "lib": [
+      "ESNext"
+    ],
+    "target": "ESNext",
+    "isolatedModules": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "noEmitOnError": false,
+    "noErrorTruncation": false,
+    "allowJs": false,
+    "checkJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": false,
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "module": "Preserve",
+    "incremental": true,
+    "removeComments": false,
+    "plugins": [
+      {
+        "name": "@effect/language-service"
+      }
+    ],
+    "types": [
+      "node",
+      "bun",
+      "vitest/globals",
+      "vitest/importMeta"
+    ]
+  }
+}
