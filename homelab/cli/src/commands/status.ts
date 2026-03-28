@@ -1,40 +1,55 @@
-import { Args, Command } from "@effect/cli"
-import * as Options from "@effect/cli/Options"
-import { Console, Effect } from "effect"
-import { discoverServices } from "../lib/discovery"
+import { Args, Command } from '@effect/cli'
+import * as Options from '@effect/cli/Options'
+import { Console, Effect } from 'effect'
+import { discoverNetworks, type HomelabService, selectServices } from '../lib/discovery'
 
-const serviceArgument = Args.text({ name: "service" }).pipe(Args.withDefault(null))
-const isJsonOutputOption = Options.boolean("json").pipe(Options.withDescription("Print JSON output"))
+const serviceArgument = Args.text({ name: 'service' }).pipe(Args.withDefault(null))
+const isJsonOutputOption = Options.boolean('json').pipe(Options.withDescription('Print JSON output'))
+
+const renderService = (service: HomelabService) => [
+  `${service.name.padEnd(16)} ${service.health.padEnd(7)} active=${(service.activeState ?? 'unknown').padEnd(8)} enabled=${service.enabledState ?? 'unknown'}`,
+  service.notes.length > 0 ? `  notes: ${service.notes.join(', ')}` : null,
+  service.urls.length > 0 ? `  urls: ${service.urls.join(', ')}` : null
+].filter((line): line is string => line !== null)
 
 export const status = Command.make(
-  "status",
+  'status',
   { isJsonOutput: isJsonOutputOption, serviceName: serviceArgument },
   ({ isJsonOutput, serviceName }) =>
-    Effect.gen(function*() {
-      const services = yield* discoverServices
-      const selectedServices = serviceName ? services.filter((service) => service.name === serviceName) : services
-
-      if (serviceName && selectedServices.length === 0) {
-        yield* Effect.fail(new Error(`Unknown service: ${serviceName}`))
-      }
+    Effect.gen(function* () {
+      const selectedServices = yield* selectServices(serviceName)
+      const networks = serviceName ? [] : yield* discoverNetworks
 
       if (isJsonOutput) {
-        yield* Console.log(JSON.stringify(selectedServices, null, 2))
+        yield* Console.log(
+          JSON.stringify(
+            {
+              networks,
+              services: selectedServices
+            },
+            null,
+            2
+          )
+        )
         return
       }
 
-      for (const service of selectedServices) {
-        yield* Console.log(
-          `- ${service.name}: health=${service.health} active=${service.activeState ?? "unknown"} enabled=${service.enabledState ?? "unknown"}`
-        )
+      if (networks.length > 0) {
+        yield* Console.log('Networks')
 
-        if (service.notes.length > 0) {
-          yield* Console.log(`  notes: ${service.notes.join(", ")}`)
+        for (const network of networks) {
+          yield* Console.log(
+            `- ${network.name}: source=${network.sourceFile} live=${network.hasLiveFile ? 'present' : 'missing'}`
+          )
         }
 
-        if (service.urls.length > 0) {
-          yield* Console.log(`  url: ${service.urls.join(", ")}`)
+        yield* Console.log('')
+      }
+
+      for (const service of selectedServices) {
+        for (const line of renderService(service)) {
+          yield* Console.log(line)
         }
       }
     })
-).pipe(Command.withDescription("Show homelab service health and runtime status"))
+).pipe(Command.withDescription('Show homelab service health and runtime status'))

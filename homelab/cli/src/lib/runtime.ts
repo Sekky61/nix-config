@@ -56,3 +56,25 @@ export const runCommandMaybe = (command: string, args: Array<string>) =>
     Effect.map((result) => result.stdout.trim()),
     Effect.catchAll(() => Effect.succeed(null))
   )
+
+export const runCommandInherit = (command: string, args: Array<string>) =>
+  Effect.tryPromise({
+    catch: (cause) => new Error(String(cause)),
+    try: () =>
+      new Promise<void>((resolve, reject) => {
+        const child = spawn(command, args, {
+          env: process.env,
+          stdio: "inherit"
+        })
+
+        child.on("error", reject)
+        child.on("close", (exitCode) => {
+          if ((exitCode ?? 1) === 0) {
+            resolve()
+            return
+          }
+
+          reject(new CommandExecutionError(command, args, exitCode ?? 1, "", ""))
+        })
+      })
+  })
