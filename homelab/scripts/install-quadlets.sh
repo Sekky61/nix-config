@@ -87,6 +87,27 @@ require_command() {
 require_command podman
 require_command systemctl
 
+require_file() {
+  local file_path="$1"
+
+  if [[ ! -f "${file_path}" ]]; then
+    echo "Error: required file '${file_path}' not found" >&2
+    exit 1
+  fi
+}
+
+install_env_example_if_missing() {
+  local source_file="$1"
+  local destination_file="$2"
+
+  require_file "${source_file}"
+
+  if [[ ! -f "${destination_file}" ]]; then
+    cp "${source_file}" "${destination_file}"
+    log "Created ${destination_file} from example"
+  fi
+}
+
 configure_and_start_service() {
   local service_name="$1"
   local unit_file_state
@@ -177,6 +198,10 @@ log "Service autostart mode: ${autostart_mode}"
 log "Preparing directories"
 mkdir -p "${quadlet_dir}" "${n8n_data_dir}" "${openclaw_data_dir}"
 
+require_file "${homelab_dir}/networks/homelab.network"
+require_file "${homelab_dir}/n8n/n8n.container"
+require_file "${homelab_dir}/openclaw/openclaw.container"
+
 log "Installing network quadlet"
 cp "${homelab_dir}/networks/homelab.network" "${quadlet_dir}/homelab.network"
 
@@ -188,15 +213,8 @@ log "Rendering OpenClaw quadlet"
 sed "s|__OPENCLAW_DATA_DIR__|${openclaw_data_dir}|g" \
   "${homelab_dir}/openclaw/openclaw.container" > "${quadlet_dir}/openclaw.container"
 
-if [[ ! -f "${quadlet_dir}/n8n.env" ]]; then
-  cp "${homelab_dir}/n8n/n8n.env.example" "${quadlet_dir}/n8n.env"
-  log "Created ${quadlet_dir}/n8n.env from example"
-fi
-
-if [[ ! -f "${quadlet_dir}/openclaw.env" ]]; then
-  cp "${homelab_dir}/openclaw/openclaw.env.example" "${quadlet_dir}/openclaw.env"
-  log "Created ${quadlet_dir}/openclaw.env from example"
-fi
+install_env_example_if_missing "${homelab_dir}/n8n/n8n.env.example" "${quadlet_dir}/n8n.env"
+install_env_example_if_missing "${homelab_dir}/openclaw/openclaw.env.example" "${quadlet_dir}/openclaw.env"
 
 log "Reloading user systemd daemon"
 systemctl --user daemon-reload

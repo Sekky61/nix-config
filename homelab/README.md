@@ -4,6 +4,8 @@ This directory keeps rootless Podman Quadlet definitions for homelab services.
 
 Inspired by: https://github.com/fpatrick/podman-quadlet
 
+Runtime state under `homelab/data/` and `homelab/docker/` is local-only and ignored by git.
+
 ## Quick start
 
 1. Prepare directories and env:
@@ -27,6 +29,7 @@ Think of it like this:
 - Files in `~/.config/containers/systemd/` are the live copies systemd uses.
 - `./homelab/scripts/install-quadlets.sh` copies source files to live copies and reloads systemd.
 - Everything stays reproducible (env setup is needed though) thanks to this simple workflow
+- Local runtime files under `homelab/data/` are intentionally not part of the repo.
 
 When to run `install-quadlets.sh`:
 
