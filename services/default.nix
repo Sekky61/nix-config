@@ -38,7 +38,6 @@ in {
       ./adguardhome.nix
       ./home-assistant.nix
       ./homepage.nix
-      ./n8n.nix
     ];
 
   # Add my generic options to lib
