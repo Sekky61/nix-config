@@ -6,87 +6,73 @@ Inspired by: https://github.com/fpatrick/podman-quadlet
 
 Runtime state under `homelab/data/` and `homelab/docker/` is local-only and ignored by git.
 
+## Workflow
+
+Think of the setup in four layers:
+
+- Files in `homelab/` are the source of truth you edit in git.
+- Files in `~/.config/containers/systemd/` are the live Quadlets and env files used by user systemd.
+- `homelab apply` syncs repo state into the live Quadlet directory.
+- `homelab status` shows whether services are configured and healthy.
+
 ## Quick start
 
-1. Prepare directories and env:
-   - `mkdir -p homelab/data/n8n ~/.config/containers/systemd`
-   - `cp homelab/n8n/n8n.env.example ~/.config/containers/systemd/n8n.env`
-2. Install quadlet files:
-   - `./homelab/scripts/install-quadlets.sh`
-3. Start services:
-   - `systemctl --user start n8n.service`
-4. Open:
-   - `http://localhost:5678`
+1. Install CLI deps once:
+   - `cd homelab/cli && bun install`
+2. Inspect what exists:
+   - `bun run start list`
+   - `bun run start status`
+3. Initialize env if needed:
+   - `bun run start env init n8n`
+4. Reconcile live Quadlets and start services:
+   - `bun run start apply`
+5. Open the service:
+   - `bun run start open n8n`
 
-## Lifecycle (simple)
+Once the CLI is wired into your shell or PATH, use `homelab ...` directly instead of `bun run start ...`.
 
-Think of it like this:
+## Day-to-day commands
 
-- Files in `homelab/` are your source of truth (what you edit in git).
-- Files in `~/.config/containers/systemd/` are the live copies systemd uses.
-- `./homelab/scripts/install-quadlets.sh` copies source files to live copies and reloads systemd.
-- Everything stays reproducible (env setup is needed though) thanks to this simple workflow
-- Local runtime files under `homelab/data/` are intentionally not part of the repo.
+- Show discovered resources: `homelab list`
+- Show health: `homelab status` or `homelab status n8n`
+- Sync repo changes into live Quadlets: `homelab apply`
+- Sync one service: `homelab apply n8n`
+- Initialize env from example: `homelab env init n8n`
+- Edit env in your editor: `homelab env edit n8n`
+- Restart a service: `homelab service restart n8n`
+- Enable autostart: `homelab service enable n8n`
+- Disable autostart: `homelab service disable n8n`
+- Open the UI: `homelab open n8n`
 
-When to run `install-quadlets.sh`:
+## When to run what
 
-- Run it the first time you set this up.
-- Run it again any time you change `*.container` or `*.network` files in `homelab/`.
-- Run it after `git pull` if homelab files changed.
+- After changing `*.container` or `*.network` files, run `homelab apply`.
+- After `git pull`, run `homelab status` and then `homelab apply` if homelab files changed.
+- After changing `~/.config/containers/systemd/<service>.env`, restart that service with `homelab service restart <service>`.
+- Use `homelab status` as the first check before dropping to raw `systemctl` or `journalctl`.
 
-When to restart containers:
+## Persistence
 
-- Restart `SERVICE_NAME` after changing `~/.config/containers/systemd/SERVICE_NAME.env`.
-- Command example: `systemctl --user restart n8n.service`
-
-How to check if it is working:
-
-- Status: `systemctl --user status n8n.service --no-pager`
-- Logs: `journalctl --user -u n8n.service -n 100 --no-pager`
-- Open UI: `http://localhost:5678`
-
-Day-to-day update flow:
-
-1. `git pull`
-2. `./homelab/scripts/install-quadlets.sh`
-3. `systemctl --user restart n8n.service`
- 4. `systemctl --user status n8n.service --no-pager`
-
-## Persistence (what survives restarts)
-
-Short answer: persistence is the mounted n8n data dir.
+Short answer: persistence is the mounted service data dir plus the live env file.
 
 - `homelab/data/n8n` is mounted into the container as `/home/node/.n8n`.
-- That directory keeps n8n state (including SQLite DB by default), config, and keys.
+- That directory keeps n8n state, config, and keys.
 - If that directory is deleted, n8n starts like a fresh install.
-- `~/.config/containers/systemd/n8n.env` is also important persistent config (especially secrets), but it is config, not app data.
+- `~/.config/containers/systemd/n8n.env` is persistent config, especially secrets, but not app data.
 
-Backups:
-- Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
+Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
 
-## How `~/.config/containers/systemd` works
+## How live Quadlets work
 
-- For rootless Quadlet, systemd reads unit definitions from `~/.config/containers/systemd` (your user-level config, not repo-managed by default).
-- In this repo, `homelab/*.container` and `homelab/*.network` are source files; `./homelab/scripts/install-quadlets.sh` copies rendered files into `~/.config/containers/systemd`.
-- Expect `~/.config/containers/systemd/n8n.container` and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
-- Expect `~/.config/containers/systemd/n8n.env` to be preserved after first creation (script only creates it if missing).
-- After install, script runs `systemctl --user daemon-reload` and starts services so changes are picked up.
-- Install keeps the current autostart state by default.
-- To change autostart during install, run `./homelab/scripts/install-quadlets.sh --autostart on` or `./homelab/scripts/install-quadlets.sh --autostart off`.
-- For day-to-day toggling, use `homelab-autostart on`, `homelab-autostart off`, or `homelab-autostart status`.
-- The network unit is started (not enabled) because Quadlet may generate it as transient; this avoids `...is transient or generated` errors.
-- On some systems, service units are treated as generated/transient and cannot be enabled; the script falls back to `start` so install still succeeds.
-
-What to sync and how often:
-
-- Sync repo config (`git pull` + rerun install script) whenever you change Quadlet files in `homelab/`, switch branches, or pull homelab updates.
-- For normal operation, no periodic sync is required if nothing changed.
-- Keep host-specific values and secrets in `~/.config/containers/systemd/n8n.env`; update only when your host/domain/secrets change.
-- A practical cadence is event-based (on config changes), plus an optional monthly review to rotate credentials and confirm env values.
+- Rootless Quadlet reads units from `~/.config/containers/systemd`.
+- `homelab apply` writes live `.container` and `.network` files there.
+- `homelab apply` creates missing data dirs under `homelab/data/<service>`.
+- `homelab env init <service>` creates the live env file only if it is missing.
+- `homelab apply` reloads user systemd and starts the shared network unit.
+- Service autostart is managed with `homelab service enable <service>` and `homelab service disable <service>`.
 
 ## Notes
 
 - This setup is rootless and uses your user systemd instance.
-- The install script writes an absolute `Volume=` path to `homelab/data/n8n` in this repo.
-- If you want auto-updates, enable the timer:
-  - `systemctl --user enable --now podman-auto-update.timer`
+- The rendered `Volume=` path points at the local repo path under `homelab/data/<service>`.
+- If you want container auto-updates, enable the timer with `systemctl --user enable --now podman-auto-update.timer`.

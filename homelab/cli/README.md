@@ -9,7 +9,7 @@ This app was bootstrapped from the `eos-utils` Effect.ts CLI and now implements 
 ```sh
 cd homelab/cli
 bun install
-bun run src/bin.ts --help
+bun run start --help
 ```
 
 ## Current command surface

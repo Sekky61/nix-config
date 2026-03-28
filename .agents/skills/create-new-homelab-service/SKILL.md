@@ -11,11 +11,7 @@ Steps
 1. Create `homelab/<service>/`.
 2. Add `homelab/<service>/<service>.container`.
 3. Add `homelab/<service>/<service>.env.example` only if the service needs env vars.
-4. Update `homelab/scripts/install-quadlets.sh` to:
-   - create the service data dir if needed
-   - render or copy the new quadlet
-   - install the example env file if missing
-   - start the service after `daemon-reload`
+4. Make sure the service is discoverable by the CLI and follows the existing naming pattern so `homelab list`, `homelab status`, and `homelab apply` pick it up automatically.
 5. Update `homelab/README.md` with the new quick-start and service URLs.
 
 Rules
@@ -25,5 +21,5 @@ Rules
 - Keep changes non-breaking for existing services.
 
 Checks
-- Read `homelab/README.md` and `homelab/scripts/install-quadlets.sh` first.
+- Read `homelab/README.md` and inspect an existing service such as `homelab/n8n/` first.
 - If there is already a similar service, copy its structure instead of inventing a new one.

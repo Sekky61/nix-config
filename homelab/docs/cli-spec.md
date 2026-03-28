@@ -4,7 +4,7 @@ The util `homelab`
 
 ## Why this exists
 
-`homelab/scripts/install-quadlets.sh` currently mixes several jobs into one flow:
+The old shell workflow mixed several jobs into one flow:
 
 - discover source files in the repo
 - render live Quadlet files into `~/.config/containers/systemd`
@@ -377,7 +377,7 @@ These are optional, but useful if the implementation supports them:
 
 Keep aliases secondary in help text; canonical commands should stay obvious.
 
-## Migration from `install-quadlets.sh`
+## Migration from the old shell scripts
 
 Desired mapping:
 
@@ -386,11 +386,11 @@ Desired mapping:
 - `homelab-autostart off` -> `homelab service disable <service>` or `homelab apply --autostart off`
 - `systemctl --user status n8n.service` -> `homelab status n8n`
 
-Transition plan:
+Migration status:
 
-1. Build `homelab apply` as the replacement for current install behavior
-2. Update docs and shell completions to point to `homelab`
-3. Remove `homelab/scripts/install-quadlets.sh` completely after the new CLI is working
+1. `homelab apply` replaces the old install flow
+2. docs now point to `homelab`
+3. the old shell scripts have been removed
 
 ## Implementation constraints the API should respect
 
@@ -465,4 +465,4 @@ If we want a small but strong first version, ship this set first:
 - `homelab env path|init|edit <service>`
 - integrated health checks in `status` and `apply`
 
-That would already cover almost every action currently spread across README knowledge, `install-quadlets.sh`, and raw `systemctl` commands.
+That already covers almost every action that used to be spread across README knowledge, the old shell scripts, and raw `systemctl` commands.
