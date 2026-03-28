@@ -9,17 +9,14 @@ Runtime state under `homelab/data/` and `homelab/docker/` is local-only and igno
 ## Quick start
 
 1. Prepare directories and env:
-   - `mkdir -p homelab/data/n8n homelab/data/openclaw ~/.config/containers/systemd`
+   - `mkdir -p homelab/data/n8n ~/.config/containers/systemd`
    - `cp homelab/n8n/n8n.env.example ~/.config/containers/systemd/n8n.env`
-   - `cp homelab/openclaw/openclaw.env.example ~/.config/containers/systemd/openclaw.env`
 2. Install quadlet files:
    - `./homelab/scripts/install-quadlets.sh`
 3. Start services:
    - `systemctl --user start n8n.service`
-   - `systemctl --user start openclaw.service`
 4. Open:
    - `http://localhost:5678`
-   - `http://localhost:18789`
 
 ## Lifecycle (simple)
 
@@ -53,9 +50,7 @@ Day-to-day update flow:
 1. `git pull`
 2. `./homelab/scripts/install-quadlets.sh`
 3. `systemctl --user restart n8n.service`
-4. `systemctl --user restart openclaw.service`
-5. `systemctl --user status n8n.service --no-pager`
-6. `systemctl --user status openclaw.service --no-pager`
+ 4. `systemctl --user status n8n.service --no-pager`
 
 ## Persistence (what survives restarts)
 
@@ -73,8 +68,8 @@ Backups:
 
 - For rootless Quadlet, systemd reads unit definitions from `~/.config/containers/systemd` (your user-level config, not repo-managed by default).
 - In this repo, `homelab/*.container` and `homelab/*.network` are source files; `./homelab/scripts/install-quadlets.sh` copies rendered files into `~/.config/containers/systemd`.
-- Expect `~/.config/containers/systemd/n8n.container`, `~/.config/containers/systemd/openclaw.container`, and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
-- Expect `~/.config/containers/systemd/n8n.env` and `~/.config/containers/systemd/openclaw.env` to be preserved after first creation (script only creates them if missing).
+- Expect `~/.config/containers/systemd/n8n.container` and `~/.config/containers/systemd/homelab.network` to be overwritten on each install run.
+- Expect `~/.config/containers/systemd/n8n.env` to be preserved after first creation (script only creates it if missing).
 - After install, script runs `systemctl --user daemon-reload` and starts services so changes are picked up.
 - Install keeps the current autostart state by default.
 - To change autostart during install, run `./homelab/scripts/install-quadlets.sh --autostart on` or `./homelab/scripts/install-quadlets.sh --autostart off`.

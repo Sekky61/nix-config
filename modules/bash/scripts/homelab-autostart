@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly SERVICES=(n8n openclaw)
+readonly SERVICES=(n8n)
 
 usage() {
   cat <<'EOF'

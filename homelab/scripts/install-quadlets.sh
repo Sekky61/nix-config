@@ -5,7 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 homelab_dir="$(cd "${script_dir}/.." && pwd)"
 quadlet_dir="${HOME}/.config/containers/systemd"
 n8n_data_dir="${homelab_dir}/data/n8n"
-openclaw_data_dir="${homelab_dir}/data/openclaw"
 autostart_mode="${HOMELAB_AUTOSTART_SERVICES:-keep}"
 
 log() {
@@ -196,11 +195,10 @@ fi
 log "Service autostart mode: ${autostart_mode}"
 
 log "Preparing directories"
-mkdir -p "${quadlet_dir}" "${n8n_data_dir}" "${openclaw_data_dir}"
+mkdir -p "${quadlet_dir}" "${n8n_data_dir}"
 
 require_file "${homelab_dir}/networks/homelab.network"
 require_file "${homelab_dir}/n8n/n8n.container"
-require_file "${homelab_dir}/openclaw/openclaw.container"
 
 log "Installing network quadlet"
 cp "${homelab_dir}/networks/homelab.network" "${quadlet_dir}/homelab.network"
@@ -209,12 +207,7 @@ log "Rendering n8n quadlet"
 sed "s|__N8N_DATA_DIR__|${n8n_data_dir}|g" \
   "${homelab_dir}/n8n/n8n.container" > "${quadlet_dir}/n8n.container"
 
-log "Rendering OpenClaw quadlet"
-sed "s|__OPENCLAW_DATA_DIR__|${openclaw_data_dir}|g" \
-  "${homelab_dir}/openclaw/openclaw.container" > "${quadlet_dir}/openclaw.container"
-
 install_env_example_if_missing "${homelab_dir}/n8n/n8n.env.example" "${quadlet_dir}/n8n.env"
-install_env_example_if_missing "${homelab_dir}/openclaw/openclaw.env.example" "${quadlet_dir}/openclaw.env"
 
 log "Reloading user systemd daemon"
 systemctl --user daemon-reload
@@ -224,8 +217,6 @@ log "Starting homelab-network.service"
 systemctl --user start homelab-network.service
 
 configure_and_start_service n8n
-configure_and_start_service openclaw
 
 log "Installed Quadlets to ${quadlet_dir}"
 log "n8n should be available at http://localhost:5678"
-log "OpenClaw should be available at http://localhost:18789"
