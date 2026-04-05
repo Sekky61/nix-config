@@ -1428,21 +1428,16 @@ vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = t
 
 -- error lens, source: https://github.com/Civitasv/runvim/tree/master
 local signs = {
-    { name = "DiagnosticSignError", text = " " },
-    { name = "DiagnosticSignWarn", text = " " },
-    { name = "DiagnosticSignHint", text = " " },
-    { name = "DiagnosticSignInfo", text = " " },
+    [vim.diagnostic.severity.ERROR] = " ",
+    [vim.diagnostic.severity.WARN] = " ",
+    [vim.diagnostic.severity.HINT] = " ",
+    [vim.diagnostic.severity.INFO] = " ",
 }
-for _, sign in ipairs(signs) do
-    -- left side symbols
-    -- todo will be deprecated
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
-end
 
 vim.diagnostic.config({
     virtual_text = { prefix = "" },
     signs = {
-        active = signs,
+        text = signs,
     },
     update_in_insert = true,
     underline = true,
