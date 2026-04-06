@@ -622,6 +622,7 @@ require("lazy").setup({
     {
         -- Syntax parsing with text objects (af/if/ac/ic/ap/ip) and motions (]f/[f/]]/[[)
         "nvim-treesitter/nvim-treesitter",
+        -- todo https://www.qu8n.com/posts/treesitter-migration-guide-for-nvim-0-12
         dependencies = {
             "nvim-treesitter/nvim-treesitter-textobjects", -- Text object motions
         },
