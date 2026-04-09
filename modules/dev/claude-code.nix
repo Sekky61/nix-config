@@ -10,9 +10,26 @@ with lib; let
   dev_cfg = config.michal.dev;
 
   cc-notification-script = pkgs.writeShellScriptBin "cc-notification-script" ''
-    sound_file=${../../assets/sounds/wiwiwi.mp3}
     notify-send 'CC'
-    if [[ -f "$sound_file" ]]; then
+    sound_files=(
+      ${../../assets/sounds/wiwiwi.mp3}
+      ${../../assets/sounds/boha.mp3}
+      ${../../assets/sounds/cibulu_doma.mp3}
+      ${../../assets/sounds/co_robim4.mp3}
+      ${../../assets/sounds/korun.mp3}
+      ${../../assets/sounds/zaplatit.mp3}
+      ${../../assets/sounds/zastavili.mp3}
+    )
+
+    available_sound_files=()
+    for sound_file in "''${sound_files[@]}"; do
+      if [[ -f "$sound_file" ]]; then
+        available_sound_files+=("$sound_file")
+      fi
+    done
+
+    if (( ''${#available_sound_files[@]} > 0 )); then
+      sound_file="''${available_sound_files[RANDOM % ''${#available_sound_files[@]}]}"
       nohup paplay "$sound_file" >/dev/null 2>&1 &
     fi
   '';
