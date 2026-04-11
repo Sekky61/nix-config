@@ -2081,7 +2081,7 @@ luasnip.add_snippets("typescript", {
     s("linkedsignal", {
         t("protected readonly "),
         i(1, "foo"),
-        t("Signal: Signal<"),
+        t("WritableSignal: Signal<"),
         i(2, "string"),
         t("> = linkedSignal"),
         t({ "(() => {", "" }),
