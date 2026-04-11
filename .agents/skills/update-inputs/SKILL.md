@@ -3,25 +3,55 @@ name: update-inputs
 description: Update flake inputs safely, use when a system or package update has been requested
 ---
 
-Use this skill when updating dependencies of the flake.
+Use this skill when the user wants to update flake inputs, either broadly or selectively.
+
+The goal of this skill is to change the update scope cleanly. Build and switch steps belong to maintenance/build or maintenance/apply flows.
+
+## Inputs
+
+- Read `flake.nix` first to spot special cases before updating:
+  - PR refs such as `?ref=pull/...`
+  - forks and custom branches
+  - inputs that intentionally follow other inputs
+- If the user did not name a host, assume the current host for any later build handoff.
 
 ## Scenarios
 
-1) Update inputs to the latest available versions:
+1. Update all standard inputs:
    - `nix flake update`
-2) If only specific inputs should be updated, run:
-   - `nix flake update nixpkgs`, `nix flake update nixpkgs opencode`
-3) If the latest version of an input is broken, pin that input to a known-good commit:
+2. Update only specific inputs:
+   - `nix flake update nixpkgs`
+   - `nix flake update nixpkgs opencode`
+3. If the latest revision is broken, pin one input narrowly:
    - `nix flake lock --override-input opencode github:anomalyco/opencode/62a24c2`
-   - Use cli tools to find revisions that might be good
-   - Leave a todo comment saying `# TODO Unpin later`
+   - Prefer a single-input override over broad rollback
+   - Add a nearby comment in `flake.nix` only when that pin is expected to stay for a while, for example `# TODO unpin after upstream fix`
+4. If the user asks for only fast-moving dev tools, prefer updating the relevant input instead of everything:
+   - examples in this repo include `opencode`, `claude-code`, and similar tooling inputs
 
-Then try `nh os build .`, see if it builds, fix small errors straight away (syntax, easy logic bugs), consult about bigger issues.
+## Workflow
+
+1. Inspect `git status --short`.
+   - Do not overwrite unrelated user changes.
+   - If `flake.nix` or `flake.lock` already have manual edits you do not understand, stop and ask.
+2. Inspect `flake.nix` for pinned, forked, or unusual inputs.
+3. Update the requested input set.
+4. Review the resulting `flake.lock` diff and summarize the notable upstream movement.
+5. Hand off to a build/apply step only if the user asked for it.
+
+## Boundaries
+
+- Default change set is `flake.lock` only.
+- Change `flake.nix` only when adding, removing, or adjusting an override/pin.
+- Keep overrides narrow to the affected input instead of broad changes.
+- Do not run `scripts/update` from this skill unless the user explicitly asked to apply the update.
 
 ## Notes
 
-- Commit only `flake.lock` (and `flake.nix` only if input definitions changed)
-- Commit name should be `flake: update` or `flake: update opencode` or similar
-- Keep overrides narrow to the affected input instead of broad changes
-- Commit to the branch you are at
-
+- If a host-specific package comes from `pkgs.michal-unstable`, keep that usage narrow. Do not switch broad modules or whole systems to `michal-unstable`.
+- For hypothetical update previews, do not rely on `nh -u --no-write-lock-file` to preserve the repo; observed behavior shows it may still write `flake.lock`.
+- For safer previews, prefer a temporary repo copy or an explicit post-command `git diff -- flake.lock` check and immediate revert if needed.
+- Preferred commit names:
+  - `flake: update`
+  - `flake: update nixpkgs`
+  - `flake: pin opencode`
