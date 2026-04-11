@@ -693,64 +693,187 @@ require("lazy").setup({
                     node_decremental = "<M-space>",
                 },
             },
-            textobjects = {
-                -- peek definition with treesitter
-                lsp_interop = {
-                    enable = true,
-                    border = "none",
-                    floating_preview_opts = {},
-                    peek_definition_code = {
-                        ["<leader>df"] = "@function.outer",
-                        ["<leader>dF"] = "@class.outer",
-                    },
-                },
-                select = {
-                    enable = true,
-                    lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-                    keymaps = {
-                        -- You can use the capture groups defined in textobjects.scm
-                        ["ap"] = { query = "@parameter.outer", desc = "parameter" },
-                        ["ip"] = { query = "@parameter.inner", desc = "parameter" },
-                        ["af"] = { query = "@function.outer", desc = "function" },
-                        ["if"] = { query = "@function.inner", desc = "function" },
-                        ["ac"] = { query = "@class.outer", desc = "class" },
-                        ["ic"] = { query = "@class.inner", desc = "class" },
-                    },
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true, -- whether to set jumps in the jumplist
-                    goto_next_start = {
-                        ["]f"] = "@function.outer",
-                        ["]]"] = "@class.outer",
-                        ["]o"] = "@loop.*",
-                        ["]c"] = "@conditional.outer",
-                        ["]b"] = "@block.outer",
-                        ["]s"] = "@statement.outer",
-                    },
-                    goto_next_end = {
-                        ["]F"] = "@function.outer",
-                        ["]["] = "@class.outer",
-                    },
-                    goto_previous_start = {
-                        ["[f"] = "@function.outer",
-                        ["[["] = "@class.outer",
-                        ["[o"] = "@loop.*",
-                        ["[c"] = "@conditional.outer",
-                        ["[b"] = "@block.outer",
-                        ["[s"] = "@statement.outer",
-                    },
-                    goto_previous_end = {
-                        ["[F"] = "@function.outer",
-                        ["[]"] = "@class.outer",
-                    },
-                },
-            },
         },
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
         branch = "main",
+        opts = {
+            -- lsp_interop = {
+            -- -- peek definition with treesitter
+            --     enable = true,
+            --     border = "none",
+            --     floating_preview_opts = {},
+            --     peek_definition_code = {
+            --         ["<leader>df"] = "@function.outer",
+            --         ["<leader>dF"] = "@class.outer",
+            --     },
+            -- },
+            select = {
+                enable = true,
+                lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+            },
+            move = {
+                enable = true,
+                set_jumps = true, -- whether to set jumps in the jumplist
+            },
+        },
+        config = function()
+            local select = require("nvim-treesitter-textobjects.select")
+            local move = require("nvim-treesitter-textobjects.move")
+
+            local function map(mode, lhs, rhs, desc, opts)
+                local keymap_opts = vim.tbl_extend("force", opts or {}, { desc = desc })
+                vim.keymap.set(mode, lhs, rhs, keymap_opts)
+            end
+
+            local function map_textobject(lhs, query, desc)
+                map({ "x", "o" }, lhs, function()
+                    select.select_textobject(query, "textobjects")
+                end, desc)
+            end
+
+            local function map_move(lhs, method, query, desc)
+                map({ "n", "x", "o" }, lhs, function()
+                    move[method](query, "textobjects")
+                end, desc)
+            end
+
+            map_textobject("ap", "@parameter.outer", "Treesitter: around parameter")
+            map_textobject("ip", "@parameter.inner", "Treesitter: inside parameter")
+            map_textobject("af", "@function.outer", "Treesitter: around function")
+            map_textobject("if", "@function.inner", "Treesitter: inside function")
+            map_textobject("ac", "@class.outer", "Treesitter: around class")
+            map_textobject("ic", "@class.inner", "Treesitter: inside class")
+
+            -- todo does not work
+            map_move("]f", "goto_next_start", "@function.outer", "Treesitter: next function start")
+            -- works
+            -- vim.keymap.set({ "n", "x", "o" }, "]m", function()
+            --     require("nvim-treesitter-textobjects.move").goto_next_start(
+            --         "@function.outer",
+            --         "textobjects"
+            --     )
+            -- end)
+
+            map_move("]]", "goto_next_start", "@class.outer", "Treesitter: next class start")
+            map_move(
+                "]o",
+                "goto_next_start",
+                { "@loop.inner", "@loop.outer" },
+                "Treesitter: next loop start"
+            )
+            map_move(
+                "]c",
+                "goto_next_start",
+                "@conditional.outer",
+                "Treesitter: next conditional start"
+            )
+            map_move("]b", "goto_next_start", "@block.outer", "Treesitter: next block start")
+            map_move(
+                "]s",
+                "goto_next_start",
+                "@statement.outer",
+                "Treesitter: next statement start"
+            )
+            map_move("]F", "goto_next_end", "@function.outer", "Treesitter: next function end")
+            map_move("][", "goto_next_end", "@class.outer", "Treesitter: next class end")
+            map_move(
+                "[f",
+                "goto_previous_start",
+                "@function.outer",
+                "Treesitter: previous function start"
+            )
+            map_move(
+                "[[",
+                "goto_previous_start",
+                "@class.outer",
+                "Treesitter: previous class start"
+            )
+            map_move(
+                "[o",
+                "goto_previous_start",
+                { "@loop.inner", "@loop.outer" },
+                "Treesitter: previous loop start"
+            )
+            map_move(
+                "[c",
+                "goto_previous_start",
+                "@conditional.outer",
+                "Treesitter: previous conditional start"
+            )
+            map_move(
+                "[b",
+                "goto_previous_start",
+                "@block.outer",
+                "Treesitter: previous block start"
+            )
+            map_move(
+                "[s",
+                "goto_previous_start",
+                "@statement.outer",
+                "Treesitter: previous statement start"
+            )
+            map_move(
+                "[F",
+                "goto_previous_end",
+                "@function.outer",
+                "Treesitter: previous function end"
+            )
+            map_move("[]", "goto_previous_end", "@class.outer", "Treesitter: previous class end")
+
+            -- Make treesitter motions repeatable with ; and ,
+            local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
+
+            -- Repeat movement with ; and ,
+            -- ensure ; goes forward and , goes backward regardless of the last direction
+            map(
+                { "n", "x", "o" },
+                ";",
+                ts_repeat_move.repeat_last_move_next,
+                "Treesitter: repeat next move"
+            )
+            map(
+                { "n", "x", "o" },
+                ",",
+                ts_repeat_move.repeat_last_move_previous,
+                "Treesitter: repeat previous move"
+            )
+
+            -- vim way: ; goes to the direction you were moving.
+            -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+            -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+
+            -- Optionally, make builtin f, F, t, T also repeatable with ; and ,
+            map(
+                { "n", "x", "o" },
+                "f",
+                ts_repeat_move.builtin_f_expr,
+                "Treesitter: repeatable f",
+                { expr = true }
+            )
+            map(
+                { "n", "x", "o" },
+                "F",
+                ts_repeat_move.builtin_F_expr,
+                "Treesitter: repeatable F",
+                { expr = true }
+            )
+            map(
+                { "n", "x", "o" },
+                "t",
+                ts_repeat_move.builtin_t_expr,
+                "Treesitter: repeatable t",
+                { expr = true }
+            )
+            map(
+                { "n", "x", "o" },
+                "T",
+                ts_repeat_move.builtin_T_expr,
+                "Treesitter: repeatable T",
+                { expr = true }
+            )
+        end,
     },
 
     {
@@ -1433,24 +1556,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     group = highlight_group,
     pattern = "*",
 })
-
--- Make treesitter motions repeatable with ; and ,
-local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
-
--- Repeat movement with ; and ,
--- ensure ; goes forward and , goes backward regardless of the last direction
-vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
-
--- vim way: ; goes to the direction you were moving.
--- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
--- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
-
--- Optionally, make builtin f, F, t, T also repeatable with ; and ,
-vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
-vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
 
 -- error lens, source: https://github.com/Civitasv/runvim/tree/master
 local signs = {
