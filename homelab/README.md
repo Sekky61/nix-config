@@ -74,5 +74,6 @@ Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
 ## Notes
 
 - This setup is rootless and uses your user systemd instance.
+- The checked-in `homelab/n8n/n8n.env.example` assumes n8n is exposed as a Tailscale service at `n8n.rhino-mora.ts.net`.
 - The rendered `Volume=` path points at the local repo path under `homelab/data/<service>`.
 - If you want container auto-updates, enable the timer with `systemctl --user enable --now podman-auto-update.timer`.
