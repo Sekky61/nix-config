@@ -564,12 +564,17 @@ require("lazy").setup({
             vim.keymap.set("n", "ff", tsb.find_files, { desc = "[F]ind [F]iles" })
             vim.keymap.set("n", "fh", tsb.help_tags, { desc = "[F]ind [H]elp" })
             vim.keymap.set("n", "fv", "<cmd>Telescope ast_grep<cr>", { desc = "[F]ind [V]AST" })
-            vim.keymap.set("n", "<leader>sw", tsb.grep_string, { desc = "[S]earch current [W]ord" })
+            vim.keymap.set("n", "fw", tsb.grep_string, { desc = "[F]ind current [W]ord" })
             vim.keymap.set("n", "fg", tsb.live_grep, { desc = "[F]ind [G]rep" })
             vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
-            vim.keymap.set("n", "<leader>ss", tsb.git_status, { desc = "[S]earch [S]tatus" })
+            vim.keymap.set("n", "fs", tsb.git_status, { desc = "[F]ind [S]tatus" })
             vim.keymap.set("n", "fr", tsb.resume, { desc = "[F]ind [R]esume" })
-            vim.keymap.set("n", "ft", "<cmd>Telescope grapple tags<cr>", { desc = "[F]ind [T]ags" })
+            vim.keymap.set(
+                "n",
+                "ft",
+                "<cmd>Telescope grapple tags<cr>",
+                { desc = "[F]ind [T]ags (grapple)" }
+            )
             vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
             vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sh", tsb.help_tags, { desc = "[S]earch [H]help" })
@@ -585,6 +590,11 @@ require("lazy").setup({
                     cwd = vim.fn.expand("%:p:h"),
                 })
             end, { desc = "[S]earch from [C]urrent dir" })
+            vim.keymap.set("n", "fc", function()
+                require("telescope.builtin").live_grep({
+                    cwd = vim.fn.expand("%:p:h"),
+                })
+            end, { desc = "[F]ind [C]urrent dir (Grep)" })
 
             -- see treesitter symbols
             vim.keymap.set(
