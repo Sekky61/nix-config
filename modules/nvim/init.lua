@@ -621,6 +621,73 @@ require("lazy").setup({
     -- ║                     CODE INTELLIGENCE                              ║
     -- ╚════════════════════════════════════════════════════════════════════╝
     {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        ---@type Flash.Config
+        opts = {
+            -- f,t,F,T motions: search with fe (find next 'e'), press f again to find next e
+            label = {
+                rainbow = {
+                    enabled = true,
+                    -- number between 1 and 9
+                    shade = 3,
+                },
+            },
+            modes = {
+                char = {
+                    jump_labels = true,
+                },
+                search = {
+                    enabled = true,
+                },
+            },
+        },
+        keys = {
+            {
+                "s",
+                mode = { "n", "x", "o" },
+                function()
+                    require("flash").jump()
+                end,
+                desc = "Flash",
+            },
+            {
+                "<c-space>",
+                mode = { "n", "x", "o" },
+                function()
+                    -- once in, use ; and , to increase the selection
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+
+            {
+                "R",
+                mode = { "o", "x" },
+                function()
+                    require("flash").treesitter_search()
+                end,
+                desc = "Treesitter Search",
+            },
+            {
+                "<c-s>",
+                mode = { "c" },
+                function()
+                    require("flash").toggle()
+                end,
+                desc = "Toggle Flash Search",
+            },
+        },
+    },
+    {
         -- Syntax parsing with text objects (af/if/ac/ic/ap/ip) and motions (]f/[f/]]/[[)
         "nvim-treesitter/nvim-treesitter",
         branch = "main",
@@ -686,27 +753,7 @@ require("lazy").setup({
                 :totable()
             require("nvim-treesitter").install(parsersToInstall)
         end,
-        opts = {
-            modules = {},
-            ignore_install = {},
-            -- Add languages to be installed here that you want installed for treesitter
-            sync_install = false,
-
-            -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-            auto_install = true,
-
-            -- highlight = { enable = true },
-            -- indent = { enable = true },
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    init_selection = "<c-space>",
-                    node_incremental = "<c-space>",
-                    scope_incremental = "<c-s>",
-                    node_decremental = "<M-space>",
-                },
-            },
-        },
+        opts = {},
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
