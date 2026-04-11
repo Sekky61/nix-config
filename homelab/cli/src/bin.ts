@@ -5,6 +5,7 @@ import { BunContext, BunRuntime } from "@effect/platform-bun"
 import { Effect } from "effect"
 import pkg from "../package.json" with { type: "json" }
 import { apply } from './commands/apply'
+import { backup } from './commands/backup'
 import { env } from './commands/env'
 import { list } from './commands/list'
 import { open } from './commands/open'
@@ -14,7 +15,7 @@ import { status } from './commands/status'
 
 const command = Command.make(pkg.name, {}, () => Effect.void).pipe(
   Command.withDescription('Homelab utility CLI'),
-  Command.withSubcommands([list, status, apply, service, env, open, paths])
+  Command.withSubcommands([list, status, apply, backup, service, env, open, paths])
 )
 
 const cli = Command.run(command, {

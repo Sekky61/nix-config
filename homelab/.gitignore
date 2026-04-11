@@ -1,4 +1,5 @@
 data/**
 !data/.gitkeep
+backups/**
 docker/**
 *.env

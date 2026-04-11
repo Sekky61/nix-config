@@ -37,6 +37,7 @@ Once the CLI is wired into your shell or PATH, use `homelab ...` directly instea
 - Show health: `homelab status` or `homelab status n8n`
 - Sync repo changes into live Quadlets: `homelab apply`
 - Sync one service: `homelab apply n8n`
+- Create a local backup archive: `homelab backup` or `homelab backup n8n`
 - Initialize env from example: `homelab env init n8n`
 - Edit env in your editor: `homelab env edit n8n`
 - Restart a service: `homelab service restart n8n`
@@ -61,6 +62,8 @@ Short answer: persistence is the mounted service data dir plus the live env file
 - `~/.config/containers/systemd/n8n.env` is persistent config, especially secrets, but not app data.
 
 Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
+
+- `homelab backup` creates a tar.gz archive under `homelab/backups/` with service data dirs and live env files.
 
 ## How live Quadlets work
 
