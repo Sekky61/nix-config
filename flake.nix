@@ -105,10 +105,7 @@
     claude-code = {url = "github:sadjow/claude-code-nix";};
 
     handy = {
-      # todo
-      # https://github.com/mike7d7/dotfiles/blob/8f9747e44c624f6bd0eb5d7e8cf28891cc810ab0/flake.nix#L20
-      # https://github.com/cjpais/Handy/pull/948
-      url = "github:xilec/Handy/fix/nix-update-hashes";
+      url = "github:xilec/Handy";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
