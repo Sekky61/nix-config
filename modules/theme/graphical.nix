@@ -19,7 +19,7 @@ in {
         };
       };
     };
-    home-manager.users.${username} = {
+    home-manager.users.${username} = {config, ...}: {
       stylix.targets = {
         hyprland.enable = true;
         hyprland.hyprpaper.enable = true;
@@ -31,6 +31,7 @@ in {
 
       gtk = {
         enable = true;
+        gtk4.theme = config.gtk.theme;
         font = {
           name = "Roboto";
           size = 12; # This size directs size of text in UI (bar, settings)

@@ -19,6 +19,8 @@ in {
       enable = true;
       package = nvim;
       defaultEditor = true;
+      withRuby = true;
+      withPython3 = true;
     };
   };
 

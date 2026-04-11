@@ -9,7 +9,7 @@ import os
 # Configuration for wallpaper sources
 WALLPAPER_SOURCES = {
     'hyprpaper': "hyprctl hyprpaper listloaded",
-    'swww': "swww query | awk -F 'image: ' '{print $2}'",
+    'awww': "awww query | awk -F 'image: ' '{print $2}'",
     'ags': "ags run-js 'wallpaper.get(0)'",
 }
 

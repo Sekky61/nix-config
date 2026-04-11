@@ -89,7 +89,7 @@
       # home-manager
       wget
       nixpkgs-fmt
-      nixfmt-classic
+      nixfmt
 
       alsa-utils # audio debug (arecord -l)
 

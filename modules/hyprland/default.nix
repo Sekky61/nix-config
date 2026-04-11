@@ -58,7 +58,7 @@ in {
       pavucontrol
       playerctl
       swappy
-      swww # wallpaper
+      awww # wallpaper
       wayshot
       wlsunset
       wl-clipboard
@@ -112,7 +112,7 @@ in {
             [
               # wallpaper
               "ydotoold"
-              "swww kill; swww init"
+              "awww kill; awww init"
               # hw sensors (screen rotation)
               "iio-hyprland eDP-1"
               # paste history init
