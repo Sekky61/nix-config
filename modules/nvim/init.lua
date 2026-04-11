@@ -622,12 +622,137 @@ require("lazy").setup({
     {
         -- Syntax parsing with text objects (af/if/ac/ic/ap/ip) and motions (]f/[f/]]/[[)
         "nvim-treesitter/nvim-treesitter",
-        -- todo https://www.qu8n.com/posts/treesitter-migration-guide-for-nvim-0-12
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects", -- Text object motions
-        },
+        branch = "main",
+        -- thanks to https://www.qu8n.com/posts/treesitter-migration-guide-for-nvim-0-12
         build = ":TSUpdate",
+        init = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function()
+                    -- Enable treesitter highlighting and disable regex syntax
+                    vim.treesitter.start()
+                    -- folds, provided by Neovim
+                    vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                    vim.wo.foldmethod = "expr"
+                    -- Enable treesitter-based indentation
+                    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                end,
+            })
+            local ensureInstalled = {
+                "html",
+                "javascript",
+                "c",
+                "cpp",
+                "go",
+                "lua",
+                "python",
+                "rust",
+                "tsx",
+                "zig",
+                "typescript",
+                "vimdoc",
+                "vim",
+                "json",
+                "yaml",
+                "toml",
+                "css",
+                "scss",
+                "tsx",
+                "csv",
+                "diff",
+                "dockerfile",
+                "bash",
+                "markdown",
+                "nix",
+                "angular",
+            }
+            local alreadyInstalled = require("nvim-treesitter.config").get_installed()
+            local parsersToInstall = vim.iter(ensureInstalled)
+                :filter(function(parser)
+                    return not vim.tbl_contains(alreadyInstalled, parser)
+                end)
+                :totable()
+            require("nvim-treesitter").install(parsersToInstall)
+        end,
+        opts = {
+            modules = {},
+            ignore_install = {},
+            -- Add languages to be installed here that you want installed for treesitter
+            sync_install = false,
+
+            -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+            auto_install = true,
+
+            -- highlight = { enable = true },
+            -- indent = { enable = true },
+            incremental_selection = {
+                enable = true,
+                keymaps = {
+                    init_selection = "<c-space>",
+                    node_incremental = "<c-space>",
+                    scope_incremental = "<c-s>",
+                    node_decremental = "<M-space>",
+                },
+            },
+            textobjects = {
+                -- peek definition with treesitter
+                lsp_interop = {
+                    enable = true,
+                    border = "none",
+                    floating_preview_opts = {},
+                    peek_definition_code = {
+                        ["<leader>df"] = "@function.outer",
+                        ["<leader>dF"] = "@class.outer",
+                    },
+                },
+                select = {
+                    enable = true,
+                    lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+                    keymaps = {
+                        -- You can use the capture groups defined in textobjects.scm
+                        ["ap"] = { query = "@parameter.outer", desc = "parameter" },
+                        ["ip"] = { query = "@parameter.inner", desc = "parameter" },
+                        ["af"] = { query = "@function.outer", desc = "function" },
+                        ["if"] = { query = "@function.inner", desc = "function" },
+                        ["ac"] = { query = "@class.outer", desc = "class" },
+                        ["ic"] = { query = "@class.inner", desc = "class" },
+                    },
+                },
+                move = {
+                    enable = true,
+                    set_jumps = true, -- whether to set jumps in the jumplist
+                    goto_next_start = {
+                        ["]f"] = "@function.outer",
+                        ["]]"] = "@class.outer",
+                        ["]o"] = "@loop.*",
+                        ["]c"] = "@conditional.outer",
+                        ["]b"] = "@block.outer",
+                        ["]s"] = "@statement.outer",
+                    },
+                    goto_next_end = {
+                        ["]F"] = "@function.outer",
+                        ["]["] = "@class.outer",
+                    },
+                    goto_previous_start = {
+                        ["[f"] = "@function.outer",
+                        ["[["] = "@class.outer",
+                        ["[o"] = "@loop.*",
+                        ["[c"] = "@conditional.outer",
+                        ["[b"] = "@block.outer",
+                        ["[s"] = "@statement.outer",
+                    },
+                    goto_previous_end = {
+                        ["[F"] = "@function.outer",
+                        ["[]"] = "@class.outer",
+                    },
+                },
+            },
+        },
     },
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        branch = "main",
+    },
+
     {
         -- File tree explorer (always loaded, keybind: <leader>tt)
         "nvim-tree/nvim-tree.lua",
@@ -711,12 +836,12 @@ require("lazy").setup({
     },
 
     {
-        -- Sticky function header (keybind: [k to jump to context)
+        -- Sticky function header (keybind: [k to jump to context), `TSContext` to toggle
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
             enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
             max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-            min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+            min_window_height = 12, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
             line_numbers = true,
             multiline_threshold = 20, -- Maximum number of lines to show for a single context
             trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
@@ -727,6 +852,12 @@ require("lazy").setup({
             zindex = 20, -- The Z-index of the context window
             on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
         },
+        config = function()
+            -- jump to the context (the line on top) when in one
+            vim.keymap.set("n", "[k", function()
+                require("treesitter-context").go_to_context(vim.v.count1)
+            end, { silent = true, desc = "Jump to previous context (start of function)" })
+        end,
     },
     -- Visual undo history (keybind: <leader>u)
     "mbbill/undotree",
@@ -1303,113 +1434,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
 })
 
--- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
-require("nvim-treesitter.configs").setup({
-    modules = {},
-    ignore_install = {},
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = {
-        "html",
-        "javascript",
-        "c",
-        "cpp",
-        "go",
-        "lua",
-        "python",
-        "rust",
-        "tsx",
-        "zig",
-        "typescript",
-        "vimdoc",
-        "vim",
-        "json",
-        "yaml",
-        "toml",
-        "css",
-        "scss",
-        "tsx",
-        "csv",
-        "diff",
-        "dockerfile",
-        "bash",
-        "markdown",
-        "nix",
-        "angular",
-    },
-    sync_install = false,
-
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = true,
-
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "<c-space>",
-            node_incremental = "<c-space>",
-            scope_incremental = "<c-s>",
-            node_decremental = "<M-space>",
-        },
-    },
-    textobjects = {
-        -- peek definition with treesitter
-        lsp_interop = {
-            enable = true,
-            border = "none",
-            floating_preview_opts = {},
-            peek_definition_code = {
-                ["<leader>df"] = "@function.outer",
-                ["<leader>dF"] = "@class.outer",
-            },
-        },
-        select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-                -- You can use the capture groups defined in textobjects.scm
-                ["ap"] = { query = "@parameter.outer", desc = "parameter" },
-                ["ip"] = { query = "@parameter.inner", desc = "parameter" },
-                ["af"] = { query = "@function.outer", desc = "function" },
-                ["if"] = { query = "@function.inner", desc = "function" },
-                ["ac"] = { query = "@class.outer", desc = "class" },
-                ["ic"] = { query = "@class.inner", desc = "class" },
-            },
-        },
-        move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-                ["]f"] = "@function.outer",
-                ["]]"] = "@class.outer",
-                ["]o"] = "@loop.*",
-                ["]c"] = "@conditional.outer",
-                ["]b"] = "@block.outer",
-                ["]s"] = "@statement.outer",
-            },
-            goto_next_end = {
-                ["]F"] = "@function.outer",
-                ["]["] = "@class.outer",
-            },
-            goto_previous_start = {
-                ["[f"] = "@function.outer",
-                ["[["] = "@class.outer",
-                ["[o"] = "@loop.*",
-                ["[c"] = "@conditional.outer",
-                ["[b"] = "@block.outer",
-                ["[s"] = "@statement.outer",
-            },
-            goto_previous_end = {
-                ["[F"] = "@function.outer",
-                ["[]"] = "@class.outer",
-            },
-        },
-    },
-})
-
 -- Make treesitter motions repeatable with ; and ,
-local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
+local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
 
 -- Repeat movement with ; and ,
 -- ensure ; goes forward and , goes backward regardless of the last direction
@@ -1992,11 +2018,6 @@ end
 --theme
 -- vim.cmd.colorscheme("catppuccin-frappe")
 vim.cmd.colorscheme("catppuccin-macchiato")
-
--- jump to the context (the line on top) when in one
-vim.keymap.set("n", "[k", function()
-    require("treesitter-context").go_to_context(vim.v.count1)
-end, { silent = true, desc = "Jump to previous context" })
 
 -- Move current line up
 vim.api.nvim_set_keymap("n", "<A-up>", ":m-2<CR>==", { noremap = true, silent = true })
