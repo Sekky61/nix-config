@@ -176,6 +176,7 @@ require("lazy").setup({
     -- Ripgrep in completion
     "lukas-reineke/cmp-rg",
     -- Tailwind to CSS conversion
+    -- todo messes with opening of lazygit
     "jcha0713/cmp-tw2css",
     -- Document symbols in `/` search
     "hrsh7th/cmp-nvim-lsp-document-symbol",
@@ -627,14 +628,26 @@ require("lazy").setup({
         build = ":TSUpdate",
         init = function()
             vim.api.nvim_create_autocmd("FileType", {
-                callback = function()
+                callback = function(args)
+                    local bufnr = args.buf
+                    local bo = vim.bo[bufnr]
+
+                    -- Skip plugin UIs like Telescope prompts and terminal-backed tools.
+                    if bo.buftype ~= "" or bo.filetype == "" then
+                        return
+                    end
+
                     -- Enable treesitter highlighting and disable regex syntax
-                    vim.treesitter.start()
+                    local ok = pcall(vim.treesitter.start, bufnr)
+                    if not ok then
+                        return
+                    end
+
                     -- folds, provided by Neovim
-                    vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-                    vim.wo.foldmethod = "expr"
+                    -- vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                    -- vim.wo.foldmethod = "expr"
                     -- Enable treesitter-based indentation
-                    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                    bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
                 end,
             })
             local ensureInstalled = {
