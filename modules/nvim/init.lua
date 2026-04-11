@@ -2204,6 +2204,7 @@ vim.api.nvim_set_keymap("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true
 vim.api.nvim_set_keymap("n", "<C-d>", "<C-d>zz", { noremap = true, silent = true })
 
 -- paste over without yanking
+vim.keymap.set("x", "p", '"_dP')
 vim.keymap.set("x", "<leader>p", '"_dP')
 
 -- unmap Q
