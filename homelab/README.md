@@ -23,10 +23,12 @@ Think of the setup in four layers:
    - `bun run start list`
    - `bun run start status`
 3. Initialize env if needed:
+   - `bun run start env init grocy`
    - `bun run start env init n8n`
 4. Reconcile live Quadlets and start services:
    - `bun run start apply`
 5. Open the service:
+   - `bun run start open grocy`
    - `bun run start open n8n`
 
 Once the CLI is wired into your shell or PATH, use `homelab ...` directly instead of `bun run start ...`.
@@ -34,16 +36,15 @@ Once the CLI is wired into your shell or PATH, use `homelab ...` directly instea
 ## Day-to-day commands
 
 - Show discovered resources: `homelab list`
-- Show health: `homelab status` or `homelab status n8n`
-- Sync repo changes into live Quadlets: `homelab apply`
-- Sync one service: `homelab apply n8n`
-- Create a local backup archive: `homelab backup` or `homelab backup n8n`
-- Initialize env from example: `homelab env init n8n`
-- Edit env in your editor: `homelab env edit n8n`
-- Restart a service: `homelab service restart n8n`
-- Enable autostart: `homelab service enable n8n`
-- Disable autostart: `homelab service disable n8n`
-- Open the UI: `homelab open n8n`
+- Show health: `homelab status` or `homelab status <service>`
+- Sync repo changes into live Quadlets: `homelab apply` or `homelab apply <service>`
+- Create a local backup archive: `homelab backup` or `homelab backup <service>`
+- Initialize env from example: `homelab env init <service>`
+- Edit env in your editor: `homelab env edit <service>`
+- Restart a service: `homelab service restart <service>`
+- Enable autostart: `homelab service enable <service>`
+- Disable autostart: `homelab service disable <service>`
+- Open the UI: `homelab open <service>`
 
 ## When to run what
 
@@ -61,7 +62,12 @@ Short answer: persistence is the mounted service data dir plus the live env file
 - If that directory is deleted, n8n starts like a fresh install.
 - `~/.config/containers/systemd/n8n.env` is persistent config, especially secrets, but not app data.
 
-Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
+- `homelab/data/grocy` is mounted into the container as `/config`.
+- That directory keeps the Grocy SQLite database, uploads, and app config.
+- If that directory is deleted, Grocy starts like a fresh install.
+- `~/.config/containers/systemd/grocy.env` is persistent runtime config like `PUID`, `PGID`, and `TZ`, but not app data.
+
+Back up `homelab/data/n8n`, `homelab/data/grocy`, `~/.config/containers/systemd/n8n.env`, and `~/.config/containers/systemd/grocy.env`.
 
 - `homelab backup` creates a tar.gz archive under `homelab/backups/` with service data dirs and live env files.
 
@@ -77,6 +83,7 @@ Back up `homelab/data/n8n` and `~/.config/containers/systemd/n8n.env`.
 ## Notes
 
 - This setup is rootless and uses your user systemd instance.
+- Grocy is exposed locally at `http://localhost:9283` and ships with a default `admin/admin` login on first start.
 - The checked-in `homelab/n8n/n8n.env.example` assumes n8n is exposed as a Tailscale service at `n8n.rhino-mora.ts.net`.
 - The rendered `Volume=` path points at the local repo path under `homelab/data/<service>`.
 - If you want container auto-updates, enable the timer with `systemctl --user enable --now podman-auto-update.timer`.

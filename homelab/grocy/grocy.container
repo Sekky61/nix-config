@@ -1,0 +1,22 @@
+[Unit]
+Description=Grocy household management
+Wants=network-online.target
+Wants=homelab-network.service
+After=network-online.target
+After=homelab-network.service
+
+[Container]
+ContainerName=grocy
+Image=lscr.io/linuxserver/grocy:latest
+EnvironmentFile=%h/.config/containers/systemd/grocy.env
+Volume=__GROCY_DATA_DIR__:/config:Z
+Network=homelab.network
+PublishPort=9283:80
+AutoUpdate=registry
+
+[Service]
+Restart=on-failure
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
