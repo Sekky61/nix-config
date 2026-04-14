@@ -1937,7 +1937,8 @@ cmp.setup({
         -- too slow
         -- { name = "rg" },
         { name = "buffer" },
-        { name = "cmp-tw2css" },
+        -- todo messes with typing for some reason
+        -- { name = "cmp-tw2css" },
         {
             name = "spell",
             option = {
