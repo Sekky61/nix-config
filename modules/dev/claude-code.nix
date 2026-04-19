@@ -13,12 +13,7 @@ with lib; let
     notify-send 'CC'
     sound_files=(
       ${../../assets/sounds/wiwiwi.mp3}
-      ${../../assets/sounds/boha.mp3}
-      ${../../assets/sounds/cibulu_doma.mp3}
       ${../../assets/sounds/co_robim4.mp3}
-      ${../../assets/sounds/korun.mp3}
-      ${../../assets/sounds/zaplatit.mp3}
-      ${../../assets/sounds/zastavili.mp3}
     )
 
     available_sound_files=()
