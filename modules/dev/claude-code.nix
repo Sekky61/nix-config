@@ -45,6 +45,9 @@ in {
           enable = true;
           settings = {
             effortLevel = "high";
+            sandbox = {
+              enabled = false;
+            };
             permissions = {
               allow = [
                 "Bash(grep:*)"
