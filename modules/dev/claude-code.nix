@@ -44,8 +44,9 @@ in {
         programs.claude-code = {
           enable = true;
           settings = {
-            "permissions" = {
-              "allow" = [
+            effortLevel = "high";
+            permissions = {
+              allow = [
                 "Bash(grep:*)"
                 "Bash(find:*)"
                 "Bash(ls:*)"
