@@ -19,6 +19,7 @@ in {
     ./codex.nix
     ./claude-code.nix
     ./opencode.nix
+    ./t3code.nix
   ];
 
   config = mkIf cfg.enable {

@@ -7,4 +7,5 @@ mount/
 
 .sops.yaml
 *.iso
+.codex
 

@@ -763,6 +763,7 @@
         "opencode": "opencode",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "t3code": "t3code",
         "walker": "walker",
         "worktrunk": "worktrunk",
         "zen-browser": "zen-browser"
@@ -944,6 +945,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "t3code": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1776969377,
+        "narHash": "sha256-NkoRVEuG6gtGpcmUDWuZdmnDAjM5tr9iMmJtPoXBvQA=",
+        "owner": "rodeyseijkens",
+        "repo": "t3code-nix",
+        "rev": "77531823cee237e1356dd6feba967dfe74b5d472",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rodeyseijkens",
+        "repo": "t3code-nix",
         "type": "github"
       }
     },

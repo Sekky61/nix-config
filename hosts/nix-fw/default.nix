@@ -21,6 +21,7 @@
     programs = {
       claude-code.enable = true;
       codex.enable = true;
+      t3code.enable = true;
       ags.enable = false;
       opencode.enable = true;
       waybar.enable = true;
