@@ -12,7 +12,7 @@ This directory contains the local AGS v3 config:
 
 ## Generate types
 
-Run this in this directory:
+Run this in this directory after installing new lib:
 
 ```bash
 ags types -d . -u

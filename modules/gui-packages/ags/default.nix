@@ -38,6 +38,7 @@ with lib; let
   pkgsExtraAgs = with pkgs; [
     gtksourceview
     gtksourceview4
+    libadwaita
     pywal
     sassc
     webkitgtk_6_0
