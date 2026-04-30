@@ -22,7 +22,7 @@
       claude-code.enable = true;
       codex.enable = true;
       t3code.enable = true;
-      ags.enable = false;
+      ags.enable = true;
       opencode.enable = true;
       waybar.enable = true;
       walker.enable = true;
