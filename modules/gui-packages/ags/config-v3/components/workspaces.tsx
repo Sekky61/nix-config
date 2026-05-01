@@ -1,6 +1,6 @@
 import AstalHyprland from 'gi://AstalHyprland';
 import Gtk from 'gi://Gtk?version=4.0';
-import { For, createBinding } from 'ags';
+import { For, With, createBinding } from 'ags';
 import { shellState } from '../shell/state';
 import { isVertical } from '../shell/layout';
 
@@ -49,17 +49,44 @@ export default function Workspaces() {
               orientation={orientation((current) =>
                 isVertical(current) ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL,
               )}
-              spacing={orientation((current) => (isVertical(current) ? 4 : 8))}
+              spacing={orientation((current) => (isVertical(current) ? 0 : 8))}
               halign={orientation((current) =>
                 isVertical(current) ? Gtk.Align.FILL : Gtk.Align.FILL,
               )}
               hexpand={orientation(isVertical)}
             >
-              <label label={`${workspace.id}`} />
-              <box
-                class="workspace-monitor-dot"
-                visible={monitors((items) => items.length > 1)}
-              />
+              <With value={orientation}>
+                {(current) =>
+                  current &&
+                  (isVertical(current) ? (
+                    <box
+                      class="workspace-chip-stack"
+                      orientation={Gtk.Orientation.VERTICAL}
+                      spacing={1}
+                      halign={Gtk.Align.CENTER}
+                    >
+                      <label
+                        class="workspace-chip-label"
+                        label={`${workspace.id}`}
+                        halign={Gtk.Align.CENTER}
+                      />
+                      <box
+                        class="workspace-monitor-dot workspace-monitor-dot-vertical"
+                        visible={monitors((items) => items.length > 1)}
+                        halign={Gtk.Align.CENTER}
+                      />
+                    </box>
+                  ) : (
+                    <>
+                      <label class="workspace-chip-label" label={`${workspace.id}`} />
+                      <box
+                        class="workspace-monitor-dot"
+                        visible={monitors((items) => items.length > 1)}
+                      />
+                    </>
+                  ))
+                }
+              </With>
             </box>
           </button>
         )}

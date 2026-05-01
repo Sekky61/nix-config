@@ -15,6 +15,7 @@ export default function MediaIndicator() {
   return (
     <menubutton
       class="rail-module rail-module-media"
+      visible={players((items) => items.length > 0)}
       halign={orientation((current) =>
         isVertical(current) ? Gtk.Align.FILL : Gtk.Align.FILL,
       )}

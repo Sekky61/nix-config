@@ -3,12 +3,14 @@ $fg-color: #{'@theme_fg_color'};
 $surface-color: rgba(28, 31, 37, 0.92);
 $surface-border: rgba(255, 255, 255, 0.08);
 $surface-muted: rgba(255, 255, 255, 0.05);
+$rail-fg-color: rgba(228, 234, 240, 0.88);
+$rail-fg-muted: rgba(228, 234, 240, 0.68);
 $accent-color: rgba(144, 205, 244, 0.95);
 $accent-muted: rgba(144, 205, 244, 0.18);
 
 window.rail-window {
   background: transparent;
-  color: $fg-color;
+  color: $rail-fg-color;
 }
 
 .rail-surface {
@@ -40,12 +42,44 @@ window.rail-window {
 }
 
 .rail-module {
+  color: $rail-fg-color;
   padding: 0;
+}
+
+.rail-module image,
+.rail-module label,
+.rail-metric,
+.rail-metric image,
+.rail-metric label {
+  color: $rail-fg-color;
+}
+
+.rail-module-battery > button,
+.rail-tray-item > button,
+.rail-module-volume > button,
+.rail-module-wireless > menubutton > button {
+  background: $surface-muted;
+  border-radius: 14px;
+  color: $rail-fg-color;
+  min-height: 0;
+  padding: 6px 8px;
+}
+
+.rail-module-battery > button image,
+.rail-module-battery > button label,
+.rail-tray-item > button image,
+.rail-tray-item > button label,
+.rail-module-volume > button image,
+.rail-module-volume > button label,
+.rail-module-wireless > menubutton > button image,
+.rail-module-wireless > menubutton > button label {
+  color: $rail-fg-color;
 }
 
 .rail-time {
   background: $surface-muted;
   border-radius: 18px;
+  color: $rail-fg-color;
   padding: 8px 12px;
 }
 
@@ -54,6 +88,7 @@ window.rail-window {
 }
 
 .rail-time-primary {
+  color: $rail-fg-color;
   font-size: 1.18rem;
   font-weight: 700;
 }
@@ -63,7 +98,7 @@ window.rail-window {
 }
 
 .rail-time-secondary {
-  color: $fg-color;
+  color: $rail-fg-muted;
   font-size: 0.82rem;
 }
 
@@ -89,6 +124,7 @@ window.rail-window {
 
 .workspace-chip {
   background: $surface-muted;
+  color: $rail-fg-color;
   padding: 0;
 }
 
@@ -105,8 +141,20 @@ window.rail-window {
 
 .workspace-chip-box-vertical {
   min-width: 0;
-  min-height: 42px;
-  padding: 6px 5px;
+  min-height: 22px;
+  padding: 2px 3px;
+}
+
+.workspace-chip-label {
+  color: inherit;
+}
+
+.workspace-chip-stack {
+  min-height: 0;
+}
+
+.workspace-chip-box-vertical .workspace-chip-label {
+  margin: 0;
 }
 
 .workspace-monitor-dot {
@@ -114,6 +162,10 @@ window.rail-window {
   border-radius: 999px;
   min-width: 5px;
   min-height: 5px;
+}
+
+.workspace-monitor-dot-vertical {
+  margin-top: -1px;
 }
 
 .rail-media-app-icon {

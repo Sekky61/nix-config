@@ -53,7 +53,8 @@ in {
       # todo move to gui
       wineWow64Packages.waylandFull
       winetricks
-      lutris
+      # Bonked for not building
+      # lutris
       parsec-bin
 
       # Nautilus file manager
