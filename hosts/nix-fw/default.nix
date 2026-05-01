@@ -22,9 +22,9 @@
       claude-code.enable = true;
       codex.enable = true;
       t3code.enable = true;
-      ags.enable = true;
       opencode.enable = true;
-      waybar.enable = true;
+      ags.enable = true;
+      waybar.enable = false;
       walker.enable = true;
       bitwarden.enable = true;
       gpu-screen-recorder.enable = true;
