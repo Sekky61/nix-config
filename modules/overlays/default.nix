@@ -31,7 +31,7 @@
     # })
     # (import ./overlay3)
     inputs.nur.overlays.default
-    inputs.opencode.overlays.default
+    # inputs.opencode.overlays.default
     inputs.claude-code.overlays.default
 
     (final: _: {

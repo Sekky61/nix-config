@@ -43,7 +43,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = {url = "github:Aylur/ags";};
+    ags = {
+      url = "github:Aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -97,10 +100,10 @@
       inputs.elephant.follows = "elephant";
     };
 
-    opencode = {
-      url = "github:anomalyco/opencode";
-      inputs.nixpkgs.follows = "nixpkgs-spicy";
-    };
+    # opencode = {
+    #   url = "github:anomalyco/opencode";
+    #   inputs.nixpkgs.follows = "nixpkgs-spicy";
+    # };
 
     claude-code = {url = "github:sadjow/claude-code-nix";};
 
