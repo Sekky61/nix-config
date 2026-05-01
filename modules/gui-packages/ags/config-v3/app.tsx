@@ -1,7 +1,8 @@
 import { createBinding, For, This } from 'ags';
 import app from 'ags/gtk4/app';
 import style from './style.scss';
-import Bar from './bar';
+import { requestHandler } from './shell/commands';
+import RailWindow from './windows/rail-window';
 
 app.start({
   css: style,
@@ -17,10 +18,11 @@ app.start({
       <For each={monitors}>
         {(monitor) => (
           <This this={app}>
-            <Bar gdkmonitor={monitor} />
+            <RailWindow gdkmonitor={monitor} />
           </This>
         )}
       </For>
     );
   },
+  requestHandler,
 });

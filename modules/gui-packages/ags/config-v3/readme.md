@@ -3,7 +3,9 @@
 This directory contains the local AGS v3 config:
 
 - `app.tsx`
-- `bar.tsx`
+- `shell/`
+- `windows/`
+- `components/`
 - `style.scss`
 - `env.d.ts`
 - `package.json`

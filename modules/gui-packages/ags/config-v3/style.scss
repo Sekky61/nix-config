@@ -1,22 +1,144 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
 $fg-color: #{'@theme_fg_color'};
-$bg-color: #{'@theme_bg_color'};
+$surface-color: rgba(28, 31, 37, 0.92);
+$surface-border: rgba(255, 255, 255, 0.08);
+$surface-muted: rgba(255, 255, 255, 0.05);
+$accent-color: rgba(144, 205, 244, 0.95);
+$accent-muted: rgba(144, 205, 244, 0.18);
 
-window#bar {
+window.rail-window {
   background: transparent;
   color: $fg-color;
-  font-weight: bold;
+}
 
-  > box {
-    background: $bg-color;
-    border-radius: 10px;
-    margin: 8px;
-  }
+.rail-surface {
+  background: $surface-color;
+  border: 1px solid $surface-border;
+  border-radius: 22px;
+  margin: 4px;
+  padding: 5px;
+}
 
-  button {
-    border-radius: 8px;
-    margin: 2px;
-    min-height: 0;
-    padding: 4px 8px;
-  }
+.rail-surface-vertical {
+  padding: 8px 5px;
+}
+
+.rail-zone-center {
+  margin: 0 10px;
+}
+
+.rail-zone-center-vertical {
+  margin: 4px 0;
+}
+
+.rail-module,
+.workspace-chip,
+.rail-tray-item {
+  background: transparent;
+  border-radius: 14px;
+  min-height: 0;
+}
+
+.rail-module {
+  padding: 0;
+}
+
+.rail-time {
+  background: $surface-muted;
+  border-radius: 18px;
+  padding: 8px 12px;
+}
+
+.rail-time-vertical {
+  padding: 8px 6px;
+}
+
+.rail-time-primary {
+  font-size: 1.18rem;
+  font-weight: 700;
+}
+
+.rail-time-primary-vertical {
+  font-size: 1rem;
+}
+
+.rail-time-secondary {
+  color: $fg-color;
+  font-size: 0.82rem;
+}
+
+.rail-tray-item {
+  padding: 3px;
+}
+
+.rail-metric-battery-vertical {
+  padding: 0 1px;
+}
+
+.rail-battery-label-vertical {
+  font-size: 0.78rem;
+}
+
+.rail-metric-volume-vertical {
+  padding: 0 1px;
+}
+
+.rail-volume-label-vertical {
+  font-size: 0.78rem;
+}
+
+.workspace-chip {
+  background: $surface-muted;
+  padding: 0;
+}
+
+.workspace-chip-active {
+  background: $accent-muted;
+  color: $accent-color;
+}
+
+.workspace-chip-box {
+  min-width: 36px;
+  min-height: 30px;
+  padding: 6px 10px;
+}
+
+.workspace-chip-box-vertical {
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 5px;
+}
+
+.workspace-monitor-dot {
+  background: $accent-color;
+  border-radius: 999px;
+  min-width: 5px;
+  min-height: 5px;
+}
+
+.rail-media-app-icon {
+  -gtk-icon-size: 16px;
+}
+
+.rail-media-player {
+  padding: 4px 0;
+}
+
+.rail-media-cover {
+  background: $surface-muted;
+  border-radius: 14px;
+}
+
+.rail-popover-list {
+  padding: 8px;
+}
+
+.rail-access-point {
+  min-width: 220px;
+}
+
+button {
+  border-radius: 14px;
+  min-height: 0;
+  padding: 4px 8px;
 }
