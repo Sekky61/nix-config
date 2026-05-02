@@ -28,6 +28,7 @@ in {
 
             # Signing
             commit.gpgsign = true;
+            gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
             tag.gpgsign = true;
 
             # More options
