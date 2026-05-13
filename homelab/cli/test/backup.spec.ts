@@ -4,6 +4,7 @@ import type { HomelabService } from '../src/lib/discovery'
 
 const makeService = (overrides: Partial<HomelabService> = {}): HomelabService => ({
   activeState: 'active',
+  autostart: true,
   containerFile: '/repo/homelab/n8n/n8n.container',
   dataDir: '/repo/homelab/data/n8n',
   dependsOn: [],

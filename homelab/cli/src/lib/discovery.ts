@@ -16,6 +16,7 @@ export type HomelabPaths = {
 
 export type HomelabService = {
   readonly activeState: string | null
+  readonly autostart: boolean
   readonly containerFile: string
   readonly dataDir: string
   readonly dependsOn: Array<string>
@@ -108,6 +109,83 @@ const parseDependencies = (containerContents: string) =>
 
 const parseHasAutoupdate = (containerContents: string) =>
   getFieldValues(containerContents, 'AutoUpdate').some((value) => value !== 'none')
+
+export const setQuadletAutostart = (contents: string, enabled: boolean) => {
+  const lines = contents.trimEnd().split('\n')
+  const installSectionStart = lines.findIndex((line) => line.trim() === '[Install]')
+
+  if (enabled) {
+    if (installSectionStart === -1) {
+      return [...lines, '', '[Install]', 'WantedBy=default.target'].join('\n') + '\n'
+    }
+
+    const nextSectionOffset = lines
+      .slice(installSectionStart + 1)
+      .findIndex((line) => line.trim().startsWith('[') && line.trim().endsWith(']'))
+    const installSectionEnd =
+      nextSectionOffset === -1 ? lines.length : installSectionStart + 1 + nextSectionOffset
+    const installSection = lines.slice(installSectionStart + 1, installSectionEnd)
+
+    if (installSection.some((line) => line.trim() === 'WantedBy=default.target')) {
+      return contents.endsWith('\n') ? contents : `${contents}\n`
+    }
+
+    return [
+      ...lines.slice(0, installSectionEnd),
+      'WantedBy=default.target',
+      ...lines.slice(installSectionEnd)
+    ].join('\n') + '\n'
+  }
+
+  if (installSectionStart === -1) {
+    return contents.endsWith('\n') ? contents : `${contents}\n`
+  }
+
+  const nextSectionOffset = lines
+    .slice(installSectionStart + 1)
+    .findIndex((line) => line.trim().startsWith('[') && line.trim().endsWith(']'))
+  const installSectionEnd =
+    nextSectionOffset === -1 ? lines.length : installSectionStart + 1 + nextSectionOffset
+  const remainingInstallLines = lines
+    .slice(installSectionStart + 1, installSectionEnd)
+    .filter((line) => line.trim() !== 'WantedBy=default.target')
+  const hasRemainingInstallSettings = remainingInstallLines.some((line) => {
+    const trimmedLine = line.trim()
+    return trimmedLine.length > 0 && !trimmedLine.startsWith('#')
+  })
+
+  const nextLines = hasRemainingInstallSettings
+    ? [
+        ...lines.slice(0, installSectionStart),
+        '[Install]',
+        ...remainingInstallLines,
+        ...lines.slice(installSectionEnd)
+      ]
+    : [...lines.slice(0, installSectionStart), ...lines.slice(installSectionEnd)]
+
+  return nextLines.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n'
+}
+
+export const setServiceSourceAutostart = (service: HomelabService, enabled: boolean) =>
+  readTextFile(service.containerFile).pipe(
+    Effect.flatMap((contents) => {
+      const updatedContents = setQuadletAutostart(contents, enabled)
+
+      if (updatedContents === contents) {
+        return Effect.succeed(false)
+      }
+
+      return Effect.tryPromise({
+        catch: (cause) => new Error(String(cause)),
+        try: () => writeFile(service.containerFile, updatedContents, 'utf8').then(() => true)
+      })
+    })
+  )
+
+export const setServiceAutostart = (service: HomelabService, enabled: boolean) =>
+  setServiceSourceAutostart(service, enabled).pipe(
+    Effect.flatMap((changed) => renderServiceContainer(service).pipe(Effect.as(changed)))
+  )
 
 export const calculateHealth = ({
   activeState,
@@ -255,6 +333,7 @@ export const discoverServices = Effect.gen(function* () {
 
           return {
             activeState,
+            autostart: getFieldValues(containerContents, 'WantedBy').includes('default.target'),
             containerFile,
             dataDir,
             dependsOn: parseDependencies(containerContents),

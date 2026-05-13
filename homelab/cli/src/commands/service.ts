@@ -1,7 +1,7 @@
 import { Args, Command } from '@effect/cli'
 import * as Options from '@effect/cli/Options'
 import { Console, Effect } from 'effect'
-import { discoverServices, findService } from '../lib/discovery'
+import { discoverServices, findService, setServiceAutostart } from '../lib/discovery'
 import { runCommand } from '../lib/runtime'
 
 const serviceArgument = Args.text({ name: 'service' })
@@ -35,6 +35,7 @@ const info = Command.make('info', { isJsonOutput: isJsonOutputOption, serviceNam
     yield* Console.log(`urls: ${service.urls.join(', ') || '(none)'}`)
     yield* Console.log(`ports: ${service.ports.join(', ') || '(none)'}`)
     yield* Console.log(`depends on: ${service.dependsOn.join(', ') || '(none)'}`)
+    yield* Console.log(`autostart: ${service.autostart ? 'yes' : 'no'}`)
     yield* Console.log(`autoupdate: ${service.hasAutoupdate ? 'yes' : 'no'}`)
     yield* Console.log(`active: ${service.activeState ?? 'unknown'}`)
     yield* Console.log(`enabled: ${service.enabledState ?? 'unknown'}`)
@@ -60,7 +61,20 @@ const status = Command.make('status', { isJsonOutput: isJsonOutputOption, servic
 const lifecycleCommand = (name: 'start' | 'stop' | 'restart' | 'enable' | 'disable', description: string) =>
   Command.make(name, { serviceName: serviceArgument }, ({ serviceName }) =>
     Effect.gen(function* () {
-      yield* findService(serviceName)
+      const service = yield* findService(serviceName)
+
+      if (name === 'enable' || name === 'disable') {
+        const enabled = name === 'enable'
+        const changed = yield* setServiceAutostart(service, enabled)
+        yield* runCommand('systemctl', ['--user', 'daemon-reload'])
+        yield* runCommand('systemctl', ['--user', name, `${serviceName}.service`]).pipe(
+          Effect.asVoid,
+          Effect.catchAll(() => Effect.void)
+        )
+        yield* Console.log(`${enabled ? 'enabled' : 'disabled'} ${serviceName}.service${changed ? '' : ' (already set)'}`)
+        return
+      }
+
       const result = yield* runCommand('systemctl', ['--user', name, `${serviceName}.service`])
       const output = [result.stdout.trim(), result.stderr.trim()].filter((value) => value.length > 0).join('\n')
       yield* Console.log(output || `${name}d ${serviceName}.service`)

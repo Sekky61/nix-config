@@ -2,6 +2,7 @@ import { Args, Command } from '@effect/cli'
 import * as Options from '@effect/cli/Options'
 import { Console, Effect } from 'effect'
 import {
+  type HomelabService,
   copyFileTo,
   copyIfMissing,
   discoverNetworks,
@@ -9,6 +10,7 @@ import {
   findService,
   getHomelabPaths,
   renderServiceContainer,
+  setServiceSourceAutostart,
   selectServices
 } from '../lib/discovery'
 import { runCommand } from '../lib/runtime'
@@ -32,15 +34,12 @@ const validateAutostartMode = (value: string) => {
   throw new Error(`Invalid autostart mode: ${value}`)
 }
 
-const applyAutostart = (serviceName: string, autostartMode: AutostartMode) => {
+const applyAutostart = (service: HomelabService, autostartMode: AutostartMode) => {
   if (autostartMode === 'keep') {
     return Effect.void
   }
 
-  return runCommand('systemctl', ['--user', autostartMode === 'on' ? 'enable' : 'disable', `${serviceName}.service`]).pipe(
-    Effect.asVoid,
-    Effect.catchAll(() => Effect.void)
-  )
+  return setServiceSourceAutostart(service, autostartMode === 'on').pipe(Effect.asVoid)
 }
 
 export const apply = Command.make(
@@ -92,6 +91,7 @@ export const apply = Command.make(
       }
 
       for (const service of services) {
+        yield* applyAutostart(service, autostartMode)
         yield* renderServiceContainer(service)
 
         if (service.envExampleFile) {
@@ -106,8 +106,6 @@ export const apply = Command.make(
       )
 
       for (const service of services) {
-        yield* applyAutostart(service.name, autostartMode)
-
         if (shouldStartServices) {
           yield* runCommand('systemctl', ['--user', 'start', '--no-block', `${service.name}.service`])
         }
