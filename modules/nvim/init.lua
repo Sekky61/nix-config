@@ -1053,7 +1053,9 @@ require("lazy").setup({
         end,
     },
     -- Visual undo history (keybind: <leader>u)
-    "mbbill/undotree",
+    -- disabled, has annoying bug with too long path names
+    -- "mbbill/undotree",
+
     -- Command line completion (duplicate entry, already listed above)
     "hrsh7th/cmp-cmdline",
 
