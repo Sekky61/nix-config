@@ -46,7 +46,7 @@ with lib; let
     };
   });
 
-  # One command (dispatcher and params)
+  # One command. Use exec for shell commands and lua for Hyprland Lua actions.
   commandModule = types.submodule ({
     config,
     name,
@@ -59,16 +59,16 @@ with lib; let
         description = "Whether the keybind should be used.";
         example = false;
       };
-      dispatcher = mkOption {
+      exec = mkOption {
         type = with types; str;
-        description = "The action to perform.";
-        example = "workspace";
-        default = "exec";
-      };
-      params = mkOption {
-        type = with types; str;
-        description = "Additional parameters for the dispatcher.";
+        description = "Shell command to execute.";
         example = "firefox";
+        default = "";
+      };
+      lua = mkOption {
+        type = with types; str;
+        description = "Lua expression that returns a Hyprland bind action.";
+        example = ''hl.dsp.focus({ workspace = "1" })'';
         default = "";
       };
       flags = mkOption {
@@ -94,7 +94,7 @@ with lib; let
           r -> release, will trigger on release of a key.
           o -> longPress, will trigger on long press of a key.
           e -> repeat, will repeat when held.
-          n -> nonConsuming, key/mouse events will be passed to the active window in addition to triggering the dispatcher.
+          n -> nonConsuming, key/mouse events will be passed to the active window in addition to triggering the action.
           m -> mouse, see below.
           t -> transparent, cannot be shadowed by other binds.
           i -> ignoreMods, will ignore modifiers.
@@ -144,24 +144,6 @@ with lib; let
 
   # Conversion functions
 
-  # Create the flag suffix. Example: [ "locked" "repeat" ] => "lr"
-  constructFlags = flags: let
-    table = {
-      "locked" = "l";
-      "release" = "r";
-      "longPress" = "o";
-      "repeat" = "e";
-      "nonConsuming" = "n";
-      "mouse" = "m";
-      "transparent" = "t";
-      "ignoreMods" = "i";
-      "separate" = "s";
-      "description" = "d"; # No description
-      "bypassInhibit" = "p";
-    };
-  in
-    builtins.concatStringsSep "" (map (f: table.${f}) flags);
-
   cross = f: arr1: arr2: lib.concatLists (map (x: map (y: (f x y)) arr2) arr1);
 
   # decompress arrays of binds and commands. Now there are surely no arrays
@@ -178,23 +160,77 @@ with lib; let
   getFlags = kb:
     kb.command.flags ++ optionals (kb.description != "") ["description"];
 
-  # Format a bind line. Example: "Super+Shift, up, movewindow, u"
-  keybindLine = kb: let
-    mods = lib.concatStringsSep " + " kb.bind.mods;
-  in
-    lib.concatStringsSep ", " [
-      mods
-      kb.bind.key
-      kb.description
-      kb.command.dispatcher
-      kb.command.params
-    ];
+  # todo can be removed
+  luaOptionName = flag:
+    {
+      "locked" = "locked";
+      "release" = "release";
+      "longPress" = "long_press";
+      "repeat" = "repeating";
+      "nonConsuming" = "non_consuming";
+      "mouse" = "mouse";
+      "transparent" = "transparent";
+      "ignoreMods" = "ignore_mods";
+      "separate" = "separate";
+      "bypassInhibit" = "dont_inhibit";
+    }.${
+      flag
+    };
 
-  bindsByFlag =
-    builtins.groupBy (kb: constructFlags (getFlags kb)) expandedBinds;
-  binds =
-    mapAttrs' (flags: kbs: nameValuePair "bind${flags}" (map keybindLine kbs))
-    bindsByFlag;
+  luaModName = mod:
+    {
+      "CONTROL" = "CTRL";
+    }
+    .${
+      mod
+    }
+    or mod;
+
+  luaKeyName = key:
+    {
+      "Left" = "left";
+      "Right" = "right";
+      "Up" = "up";
+      "Down" = "down";
+      "Page_Up" = "page_up";
+      "Page_Down" = "page_down";
+      "Space" = "space";
+      "Return" = "return";
+    }
+    .${
+      key
+    }
+    or key;
+
+  luaBindKeys = kb:
+    concatStringsSep " + " ((map luaModName kb.bind.mods) ++ [(luaKeyName kb.bind.key)]);
+
+  luaBindOptions = kb: let
+    flags = getFlags kb;
+    optionFlags = filter (flag: flag != "description") flags;
+    options =
+      map (flag: "${luaOptionName flag} = true") optionFlags
+      ++ optionals (kb.description != "") ["description = ${lib.generators.toLua {} kb.description}"];
+  in
+    if options == []
+    then "nil"
+    else "{ ${concatStringsSep ", " options} }";
+
+  luaAction = kb: let
+    toLua = lib.generators.toLua {};
+    command = kb.command;
+  in
+    if command.lua != ""
+    then command.lua
+    else "hl.dsp.exec_cmd(${toLua command.exec})";
+
+  luaBindLine = kb: ''
+    {
+      keys = ${lib.generators.toLua {} (luaBindKeys kb)},
+      action = ${luaAction kb},
+      options = ${luaBindOptions kb},
+    },
+  '';
 in {
   # Define the option
   options.michal.programs.hyprland.keybinds = mkOption {
@@ -203,7 +239,7 @@ in {
     default = [];
     description = ''
       A list of key bindings for Hyprland. Each binding is an attribute set
-      with attributes such as `mods`, `key`, `dispatcher`, `params`, and `flags`.
+      with attributes such as `mods`, `key`, `exec`, `lua`, and `flags`.
     '';
     example = [
       {
@@ -219,8 +255,7 @@ in {
           }
         ];
         command = {
-          params = "hyprlock";
-          dispatcher = "exec";
+          exec = "hyprlock";
           flags = [];
         };
       }
@@ -239,6 +274,10 @@ in {
       {
         assertion = builtins.all (kb: allUnique (getFlags kb)) expandedBinds;
         message = "config.michal.programs.hyprland.keybinds[].command.flags have a duplicate.";
+      }
+      {
+        assertion = builtins.all (kb: (kb.command.exec != "") != (kb.command.lua != "")) expandedBinds;
+        message = "config.michal.programs.hyprland.keybinds[].command must set exactly one of exec or lua.";
       }
     ];
 
@@ -270,8 +309,7 @@ in {
             key = n;
           };
           command = {
-            dispatcher = "workspace";
-            params = n;
+            lua = ''hl.dsp.focus({ workspace = "${n}" })'';
           };
         }
         {
@@ -281,8 +319,7 @@ in {
             key = n;
           };
           command = {
-            dispatcher = "movetoworkspacesilent";
-            params = n;
+            lua = ''hl.dsp.window.move({ workspace = "${n}" })'';
           };
         }
       ];
@@ -297,7 +334,7 @@ in {
             mods = ["CONTROL" "ALT"];
             key = "Delete";
           };
-          command = {params = toggleWindow "session";};
+          command = {exec = toggleWindow "session";};
         }
         {
           description = "Launch terminal";
@@ -305,7 +342,7 @@ in {
             mods = ["SUPER"];
             key = "Return";
           };
-          command = {params = defaultTerminal;};
+          command = {exec = defaultTerminal;};
         }
         {
           description = "Launch Browser";
@@ -313,7 +350,7 @@ in {
             mods = ["SUPER"];
             key = "W";
           };
-          command = {params = config.environment.sessionVariables.BROWSER;};
+          command = {exec = config.environment.sessionVariables.BROWSER;};
         }
         {
           description = "Launch VSCode";
@@ -321,7 +358,7 @@ in {
             mods = ["SUPER"];
             key = "C";
           };
-          command = {params = "code --password-store=gnome";};
+          command = {exec = "code --password-store=gnome";};
         }
         {
           description = "Launch file manager";
@@ -329,7 +366,7 @@ in {
             mods = ["SUPER"];
             key = "E";
           };
-          command = {params = "nautilus --new-window";};
+          command = {exec = "nautilus --new-window";};
         }
         {
           description = "Launch terminal file manager";
@@ -337,7 +374,7 @@ in {
             mods = ["SUPER" "ALT"];
             key = "E";
           };
-          command = {params = "${defaultTerminal} -e yazi";};
+          command = {exec = "${defaultTerminal} -e yazi";};
         }
         {
           description = "Kill active window";
@@ -346,8 +383,7 @@ in {
             key = "Q";
           };
           command = {
-            dispatcher = "killactive";
-            params = "";
+            lua = "hl.dsp.window.close()";
           };
         }
         {
@@ -356,7 +392,7 @@ in {
             mods = ["SHIFT" "SUPER" "ALT"];
             key = "Q";
           };
-          command = {params = "hyprctl kill";};
+          command = {exec = "hyprctl kill";};
         }
         {
           description = "Launch logout menu"; # TODO not working, also wlogout might not be installed
@@ -364,7 +400,7 @@ in {
             mods = ["CONTROL" "SHIFT" "ALT"];
             key = "Delete";
           };
-          command = {params = "pkill wlogout || wlogout -p layer-shell";};
+          command = {exec = "pkill wlogout || wlogout -p layer-shell";};
         }
         {
           description = "Power off system"; # TODO not working
@@ -372,7 +408,7 @@ in {
             mods = ["CONTROL" "SHIFT" "ALT" "SUPER"];
             key = "Delete";
           };
-          command = {params = "systemctl poweroff";};
+          command = {exec = "systemctl poweroff";};
         }
         {
           description = "Set power profile: performance";
@@ -381,7 +417,7 @@ in {
             key = "1";
           };
           command = {
-            params = "powerprofilesctl set performance && notify-send 'Power profile' 'Performance' -a 'Power Profiles'";
+            exec = "powerprofilesctl set performance && notify-send 'Power profile' 'Performance' -a 'Power Profiles'";
           };
         }
         {
@@ -391,7 +427,7 @@ in {
             key = "2";
           };
           command = {
-            params = "powerprofilesctl set balanced && notify-send 'Power profile' 'Balanced' -a 'Power Profiles'";
+            exec = "powerprofilesctl set balanced && notify-send 'Power profile' 'Balanced' -a 'Power Profiles'";
           };
         }
         {
@@ -401,7 +437,7 @@ in {
             key = "3";
           };
           command = {
-            params = "powerprofilesctl set power-saver && notify-send 'Power profile' 'Power Saver' -a 'Power Profiles'";
+            exec = "powerprofilesctl set power-saver && notify-send 'Power profile' 'Power Saver' -a 'Power Profiles'";
           };
         }
         {
@@ -411,7 +447,7 @@ in {
             key = "I";
           };
           command = {
-            params = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
+            exec = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
           };
         }
         {
@@ -420,7 +456,7 @@ in {
             mods = ["CONTROL" "SHIFT"];
             key = "Escape";
           };
-          command = {params = "gnome-system-monitor";};
+          command = {exec = "gnome-system-monitor";};
         }
         {
           description = "Toggle on-screen keyboard"; # todo not reimplemented
@@ -428,7 +464,7 @@ in {
             mods = ["SUPER"];
             key = "K";
           };
-          command = {params = toggleWindow "osk";};
+          command = {exec = toggleWindow "osk";};
         }
         {
           description = "Screenshot region OCR";
@@ -437,7 +473,7 @@ in {
             key = "S";
           };
           command = {
-            params = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
+            exec = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
           };
         }
         {
@@ -449,7 +485,7 @@ in {
             }
             {key = "Print";}
           ];
-          command = {params = ss_region_clipboard;};
+          command = {exec = ss_region_clipboard;};
         }
         {
           description = "Screenshot screen to file";
@@ -457,7 +493,7 @@ in {
             mods = ["SUPER" "CONTROL"];
             key = "S";
           };
-          command = {params = ss_monitor_file;};
+          command = {exec = ss_monitor_file;};
         }
         {
           description = "Screenshot region and edit";
@@ -465,7 +501,7 @@ in {
             mods = ["SUPER" "ALT"];
             key = "S";
           };
-          command = {params = "${ss_region_stdout} | swappy -f -";};
+          command = {exec = "${ss_region_stdout} | swappy -f -";};
         }
         {
           description = "Screen recording";
@@ -473,7 +509,7 @@ in {
             mods = ["SUPER" "ALT"];
             key = "R";
           };
-          command = {params = "record";};
+          command = {exec = "record";};
         }
         {
           description = "Fullscreen recording";
@@ -481,7 +517,7 @@ in {
             mods = ["CONTROL" "ALT"];
             key = "R";
           };
-          command = {params = "record --fullscreen";};
+          command = {exec = "record --fullscreen";};
         }
         {
           description = "Fullscreen recording with audio";
@@ -489,7 +525,7 @@ in {
             mods = ["SUPER" "SHIFT" "ALT"];
             key = "R";
           };
-          command = {params = "record --fullscreen-sound";};
+          command = {exec = "record --fullscreen-sound";};
         }
         {
           description = "Color picker";
@@ -497,7 +533,7 @@ in {
             mods = ["SUPER" "SHIFT"];
             key = "C";
           };
-          command = {params = "hyprpicker -a";};
+          command = {exec = "hyprpicker -a";};
         }
         {
           description = "Lock screen";
@@ -511,7 +547,7 @@ in {
               key = "L";
             }
           ];
-          command = {params = "hyprlock";};
+          command = {exec = "hyprlock";};
         }
         {
           description = "Reset AGS"; # TODO
@@ -519,7 +555,7 @@ in {
             mods = ["CONTROL" "SUPER"];
             key = "R";
           };
-          command = {params = "ags quit; ags run &";};
+          command = {exec = "ags quit; ags run &";};
         }
         {
           description = "Toggle launcher";
@@ -527,7 +563,7 @@ in {
             mods = ["SUPER"];
             key = "Tab";
           };
-          command = {params = toggleWindow "launcher";};
+          command = {exec = toggleWindow "launcher";};
         }
         {
           description = "Toggle between horizontal and vertical bar";
@@ -535,7 +571,7 @@ in {
             mods = ["SUPER"];
             key = "T";
           };
-          command = {params = agsRequest "bar-toggle";};
+          command = {exec = agsRequest "bar-toggle";};
         }
         {
           description = "Toggle cheatsheet";
@@ -543,7 +579,7 @@ in {
             mods = ["SUPER"];
             key = "Slash";
           };
-          command = {params = toggleWindow "cheatsheet";};
+          command = {exec = toggleWindow "cheatsheet";};
         }
         {
           description = "Suspend system"; # With a delay
@@ -552,7 +588,7 @@ in {
             key = "L";
           };
           command = {
-            params = "sleep 0.1 && systemctl suspend";
+            exec = "sleep 0.1 && systemctl suspend";
             flags = ["locked"];
           };
         }
@@ -563,7 +599,7 @@ in {
             key = "M";
           };
           command = {
-            params = "ags run-js 'indicator.popup(1);'";
+            exec = "ags run-js 'indicator.popup(1);'";
             flags = ["locked"];
           };
         }
@@ -574,7 +610,7 @@ in {
             key = "M";
           };
           command = {
-            params = "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
+            exec = "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
           };
         }
         {
@@ -584,7 +620,7 @@ in {
             key = "Comma";
           };
           command = {
-            params = "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
+            exec = "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
           };
         }
         {
@@ -594,7 +630,7 @@ in {
             key = "F12";
           };
           command = {
-            params = "notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'";
+            exec = "notify-send 'Test notification' 'This is a really long message to test truncation and wrapping\\nYou can middle click or flick this notification to dismiss it!' -a 'Shell' -A 'Test1=I got it!' -A 'Test2=Another action'";
           };
         }
         {
@@ -604,14 +640,14 @@ in {
             key = "Equal";
           };
           command = {
-            params = "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
+            exec = "notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'";
           };
         }
         {
           description = "Increase brightness";
           bind = {key = "XF86MonBrightnessUp";};
           command = {
-            params = "brightnessctl set +10%";
+            exec = "brightnessctl set +10%";
             flags = ["repeat"];
           };
         }
@@ -619,7 +655,7 @@ in {
           description = "Decrease brightness";
           bind = {key = "XF86MonBrightnessDown";};
           command = {
-            params = "brightnessctl set 10%-";
+            exec = "brightnessctl set 10%-";
             flags = ["repeat"];
           };
         }
@@ -629,7 +665,7 @@ in {
             mods = ["SUPER"];
             key = "A";
           };
-          command = {params = "stt start";};
+          command = {exec = "stt start";};
         }
         {
           description = "Speech to text (hold and speak)";
@@ -638,7 +674,7 @@ in {
             key = "A";
           };
           command = {
-            params = "stt stop";
+            exec = "stt stop";
             flags = ["release"];
           };
         }
@@ -649,7 +685,7 @@ in {
             key = "Z";
           };
           # First cancel the recording, then start recording again.
-          command = {params = "handy --cancel; handy --toggle-transcription";};
+          command = {exec = "handy --cancel; handy --toggle-transcription";};
         }
         {
           description = "Handy push to talk";
@@ -658,7 +694,7 @@ in {
             key = "Z";
           };
           command = {
-            params = "handy --toggle-transcription";
+            exec = "handy --toggle-transcription";
             flags = ["release"];
           };
         }
@@ -668,8 +704,12 @@ in {
       # Make a json with the keybinds available, for example to ags
       home.file = {".config/keybinds.json".text = builtins.toJSON cfg;};
 
-      # Add only binds here, rest of config is elsewhere
-      wayland.windowManager.hyprland.settings = binds;
+      xdg.configFile."hypr/generated/keybinds.lua".text = ''
+        -- Generated from config.michal.programs.hyprland.keybinds.
+        require("hypr.keybinds").bind_all({
+        ${concatStringsSep "\n" (map luaBindLine expandedBinds)}
+        })
+      '';
     };
   };
 }

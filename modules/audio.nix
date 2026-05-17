@@ -52,7 +52,7 @@ in {
             key = "XF86AudioMute";
           };
           command = {
-            params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
+            exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
             flags = ["locked"];
           };
         }
@@ -63,7 +63,7 @@ in {
             key = "M";
           };
           command = {
-            params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
+            exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%";
             flags = ["locked"];
           };
         }
@@ -74,7 +74,7 @@ in {
             key = "N";
           };
           command = {
-            params = nextTrackCmd;
+            exec = nextTrackCmd;
             flags = ["locked"];
           };
         }
@@ -85,7 +85,7 @@ in {
             key = "XF86AudioNext";
           };
           command = {
-            params = nextTrackCmd;
+            exec = nextTrackCmd;
             flags = ["locked"];
           };
         }
@@ -96,7 +96,7 @@ in {
             key = "B";
           };
           command = {
-            params = "playerctl previous";
+            exec = "playerctl previous";
             flags = ["locked"];
           };
         }
@@ -107,7 +107,7 @@ in {
             key = "P";
           };
           command = {
-            params = "playerctl play-pause";
+            exec = "playerctl play-pause";
             flags = ["locked"];
           };
         }
@@ -118,7 +118,7 @@ in {
             key = "XF86AudioPlay";
           };
           command = {
-            params = "playerctl play-pause";
+            exec = "playerctl play-pause";
             flags = ["locked"];
           };
         }
@@ -126,7 +126,7 @@ in {
           description = "Raise volume";
           bind = {key = "XF86AudioRaiseVolume";};
           command = {
-            params = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
+            exec = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
             flags = ["repeat"];
           };
         }
@@ -134,7 +134,7 @@ in {
           description = "Lower volume";
           bind = {key = "XF86AudioLowerVolume";};
           command = {
-            params = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+            exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
             flags = ["repeat"];
           };
         }
@@ -146,7 +146,7 @@ in {
             mods = ["CONTROL" "SUPER"];
             key = "V";
           };
-          command = {params = "pavucontrol";};
+          command = {exec = "pavucontrol";};
         }
       ];
   };

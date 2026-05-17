@@ -23,7 +23,7 @@ const sessionButtons: Record<string, SessionButtonProps> = {
     icon: "logout",
     command: () => {
       toggleWindow("session");
-      execAsync(["bash", "-c", "pkill Hyprland || pkill sway"]);
+      execAsync(["bash", "-c", "hyprctl dispatch exit || swaymsg exit"]);
     },
   },
   sleep: {

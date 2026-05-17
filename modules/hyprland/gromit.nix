@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  username,
   ...
 }: {
   # Gromit-mpx is program for drawing to screen
@@ -19,8 +18,7 @@
         description = "Toggle drawing to screen"; # TODO toggle off does not work (kill it with super+q)
         bind = {key = "F7";};
         command = {
-          dispatcher = "togglespecialworkspace";
-          params = "gromit";
+          lua = ''hl.dsp.workspace.toggle_special("gromit")'';
         };
       }
       {
@@ -29,12 +27,12 @@
           mods = ["SHIFT"];
           key = "F7";
         };
-        command = {params = "gromit-mpx --clear";};
+        command = {exec = "gromit-mpx --clear";};
       }
       {
         description = "Drawing: Undo";
         bind = {key = "F6";};
-        command = {params = "gromit-mpx --undo";};
+        command = {exec = "gromit-mpx --undo";};
       }
       {
         description = "Drawing: Redo";
@@ -42,24 +40,8 @@
           mods = ["SHIFT"];
           key = "F6";
         };
-        command = {params = "gromit-mpx --redo";};
+        command = {exec = "gromit-mpx --redo";};
       }
     ];
-
-    home-manager.users.${username} = {
-      wayland.windowManager.hyprland = {
-        settings = {
-          windowrule = [
-            "no_blur on, match:title ^(Gromit-mpx)$"
-            "opacity 1.0, match:title ^(Gromit-mpx)$"
-            "no_shadow on, match:title ^(Gromit-mpx)$"
-            "size 100% 100%, match:title ^(Gromit-mpx)$"
-          ];
-          workspace = [
-            "special:gromit, gapsin:0, gapsout:0, on-created-empty: gromit-mpx -a"
-          ];
-        };
-      };
-    };
   };
 }
