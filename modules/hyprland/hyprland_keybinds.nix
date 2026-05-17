@@ -13,8 +13,7 @@ with lib; {
           key = "Space";
         };
         command = {
-          dispatcher = "togglefloating";
-          params = "";
+          lua = ''hl.dsp.window.float({ action = "toggle" })'';
         };
       }
       {
@@ -24,8 +23,7 @@ with lib; {
           key = "n";
         };
         command = {
-          dispatcher = "layoutmsg";
-          params = "togglesplit";
+          lua = ''hl.dsp.layout("togglesplit")'';
         };
       }
       {
@@ -35,8 +33,7 @@ with lib; {
           key = "Left";
         };
         command = {
-          dispatcher = "movewindow";
-          params = "l";
+          lua = ''hl.dsp.window.move({ direction = "left" })'';
         };
       }
       {
@@ -46,8 +43,7 @@ with lib; {
           key = "Right";
         };
         command = {
-          dispatcher = "movewindow";
-          params = "r";
+          lua = ''hl.dsp.window.move({ direction = "right" })'';
         };
       }
       {
@@ -57,8 +53,7 @@ with lib; {
           key = "Up";
         };
         command = {
-          dispatcher = "movewindow";
-          params = "u";
+          lua = ''hl.dsp.window.move({ direction = "up" })'';
         };
       }
       {
@@ -68,8 +63,7 @@ with lib; {
           key = "Down";
         };
         command = {
-          dispatcher = "movewindow";
-          params = "d";
+          lua = ''hl.dsp.window.move({ direction = "down" })'';
         };
       }
       {
@@ -85,8 +79,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "movefocus";
-          params = "l";
+          lua = ''hl.dsp.focus({ direction = "left" })'';
         };
       }
       {
@@ -102,8 +95,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "movefocus";
-          params = "r";
+          lua = ''hl.dsp.focus({ direction = "right" })'';
         };
       }
       {
@@ -113,8 +105,7 @@ with lib; {
           key = "Up";
         };
         command = {
-          dispatcher = "movefocus";
-          params = "u";
+          lua = ''hl.dsp.focus({ direction = "up" })'';
         };
       }
       {
@@ -124,8 +115,7 @@ with lib; {
           key = "Down";
         };
         command = {
-          dispatcher = "movefocus";
-          params = "d";
+          lua = ''hl.dsp.focus({ direction = "down" })'';
         };
       }
       {
@@ -149,8 +139,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "workspace";
-          params = "+1";
+          lua = ''hl.dsp.focus({ workspace = "+1" })'';
         };
       }
       {
@@ -174,8 +163,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "workspace";
-          params = "-1";
+          lua = ''hl.dsp.focus({ workspace = "-1" })'';
         };
       }
       {
@@ -187,8 +175,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "workspace";
-          params = "-5";
+          lua = ''hl.dsp.focus({ workspace = "-5" })'';
         };
       }
       {
@@ -200,8 +187,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "workspace";
-          params = "+5";
+          lua = ''hl.dsp.focus({ workspace = "+5" })'';
         };
       }
       {
@@ -229,8 +215,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "movetoworkspace";
-          params = "+1";
+          lua = ''hl.dsp.window.move({ workspace = "+1" })'';
         };
       }
       {
@@ -258,8 +243,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "movetoworkspace";
-          params = "-1";
+          lua = ''hl.dsp.window.move({ workspace = "-1" })'';
         };
       }
       {
@@ -269,8 +253,7 @@ with lib; {
           key = "F";
         };
         command = {
-          dispatcher = "fullscreen";
-          params = "0";
+          lua = ''hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })'';
         };
       }
       {
@@ -280,8 +263,7 @@ with lib; {
           key = "D";
         };
         command = {
-          dispatcher = "fullscreen";
-          params = "1";
+          lua = ''hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })'';
         };
       }
       {
@@ -291,8 +273,7 @@ with lib; {
           key = "F";
         };
         command = {
-          dispatcher = "fullscreenstate";
-          params = "-1 2";
+          lua = ''hl.dsp.window.fullscreen_state({ internal = -1, client = 2, action = "toggle" })'';
         };
       }
       {
@@ -308,8 +289,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "layoutmsg";
-          params = "mfact -0.1";
+          lua = ''hl.dsp.layout("mfact -0.1")'';
           flags = ["repeat"];
         };
       }
@@ -326,8 +306,7 @@ with lib; {
           }
         ];
         command = {
-          dispatcher = "layoutmsg";
-          params = "mfact +0.1";
+          lua = ''hl.dsp.layout("mfact +0.1")'';
           flags = ["repeat"];
         };
       }

@@ -24,10 +24,10 @@ type Bind = {
 };
 
 type Command = {
-  dispatcher: string;
   enable: boolean;
+  exec: string;
   flags: string[];
-  params: string;
+  lua: string;
 };
 
 type Keybind = {
@@ -46,7 +46,7 @@ function anyOf(word: string, ...haystack: string[]) {
 // Define category rules with discriminating logic
 const categoryRules = {
   screenshot: (keybind: Keybind) => {
-    const cmd = getCommand(keybind).params;
+    const cmd = getCommand(keybind).exec;
     return anyOf(
       cmd,
       "record",
@@ -58,32 +58,29 @@ const categoryRules = {
     );
   },
   window: (keybind: Keybind) => {
-    const dispatcher = getCommand(keybind).dispatcher;
+    const action = getCommand(keybind).lua;
     return anyOf(
-      dispatcher,
-      "togglefloating",
-      "pseudo",
-      "killactive",
+      action,
+      "float",
+      "close",
       "window",
-      "togglesplit",
       "fullscreen", // "fullscreenstate",
-      "resize",
+      "layout",
     );
   },
   workspace: (keybind: Keybind) => {
-    const dispatcher = getCommand(keybind).dispatcher;
-    return anyOf(dispatcher, "workspace", "movetoworkspace", "movewindow");
+    const action = getCommand(keybind).lua;
+    return anyOf(action, "workspace", "focus", "move");
   },
   launch: (keybind: Keybind) => {
-    const dispatcher = getCommand(keybind).dispatcher;
-    const cmd = getCommand(keybind).params;
+    const cmd = getCommand(keybind).exec;
     return (
-      (dispatcher === "exec" && anyOf(cmd, "launch", "open", "fuzzel")) ||
+      anyOf(cmd, "launch", "open", "fuzzel") ||
       anyOf(keybind.description, "Launch")
     );
   },
   system: (keybind: Keybind) => {
-    const cmd = getCommand(keybind).params;
+    const cmd = getCommand(keybind).exec;
     return (
       anyOf(cmd, "brightnessctl", "hyprlock", "killall") ||
       anyOf(keybind.description, "volume", "track", "media", "monitor")

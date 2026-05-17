@@ -26,7 +26,7 @@ function GetEntries()
     | . as $entry
     | (if (.command | type) == "array" then .command[] else .command end)
     | select((type == "object") and (.enable // false) and (.visible // true))
-    | [($entry.description // ""), (($entry.bind.mods // []) | join("+")), ($entry.bind.key // ""), (.dispatcher // ""), (.params // "")]
+    | [($entry.description // ""), (($entry.bind.mods // []) | join("+")), ($entry.bind.key // ""), (.exec // ""), (.lua // "")]
     | @tsv
   ]]
 
@@ -44,7 +44,7 @@ function GetEntries()
     end
 
     for line in handle:lines() do
-        local description, mods, key, dispatcher, params =
+        local description, mods, key, exec, lua =
             line:match("([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t(.*)")
         if description and key then
             local shortcut = key
@@ -54,17 +54,15 @@ function GetEntries()
 
             local title = description ~= "" and description or shortcut
             local subtext = shortcut
-            if dispatcher ~= "" then
-                subtext = subtext .. " -> " .. dispatcher
+            if exec ~= "" then
+                subtext = subtext .. " -> exec"
+            elseif lua ~= "" then
+                subtext = subtext .. " -> lua"
             end
 
             local launch_cmd = ""
-            if params ~= "" then
-                if dispatcher == "" or dispatcher == "exec" then
-                    launch_cmd = params
-                else
-                    launch_cmd = "hyprctl dispatch " .. dispatcher .. " " .. params
-                end
+            if exec ~= "" then
+                launch_cmd = exec
             end
 
             local launch_value = ""

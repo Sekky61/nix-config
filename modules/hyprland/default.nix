@@ -10,20 +10,26 @@ with lib; let
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
   monitors = config.michal.monitors;
-  shouldIncludeAgs = config.michal.programs.ags.enable;
+  walkerBin = "${pkgs.walker}/bin/walker";
 
-  rounding = 5; # px
-
-  # Convert monitor config to Hyprland format
-  # todo https://wiki.hypr.land/Configuring/Monitors/#monitor-v2
-  monitorToHyprland = monitor:
+  toLua = lib.generators.toLua {};
+  monitorToLua = monitor:
     if monitor.enabled
-    then "desc:${monitor.id},${toString monitor.width}x${
-      toString monitor.height
-    }@${toString monitor.refreshRate},${toString monitor.position.x}x${
-      toString monitor.position.y
-    },${toString monitor.scale},transform,${toString monitor.transform}"
-    else "desc:${monitor.id},disable";
+    then ''
+      hl.monitor({
+        output = "desc:${monitor.id}",
+        mode = "${toString monitor.width}x${toString monitor.height}@${toString monitor.refreshRate}",
+        position = "${toString monitor.position.x}x${toString monitor.position.y}",
+        scale = ${toLua monitor.scale},
+        transform = ${toLua monitor.transform},
+      })
+    ''
+    else ''
+      hl.monitor({
+        output = "desc:${monitor.id}",
+        disabled = true,
+      })
+    '';
 in {
   imports = [
     ./keybinds.nix
@@ -89,212 +95,56 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
+        configType = "lua";
+
+        # Home Manager's systemd integration is emitted into its generated
+        # hyprland.lua. The linked entrypoint starts hyprland-session.target
+        # directly so this file can stay owned by the repo.
+        systemd.enable = false;
+
+        settings = mkForce {};
 
         plugins = with pkgs; [
           # hyprlandPlugins.<plugin>
         ];
 
-        settings = {
-          env = [
-            "QT_QPA_PLATFORM, wayland"
-            "QT_QPA_PLATFORMTHEME, qt5ct"
-            "QT_STYLE_OVERRIDE,kvantum"
-            "GDK_SCALE, 2"
-            "XCURSOR_SIZE, 32"
-            "WLR_NO_HARDWARE_CURSORS, 1"
-          ];
-          monitor =
-            map monitorToHyprland monitors
-            ++ [
-              ",preferred,auto,1" # auto
-            ];
-          exec-once =
-            [
-              # wallpaper
-              "ydotoold"
-              "awww kill; awww init"
-              # hw sensors (screen rotation)
-              "iio-hyprland eDP-1"
-              # paste history init
-              "wl-paste --type text --watch cliphist store"
-              "wl-paste --type image --watch cliphist store"
-              # cursor todo
-              "hyprctl setcursor Bibata-Modern-Classic 24"
-              # launch programs
-              # :
-              "[workspace 1 silent] ${browser}"
-              "[workspace 2 silent] ${defaultTerminal}"
-              "handy --start-hidden"
-            ]
-            # system tray
-            ++ optional shouldIncludeAgs "ags run";
-          # Waybar is handled by home manager
-          # ++ optional shouldIncludeWaybar "waybar"
-
-          general = {
-            gaps_in = 2;
-            gaps_out = 3;
-            gaps_workspaces = 50;
-            layout = "master";
-            resize_on_border = true; # click and drag on border to resize
-            border_size = 1;
-            #"col.active_border" = "rgba(38bdf8ee)";
-            #"col.inactive_border" = "rgba(0369a1cc)";
-          };
-          master = {mfact = 0.7;};
-          dwindle = {
-            preserve_split = true;
-            smart_resizing = false;
-          };
-          gesture = [
-            "3, horizontal, workspace"
-            "4, up, dispatcher, exec, xdg-open https://youtube.com/shorts" # :)
-          ];
-          binds = {scroll_event_delay = 0;};
-          input = {
-            sensitivity = 0.2; # -1 to 1
-            # Keyboard: Add a layout and uncomment kb_options for Win+Space switching shortcut
-            kb_layout = "us,cz";
-            # todo what is the first one? this might interfere with alt shift binds
-            # the second one swaps capslock and win key
-            kb_options = "grp:alt_shift_toggle,caps:super";
-            numlock_by_default = true;
-            repeat_delay = 250;
-            repeat_rate = 35;
-
-            touchpad = {
-              natural_scroll = true;
-              disable_while_typing = false;
-              clickfinger_behavior = true;
-              scroll_factor = 0.5;
-            };
-
-            special_fallthrough =
-              true; # only in new hyprland versions. but they're hella fucked
-            follow_mouse = 1;
-          };
-          decoration = {
-            rounding = rounding;
-
-            blur = {
-              enabled = true;
-              xray = true;
-              special = false;
-              new_optimizations = true;
-              size = 5;
-              passes = 4;
-              brightness = 1;
-              noise = 1.0e-2;
-              contrast = 1;
-            };
-            # Shadow
-            shadow = {
-              enabled = true;
-              #color = "rgba(0000001A)";
-              offset = "0 2";
-              range = 20;
-              render_power = 2;
-              ignore_window = true;
-            };
-
-            # Dim
-            dim_inactive = true;
-            dim_strength = 0.1;
-            dim_special = 0;
-          };
-          animations = {
-            enabled = true;
-            bezier = [
-              "md3_decel, 0.05, 0.7, 0.1, 1"
-              "md3_accel, 0.3, 0, 0.8, 0.15"
-              "overshot, 0.05, 0.9, 0.1, 1.1"
-              "crazyshot, 0.1, 1.5, 0.76, 0.92"
-              "hyprnostretch, 0.05, 0.9, 0.1, 1.0"
-              "fluent_decel, 0.1, 1, 0, 1"
-              "easeInOutCirc, 0.85, 0, 0.15, 1"
-              "easeOutCirc, 0, 0.55, 0.45, 1"
-              "easeOutExpo, 0.16, 1, 0.3, 1"
-            ];
-            animation = [
-              "windows, 1, 3, md3_decel, popin 60%"
-              "border, 1, 10, default"
-              "fade, 1, 2.5, md3_decel"
-
-              # Workspace switching
-              "workspaces, 0" # Instant switch
-              # "workspaces, 1, 7, fluent_decel, slide"
-              # "workspaces, 1, 3.5, md3_decel, slide"
-              # "workspaces, 1, 7, fluent_decel, slidefade 15%"
-              # "specialWorkspace, 1, 3, md3_decel, slidefadevert 15%"
-              # "specialWorkspace, 1, 3, md3_decel, slidevert"
-            ];
-          };
-          misc = {
-            vfr = 1;
-            vrr = 1;
-
-            key_press_enables_dpms = true; # Should wake up screen
-            mouse_move_enables_dpms = true;
-
-            # layers_hog_mouse_focus = true;
-            focus_on_activate = true;
-            animate_manual_resizes = false;
-            animate_mouse_windowdragging = false;
-            # Swallowing: replacing graphical window with the spawining terminal
-            enable_swallow = false;
-            swallow_regex = "(foot|kitty|allacritty|Alacritty)";
-
-            disable_hyprland_logo = true;
-            on_focus_under_fullscreen = 2;
-          };
-          xwayland = {force_zero_scaling = true;};
-          bind = [
-            # "Super, S, togglespecialworkspace,"
-            # "Control+Super, S, togglespecialworkspace,"
-            "Alt, Tab, cyclenext"
-            "Alt, Tab, bringactivetotop,"
-            "Control+Shift+Super, Up, movetoworkspacesilent, special"
-            "Super, m, movecurrentworkspacetomonitor, +1"
-            # "Super+Shift, S, movetoworkspacesilent, special"
-            "Super, mouse_up, workspace, +1"
-            "Super, mouse_down, workspace, -1"
-            "Control+Super, mouse_up, workspace, +1"
-            "bind = Control+Super, mouse_down, workspace, -1"
-          ];
-          bindm = [
-            "Super, mouse:272, movewindow" # left click to move window
-            # occupied, todo
-            # "Super, Z, movewindow"
-            "Super, mouse:273, resizewindow" # right click to resize window
-          ];
-          bindle = [
-            "Alt, I, exec, ydotool key 103:1 103:0 "
-            "Alt, K, exec, ydotool key 108:1 108:0"
-            "Alt, J, exec, ydotool key 105:1 105:0"
-            "Alt, L, exec, ydotool key 106:1 106:0"
-          ];
-          bindr = [
-            "Control+Super, R, exec, killall ags .ags-wrapped ydotool; ags &"
-            "Control+Super+Alt, R, exec, hyprctl reload; killall ags ydotool; ags &"
-          ];
-          windowrule = [
-            # Disables blur for windows. Substantially improves performance.
-            "no_blur on, match:title .*"
-            # GTK dev
-            "pin on, match:title ^(showmethekey-gtk)$"
-            "float on, match:title ^(Open File)(.*)$"
-            "float on, match:title ^(Select a File)(.*)$"
-            "float on, match:title ^(Choose wallpaper)(.*)$"
-            "float on, match:title ^(Open Folder)(.*)$"
-            "float on, match:title ^(Save As)(.*)$"
-            "float on, match:title ^(Library)(.*)$ "
-          ];
-          layerrule = ["no_anim on, match:namespace waybar"];
-          # source = [ # todo
-          #   "./hyprland/colors.conf"
-          # ];
-        };
+        # Hyprland 0.55+ uses Lua config. Keep the active config in
+        # hyprland.lua instead of generated Nix settings while migrating.
+        extraConfig = mkForce "";
       };
+
+      xdg.configFile."hypr/hyprland.lua".source = ./hyprland.lua;
+      xdg.configFile."hypr/hypr".source = ./lua;
+      xdg.configFile."hypr/generated/startup.lua".text = ''
+        -- Generated from default session applications.
+        hl.on("hyprland.start", function()
+          hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
+          hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
+        end)
+      '';
+      xdg.configFile."hypr/generated/rules.lua".text = ''
+        -- Generated from optional Hyprland integrations.
+        ${optionalString config.michal.programs.walker.enable ''
+          hl.gesture({
+            fingers = 4,
+            direction = "down",
+            action = function()
+              hl.exec_cmd(${toLua walkerBin})
+            end,
+          })
+        ''}
+      '';
+      xdg.configFile."hypr/generated/monitors.lua".text = ''
+        -- Generated from config.michal.monitors.
+        ${concatStringsSep "\n" (map monitorToLua monitors)}
+
+        hl.monitor({
+          output = "",
+          mode = "preferred",
+          position = "auto",
+          scale = "auto",
+        })
+      '';
     };
   };
 }

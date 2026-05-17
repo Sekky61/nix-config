@@ -113,14 +113,6 @@ in {
           };
         };
       };
-
-      wayland.windowManager.hyprland = {
-        settings = {
-          gesture = [
-            "4, down, dispatcher, exec, ${walkerBin}"
-          ];
-        };
-      };
     };
 
     michal.programs.hyprland.keybinds = [
@@ -130,7 +122,7 @@ in {
           mods = ["SUPER"];
           key = "Space";
         };
-        command = {params = walkerBin;};
+        command = {exec = walkerBin;};
       }
       {
         description = "Clipboard history";
@@ -138,7 +130,7 @@ in {
           mods = ["SUPER"];
           key = "V";
         };
-        command = {params = "${walkerBin} --provider clipboard";};
+        command = {exec = "${walkerBin} --provider clipboard";};
       }
       {
         description = "Show keybinds menu";
@@ -146,7 +138,7 @@ in {
           mods = ["SUPER" "SHIFT"];
           key = "K";
         };
-        command = {params = "${walkerBin} --provider menus:keybinds";};
+        command = {exec = "${walkerBin} --provider menus:keybinds";};
       }
     ];
   };
