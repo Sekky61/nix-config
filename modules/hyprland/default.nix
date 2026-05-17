@@ -13,6 +13,16 @@ with lib; let
   walkerBin = "${pkgs.walker}/bin/walker";
 
   toLua = lib.generators.toLua {};
+  generatedFiles = config.michal.hyprland.generatedFiles;
+  hyprConfigDir = pkgs.runCommand "hypr-config" {} ''
+    mkdir -p "$out/hypr" "$out/generated"
+    cp ${./hyprland.lua} "$out/hyprland.lua"
+    cp -r ${./lua}/. "$out/hypr/"
+    ${concatStringsSep "\n" (mapAttrsToList (path: text: ''
+        install -Dm0644 ${pkgs.writeText "hypr-${baseNameOf path}" text} "$out/${path}"
+      '')
+      generatedFiles)}
+  '';
   monitorToLua = monitor:
     if monitor.enabled
     then ''
@@ -42,6 +52,12 @@ in {
 
   options.michal.hyprland = {
     enable = mkEnableOption "Hyprland desktop configuration";
+    generatedFiles = mkOption {
+      type = types.attrsOf types.lines;
+      default = {};
+      internal = true;
+      description = "Generated Lua files to include in the store-backed Hyprland config directory.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -95,11 +111,13 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
+        package = null;
+        portalPackage = null;
         configType = "lua";
 
-        # Home Manager's systemd integration is emitted into its generated
-        # hyprland.lua. The linked entrypoint starts hyprland-session.target
-        # directly so this file can stay owned by the repo.
+        # Home Manager's Hyprland module still generates hypr/.luarc.json when
+        # it owns a package. The NixOS module owns Hyprland and the portal; this
+        # module only uses Home Manager to place config files.
         systemd.enable = false;
 
         settings = mkForce {};
@@ -113,38 +131,47 @@ in {
         extraConfig = mkForce "";
       };
 
-      xdg.configFile."hypr/hyprland.lua".source = ./hyprland.lua;
-      xdg.configFile."hypr/hypr".source = ./lua;
-      xdg.configFile."hypr/generated/startup.lua".text = ''
-        -- Generated from default session applications.
-        hl.on("hyprland.start", function()
-          hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
-          hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
-        end)
-      '';
-      xdg.configFile."hypr/generated/rules.lua".text = ''
-        -- Generated from optional Hyprland integrations.
-        ${optionalString config.michal.programs.walker.enable ''
-          hl.gesture({
-            fingers = 4,
-            direction = "down",
-            action = function()
-              hl.exec_cmd(${toLua walkerBin})
-            end,
-          })
-        ''}
-      '';
-      xdg.configFile."hypr/generated/monitors.lua".text = ''
-        -- Generated from config.michal.monitors.
-        ${concatStringsSep "\n" (map monitorToLua monitors)}
+      # Keep the Lua config as one store-backed tree so require("hypr.*") and
+      # require("generated.*") resolve relative to one real directory. Do not
+      # link all of hypr/: hyprlock, hyprpaper, and hypridle also place files
+      # there through Home Manager.
+      xdg.configFile."hypr/config".source = hyprConfigDir;
 
-        hl.monitor({
-          output = "",
-          mode = "preferred",
-          position = "auto",
-          scale = "auto",
-        })
-      '';
+      # Compatibility path for running sessions and tools that still reload the
+      # old entrypoint. hyprland.lua adds both its own directory and ./config to
+      # package.path, so this path and hypr/config/hyprland.lua both work.
+      xdg.configFile."hypr/hyprland.lua".source = "${hyprConfigDir}/hyprland.lua";
     };
+
+    michal.hyprland.generatedFiles."generated/startup.lua" = ''
+      -- Generated from default session applications.
+      hl.on("hyprland.start", function()
+        hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
+        hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
+      end)
+    '';
+    michal.hyprland.generatedFiles."generated/rules.lua" = ''
+      -- Generated from optional Hyprland integrations.
+      ${optionalString config.michal.programs.walker.enable ''
+        hl.gesture({
+          fingers = 4,
+          direction = "down",
+          action = function()
+            hl.exec_cmd(${toLua walkerBin})
+          end,
+        })
+      ''}
+    '';
+    michal.hyprland.generatedFiles."generated/monitors.lua" = ''
+      -- Generated from config.michal.monitors.
+      ${concatStringsSep "\n" (map monitorToLua monitors)}
+
+      hl.monitor({
+        output = "",
+        mode = "preferred",
+        position = "auto",
+        scale = "auto",
+      })
+    '';
   };
 }

@@ -1,13 +1,17 @@
 -- See https://wiki.hypr.land/Configuring/Start/
 
-local config_home = os.getenv("XDG_CONFIG_HOME")
-if config_home == nil or config_home == "" then
-  config_home = os.getenv("HOME") .. "/.config"
-end
+local config_path = debug.getinfo(1, "S").source:sub(2)
+local config_dir = config_path:match("(.*/)")
 
+-- Hyprland does not add the config file directory to Lua's module search path.
+-- Keep module lookup relative to the entrypoint, whether it is loaded from the
+-- canonical hypr/config path, the compatibility hypr/hyprland.lua path, or the
+-- resolved Nix store path.
 package.path = table.concat({
-  config_home .. "/hypr/?.lua",
-  config_home .. "/hypr/?/init.lua",
+  config_dir .. "?.lua",
+  config_dir .. "?/init.lua",
+  config_dir .. "config/?.lua",
+  config_dir .. "config/?/init.lua",
   package.path,
 }, ";")
 

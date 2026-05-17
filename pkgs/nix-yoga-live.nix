@@ -44,7 +44,7 @@ inputs.nixos-generators.nixosGenerate {
               # F2 to open sessions
               # F3 to open power menu
               command =
-                "${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd \"start-hyprland -- --config /home/michal/.config/hypr/hyprland.lua\" --kb-command 1 --kb-sessions 2 --kb-power 3";
+                "${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd \"start-hyprland -- --config /home/michal/.config/hypr/config/hyprland.lua\" --kb-command 1 --kb-sessions 2 --kb-power 3";
               user = "greeter";
             };
           };
