@@ -703,13 +703,13 @@ in {
     home-manager.users.${username} = {
       # Make a json with the keybinds available, for example to ags
       home.file = {".config/keybinds.json".text = builtins.toJSON cfg;};
-
-      xdg.configFile."hypr/generated/keybinds.lua".text = ''
-        -- Generated from config.michal.programs.hyprland.keybinds.
-        require("hypr.keybinds").bind_all({
-        ${concatStringsSep "\n" (map luaBindLine expandedBinds)}
-        })
-      '';
     };
+
+    michal.hyprland.generatedFiles."generated/keybinds.lua" = ''
+      -- Generated from config.michal.programs.hyprland.keybinds.
+      require("hypr.keybinds").bind_all({
+      ${concatStringsSep "\n" (map luaBindLine expandedBinds)}
+      })
+    '';
   };
 }
