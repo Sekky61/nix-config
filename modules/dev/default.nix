@@ -19,6 +19,7 @@ in {
     ./codex.nix
     ./claude-code.nix
     ./opencode.nix
+    ./pi.nix
     ./t3code.nix
   ];
 
@@ -29,7 +30,6 @@ in {
       home.packages = with pkgs; [
         # Languages - JS/TS
         nodejs_latest
-        typescript
         yarn
         gjs
         bun

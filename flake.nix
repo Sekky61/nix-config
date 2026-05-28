@@ -107,6 +107,11 @@
 
     claude-code = {url = "github:sadjow/claude-code-nix";};
 
+    pi = {
+      url = "github:lukasl-dev/pi.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     handy = {
       url = "github:xilec/Handy";
       inputs.nixpkgs.follows = "nixpkgs";
