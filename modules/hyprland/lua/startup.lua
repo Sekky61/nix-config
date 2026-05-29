@@ -7,7 +7,6 @@ local function run_if(command)
 end
 
 hl.on("hyprland.start", function()
-  sh("dbus-update-activation-environment --systemd DISPLAY HYPRLAND_INSTANCE_SIGNATURE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE && systemctl --user stop hyprland-session.target && systemctl --user start hyprland-session.target")
   sh("ydotoold")
   sh("awww kill; awww init")
   sh("systemctl --user start hyprpolkitagent")

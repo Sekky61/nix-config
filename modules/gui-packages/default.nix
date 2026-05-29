@@ -7,6 +7,7 @@
     ./ags
     ./apps.nix
     ./browser
+    ./dms-shell.nix
     ./fonts.nix
     ./gpu-screen-recorder.nix
     ./kde-connect.nix

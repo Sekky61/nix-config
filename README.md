@@ -97,8 +97,26 @@ To use it, run `./scripts/update --impure`.
 ## Key Features
 
 ### Hyprland
-The window manager. See shortcuts with `walker --provider menus:keybinds`.
-Launches Chrome on startup.
+Hyprland is the Wayland compositor and primary desktop session. The NixOS module enables Hyprland with UWSM:
+
+```nix
+programs.hyprland = {
+  enable = true;
+  withUWSM = true;
+};
+```
+
+`greetd` uses `tuigreet`, and the default session starts through UWSM:
+
+```bash
+uwsm start hyprland.desktop
+```
+
+UWSM makes the Hyprland session a proper `systemd --user` graphical session. Home Manager still places the Lua config files, but its Hyprland systemd integration is disabled because UWSM owns that lifecycle.
+
+The config entrypoint is generated at `~/.config/hypr/config/hyprland.lua`, with a compatibility link at `~/.config/hypr/hyprland.lua`. The source lives in `modules/hyprland/`: static Lua is under `modules/hyprland/lua/`, and Nix-generated Lua is written into `generated/`.
+
+See shortcuts with `walker --provider menus:keybinds`. The default startup opens the configured browser on workspace 1 and the configured terminal on workspace 2.
 
 ### Theme
 The wallpaper is set in `graphical.nix`.
@@ -153,7 +171,7 @@ metadata like `declarations`, `default` (literalExpression), `description`,
 
 ### Other
 
-- `tuigreet`, launching Hyprland on login
+- `tuigreet`, launching `uwsm start hyprland.desktop` on login
 
 ## Secrets Management
 

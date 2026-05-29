@@ -90,7 +90,10 @@ in {
       nwg-displays # GUI for resolution and monitor placement
     ];
 
-    programs.hyprland.enable = true; # enables xdg-desktop-portal-hyprland
+    programs.hyprland = {
+      enable = true; # enables xdg-desktop-portal-hyprland
+      withUWSM = true;
+    };
 
     programs.xwayland.enable = true;
 
@@ -111,41 +114,37 @@ in {
 
       wayland.windowManager.hyprland = {
         enable = true;
-        package = null;
-        portalPackage = null;
         configType = "lua";
 
-        # Home Manager's Hyprland module still generates hypr/.luarc.json when
-        # it owns a package. The NixOS module owns Hyprland and the portal; this
-        # module only uses Home Manager to place config files.
+        # UWSM owns the systemd user session for Hyprland. Home Manager's
+        # Hyprland integration only places the Lua config files here; keep its
+        # legacy systemd integration disabled so it does not race UWSM's
+        # graphical-session setup.
         systemd.enable = false;
-
-        settings = mkForce {};
 
         plugins = with pkgs; [
           # hyprlandPlugins.<plugin>
         ];
-
-        # Hyprland 0.55+ uses Lua config. Keep the active config in
-        # hyprland.lua instead of generated Nix settings while migrating.
-        extraConfig = mkForce "";
       };
 
       # Keep the Lua config as one store-backed tree so require("hypr.*") and
-      # require("generated.*") resolve relative to one real directory. Do not
-      # link all of hypr/: hyprlock, hyprpaper, and hypridle also place files
-      # there through Home Manager.
+      # require("generated.*") resolve from the same root. Do not link all of
+      # hypr/: hyprlock, hyprpaper, and hypridle also place files there through
+      # Home Manager.
       xdg.configFile."hypr/config".source = hyprConfigDir;
 
-      # Compatibility path for running sessions and tools that still reload the
-      # old entrypoint. hyprland.lua adds both its own directory and ./config to
-      # package.path, so this path and hypr/config/hyprland.lua both work.
+      # Compatibility path for tools that expect Hyprland's default entrypoint.
+      # The UWSM desktop entry loads hypr/config/hyprland.lua; this link keeps
+      # manual reloads and external tooling working with hypr/hyprland.lua too.
       xdg.configFile."hypr/hyprland.lua".source = "${hyprConfigDir}/hyprland.lua";
     };
 
     michal.hyprland.generatedFiles."generated/startup.lua" = ''
       -- Generated from default session applications.
       hl.on("hyprland.start", function()
+        ${optionalString config.michal.programs.dms-shell.enable ''
+        hl.exec_cmd("dms run")
+      ''}
         hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
         hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
       end)
