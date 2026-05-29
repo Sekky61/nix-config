@@ -11,7 +11,6 @@ in {
   config = mkIf config.hardware.bluetooth.enable {
     services.blueman = {
       enable = graphical;
-      withApplet = false;
     };
 
     home-manager.users.${username} = {
