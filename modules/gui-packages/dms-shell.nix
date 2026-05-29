@@ -13,7 +13,10 @@ in {
   config = mkIf cfg.enable {
     programs.dms-shell = {
       enable = true;
-      systemd.enable = false;
+      systemd = {
+        enable = true;
+        restartIfChanged = true;
+      };
     };
   };
 }

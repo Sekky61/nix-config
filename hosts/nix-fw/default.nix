@@ -24,7 +24,7 @@
       t3code.enable = true;
       pi.enable = true;
       opencode.enable = true;
-      ags.enable = true;
+      dms-shell.enable = true;
       waybar.enable = false;
       walker.enable = true;
       bitwarden.enable = true;

@@ -142,9 +142,6 @@ in {
     michal.hyprland.generatedFiles."generated/startup.lua" = ''
       -- Generated from default session applications.
       hl.on("hyprland.start", function()
-        ${optionalString config.michal.programs.dms-shell.enable ''
-        hl.exec_cmd("dms run")
-      ''}
         hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
         hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
       end)
