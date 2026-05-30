@@ -1,9 +1,13 @@
-hl.bind("ALT + TAB", hl.dsp.window.cycle_next())
-hl.bind("ALT + TAB", hl.dsp.window.bring_to_top())
+hl.bind("ALT + TAB", function()
+    hl.dsp.window.cycle_next()
+    hl.dsp.window.bring_to_top()
+end)
+
 hl.bind("CTRL + SHIFT + SUPER + up", hl.dsp.window.move({ workspace = "special" }))
 hl.bind("SUPER + m", function()
-  hl.exec_cmd("hyprctl dispatch movecurrentworkspacetomonitor +1")
+    hl.exec_cmd("hyprctl dispatch movecurrentworkspacetomonitor +1")
 end)
+hl.bind("SUPER + m", hl.dsp.workspace.move({ monitor = "+1" })) -- move current workspace to next monitor
 hl.bind("SUPER + mouse_up", hl.dsp.focus({ workspace = "+1" }))
 hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "-1" }))
 hl.bind("CTRL + SUPER + mouse_up", hl.dsp.focus({ workspace = "+1" }))
@@ -15,5 +19,13 @@ hl.bind("ALT + I", hl.dsp.exec_cmd("ydotool key 103:1 103:0"), { locked = true, 
 hl.bind("ALT + K", hl.dsp.exec_cmd("ydotool key 108:1 108:0"), { locked = true, repeating = true })
 hl.bind("ALT + J", hl.dsp.exec_cmd("ydotool key 105:1 105:0"), { locked = true, repeating = true })
 hl.bind("ALT + L", hl.dsp.exec_cmd("ydotool key 106:1 106:0"), { locked = true, repeating = true })
-hl.bind("CTRL + SUPER + R", hl.dsp.exec_cmd("killall ags .ags-wrapped ydotool; ags &"), { release = true })
-hl.bind("CTRL + SUPER + ALT + R", hl.dsp.exec_cmd("hyprctl reload; killall ags ydotool; ags &"), { release = true })
+hl.bind(
+    "CTRL + SUPER + R",
+    hl.dsp.exec_cmd("killall ags .ags-wrapped ydotool; ags &"),
+    { release = true }
+)
+hl.bind(
+    "CTRL + SUPER + ALT + R",
+    hl.dsp.exec_cmd("hyprctl reload; killall ags ydotool; ags &"),
+    { release = true }
+)
