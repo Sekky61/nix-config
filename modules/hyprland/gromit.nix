@@ -1,4 +1,5 @@
 {
+  username,
   config,
   lib,
   pkgs,
@@ -13,9 +14,50 @@
       gromit-mpx # Draw on screen
     ];
 
+    home-manager.users.${username} = {
+      services.gromit-mpx = {
+        enable = true;
+        hotKey = null;
+        tools = [
+          {
+            device = "default";
+            type = "pen";
+            size = 3;
+          }
+          {
+            device = "default";
+            type = "pen";
+            color = "blue";
+            size = 3;
+            modifiers = ["SHIFT"];
+          }
+          {
+            device = "default";
+            type = "pen";
+            color = "black";
+            size = 3;
+            modifiers = ["CONTROL"];
+          }
+          {
+            device = "default";
+            type = "pen";
+            color = "white";
+            size = 3;
+            modifiers = ["2"];
+          }
+          {
+            device = "default";
+            type = "eraser";
+            size = 30;
+            modifiers = ["3"];
+          }
+        ];
+      };
+    };
+
     michal.programs.hyprland.keybinds = [
       {
-        description = "Toggle drawing to screen"; # TODO toggle off does not work (kill it with super+q)
+        description = "Toggle drawing to screen";
         bind = {key = "F7";};
         command = {
           lua = ''hl.dsp.workspace.toggle_special("gromit")'';
