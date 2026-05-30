@@ -1,8 +1,5 @@
 {
   imports = [
-    # todo make properly
-    # ./stt.nix
-
     # With options
     ./ags
     ./apps.nix
@@ -17,6 +14,7 @@
     ./options.nix
     ./remote-desktop.nix
     ./steam.nix
+    ./stt.nix
     ./terminal-emulator
     ./walker
   ];

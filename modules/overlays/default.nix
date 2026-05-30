@@ -37,6 +37,7 @@
     (final: _: {
       walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
       handy = inputs.handy.packages.${pkgs.stdenv.system}.handy;
+      openwhispr = inputs.nixpkgs-openwhispr.legacyPackages.${final.stdenv.hostPlatform.system}.openwhispr;
     })
 
     (final: _: {

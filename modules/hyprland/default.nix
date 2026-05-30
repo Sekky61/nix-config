@@ -143,6 +143,7 @@ in {
       hl.on("hyprland.start", function()
         hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
         hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
+        hl.exec_cmd(${toLua defaultTerminal}, { workspace = "special:notes" })
       end)
     '';
     michal.hyprland.generatedFiles."generated/rules.lua" = ''

@@ -18,7 +18,6 @@ hl.window_rule({
     no_blur = true,
 })
 
-
 for _, title in ipairs({
     "^(Open File)(.*)$",
     "^(Select a File)(.*)$",
@@ -52,6 +51,17 @@ hl.workspace_rule({
     gaps_in = 0,
     gaps_out = 0,
     on_created_empty = "gromit-mpx -a",
+})
+
+hl.window_rule({
+    name = "voice-recorder-overlay",
+    match = { class = "open-whispr", title = "Voice Recorder" },
+    pin = true,
+    float = true,
+    border_size = 0,
+    no_shadow = true,
+    no_initial_focus = true,
+    no_follow_mouse = true,
 })
 
 hl.layer_rule({

@@ -587,6 +587,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-openwhispr": {
+      "locked": {
+        "lastModified": 1778777504,
+        "narHash": "sha256-foUGetqBBOL7CngIkXsPlikHKmxktuQIuPhyXRicdpM=",
+        "owner": "benedikt-weyer",
+        "repo": "nixpkgs-fork",
+        "rev": "436987e0263dfe1358c741b53398f2596397fb68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "benedikt-weyer",
+        "ref": "add-openwhispr-package",
+        "repo": "nixpkgs-fork",
+        "type": "github"
+      }
+    },
     "nixpkgs-spicy": {
       "locked": {
         "lastModified": 1779560665,
@@ -761,6 +777,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-openwhispr": "nixpkgs-openwhispr",
         "nixpkgs-spicy": "nixpkgs-spicy",
         "nur": "nur",
         "pi": "pi",

@@ -345,6 +345,16 @@ in {
           command = {exec = defaultTerminal;};
         }
         {
+          description = "Toggle notes";
+          bind = {
+            mods = ["SUPER"];
+            key = "N";
+          };
+          command = {
+            lua = ''hl.dsp.workspace.toggle_special("notes")'';
+          };
+        }
+        {
           description = "Launch Browser";
           bind = {
             mods = ["SUPER"];
