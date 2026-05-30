@@ -80,7 +80,6 @@ in {
       pavucontrol
       playerctl
       swappy
-      awww # wallpaper
       wayshot
       wlsunset
       wl-clipboard
