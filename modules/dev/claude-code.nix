@@ -10,7 +10,6 @@ with lib; let
   dev_cfg = config.michal.dev;
 
   cc-notification-script = pkgs.writeShellScriptBin "cc-notification-script" ''
-    notify-send 'CC'
     sound_files=(
       ${../../assets/sounds/wiwiwi.mp3}
       ${../../assets/sounds/co_robim4.mp3}
