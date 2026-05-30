@@ -9,6 +9,16 @@ with lib; let
   cfg = config.michal.hyprland;
   browser = config.environment.sessionVariables.BROWSER;
   defaultTerminal = config.michal.environment.terminal;
+  notesTerminal =
+    if defaultTerminal == "ghostty"
+    then "${pkgs.writeShellScript "notes-terminal" ''
+      exec ghostty \
+        --class=com.michal.notes \
+        --title=Notes \
+        --working-directory=~/Documents/notes \
+        -e sh -lc 'command -v nvim >/dev/null 2>&1 && exec nvim || exec "''${SHELL:-sh}"'
+    ''}"
+    else defaultTerminal;
   monitors = config.michal.monitors;
   walkerBin = "${pkgs.walker}/bin/walker";
 
@@ -143,11 +153,18 @@ in {
       hl.on("hyprland.start", function()
         hl.exec_cmd(${toLua browser}, { workspace = "1 silent" })
         hl.exec_cmd(${toLua defaultTerminal}, { workspace = "2 silent" })
-        hl.exec_cmd(${toLua defaultTerminal}, { workspace = "special:notes" })
+        hl.exec_cmd(${toLua notesTerminal})
       end)
     '';
     michal.hyprland.generatedFiles."generated/rules.lua" = ''
       -- Generated from optional Hyprland integrations.
+      hl.window_rule({
+        name = "notes-special-workspace",
+        match = { class = "com.michal.notes" },
+        workspace = "special:notes silent",
+        no_initial_focus = true,
+      })
+
       ${optionalString config.michal.programs.walker.enable ''
         hl.gesture({
           fingers = 4,
