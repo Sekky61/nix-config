@@ -6,6 +6,7 @@
 }: let
   myWallpaper = builtins.toPath config.stylix.image;
   cfg = config.michal;
+  lockCommand = "pidof hyprlock || hyprlock";
 in {
   options.michal.hasFingerprintReader = lib.mkOption {
     type = lib.types.bool;
@@ -14,8 +15,8 @@ in {
   };
 
   config = lib.mkIf cfg.hyprland.enable {
-    # Hyprlock is the lockscreen handling for hyprland
-    # Hypridle manages automatic locking
+    # Hyprlock is the lockscreen handling for hyprland.
+    # Hypridle manages automatic locking.
 
     home-manager.users.${username} = {
       programs.hyprlock = {
@@ -91,7 +92,7 @@ in {
         enable = true;
         settings = {
           general = {
-            lock_cmd = "pidof hyprlock || hyprlock"; # avoid starting multiple hyprlock instances.
+            lock_cmd = lockCommand;
             before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
             after_sleep_cmd = "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
           };

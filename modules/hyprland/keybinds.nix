@@ -441,13 +441,16 @@ in {
           };
         }
         {
-          description = "Open system settings";
+          description = "Open settings";
           bind = {
             mods = ["SUPER"];
             key = "I";
           };
           command = {
-            exec = ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
+            exec =
+              if config.michal.programs.dms-shell.enable
+              then "dms ipc call settings focusOrToggle"
+              else ''XDG_CURRENT_DESKTOP="gnome" gnome-control-center'';
           };
         }
         {
@@ -547,7 +550,12 @@ in {
               key = "L";
             }
           ];
-          command = {exec = "hyprlock";};
+          command = {
+            exec =
+              if config.michal.programs.dms-shell.enable
+              then "dms ipc call lock lock"
+              else "hyprlock";
+          };
         }
         {
           description = "Reset AGS"; # TODO

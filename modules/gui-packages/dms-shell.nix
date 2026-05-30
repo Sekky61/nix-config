@@ -11,6 +11,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # DMS stores GUI-managed shell settings in
+    # ~/.config/DankMaterialShell/settings.json. For example, enabling
+    # fingerprint unlock for the DMS lock screen writes `enableFprint = true`.
     programs.dms-shell = {
       enable = true;
       systemd = {
