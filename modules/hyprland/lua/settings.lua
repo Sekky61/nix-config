@@ -8,6 +8,9 @@ set_env({
     QT_QPA_PLATFORM = "wayland",
     QT_QPA_PLATFORMTHEME = "qt5ct",
     QT_STYLE_OVERRIDE = "kvantum",
+    -- GTK 4.20+ no longer handles dead keys on Wayland without an input method.
+    -- Use GTK's simple IM backend so compose/dead-key input works in Ghostty.
+    GTK_IM_MODULE = "simple",
     GDK_SCALE = "1",
     XCURSOR_SIZE = "32",
 })
