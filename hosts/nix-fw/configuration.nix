@@ -174,7 +174,12 @@
 
   # network
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      # Disable Wi-Fi powersave: MT7925e latency can spike to 1s+ with it enabled.
+      # This manifested as very slow throughput on otherwise fast networks.
+      wifi.powersave = false;
+    };
     # wireless.enable = true;
 
     # interfaces = {
