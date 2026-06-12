@@ -20,6 +20,7 @@ in {
     ./claude-code.nix
     ./opencode.nix
     ./pi.nix
+    ./safe-chain.nix
     ./t3code.nix
   ];
 

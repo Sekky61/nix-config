@@ -19,6 +19,10 @@
     hyprland.enable = true;
     hasFingerprintReader = true;
     programs = {
+      safe-chain = {
+        enable = true;
+        integration = "pathShims";
+      };
       claude-code.enable = true;
       codex.enable = true;
       t3code.enable = true;
