@@ -113,7 +113,7 @@
     };
 
     handy = {
-      url = "github:xilec/Handy";
+      url = "github:Sekky61/Handy/fork";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

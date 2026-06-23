@@ -697,22 +697,21 @@ in {
           };
         }
         {
-          description = "Handy push to talk";
+          description = "Handy push to talk with post-processing";
           bind = {
             mods = ["SUPER"];
             key = "Z";
           };
-          # First cancel the recording, then start recording again.
-          command = {exec = "handy --cancel; handy --toggle-transcription";};
+          command = {exec = "handy --start-recording --post-process";};
         }
         {
-          description = "Handy push to talk";
+          description = "Handy push to talk with post-processing";
           bind = {
             mods = ["SUPER"];
             key = "Z";
           };
           command = {
-            exec = "handy --toggle-transcription";
+            exec = "handy --stop-recording";
             flags = ["release"];
           };
         }

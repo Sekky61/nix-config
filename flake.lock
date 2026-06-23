@@ -414,15 +414,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1773485650,
-        "narHash": "sha256-P0+VTq1ziPhxmKzVQi1yawyh6FFUpjKTdTuksyUM3Io=",
-        "owner": "xilec",
+        "lastModified": 1782226040,
+        "narHash": "sha256-LMm6s+P0rzPslvTP+LznjsKKcNa+Vx3f1Uj6QCrmWfA=",
+        "owner": "Sekky61",
         "repo": "Handy",
-        "rev": "b833a21f043a8dcd5d7019e4d4cb5f8d2f8c9203",
+        "rev": "7a901efc35352faf7f7c740764fc327c82e35da5",
         "type": "github"
       },
       "original": {
-        "owner": "xilec",
+        "owner": "Sekky61",
+        "ref": "fork",
         "repo": "Handy",
         "type": "github"
       }
