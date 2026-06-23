@@ -13,7 +13,9 @@ in {
   ];
 
   home-manager.users.${username} = {
-    xdg.configFile."nvim".source = impurity.link ./.; # TODO leave out the nix files
+    xdg.configFile."nvim/lua".source = impurity.link ./lua;
+    xdg.configFile."nvim/lazy-lock.json".source = impurity.link ./lazy-lock.json;
+    xdg.configFile."nvim/.luarc.json".source = impurity.link ./.luarc.json;
 
     programs.neovim = {
       enable = true;
@@ -21,6 +23,7 @@ in {
       defaultEditor = true;
       withRuby = true;
       withPython3 = true;
+      initLua = builtins.readFile ./init.lua;
     };
   };
 
