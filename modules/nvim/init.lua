@@ -53,7 +53,10 @@ local servers = {
         cmd = function(dispatchers, config)
             local root_dir = config.root_dir or vim.fn.getcwd()
             if vim.fn.executable("direnv") == 1 then
-                return vim.lsp.rpc.start({ "direnv", "exec", root_dir, "rust-analyzer" }, dispatchers)
+                return vim.lsp.rpc.start(
+                    { "direnv", "exec", root_dir, "rust-analyzer" },
+                    dispatchers
+                )
             end
             return vim.lsp.rpc.start({ "rust-analyzer" }, dispatchers)
         end,
@@ -89,7 +92,55 @@ local servers = {
     cssls = { filetypes = { "scss", "less", "stylus", "css" } },
     -- This rascal kills ram
     -- tailwindcss = {},
-    angularls = {},
+    angularls = {
+        settings = {
+            angular = {
+                documentSymbols = {
+                    enabled = true,
+                    showImplicitForVariables = false,
+                },
+                inlayHints = {
+                    bindingHints = {
+                        pipeOutputTypes = true,
+                        propertyBindingTypes = true,
+                        requiredInputIndicator = "asterisk",
+                        twoWayBindingSignalTypes = true,
+                    },
+                    controlFlowHints = {
+                        deferTriggerTypes = true,
+                        switchExpressionTypes = true,
+                    },
+                    eventHints = {
+                        hostListenerArgumentTypes = true,
+                        parameterTypes = true,
+                    },
+                    functionTypes = {
+                        arrowFunctionParameterTypes = true,
+                        arrowFunctionReturnTypes = true,
+                    },
+                    interaction = {
+                        interactiveInlayHints = true,
+                    },
+                    parameterHints = {
+                        nameHints = "literals",
+                        suppressWhenArgumentMatchesName = true,
+                    },
+                    variableTypes = {
+                        forLoopVariableTypes = true,
+                        ifAliasTypes = "complex",
+                        letDeclarationTypes = true,
+                        referenceVariableTypes = true,
+                        suppressWhenTypeMatchesName = true,
+                    },
+                },
+            },
+            editor = {
+                inlayHints = {
+                    enabled = "on",
+                },
+            },
+        },
+    },
     yamlls = {},
     vtsls = {
         -- typescript server
@@ -1793,7 +1844,6 @@ local on_attach = function(client, bufnr)
         "convert named export",
         "move to a new file",
         "generate 'get'",
-        "add missing import",
     }
 
     nmap("<leader>ca", function()
