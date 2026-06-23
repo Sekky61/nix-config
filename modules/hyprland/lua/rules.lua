@@ -53,17 +53,6 @@ hl.workspace_rule({
     on_created_empty = "gromit-mpx -a",
 })
 
-hl.window_rule({
-    name = "voice-recorder-overlay",
-    match = { class = "open-whispr", title = "Voice Recorder" },
-    pin = true,
-    float = true,
-    border_size = 0,
-    no_shadow = true,
-    no_initial_focus = true,
-    no_follow_mouse = true,
-})
-
 hl.layer_rule({
     name = "no-anim-waybar",
     match = { namespace = "waybar" },

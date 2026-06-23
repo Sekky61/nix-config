@@ -33,8 +33,6 @@
 
     nixpkgs-spicy.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-openwhispr.url = "github:benedikt-weyer/nixpkgs-fork/add-openwhispr-package";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -111,6 +109,11 @@
 
     pi = {
       url = "github:lukasl-dev/pi.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    handy = {
+      url = "github:xilec/Handy";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

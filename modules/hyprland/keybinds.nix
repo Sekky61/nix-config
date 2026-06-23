@@ -696,6 +696,26 @@ in {
             flags = ["release"];
           };
         }
+        {
+          description = "Handy push to talk";
+          bind = {
+            mods = ["SUPER"];
+            key = "Z";
+          };
+          # First cancel the recording, then start recording again.
+          command = {exec = "handy --cancel; handy --toggle-transcription";};
+        }
+        {
+          description = "Handy push to talk";
+          bind = {
+            mods = ["SUPER"];
+            key = "Z";
+          };
+          command = {
+            exec = "handy --toggle-transcription";
+            flags = ["release"];
+          };
+        }
       ];
 
     home-manager.users.${username} = {

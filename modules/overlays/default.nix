@@ -37,7 +37,7 @@
     (final: _: {
       safe-chain = final.callPackage ../../pkgs/safe-chain {};
       walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
-      openwhispr = inputs.nixpkgs-openwhispr.legacyPackages.${final.stdenv.hostPlatform.system}.openwhispr;
+      handy = inputs.handy.packages.${pkgs.stdenv.system}.handy;
     })
 
     (final: _: {
