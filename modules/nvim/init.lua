@@ -46,7 +46,37 @@ vim.api.nvim_create_autocmd("FileType", {
 local servers = {
     clangd = {},
     pyright = {},
-    rust_analyzer = {},
+    rust_analyzer = {
+        root_dir = function(bufnr, on_dir)
+            on_dir(vim.fs.root(bufnr, { "Cargo.toml", "rust-project.json", ".git" }))
+        end,
+        cmd = function(dispatchers, config)
+            local root_dir = config.root_dir or vim.fn.getcwd()
+            if vim.fn.executable("direnv") == 1 then
+                return vim.lsp.rpc.start({ "direnv", "exec", root_dir, "rust-analyzer" }, dispatchers)
+            end
+            return vim.lsp.rpc.start({ "rust-analyzer" }, dispatchers)
+        end,
+        settings = {
+            ["rust-analyzer"] = {
+                cargo = {
+                    allFeatures = true,
+                    buildScripts = {
+                        enable = true,
+                    },
+                    loadOutDirsFromCheck = true,
+                },
+                check = {
+                    allTargets = true,
+                    command = "clippy",
+                    features = "all",
+                },
+                procMacro = {
+                    enable = true,
+                },
+            },
+        },
+    },
     jsonls = {},
     nil_ls = {}, -- nix
     gopls = {},
@@ -178,6 +208,26 @@ require("lazy").setup({
     -- Tailwind to CSS conversion
     -- todo messes with opening of lazygit
     "jcha0713/cmp-tw2css",
+    {
+        -- Cargo.toml dependency completion, hover and code actions
+        "saecki/crates.nvim",
+        tag = "stable",
+        event = { "BufRead Cargo.toml", "BufNewFile Cargo.toml" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {
+            completion = {
+                crates = {
+                    enabled = true,
+                },
+            },
+            lsp = {
+                enabled = true,
+                actions = true,
+                completion = true,
+                hover = true,
+            },
+        },
+    },
     -- Document symbols in `/` search
     "hrsh7th/cmp-nvim-lsp-document-symbol",
     -- More LSP/formatting plugins below: mason (line ~949), conform (line ~1010)
@@ -1818,6 +1868,16 @@ local on_attach = function(client, bufnr)
     end, "[W]orkspace [L]ist Folders")
 end
 
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client then
+            on_attach(client, args.buf)
+        end
+    end,
+})
+
 -- Toggle auto format
 -- Format(Enable|Disable)
 -- https://github.com/stevearc/conform.nvim/blob/master/doc/recipes.md
@@ -1845,7 +1905,6 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 vim.lsp.config("*", {
     capabilities = capabilities,
-    on_attach = on_attach,
 })
 
 for server_name, config in pairs(servers) do
@@ -1861,7 +1920,6 @@ vim.lsp.config("zls", {
     root_markers = { "zls.json", "build.zig", ".git" },
     workspace_required = false,
     cmd = { "zls" },
-    on_attach = on_attach,
     capabilities = capabilities,
     filetypes = { "zig", "zir" },
     settings = {
