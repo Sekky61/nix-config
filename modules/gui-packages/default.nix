@@ -7,6 +7,7 @@
     ./dms-shell.nix
     ./fonts.nix
     ./gpu-screen-recorder.nix
+    ./handy.nix
     ./kde-connect.nix
     ./notifications.nix
     ./monitors.nix

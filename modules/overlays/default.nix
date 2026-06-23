@@ -37,7 +37,6 @@
     (final: _: {
       safe-chain = final.callPackage ../../pkgs/safe-chain {};
       walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
-      handy = inputs.handy.packages.${pkgs.stdenv.system}.handy;
     })
 
     (final: _: {
