@@ -47,6 +47,11 @@ in {
             sandbox = {
               enabled = false;
             };
+            enabledPlugins = {
+              "eos-jira@eos-clubzone" = true;
+              "eos-support-tools@eos-clubzone" = true;
+              "eos-docs-search@eos-clubzone" = true;
+            };
             permissions = {
               allow = [
                 "Bash(grep:*)"
