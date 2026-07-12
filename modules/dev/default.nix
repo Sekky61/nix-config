@@ -15,6 +15,7 @@ in {
     ./debugger.nix
     ./direnv.nix
     ./git.nix
+    ./hunk.nix
     # Agents
     ./codex.nix
     ./claude-code.nix

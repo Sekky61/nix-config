@@ -15,6 +15,7 @@
     programs = {
       claude-code.enable = true;
       codex.enable = true;
+      hunk.enable = true;
       docker.enable = true;
       ags.enable = true;
       bitwarden.enable = true;

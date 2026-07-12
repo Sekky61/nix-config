@@ -126,5 +126,10 @@
       url = "github:rodeyseijkens/t3code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hunk = {
+      url = "github:modem-dev/hunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

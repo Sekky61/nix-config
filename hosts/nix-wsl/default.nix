@@ -10,6 +10,7 @@
     programs = {
       claude-code.enable = true;
       codex.enable = true;
+      hunk.enable = true;
       docker.enable = true;
       opencode.enable = true;
       tailscale = {
