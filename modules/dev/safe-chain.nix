@@ -131,7 +131,7 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = pkgs.safe-chain;
+      default = pkgs.safe-chain or (pkgs.callPackage ../../pkgs/safe-chain {});
       description = "Safe Chain package to install.";
     };
 
