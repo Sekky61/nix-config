@@ -115,6 +115,7 @@
     handy = {
       url = "github:Sekky61/Handy/fork";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bun2nix.inputs.systems.url = "github:nix-systems/default/future-26.11";
     };
 
     worktrunk = {
@@ -130,6 +131,7 @@
     hunk = {
       url = "github:modem-dev/hunk";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bun2nix.inputs.systems.url = "github:nix-systems/default/future-26.11";
     };
   };
 }
