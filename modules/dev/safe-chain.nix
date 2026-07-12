@@ -125,6 +125,48 @@ with lib; let
       '';
     })
   tools);
+
+  pathShimPosixInit = ''
+    _safe_chain_run_shim() {
+      original_cmd=$1
+      shift
+      shim="$HOME/.safe-chain/shims/$original_cmd"
+
+      if [ -x "$shim" ]; then
+        "$shim" "$@"
+      else
+        command "$original_cmd" "$@"
+      fi
+    }
+
+    ${concatMapStringsSep "\n" ({tool, ...}: ''
+        ${tool}() {
+          _safe_chain_run_shim ${tool} "$@"
+        }
+      '')
+      tools}
+  '';
+
+  pathShimFishInit = ''
+    function __safe_chain_run_shim
+        set -l original_cmd $argv[1]
+        set -e argv[1]
+        set -l shim "$HOME/.safe-chain/shims/$original_cmd"
+
+        if test -x "$shim"
+            command "$shim" $argv
+        else
+            command "$original_cmd" $argv
+        end
+    end
+
+    ${concatMapStringsSep "\n" ({tool, ...}: ''
+        function ${tool}
+            __safe_chain_run_shim ${tool} $argv
+        end
+      '')
+      tools}
+  '';
 in {
   options.michal.programs.safe-chain = {
     enable = mkEnableOption "Aikido Safe Chain";
@@ -144,7 +186,7 @@ in {
     integration = mkOption {
       type = types.enum ["shell" "pathShims"];
       default = "shell";
-      description = "How to integrate Safe Chain. Use pathShims for PATH-level wrappers instead of shell functions.";
+      description = "How to integrate Safe Chain. pathShims also installs shell dispatchers so dev shells cannot shadow the shims.";
     };
   };
 
@@ -154,21 +196,35 @@ in {
     })
 
     (mkIf cfg.enable {
+      programs.bash.interactiveShellInit = ''
+        source "$HOME/.safe-chain/scripts/init-posix.sh"
+      '';
+
       home-manager.users.${username} = {
         home = {
           packages = [cfg.package];
 
           file =
-            optionalAttrs (cfg.integration == "shell") {
-              ".safe-chain/scripts/init-posix.sh" = {
-                source = "${startupScripts}/init-posix.sh";
-                force = true;
-              };
+            {
+              ".safe-chain/scripts/init-posix.sh" =
+                {
+                  force = true;
+                }
+                // (
+                  if cfg.integration == "shell"
+                  then {source = "${startupScripts}/init-posix.sh";}
+                  else {text = pathShimPosixInit;}
+                );
 
-              ".safe-chain/scripts/init-fish.fish" = {
-                source = "${startupScripts}/init-fish.fish";
-                force = true;
-              };
+              ".safe-chain/scripts/init-fish.fish" =
+                {
+                  force = true;
+                }
+                // (
+                  if cfg.integration == "shell"
+                  then {source = "${startupScripts}/init-fish.fish";}
+                  else {text = pathShimFishInit;}
+                );
             }
             // optionalAttrs (cfg.integration == "pathShims") shimFiles;
 
@@ -177,11 +233,7 @@ in {
           ];
         };
 
-        programs.bash.initExtra = mkIf (cfg.integration == "shell") ''
-          source "$HOME/.safe-chain/scripts/init-posix.sh"
-        '';
-
-        xdg.configFile."fish/conf.d/safe-chain.fish" = mkIf (cfg.integration == "shell") {
+        xdg.configFile."fish/conf.d/safe-chain.fish" = {
           text = ''
             source "$HOME/.safe-chain/scripts/init-fish.fish"
           '';
