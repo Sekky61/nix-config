@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   username,
   ...
 }:
@@ -22,7 +23,10 @@ in {
       home-manager.users.${username} = {
         imports = [inputs.pi.homeManagerModules.default];
 
-        programs.pi.coding-agent.enable = true;
+        programs.pi.coding-agent = {
+          enable = true;
+          package = pkgs.michal-unstable.pi-coding-agent;
+        };
       };
     })
   ];
