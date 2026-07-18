@@ -33,6 +33,10 @@
 
     nixpkgs-spicy.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # linux-firmware 20260622 causes MT7925 WMT initialization timeouts on nix-fw.
+    # 20260519 from this revision is known-good. TODO: remove after the regression is fixed.
+    nixpkgs-firmware.url = "github:NixOS/nixpkgs/64c08a7ca051951c8eae34e3e3cb1e202fe36786";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

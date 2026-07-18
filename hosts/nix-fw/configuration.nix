@@ -7,9 +7,18 @@
 }: {
   # nix
   documentation.nixos.enable = false; # .desktop
-  nixpkgs.config = {
-    allowUnfree = true;
-    rocmSupport = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      rocmSupport = true;
+    };
+    # Pin only firmware while allowing the kernel and the rest of nixpkgs to update.
+    # ucsi_acpi error 256 also occurs on known-good boots and is unrelated.
+    overlays = [
+      (_: _: {
+        linux-firmware = inputs.nixpkgs-firmware.legacyPackages.x86_64-linux.linux-firmware;
+      })
+    ];
   };
 
   nix.settings = {
@@ -39,7 +48,9 @@
           # F1 to open commands
           # F2 to open sessions
           # F3 to open power menu
-          command = ''${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd "uwsm start hyprland.desktop" --kb-command 1 --kb-sessions 2 --kb-power 3'';
+          # Embedded double quotes make the TOML generator emit a multiline string,
+          # which greetd 0.10.3 rejects as an illegal character.
+          command = ''${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd 'uwsm start hyprland.desktop' --kb-command 1 --kb-sessions 2 --kb-power 3'';
           user = "greeter";
         };
       };
@@ -204,6 +215,8 @@
 
   # Boot
   boot = {
+    # The newer MT7925 driver works with the pinned firmware above.
+    kernelPackages = pkgs.linuxPackages_latest;
     tmp.cleanOnBoot = true;
     supportedFilesystems = ["btrfs" "ext4" "fat32" "ntfs"];
     loader = {

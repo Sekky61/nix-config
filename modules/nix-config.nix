@@ -35,6 +35,13 @@
     channel.enable = false; # remove nix-channel related tools & configs, we use flakes instead.
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+    # code-cursor currently depends on EOL Electron.
+    "electron-39.8.10"
+    # Ventoy bundles outdated components and is marked insecure upstream.
+    "ventoy-1.1.12"
+  ];
+
   # but NIX_PATH is still used by many useful tools, so we set it to the same value as the one used by this flake.
   # Make `nix repl '<nixpkgs>'` use the same nixpkgs as the one used by this flake.
   environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
