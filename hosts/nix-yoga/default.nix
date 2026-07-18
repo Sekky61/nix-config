@@ -17,7 +17,6 @@
       codex.enable = true;
       hunk.enable = true;
       docker.enable = true;
-      ags.enable = true;
       bitwarden.enable = true;
       gpu-screen-recorder.enable = true;
       obs-studio.enable = true;

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-ags quit || true # allows fail
-ags run --directory modules/gui-packages/ags/config --gtk 4

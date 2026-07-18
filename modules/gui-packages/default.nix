@@ -1,7 +1,6 @@
 {
   imports = [
     # With options
-    ./ags
     ./apps.nix
     ./browser
     ./dms-shell.nix

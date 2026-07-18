@@ -210,19 +210,6 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 8. Create sops private key and add it to the right place: `sudo ssh-to-age -private-key -i /etc/ssh/ssh_host_ed25519_key > ~/.config/sops/age/keys.txt`
 9. `atuin login` and `atuin sync`. Find the key in sops.
 
-### AGS Notes
-
-To get TypeScript types:
-```bash
-cd modules/gui-packages/ags/config
-npm i
-```
-
-- See the [AGS docs](https://aylur.github.io/ags/) and [GJS docs](https://gjs.guide/), todo astal docs.
-- To debug, kill ags with `ags quit` and then launch it in a shell: `ags` (or with a `--directory` flag).
-- Look up icons with [icon-browser](https://github.com/Aylur/icon-browser/tree/main).
-- Use `ags inspect` as an inspector.
-
 ### General Notes
 - Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
 - Take a look at [https://github.com/NotAShelf/nyx/tree/main](https://github.com/NotAShelf/nyx/tree/main), a great inspiration.

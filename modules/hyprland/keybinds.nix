@@ -283,9 +283,6 @@ in {
 
     # Actual keybinds definition
     michal.programs.hyprland.keybinds = let
-      toggleWindow = name: "ags toggle '${name}'";
-      agsRequest = cmd: "ags request '${cmd}'";
-
       workspaceBinds = num: let
         n = toString num;
       in [
@@ -315,14 +312,6 @@ in {
     in
       allWorkspaceBinds
       ++ [
-        {
-          description = "Toggle Session Menu (shutdown or restart)";
-          bind = {
-            mods = ["CONTROL" "ALT"];
-            key = "Delete";
-          };
-          command = {exec = toggleWindow "session";};
-        }
         {
           description = "Launch terminal";
           bind = {
@@ -459,14 +448,6 @@ in {
           command = {exec = "gnome-system-monitor";};
         }
         {
-          description = "Toggle on-screen keyboard"; # todo not reimplemented
-          bind = {
-            mods = ["SUPER"];
-            key = "K";
-          };
-          command = {exec = toggleWindow "osk";};
-        }
-        {
           description = "Screen recording";
           bind = {
             mods = ["SUPER" "ALT"];
@@ -518,38 +499,6 @@ in {
           };
         }
         {
-          description = "Reset AGS"; # TODO
-          bind = {
-            mods = ["CONTROL" "SUPER"];
-            key = "R";
-          };
-          command = {exec = "ags quit; ags run &";};
-        }
-        {
-          description = "Toggle launcher";
-          bind = {
-            mods = ["SUPER"];
-            key = "Tab";
-          };
-          command = {exec = toggleWindow "launcher";};
-        }
-        {
-          description = "Toggle between horizontal and vertical bar";
-          bind = {
-            mods = ["SUPER"];
-            key = "T";
-          };
-          command = {exec = agsRequest "bar-toggle";};
-        }
-        {
-          description = "Toggle cheatsheet";
-          bind = {
-            mods = ["SUPER"];
-            key = "Slash";
-          };
-          command = {exec = toggleWindow "cheatsheet";};
-        }
-        {
           description = "Suspend system"; # With a delay
           bind = {
             mods = ["SUPER" "SHIFT"];
@@ -558,37 +507,6 @@ in {
           command = {
             exec = "sleep 0.1 && systemctl suspend";
             flags = ["locked"];
-          };
-        }
-        {
-          description = "Show popup via AGS JavaScript"; # todo
-          bind = {
-            mods = ["SUPER" "SHIFT"];
-            key = "M";
-          };
-          command = {
-            exec = "ags run-js 'indicator.popup(1);'";
-            flags = ["locked"];
-          };
-        }
-        {
-          description = "Toggle music controls"; # todo
-          bind = {
-            mods = ["SUPER"];
-            key = "M";
-          };
-          command = {
-            exec = "ags run-js 'openMusicControls.value = !openMusicControls.value;'";
-          };
-        }
-        {
-          description = "Show color scheme"; # todo
-          bind = {
-            mods = ["SUPER"];
-            key = "Comma";
-          };
-          command = {
-            exec = "ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'";
           };
         }
         {
@@ -668,7 +586,7 @@ in {
       ];
 
     home-manager.users.${username} = {
-      # Make a json with the keybinds available, for example to ags
+      # Make a json with the keybinds available
       home.file = {".config/keybinds.json".text = builtins.toJSON cfg;};
     };
 
