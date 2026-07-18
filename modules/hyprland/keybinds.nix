@@ -373,30 +373,6 @@ in {
           };
         }
         {
-          description = "Select window to kill"; # TODO not working
-          bind = {
-            mods = ["SHIFT" "SUPER" "ALT"];
-            key = "Q";
-          };
-          command = {exec = "hyprctl kill";};
-        }
-        {
-          description = "Launch logout menu"; # TODO not working, also wlogout might not be installed
-          bind = {
-            mods = ["CONTROL" "SHIFT" "ALT"];
-            key = "Delete";
-          };
-          command = {exec = "pkill wlogout || wlogout -p layer-shell";};
-        }
-        {
-          description = "Power off system"; # TODO not working
-          bind = {
-            mods = ["CONTROL" "SHIFT" "ALT" "SUPER"];
-            key = "Delete";
-          };
-          command = {exec = "systemctl poweroff";};
-        }
-        {
           description = "Set power profile: performance";
           bind = {
             mods = ["SUPER" "ALT"];
