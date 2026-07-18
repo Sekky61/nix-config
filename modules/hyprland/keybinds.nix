@@ -283,8 +283,6 @@ in {
 
     # Actual keybinds definition
     michal.programs.hyprland.keybinds = let
-      quickCapture = mode: "dms ipc call quickCapture screenshot ${mode} edit";
-
       toggleWindow = name: "ags toggle '${name}'";
       agsRequest = cmd: "ags request '${cmd}'";
 
@@ -467,41 +465,6 @@ in {
             key = "K";
           };
           command = {exec = toggleWindow "osk";};
-        }
-        {
-          description = "Capture and edit screenshot region for OCR";
-          bind = {
-            mods = ["SUPER" "SHIFT"];
-            key = "S";
-          };
-          command = {exec = quickCapture "region";};
-        }
-        {
-          description = "Capture and edit screenshot region";
-          bind = [
-            {
-              mods = ["SUPER"];
-              key = "S";
-            }
-            {key = "Print";}
-          ];
-          command = {exec = quickCapture "region";};
-        }
-        {
-          description = "Capture and edit full screen";
-          bind = {
-            mods = ["SUPER" "CONTROL"];
-            key = "S";
-          };
-          command = {exec = quickCapture "full";};
-        }
-        {
-          description = "Capture and edit active window";
-          bind = {
-            mods = ["SUPER" "ALT"];
-            key = "S";
-          };
-          command = {exec = quickCapture "window";};
         }
         {
           description = "Screen recording";
