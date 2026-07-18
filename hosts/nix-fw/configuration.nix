@@ -41,18 +41,12 @@
     spice-vdagentd.enable = true; # protocol for sharing clipboard with VMs
     pcscd.enable = true; # necessary? for gnupg
     envfs.enable = true;
-    greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          # F1 to open commands
-          # F2 to open sessions
-          # F3 to open power menu
-          # Embedded double quotes make the TOML generator emit a multiline string,
-          # which greetd 0.10.3 rejects as an illegal character.
-          command = ''${pkgs.tuigreet}/bin/tuigreet --greeting 'The royal PC is clean, your Highness' --user-menu --asterisks --time --remember --cmd 'uwsm start hyprland.desktop' --kb-command 1 --kb-sessions 2 --kb-power 3'';
-          user = "greeter";
-        };
+    displayManager = {
+      defaultSession = "hyprland-uwsm";
+      dms-greeter = {
+        enable = true;
+        compositor.name = "hyprland";
+        configHome = "/home/${username}";
       };
     };
     gvfs.enable = true;

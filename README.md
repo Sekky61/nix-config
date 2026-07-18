@@ -106,7 +106,7 @@ programs.hyprland = {
 };
 ```
 
-`greetd` uses `tuigreet`, and the default session starts through UWSM:
+`greetd` uses DankGreeter, and the default session starts through UWSM:
 
 ```bash
 uwsm start hyprland.desktop
@@ -171,7 +171,7 @@ metadata like `declarations`, `default` (literalExpression), `description`,
 
 ### Other
 
-- `tuigreet`, launching `uwsm start hyprland.desktop` on login
+- DankGreeter, with the `hyprland-uwsm` session selected by default
 
 ## Secrets Management
 
