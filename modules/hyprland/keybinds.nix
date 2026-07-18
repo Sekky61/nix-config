@@ -283,18 +283,7 @@ in {
 
     # Actual keybinds definition
     michal.programs.hyprland.keybinds = let
-      ss_flags = {
-        monitor = "-m output";
-        region = "-m region";
-        window = "-m window";
-        clipboard = "--clipboard-only"; # default: both storage and clipboard
-        freeze = "--freeze";
-        stdout = "--raw";
-      };
-      screen = flagArr: toString (["hyprshot"] ++ flagArr);
-      ss_region_stdout = screen (with ss_flags; [region stdout]);
-      ss_region_clipboard = screen (with ss_flags; [region clipboard freeze]);
-      ss_monitor_file = screen (with ss_flags; [monitor]);
+      quickCapture = mode: "dms ipc call quickCapture screenshot ${mode} edit";
 
       toggleWindow = name: "ags toggle '${name}'";
       agsRequest = cmd: "ags request '${cmd}'";
@@ -480,17 +469,15 @@ in {
           command = {exec = toggleWindow "osk";};
         }
         {
-          description = "Screenshot region OCR";
+          description = "Capture and edit screenshot region for OCR";
           bind = {
             mods = ["SUPER" "SHIFT"];
             key = "S";
           };
-          command = {
-            exec = "${ss_region_stdout} | tesseract stdin stdout | wl-copy";
-          };
+          command = {exec = quickCapture "region";};
         }
         {
-          description = "Screenshot region to clipboard";
+          description = "Capture and edit screenshot region";
           bind = [
             {
               mods = ["SUPER"];
@@ -498,23 +485,23 @@ in {
             }
             {key = "Print";}
           ];
-          command = {exec = ss_region_clipboard;};
+          command = {exec = quickCapture "region";};
         }
         {
-          description = "Screenshot screen to file";
+          description = "Capture and edit full screen";
           bind = {
             mods = ["SUPER" "CONTROL"];
             key = "S";
           };
-          command = {exec = ss_monitor_file;};
+          command = {exec = quickCapture "full";};
         }
         {
-          description = "Screenshot region and edit";
+          description = "Capture and edit active window";
           bind = {
             mods = ["SUPER" "ALT"];
             key = "S";
           };
-          command = {exec = "${ss_region_stdout} | swappy -f -";};
+          command = {exec = quickCapture "window";};
         }
         {
           description = "Screen recording";
