@@ -11,7 +11,7 @@ in {
   options.michal.programs.handy = {
     enable = mkOption {
       type = types.bool;
-      default = config.michal.programs.stt.enable;
+      default = config.michal.graphical.enable;
       description = "Handy speech-to-text service";
     };
   };
@@ -23,5 +23,27 @@ in {
       services.handy.enable = true;
       home.packages = [config.services.handy.package];
     };
+
+    michal.programs.hyprland.keybinds = [
+      {
+        description = "Handy push to talk with post-processing";
+        bind = {
+          mods = ["SUPER"];
+          key = "Z";
+        };
+        command = {exec = "handy --start-recording --post-process";};
+      }
+      {
+        description = "Handy push to talk with post-processing";
+        bind = {
+          mods = ["SUPER"];
+          key = "Z";
+        };
+        command = {
+          exec = "handy --stop-recording";
+          flags = ["release"];
+        };
+      }
+    ];
   };
 }

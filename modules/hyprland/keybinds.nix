@@ -545,44 +545,6 @@ in {
             flags = ["repeat"];
           };
         }
-        {
-          description = "Speech to text (hold and speak)";
-          bind = {
-            mods = ["SUPER"];
-            key = "A";
-          };
-          command = {exec = "stt start";};
-        }
-        {
-          description = "Speech to text (hold and speak)";
-          bind = {
-            mods = ["SUPER"];
-            key = "A";
-          };
-          command = {
-            exec = "stt stop";
-            flags = ["release"];
-          };
-        }
-        {
-          description = "Handy push to talk with post-processing";
-          bind = {
-            mods = ["SUPER"];
-            key = "Z";
-          };
-          command = {exec = "handy --start-recording --post-process";};
-        }
-        {
-          description = "Handy push to talk with post-processing";
-          bind = {
-            mods = ["SUPER"];
-            key = "Z";
-          };
-          command = {
-            exec = "handy --stop-recording";
-            flags = ["release"];
-          };
-        }
       ];
 
     home-manager.users.${username} = {
