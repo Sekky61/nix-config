@@ -12,6 +12,7 @@
     ./monitors.nix
     ./obs.nix
     ./options.nix
+    ./record
     ./remote-desktop.nix
     ./steam.nix
     ./terminal-emulator

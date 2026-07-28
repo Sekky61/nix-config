@@ -21,7 +21,10 @@ in {
 
     (mkIf cfg.enable {
       home-manager.users.${username}.home.packages = [
-        inputs.t3code.packages.${pkgs.system}.default
+        (inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (_: {
+          # Upstream passes the entire package set as a derivation attribute.
+          pkgs = null;
+        }))
       ];
     })
   ];
