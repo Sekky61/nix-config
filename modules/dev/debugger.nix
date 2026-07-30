@@ -31,11 +31,6 @@ in {
         hotspot
         poop # todo old version
       ];
-
-      programs.gemini-cli = {
-        enable = true;
-        # no settings - it forces gemini to auth every time
-      };
     };
 
     programs.bcc.enable = true; # Dynamic Tracing Tools for Linux
