@@ -215,7 +215,7 @@ with lib; {
           }
         ];
         command = {
-          lua = ''hl.dsp.window.move({ workspace = "+1" })'';
+          lua = ''hl.dsp.window.move({ workspace = "+1", follow = false })'';
         };
       }
       {
@@ -243,7 +243,7 @@ with lib; {
           }
         ];
         command = {
-          lua = ''hl.dsp.window.move({ workspace = "-1" })'';
+          lua = ''hl.dsp.window.move({ workspace = "-1", follow = false })'';
         };
       }
       {

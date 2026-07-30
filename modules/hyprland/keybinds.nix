@@ -303,7 +303,7 @@ in {
             key = n;
           };
           command = {
-            lua = ''hl.dsp.window.move({ workspace = "${n}" })'';
+            lua = ''hl.dsp.window.move({ workspace = "${n}", follow = false })'';
           };
         }
       ];

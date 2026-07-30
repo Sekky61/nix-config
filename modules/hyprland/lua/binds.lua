@@ -5,7 +5,7 @@ end, { description = "Cycle to next window" })
 
 hl.bind(
     "CTRL + SHIFT + SUPER + up",
-    hl.dsp.window.move({ workspace = "special" }),
+    hl.dsp.window.move({ workspace = "special", follow = false }),
     { description = "Move window to special workspace" }
 )
 hl.bind(
