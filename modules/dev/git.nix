@@ -44,6 +44,9 @@ in {
         };
         gh = {
           enable = true;
+          extensions = [
+            pkgs.gh-stack
+          ];
         };
         gh-dash = {
           enable = true;
