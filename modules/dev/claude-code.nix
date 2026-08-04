@@ -44,6 +44,7 @@ in {
           enable = true;
           settings = {
             effortLevel = "high";
+            defaultMode = "auto";
             sandbox = {
               enabled = false;
             };
