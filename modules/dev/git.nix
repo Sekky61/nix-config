@@ -135,8 +135,8 @@ in {
                       value = "fix: cr feedback";
                     }
                     {
-                      name = "fix: apply autofix";
-                      value = "fix: apply autofix";
+                      name = "fix: agent feedback";
+                      value = "fix: agent feedback";
                     }
                     {
                       name = "chore: translations";
