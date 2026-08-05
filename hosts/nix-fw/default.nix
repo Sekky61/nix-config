@@ -26,7 +26,6 @@
       claude-code.enable = true;
       codex.enable = true;
       hunk.enable = true;
-      t3code.enable = true;
       pi.enable = true;
       opencode.enable = true;
       dms-shell.enable = true;

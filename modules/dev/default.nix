@@ -22,7 +22,6 @@ in {
     ./opencode.nix
     ./pi.nix
     ./safe-chain.nix
-    ./t3code.nix
   ];
 
   config = mkIf cfg.enable {
@@ -149,6 +148,10 @@ in {
         };
 
         java.enable = true;
+
+        t3code = {
+          enable = true;
+        };
       };
     };
 
