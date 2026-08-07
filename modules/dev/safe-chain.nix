@@ -1,13 +1,11 @@
 {
+  config,
   lib,
   pkgs,
-  config,
-  username,
   ...
 }:
 with lib; let
-  cfg = config.michal.programs.safe-chain;
-  dev_cfg = config.michal.dev;
+  cfg = config.programs.safe-chain;
 
   startupScripts =
     if cfg.includePython
@@ -127,6 +125,14 @@ with lib; let
   tools);
 
   pathShimPosixInit = ''
+    case "$PATH" in
+      "$HOME/.safe-chain/shims"|"$HOME/.safe-chain/shims:"*) ;;
+      *)
+        PATH="$HOME/.safe-chain/shims:$PATH"
+        export PATH
+        ;;
+    esac
+
     _safe_chain_run_shim() {
       original_cmd=$1
       shift
@@ -148,6 +154,10 @@ with lib; let
   '';
 
   pathShimFishInit = ''
+    if test "$PATH[1]" != "$HOME/.safe-chain/shims"
+        set -gx PATH "$HOME/.safe-chain/shims" $PATH
+    end
+
     function __safe_chain_run_shim
         set -l original_cmd $argv[1]
         set -e argv[1]
@@ -168,7 +178,7 @@ with lib; let
       tools}
   '';
 in {
-  options.michal.programs.safe-chain = {
+  options.programs.safe-chain = {
     enable = mkEnableOption "Aikido Safe Chain";
 
     package = mkOption {
@@ -190,55 +200,48 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf dev_cfg.enable {
-      michal.programs.safe-chain.enable = mkDefault true;
-    })
+  config = mkIf cfg.enable {
+    home.packages = [cfg.package];
 
-    (mkIf cfg.enable {
-      programs.bash.interactiveShellInit = ''
+    programs.bash = {
+      enable = true;
+      initExtra = mkAfter ''
         source "$HOME/.safe-chain/scripts/init-posix.sh"
       '';
+    };
 
-      home-manager.users.${username} = {
-        home = {
-          packages = [cfg.package];
+    home.file =
+      {
+        ".safe-chain/scripts/init-posix.sh" =
+          {
+            force = true;
+          }
+          // (
+            if cfg.integration == "shell"
+            then {source = "${startupScripts}/init-posix.sh";}
+            else {text = pathShimPosixInit;}
+          );
 
-          file =
-            {
-              ".safe-chain/scripts/init-posix.sh" =
-                {
-                  force = true;
-                }
-                // (
-                  if cfg.integration == "shell"
-                  then {source = "${startupScripts}/init-posix.sh";}
-                  else {text = pathShimPosixInit;}
-                );
+        ".safe-chain/scripts/init-fish.fish" =
+          {
+            force = true;
+          }
+          // (
+            if cfg.integration == "shell"
+            then {source = "${startupScripts}/init-fish.fish";}
+            else {text = pathShimFishInit;}
+          );
+      }
+      // optionalAttrs (cfg.integration == "pathShims") shimFiles;
 
-              ".safe-chain/scripts/init-fish.fish" =
-                {
-                  force = true;
-                }
-                // (
-                  if cfg.integration == "shell"
-                  then {source = "${startupScripts}/init-fish.fish";}
-                  else {text = pathShimFishInit;}
-                );
-            }
-            // optionalAttrs (cfg.integration == "pathShims") shimFiles;
+    home.sessionPath = optionals (cfg.integration == "pathShims") [
+      "$HOME/.safe-chain/shims"
+    ];
 
-          sessionPath = optionals (cfg.integration == "pathShims") [
-            "$HOME/.safe-chain/shims"
-          ];
-        };
-
-        xdg.configFile."fish/conf.d/safe-chain.fish" = {
-          text = ''
-            source "$HOME/.safe-chain/scripts/init-fish.fish"
-          '';
-        };
-      };
-    })
-  ];
+    xdg.configFile."fish/conf.d/safe-chain.fish" = {
+      text = ''
+        source "$HOME/.safe-chain/scripts/init-fish.fish"
+      '';
+    };
+  };
 }

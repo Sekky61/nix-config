@@ -5,16 +5,16 @@
 }:
 buildNpmPackage rec {
   pname = "safe-chain";
-  version = "1.5.7";
+  version = "1.5.14";
 
   src = fetchFromGitHub {
     owner = "AikidoSec";
     repo = "safe-chain";
     rev = version;
-    hash = "sha256-cyQ0fcjK//Oa9txLtgMN1nTYeB3g73ERfl2xsq6o9ck=";
+    hash = "sha256-K8QMc27Wp+YZXNysTrlmz+Y44TWKAUZOq8vknEah7Gg=";
   };
 
-  npmDepsHash = "sha256-7GvSXlmaiFYl1YhFM2rDkB44LO498MLZ9gpQxjONnCc=";
+  npmDepsHash = "sha256-6MsC+053YcDAokHSigdzq1ZdO/ChLmaCVrpLD/H1dM8=";
 
   dontNpmBuild = true;
 

@@ -8,6 +8,11 @@
   michal.programs.podman.enable = true;
   # michal.programs.docker.enable = true;
 
+  home-manager.users.${username}.programs.safe-chain = {
+    enable = true;
+    integration = "pathShims";
+  };
+
   michal = {
     audio = {
       enable = true;
@@ -19,10 +24,6 @@
     hyprland.enable = true;
     hasFingerprintReader = true;
     programs = {
-      safe-chain = {
-        enable = true;
-        integration = "pathShims";
-      };
       claude-code.enable = true;
       codex.enable = true;
       hunk.enable = true;

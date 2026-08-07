@@ -21,7 +21,6 @@ in {
     ./claude-code.nix
     ./opencode.nix
     ./pi.nix
-    ./safe-chain.nix
   ];
 
   config = mkIf cfg.enable {
