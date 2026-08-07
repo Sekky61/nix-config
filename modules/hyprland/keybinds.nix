@@ -255,7 +255,7 @@ in {
           }
         ];
         command = {
-          exec = "hyprlock";
+          exec = "dms ipc call lock lock";
           flags = [];
         };
       }
@@ -467,12 +467,7 @@ in {
               key = "L";
             }
           ];
-          command = {
-            exec =
-              if config.michal.programs.dms-shell.enable
-              then "dms ipc call lock lock"
-              else "hyprlock";
-          };
+          command = {exec = "dms ipc call lock lock";};
         }
         {
           description = "Suspend system"; # With a delay

@@ -55,7 +55,6 @@ in {
     ./keybinds.nix
     ./hyprland_keybinds.nix
     ./gromit.nix
-    ./hyprlock.nix
     ./hyprpaper.nix
     ./auth.nix
   ];
@@ -137,9 +136,8 @@ in {
       };
 
       # Keep the Lua config as one store-backed tree so require("hypr.*") and
-      # require("generated.*") resolve from the same root. Do not link all of
-      # hypr/: hyprlock, hyprpaper, and hypridle also place files there through
-      # Home Manager.
+      # require("generated.*") resolve from the same root. Hyprpaper also places
+      # files in hypr/ through Home Manager.
       xdg.configFile."hypr/config".source = hyprConfigDir;
 
       # Compatibility path for tools that expect Hyprland's default entrypoint.

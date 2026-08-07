@@ -22,7 +22,6 @@
     dev.enable = true;
     graphical.enable = true;
     hyprland.enable = true;
-    hasFingerprintReader = true;
     programs = {
       claude-code.enable = true;
       codex.enable = true;

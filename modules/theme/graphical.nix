@@ -23,7 +23,6 @@ in {
       stylix.targets = {
         hyprland.enable = true;
         hyprland.hyprpaper.enable = true;
-        hyprlock.enable = false;
         alacritty.enable = false;
         vscode.enable = false;
         gtk.enable = false;
