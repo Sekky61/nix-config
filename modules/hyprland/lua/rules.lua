@@ -34,9 +34,12 @@ for _, title in ipairs({
 end
 
 for name, value in pairs({
+    float = true,
     no_blur = true,
+    no_initial_focus = true,
     opacity = 1.0,
     no_shadow = true,
+    pin = true,
     size = "100% 100%",
 }) do
     hl.window_rule({
@@ -45,13 +48,6 @@ for name, value in pairs({
         [name] = value,
     })
 end
-
-hl.workspace_rule({
-    workspace = "special:gromit",
-    gaps_in = 0,
-    gaps_out = 0,
-    on_created_empty = "gromit-mpx -a",
-})
 
 hl.layer_rule({
     name = "no-anim-waybar",

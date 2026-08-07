@@ -4,7 +4,33 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  gromitControl = pkgs.writeShellApplication {
+    name = "gromit-control";
+    runtimeInputs = with pkgs; [
+      coreutils
+      gromit-mpx
+      systemd
+    ];
+    text = ''
+      if systemctl --user is-active --quiet gromit-mpx.service; then
+        if [[ "''${1:-}" == "--toggle" ]]; then
+          exec gromit-mpx --quit
+        fi
+
+        exec gromit-mpx "$@"
+      fi
+
+      if [[ "''${1:-}" != "--toggle" ]]; then
+        exit 0
+      fi
+
+      systemctl --user start gromit-mpx.service
+      sleep 0.1
+      exec gromit-mpx --toggle
+    '';
+  };
+in {
   # Gromit-mpx is program for drawing to screen
   #
   # - TODO the drawing area is probably cropped due to monitor scaling
@@ -18,6 +44,7 @@
       services.gromit-mpx = {
         enable = true;
         hotKey = null;
+        undoKey = null;
         tools = [
           {
             device = "default";
@@ -53,36 +80,48 @@
           }
         ];
       };
+
+      # Start Gromit only after the first toggle. The standard module starts it
+      # for each graphical session and can take focus during Home Manager switches.
+      systemd.user.services.gromit-mpx.Install.WantedBy = lib.mkForce [];
     };
 
-    michal.programs.hyprland.keybinds = [
+    michal.programs.hyprland.keybinds = let
+      control = action: "${gromitControl}/bin/gromit-control ${action}";
+    in [
       {
-        description = "Toggle drawing to screen";
+        description = "Toggle screen drawing";
         bind = {key = "F7";};
-        command = {
-          lua = ''hl.dsp.workspace.toggle_special("gromit")'';
-        };
+        command = {exec = control "--toggle";};
       }
       {
-        description = "Clear drawing";
+        description = "Clear screen drawing";
         bind = {
           mods = ["SHIFT"];
           key = "F7";
         };
-        command = {exec = "gromit-mpx --clear";};
+        command = {exec = control "--clear";};
       }
       {
-        description = "Drawing: Undo";
+        description = "Hide screen drawing";
+        bind = {
+          mods = ["CONTROL"];
+          key = "F7";
+        };
+        command = {exec = control "--visibility";};
+      }
+      {
+        description = "Undo screen drawing";
         bind = {key = "F6";};
-        command = {exec = "gromit-mpx --undo";};
+        command = {exec = control "--undo";};
       }
       {
-        description = "Drawing: Redo";
+        description = "Redo screen drawing";
         bind = {
           mods = ["SHIFT"];
           key = "F6";
         };
-        command = {exec = "gromit-mpx --redo";};
+        command = {exec = control "--redo";};
       }
     ];
   };
