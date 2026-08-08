@@ -50,6 +50,7 @@ in {
         };
         gh-dash = {
           enable = true;
+          package = pkgs.michal-unstable.gh-dash;
           settings = {
             prSections = [
               {
@@ -77,14 +78,15 @@ in {
 
       programs.lazygit = {
         enable = true;
+        package = pkgs.michal-unstable.lazygit;
         settings = {
           gui = {nerdFontsVersion = "3";};
           git = {
             mainBranches = ["master" "main" "develop"];
             parseEmoji = true;
-            pagers = [
+            diffRenderers = [
               {
-                pager = ''
+                command = ''
                   delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
                 '';
                 colorArg = "always";

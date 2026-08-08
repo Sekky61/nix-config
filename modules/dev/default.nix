@@ -150,6 +150,7 @@ in {
 
         t3code = {
           enable = true;
+          package = pkgs.michal-unstable.t3code;
         };
       };
     };
