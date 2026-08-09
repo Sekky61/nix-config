@@ -16,7 +16,7 @@ with lib; let
         --class=com.michal.notes \
         --title=Notes \
         --working-directory=~/Documents/notes \
-        -e sh -lc 'command -v nvim >/dev/null 2>&1 && exec nvim || exec "''${SHELL:-sh}"'
+        -e sh -lc 'command -v nvim >/dev/null 2>&1 && exec nvim --cmd "set exrc" || exec "''${SHELL:-sh}"'
     ''}"
     else defaultTerminal;
   monitors = config.michal.monitors;

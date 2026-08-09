@@ -2,11 +2,13 @@
   config,
   inputs,
   lib,
+  pkgs,
   username,
   ...
 }:
 with lib; let
   cfg = config.michal.programs.handy;
+  handyBacklog = pkgs.writeShellScriptBin "handy-backlog" (builtins.readFile ../bash/scripts/handy-backlog);
 in {
   options.michal.programs.handy = {
     enable = mkOption {
@@ -21,7 +23,7 @@ in {
       imports = [inputs.handy.homeManagerModules.default];
 
       services.handy.enable = true;
-      home.packages = [config.services.handy.package];
+      home.packages = [config.services.handy.package handyBacklog];
     };
 
     michal.programs.hyprland.keybinds = [
@@ -38,6 +40,25 @@ in {
         bind = {
           mods = ["SUPER"];
           key = "Z";
+        };
+        command = {
+          exec = "handy --stop-recording";
+          flags = ["release"];
+        };
+      }
+      {
+        description = "Add voice note to backlog";
+        bind = {
+          mods = ["SUPER"];
+          key = "B";
+        };
+        command = {exec = "${handyBacklog}/bin/handy-backlog";};
+      }
+      {
+        description = "Add voice note to backlog";
+        bind = {
+          mods = ["SUPER"];
+          key = "B";
         };
         command = {
           exec = "handy --stop-recording";

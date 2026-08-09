@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_name='Handy backlog'
+handy_bin="${HANDY_BIN:-handy}"
+backlog_file="${BACKLOG_FILE:-${XDG_DOCUMENTS_DIR:-$HOME/Documents}/notes/eos/backlog.md}"
+
+notify() {
+  local urgency="$1"
+  local title="$2"
+  local body="$3"
+
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -a "$script_name" -u "$urgency" "$title" "$body"
+  fi
+  printf '%s: %s\n' "$title" "$body" >&2
+}
+
+if [[ ! -e "$backlog_file" ]]; then
+  notify critical 'Backlog nenalezen' "Soubor neexistuje: $backlog_file"
+  exit 1
+fi
+
+if [[ ! -f "$backlog_file" ]]; then
+  notify critical 'Backlog není soubor' "Cesta není běžný soubor: $backlog_file"
+  exit 1
+fi
+
+if [[ ! -w "$backlog_file" ]]; then
+  notify critical 'Backlog nelze zapisovat' "Nemám právo zapisovat do: $backlog_file"
+  exit 1
+fi
+
+if ! command -v "$handy_bin" >/dev/null 2>&1; then
+  notify critical 'Handy není dostupné' "Příkaz nebyl nalezen: $handy_bin"
+  exit 1
+fi
+
+notify normal 'Handy backlog' 'Mluv. Nahrávání ukonči uvolněním zkratky.'
+
+if ! transcript="$("$handy_bin" --start-recording --wait 2>&1)"; then
+  notify critical 'Handy selhalo' "$transcript"
+  exit 1
+fi
+
+transcript="$(printf '%s' "$transcript" | tr '\n' ' ' | sed 's/[[:space:]]\+/ /g; s/^ //; s/ $//')"
+
+if [[ -z "$transcript" ]]; then
+  notify normal 'Prázdná poznámka' 'Handy nevrátilo žádný text; backlog nebyl změněn.'
+  exit 0
+fi
+
+if ! printf '\n%s: %s\n' "$(date '+%Y-%m-%d %H:%M')" "$transcript" >> "$backlog_file"; then
+  notify critical 'Zápis selhal' "Nepodařilo se zapsat do: $backlog_file"
+  exit 1
+fi
+
+notify normal 'Přidáno do backlogu' "$transcript"
