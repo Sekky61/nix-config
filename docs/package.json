@@ -18,8 +18,9 @@
     "vite-react-ssg": "^0.8.9"
   },
   "scripts": {
-    "docs:dev": "bunx vite-react-ssg dev",
-    "docs:build": "bunx vite-react-ssg build",
+    "docs:prepare": "cd .. && nix build .#michal-options-docs",
+    "docs:dev": "bun run docs:prepare && bunx vite-react-ssg dev",
+    "docs:build": "bun run docs:prepare && bunx vite-react-ssg build",
     "docs:preview": "bunx vite-react-ssg preview",
     "docs:serve": "bunx serve ./dist --listen 3000",
     "docs:open": "bunx serve ./dist --listen 3000 --open"
