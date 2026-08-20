@@ -52,6 +52,7 @@ in {
               "eos-jira@eos-clubzone" = true;
               "eos-support-tools@eos-clubzone" = true;
               "eos-docs-search@eos-clubzone" = true;
+              "eos-dev-workflow@eos-clubzone" = true;
             };
             permissions = {
               allow = [
