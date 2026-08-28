@@ -149,15 +149,9 @@ local servers = {
     tsgo = {
         enabled = ts_lsp_server == "tsgo",
     }, -- typescript server, new
-    biome = {
-        cmd = { "./node_modules/.bin/biome", "lsp-proxy" },
-    },
-    oxlint = {
-        cmd = { "./node_modules/.bin/oxlint", "--lsp" },
-    },
-    oxfmt = {
-        cmd = { "./node_modules/.bin/oxfmt", "--lsp" },
-    },
+    biome = {},
+    oxlint = {},
+    oxfmt = {},
     astro = {},
     eslint = {},
     emmet_ls = {
