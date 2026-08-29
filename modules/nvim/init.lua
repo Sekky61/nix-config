@@ -1282,48 +1282,6 @@ require("lazy").setup({
             require("cursor").setup({})
         end,
     },
-    {
-        -- AI chat/inline assistant (keybinds: <C-a>, <LocalLeader>a, ga)
-        -- Env: OPENROUTER_API_KEY
-        "olimorris/codecompanion.nvim",
-        opts = {
-            strategies = {
-                chat = {
-                    adapter = "opencode",
-                },
-                inline = {
-                    adapter = "a_openrouter",
-                },
-                cmd = {
-                    adapter = "a_openrouter",
-                },
-            },
-            adapters = {
-                http = {
-                    a_openrouter = function()
-                        return require("codecompanion.adapters").extend("openai_compatible", {
-                            env = {
-                                url = "https://openrouter.ai/api",
-                                api_key = "OPENROUTER_API_KEY",
-                                chat_url = "/v1/chat/completions",
-                            },
-                            schema = {
-                                model = {
-                                    -- default = "@preset/groq-kimi-k2",
-                                    default = "moonshotai/kimi-k2.5",
-                                },
-                            },
-                        })
-                    end,
-                },
-            },
-            -- NOTE: The log_level is in `opts.opts`
-            opts = {
-                log_level = "DEBUG", -- or "TRACE"
-            },
-        },
-    },
-
     -- ╔════════════════════════════════════════════════════════════════════╗
     -- ║                 GIT PLUGINS (CONTINUED)                            ║
     -- ╚════════════════════════════════════════════════════════════════════╝
@@ -2394,20 +2352,6 @@ vim.keymap.set(
     "<cmd>%bd|e#<cr>",
     { desc = "[C]lose all [b]uffers but the current one" }
 ) -- https://stackoverflow.com/a/42071865/516188
-
-vim.keymap.set(
-    { "n", "v" },
-    "<C-a>",
-    "<cmd>CodeCompanionActions<cr>",
-    { noremap = true, silent = true }
-)
-vim.keymap.set(
-    { "n", "v" },
-    "<LocalLeader>a",
-    "<cmd>CodeCompanionChat Toggle<cr>",
-    { noremap = true, silent = true }
-)
-vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
 vim.keymap.set(
     "n",
