@@ -190,9 +190,25 @@ local servers = {
         },
     },
     lua_ls = {
-        Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
+        settings = {
+            Lua = {
+                runtime = {
+                    version = "LuaJIT",
+                },
+                diagnostics = {
+                    globals = { "vim" },
+                },
+                workspace = {
+                    checkThirdParty = false,
+                    library = vim.api.nvim_get_runtime_file("", true),
+                },
+                hint = {
+                    enable = true,
+                },
+                telemetry = {
+                    enable = false,
+                },
+            },
         },
     },
 }
@@ -1850,6 +1866,8 @@ end
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
+local biome_fix_group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true })
+
 local on_attach = function(client, bufnr)
     local nmap = function(keys, func, desc)
         if desc then
@@ -1881,8 +1899,9 @@ local on_attach = function(client, bufnr)
     end, "[C]ode [A]ction")
 
     if client.name == "biome" then
+        vim.api.nvim_clear_autocmds({ group = biome_fix_group, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
-            group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
+            group = biome_fix_group,
             callback = function()
                 vim.lsp.buf.code_action({
                     context = {
