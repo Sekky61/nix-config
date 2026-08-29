@@ -12,7 +12,7 @@ with lib; let
   cc-notification-script = pkgs.writeShellScriptBin "cc-notification-script" ''
     sound_files=(
       ${../../assets/sounds/wiwiwi.mp3}
-      ${../../assets/sounds/co_robim4.mp3}
+      ${../../assets/sounds/zaplatit.mp3}
     )
 
     available_sound_files=()
