@@ -10,7 +10,7 @@ vim.g.loaded_netrwPlugin = 1
 
 local dev_mode = vim.env.DEV_MODE == "1"
 
--- TS LSP - toggle to change
+-- TS LSP - toggle to change tsgo or vtsls
 local ts_lsp_server = "vtsls"
 
 -- Install package manager
@@ -33,6 +33,12 @@ vim.opt.rtp:prepend(lazypath)
 -- it is further in the back
 js_formatters = { "oxfmt", "prettierd", "prettier", "biome", stop_after_first = true }
 -- js_formatters = { "biome", stop_after_first = true }
+
+vim.filetype.add({
+    pattern = {
+        [".*%.component%.html"] = "htmlangular",
+    },
+})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "typescript", "htmlangular" },
@@ -142,6 +148,10 @@ local servers = {
         },
     },
     yamlls = {},
+    nxls = {
+        root_markers = { "nx.json" },
+        workspace_required = true,
+    },
     vtsls = {
         -- typescript server
         enabled = ts_lsp_server == "vtsls",
@@ -1455,6 +1465,11 @@ require("lazy").setup({
                     -- In other words, for these servers, use node_modules
                     return false
                 end
+                if server == "nxls" then
+                    -- No neovim.lspconfig entry in the mason registry, so
+                    -- mason-lspconfig rejects it. Installed by mason-tool-installer.
+                    return false
+                end
                 return true
             end, vim.tbl_keys(servers)),
             automatic_enable = enabled_server_names(),
@@ -1554,6 +1569,8 @@ require("lazy").setup({
                 typescriptreact = js_formatters,
                 javascriptreact = js_formatters,
                 nix = { "alejandra" },
+                css = { "prettierd", "prettier" },
+                scss = { "prettierd", "prettier" },
                 html = { "prettierd", "prettier" },
                 htmlangular = { "prettierd", "prettier" },
             },
@@ -2103,7 +2120,6 @@ local function default_type(args, _parent, _old_state, user_args)
 
     -- allow override via user_arg.default_type, fallback to "string"
     local fallback = (user_args and user_args.fallback_type) or "string"
-    print("DEBUG: bool_match =", vim.inspect(user_args))
     -- detect boolean prefixes
     local prefix = name:match("^is")
         or name:match("^has")
@@ -2141,7 +2157,7 @@ luasnip.add_snippets("typescript", {
         t("> = computed"),
         t({ "(() => {", "" }),
         i(3, "  return "),
-        d(3, default_value, { 2 }),
+        d(4, default_value, { 2 }),
         t({ ";", "});" }),
     }),
 
@@ -2163,10 +2179,11 @@ luasnip.add_snippets("typescript", {
         i(1, "foo"),
         t("Signal: Signal<"),
         d(2, default_type, { 1 }),
-        t("> = toSignal"),
-        t(">("),
+        t("> = toSignal("),
         i(3, "of(null)"),
-        t(");"),
+        t(", { initialValue: "),
+        d(4, default_value, { 2 }),
+        t(" });"),
     }),
 
     -- Input signal
@@ -2183,12 +2200,25 @@ luasnip.add_snippets("typescript", {
         t("' });"),
     }),
 
+    -- Required input signal
+    s("inputrequiredsignal", {
+        t("readonly "),
+        i(1, "foo"),
+        t("Signal: InputSignal<"),
+        d(2, default_type, { 1 }),
+        t("> = input.required<"),
+        f(typearg, { 2 }),
+        t(">({ alias: '"),
+        f(typearg, { 1 }),
+        t("' });"),
+    }),
+
     -- Output signal
     s("outputsignal", {
         t("readonly "),
         i(1, "foo"),
         t(": OutputEmitterRef<"),
-        d(2, default_type, { 1 }, { user_args = { fallback_type = "void" } }), -- todo fallback does not work
+        d(2, default_type, { 1 }, { user_args = { { fallback_type = "void" } } }),
         t("> = output();"),
     }),
 
@@ -2196,7 +2226,7 @@ luasnip.add_snippets("typescript", {
     s("linkedsignal", {
         t("protected readonly "),
         i(1, "foo"),
-        t("WritableSignal: Signal<"),
+        t("Signal: WritableSignal<"),
         i(2, "string"),
         t("> = linkedSignal"),
         t({ "(() => {", "" }),
@@ -2232,6 +2262,12 @@ luasnip.add_snippets("typescript", {
         i(0),
     }),
 
+    s("tapconsole", {
+        t("tap(o => console.log('tap o', o)),"),
+    }),
+})
+
+luasnip.add_snippets("htmlangular", {
     s("ngif", {
         t("@if ("),
         i(1, "condition"),
@@ -2239,10 +2275,6 @@ luasnip.add_snippets("typescript", {
         i(2, "<div></div>"),
         t({ "", "}" }),
         i(0),
-    }),
-
-    s("tapconsole", {
-        t("tap(o => console.log('tap o', o)),"),
     }),
 })
 
@@ -2355,3 +2387,96 @@ vim.keymap.set(
     ":Minuet virtualtext toggle<CR>",
     { desc = "[T]oggle [M]inuet virtual text" }
 )
+
+-- Angular companion files: jump between .ts / .html / .scss / .spec.ts
+local ng_variants = {
+    class = { ".ts" },
+    html = { ".html" },
+    style = { ".scss", ".css" },
+    spec = { ".spec.ts" },
+}
+local ng_cycle_order = { "class", "html", "style", "spec" }
+
+local function ng_stem()
+    local path = vim.api.nvim_buf_get_name(0)
+    if path == "" then
+        return nil
+    end
+    path = vim.fn.fnamemodify(path, ":p")
+    for _, suffix in ipairs({ "%.spec%.ts$", "%.ts$", "%.html$", "%.scss$", "%.css$" }) do
+        local stem = path:match("^(.*)" .. suffix)
+        if stem then
+            return stem
+        end
+    end
+    return nil
+end
+
+local function ng_resolve(stem, kind)
+    for _, ext in ipairs(ng_variants[kind]) do
+        local candidate = stem .. ext
+        if vim.uv.fs_stat(candidate) then
+            return candidate
+        end
+    end
+    return nil
+end
+
+local function ng_open(kind)
+    local stem = ng_stem()
+    if not stem then
+        vim.notify("No Angular companion files for this buffer", vim.log.levels.WARN)
+        return
+    end
+    local target = ng_resolve(stem, kind)
+    if not target then
+        vim.notify(
+            ("No %s companion for %s"):format(kind, vim.fn.fnamemodify(stem, ":t")),
+            vim.log.levels.WARN
+        )
+        return
+    end
+    vim.cmd.edit(vim.fn.fnameescape(target))
+end
+
+local function ng_cycle()
+    local stem = ng_stem()
+    if not stem then
+        vim.notify("No Angular companion files for this buffer", vim.log.levels.WARN)
+        return
+    end
+    local existing = {}
+    for _, kind in ipairs(ng_cycle_order) do
+        local target = ng_resolve(stem, kind)
+        if target then
+            table.insert(existing, target)
+        end
+    end
+    if #existing < 2 then
+        vim.notify("Nothing to cycle to", vim.log.levels.WARN)
+        return
+    end
+    local current = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p")
+    local index = 0
+    for n, path in ipairs(existing) do
+        if path == current then
+            index = n
+            break
+        end
+    end
+    vim.cmd.edit(vim.fn.fnameescape(existing[index % #existing + 1]))
+end
+
+vim.keymap.set("n", "<leader>ot", function()
+    ng_open("class")
+end, { desc = "[O]pen companion .[t]s" })
+vim.keymap.set("n", "<leader>oh", function()
+    ng_open("html")
+end, { desc = "[O]pen companion .[h]tml" })
+vim.keymap.set("n", "<leader>os", function()
+    ng_open("style")
+end, { desc = "[O]pen companion .[s]css" })
+vim.keymap.set("n", "<leader>op", function()
+    ng_open("spec")
+end, { desc = "[O]pen companion .s[p]ec.ts" })
+vim.keymap.set("n", "<leader>oo", ng_cycle, { desc = "[O]pen next c[o]mpanion file" })
