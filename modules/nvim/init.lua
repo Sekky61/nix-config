@@ -161,7 +161,16 @@ local servers = {
     }, -- typescript server, new
     biome = {},
     oxlint = {},
-    oxfmt = {},
+    oxfmt = {
+        -- Use oxfmt only when the project has its own installation.
+        -- This keeps it out of projects that use another formatter.
+        root_dir = function(bufnr, on_dir)
+            local root = vim.fs.root(bufnr, { "node_modules/.bin/oxfmt" })
+            if root then
+                on_dir(root)
+            end
+        end,
+    },
     astro = {},
     eslint = {},
     emmet_ls = {
