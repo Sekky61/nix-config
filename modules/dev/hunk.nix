@@ -20,6 +20,22 @@ in {
       programs.hunk = {
         enable = true;
         package = inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk;
+        settings = {
+          theme = "catppuccin-macchiato";
+          mode = "auto";
+          watch = true;
+          line_numbers = true;
+          exclude_untracked = false;
+          tab_width = 4;
+          file_gap = 1;
+          hunk_gap = 0;
+          wrap_lines = true;
+          menu_bar = true;
+          agent_notes = true;
+          prompt_save_view_preferences = false;
+          transparent_background = false;
+        };
+        enableClaudeIntegration = true;
       };
     };
   };
