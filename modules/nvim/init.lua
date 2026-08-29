@@ -227,6 +227,12 @@ local function enabled_server_names()
     return names
 end
 
+local function telescope_builtin(picker, opts)
+    return function()
+        require("telescope.builtin")[picker](opts or {})
+    end
+end
+
 require("lazy").setup({
     -- ╔════════════════════════════════════════════════════════════════════╗
     -- ║                    GIT & VERSION CONTROL                           ║
@@ -455,6 +461,7 @@ require("lazy").setup({
         -- Extensions: fzf, undo, ui-select, egrepify, ast_grep, grapple
         "nvim-telescope/telescope.nvim",
         tag = "v0.2.1",
+        cmd = "Telescope",
         dependencies = {
             "nvim-lua/plenary.nvim", -- Lua utilities
             "nvim-telescope/telescope-ui-select.nvim", -- Use Telescope for vim.ui.select
@@ -463,6 +470,54 @@ require("lazy").setup({
             "Marskey/telescope-sg", -- AST-based search
             -- FZF algorithm (native, requires make)
             { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+        },
+        keys = {
+            { "<leader><space>", telescope_builtin("oldfiles"), desc = "[ ] Find recently opened files" },
+            { "<leader>?", telescope_builtin("buffers", { sort_mru = true }), desc = "[?] Find existing buffers" },
+            { "<leader>/", telescope_builtin("current_buffer_fuzzy_find"), desc = "[/] Fuzzily search in current buffer" },
+            { "ff", telescope_builtin("find_files"), desc = "[F]ind [F]iles" },
+            { "fh", telescope_builtin("help_tags"), desc = "[F]ind [H]elp" },
+            { "fv", "<cmd>Telescope ast_grep<cr>", desc = "[F]ind [V]AST" },
+            { "fw", telescope_builtin("grep_string"), desc = "[F]ind current [W]ord" },
+            { "fg", telescope_builtin("live_grep"), desc = "[F]ind [G]rep" },
+            { "<leader>sd", telescope_builtin("diagnostics"), desc = "[S]earch [D]iagnostics" },
+            { "fs", telescope_builtin("git_status"), desc = "[F]ind [S]tatus" },
+            { "fr", telescope_builtin("resume"), desc = "[F]ind [R]esume" },
+            { "ft", "<cmd>Telescope grapple tags<cr>", desc = "[F]ind [T]ags (grapple)" },
+            { "<leader>s=", telescope_builtin("spell_suggest"), desc = "[S]earch Spelling [=]" },
+            { "<leader>sk", telescope_builtin("keymaps"), desc = "[S]earch [K]eymaps" },
+            { "<leader>sh", telescope_builtin("help_tags"), desc = "[S]earch [H]help" },
+            { "<leader>sj", telescope_builtin("jumplist"), desc = "[S]earch [J]umplist" },
+            { "<leader>sx", telescope_builtin("marks"), desc = "[S]earch Mar[x]" },
+            {
+                "<leader>sm",
+                telescope_builtin("builtin", { include_extensions = true }),
+                desc = "[S]earch [M]enu",
+            },
+            {
+                "<leader>sc",
+                function()
+                    require("telescope.builtin").find_files({ cwd = vim.fn.expand("%:p:h") })
+                end,
+                desc = "[S]earch from [C]urrent dir",
+            },
+            {
+                "fc",
+                function()
+                    require("telescope.builtin").live_grep({ cwd = vim.fn.expand("%:p:h") })
+                end,
+                desc = "[F]ind [C]urrent dir (Grep)",
+            },
+            { "<leader>sv", telescope_builtin("treesitter"), desc = "[S]earch [V]ariables (Treesitter Symbols)" },
+            {
+                "<leader>sp",
+                function()
+                    require("telescope-processes").list_processes()
+                end,
+                desc = "[S]earch [P]rocesses",
+            },
+            { "<leader>su", "<cmd>Telescope undo<cr>", desc = "[S]earch [U]ndo" },
+            { "<leader>se", "<cmd>Telescope egrepify<cr>", desc = "[S]earch [E]grepify" },
         },
         config = function()
             local ts = require("telescope")
@@ -671,89 +726,6 @@ require("lazy").setup({
             ts.load_extension("ast_grep")
             ts.load_extension("grapple")
 
-            -- See `:help telescope.builtin`
-            local tsb = require("telescope.builtin")
-            vim.keymap.set(
-                "n",
-                "<leader><space>",
-                tsb.oldfiles,
-                { desc = "[ ] Find recently opened files" }
-            )
-            vim.keymap.set("n", "<leader>?", function()
-                tsb.buffers({ sort_mru = true })
-            end, { desc = "[?] Find existing buffers" })
-            vim.keymap.set(
-                "n",
-                "<leader>/",
-                tsb.current_buffer_fuzzy_find,
-                { desc = "[/] Fuzzily search in current buffer" }
-            )
-
-            -- <C-q>    Send all items not filtered to quickfixlist (qflist)
-            -- combine with :cdo (apply command to all items in quickfix list)
-            vim.keymap.set("n", "ff", tsb.find_files, { desc = "[F]ind [F]iles" })
-            vim.keymap.set("n", "fh", tsb.help_tags, { desc = "[F]ind [H]elp" })
-            vim.keymap.set("n", "fv", "<cmd>Telescope ast_grep<cr>", { desc = "[F]ind [V]AST" })
-            vim.keymap.set("n", "fw", tsb.grep_string, { desc = "[F]ind current [W]ord" })
-            vim.keymap.set("n", "fg", tsb.live_grep, { desc = "[F]ind [G]rep" })
-            vim.keymap.set("n", "<leader>sd", tsb.diagnostics, { desc = "[S]earch [D]iagnostics" })
-            vim.keymap.set("n", "fs", tsb.git_status, { desc = "[F]ind [S]tatus" })
-            vim.keymap.set("n", "fr", tsb.resume, { desc = "[F]ind [R]esume" })
-            vim.keymap.set(
-                "n",
-                "ft",
-                "<cmd>Telescope grapple tags<cr>",
-                { desc = "[F]ind [T]ags (grapple)" }
-            )
-            vim.keymap.set("n", "<leader>s=", tsb.spell_suggest, { desc = "[S]earch Spelling [=]" })
-            vim.keymap.set("n", "<leader>sk", tsb.keymaps, { desc = "[S]earch [K]eymaps" })
-            vim.keymap.set("n", "<leader>sh", tsb.help_tags, { desc = "[S]earch [H]help" })
-            vim.keymap.set("n", "<leader>sj", tsb.jumplist, { desc = "[S]earch [J]umplist" }) -- <C-O> to go back, <C-I> to go forward
-            vim.keymap.set("n", "<leader>sx", tsb.marks, { desc = "[S]earch Mar[x]" }) -- <m(LETTER)> to set, <'(LETTER)> to go there. USE CAPITAL LETTERS FOR GLOBAL MARKS!
-
-            vim.keymap.set("n", "<leader>sm", function()
-                tsb.builtin({ include_extensions = true })
-            end, { desc = "[S]earch [M]enu" })
-
-            vim.keymap.set("n", "<leader>sc", function()
-                require("telescope.builtin").find_files({
-                    cwd = vim.fn.expand("%:p:h"),
-                })
-            end, { desc = "[S]earch from [C]urrent dir" })
-            vim.keymap.set("n", "fc", function()
-                require("telescope.builtin").live_grep({
-                    cwd = vim.fn.expand("%:p:h"),
-                })
-            end, { desc = "[F]ind [C]urrent dir (Grep)" })
-
-            -- see treesitter symbols
-            vim.keymap.set(
-                "n",
-                "<leader>sv",
-                tsb.treesitter,
-                { desc = "[S]earch [V]ariables (Treesitter Symbols)" }
-            )
-            vim.keymap.set(
-                "n",
-                "<leader>sp",
-                processes_picker.list_processes,
-                { desc = "[S]earch [P]rocesses" }
-            )
-
-            -- undo
-            vim.keymap.set(
-                "n",
-                "<leader>su",
-                "<cmd>Telescope undo<cr>",
-                { desc = "[S]earch [U]udo" }
-            )
-
-            vim.keymap.set(
-                "n",
-                "<leader>se",
-                "<cmd>Telescope egrepify<cr>",
-                { desc = "[S]earch [E]grepify" }
-            )
         end,
     },
 
@@ -1117,6 +1089,10 @@ require("lazy").setup({
         ---@type AutoSession.Config
         opts = {
             suppressed_dirs = { "~/", "~/Documents", "~/Downloads", "/" },
+            session_lens = {
+                -- Do not load Telescope just to register the session-lens extension.
+                load_on_setup = false,
+            },
         },
     },
     {
