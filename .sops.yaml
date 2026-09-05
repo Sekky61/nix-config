@@ -1,6 +1,6 @@
 keys:
   # Development
-  - &admin_majer age19z5x2n6x9qykp03lseh5uztgsfsmchn5gz6t98phjqkn6a6u8ugsdftl2w
+  - &admin_majer age19nvhqn6rwy933a8agffny3rdqudsj3lcl8rhvkk2v8959c7hhcmsjdhlge
   # Hosts
   - &host_nixpi_old age1jgc7q2urjrpp08lgn9sqh8jyffta23tzdhydyf6s49j5jw6lk30qa6k5y3
   - &host_nixpi age1v9yj65nfhw4alw6nrha62dj85ar0edy6haaxg4jl8xxu94d9ls4s6044tx
@@ -8,6 +8,10 @@ keys:
   - &host_nix_wsl age1u7rs9uru5ryqczlcrgx9zmc03nswu3g8r0dpy7t88pplgynp5s6sr5h3vs
   - &host_nix_fw age19nvhqn6rwy933a8agffny3rdqudsj3lcl8rhvkk2v8959c7hhcmsjdhlge
 creation_rules:
+  - path_regex: Homelab2/secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_majer
   - path_regex: modules/sops/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - age:

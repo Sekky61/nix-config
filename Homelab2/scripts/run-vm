@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$repo_root"
+
+if [[ ! -r /tmp/homelab2-secrets/age-key.txt ]]; then
+  echo "Missing /tmp/homelab2-secrets/age-key.txt" >&2
+  echo "Create the local test age key before starting build-vm." >&2
+  exit 1
+fi
+
+nix build .#nixosConfigurations.homelab-apps.config.system.build.vm
+
+export QEMU_NET_OPTS="${QEMU_NET_OPTS:-hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:3774-:3773}"
+export QEMU_OPTS="${QEMU_OPTS:--nographic}"
+
+exec ./result/bin/run-homelab-apps-vm "$@"

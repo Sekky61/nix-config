@@ -8,4 +8,5 @@ mount/
 .sops.yaml
 *.iso
 .codex
-
+Homelab2/secrets/*.local.yaml
+Homelab2/secrets/test.yaml

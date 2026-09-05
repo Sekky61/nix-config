@@ -54,6 +54,28 @@
         ./common
       ];
     };
+
+    homelab-apps = nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        username = "michal";
+        hostname = "homelab-apps";
+        inherit inputs self lib;
+      };
+      modules = [
+        ../Homelab2/nixos/configuration.nix
+        ({ lib, ... }: {
+          virtualisation.vmVariant.virtualisation.emptyDiskImages = [
+            8192
+            16384
+          ];
+          virtualisation.vmVariant.virtualisation.sharedDirectories.shared = {
+            source = lib.mkForce "/tmp/homelab2-secrets";
+            target = "/tmp/shared";
+          };
+        })
+      ];
+    };
   };
 
   # Impure versions of hosts

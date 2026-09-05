@@ -1,6 +1,7 @@
 {
   username,
   config,
+  options,
   lib,
   pkgs,
   ...
@@ -85,14 +86,6 @@ in {
     users.users.root = {
       openssh.authorizedKeys.keys = cfg.personal.keys;
     };
-    home-manager.users = lib.optionalAttrs (config ? home-manager) {
-      ${username} = {
-        home.file.".ssh/id_ed25519.pub" = {
-          text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkCgOhmEum22iwht2rfJxWnbNCVbd0gWOPXdYHO1vPU michal-nix-key";
-        };
-      };
-    };
-
     # Client
     programs.ssh = {
       # ControlMaster caused problems with ssh to nixpi - lagging connection
@@ -132,5 +125,11 @@ in {
     ];
 
     services.gnome.gnome-keyring.enable = true;
+  } // lib.optionalAttrs (options ? home-manager) {
+    home-manager.users.${username} = {
+      home.file.".ssh/id_ed25519.pub" = {
+        text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkCgOhmEum22iwht2rfJxWnbNCVbd0gWOPXdYHO1vPU michal-nix-key";
+      };
+    };
   };
 }
