@@ -12,8 +12,12 @@
   systemd.services.t3code = {
     description = "T3 Code server";
     wantedBy = [ "multi-user.target" ];
-    after = [ "network-online.target" ];
+    after = [
+      "network-online.target"
+      "sops-install-secrets.service"
+    ];
     wants = [ "network-online.target" ];
+    requires = [ "sops-install-secrets.service" ];
     serviceConfig = {
       User = "t3code";
       Group = "t3code";
