@@ -1,5 +1,0 @@
-coverage/
-*.tsbuildinfo
-node_modules/
-.direnv/
-homelab
