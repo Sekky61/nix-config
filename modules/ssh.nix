@@ -27,7 +27,7 @@ in {
               };
               sha256 = mkOption {
                 type = types.str;
-                example = "sha256:0i8s5nc48dpf1rvjnk22ny03ckvyk4mpydgd48g2wz687v8wip05";
+                example = "sha256:1vbxjnm510fcm3fv63a82i4qf8znjz6hpqi8a6wwhvnv0hqbvhcw";
               };
             };
           }
@@ -66,7 +66,7 @@ in {
         remotes = [
           {
             url = "https://github.com/Sekky61.keys";
-            sha256 = "1dg1pri406nryydsb0s9sk702xj6hb15wgvzp744zwbyllj19x1r";
+            sha256 = "1vbxjnm510fcm3fv63a82i4qf8znjz6hpqi8a6wwhvnv0hqbvhcw";
           }
         ];
         extraKeys = [
