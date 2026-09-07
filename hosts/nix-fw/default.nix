@@ -43,6 +43,7 @@
         gui = false;
       };
       steam.enable = true;
+      three-d-printing.enable = true;
       alacritty.enable = true;
       kde-connect.enable = true;
       godot.enable = true;

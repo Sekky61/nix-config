@@ -16,6 +16,7 @@
     ./remote-desktop.nix
     ./steam.nix
     ./terminal-emulator
+    ./three-d-printing.nix
     ./walker
   ];
 }
