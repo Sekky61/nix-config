@@ -39,7 +39,7 @@
     # code-cursor currently depends on EOL Electron.
     "electron-39.8.10"
     # Ventoy bundles outdated components and is marked insecure upstream.
-    "ventoy-1.1.12"
+    "ventoy-1.1.17"
   ];
 
   # but NIX_PATH is still used by many useful tools, so we set it to the same value as the one used by this flake.
