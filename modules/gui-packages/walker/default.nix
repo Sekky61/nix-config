@@ -9,6 +9,55 @@
 with lib; let
   cfg = config.michal.programs.walker;
   walkerBin = "${pkgs.walker}/bin/walker";
+  base64Helper = pkgs.writeShellApplication {
+    name = "base64-helper";
+    runtimeInputs = with pkgs; [
+      coreutils
+      libnotify
+      walker
+      wl-clipboard
+    ];
+    text = ''
+      set -euo pipefail
+
+      mode="''${1:-decode}"
+      case "$mode" in
+        decode)
+          placeholder='Base64 decode'
+          success_message='Base64 decoded'
+          error_message='The input is not valid Base64.'
+          ;;
+        encode)
+          placeholder='Base64 encode'
+          success_message='Base64 encoded'
+          error_message='Could not encode the input.'
+          ;;
+        *)
+          printf 'Usage: %s [decode|encode]\n' "$0" >&2
+          exit 2
+          ;;
+      esac
+
+      input="$(walker --dmenu --placeholder "$placeholder")" || exit 0
+      [[ -n "$input" ]] || exit 0
+
+      output_file="$(mktemp)"
+      trap 'rm -f "$output_file"' EXIT
+
+      if [[ "$mode" == decode ]]; then
+        if ! printf '%s' "$input" | base64 --decode >"$output_file" 2>/dev/null; then
+          notify-send -a 'Walker' -u critical 'Base64 decode failed' "$error_message"
+          exit 1
+        fi
+      elif ! printf '%s' "$input" | base64 --wrap=0 >"$output_file" 2>/dev/null; then
+        notify-send -a 'Walker' -u critical 'Base64 encode failed' "$error_message"
+        exit 1
+      fi
+
+      wl-copy <"$output_file"
+      notify-send -a 'Walker' "$success_message" 'Result copied to clipboard.'
+    '';
+  };
 in {
   options.michal.programs.walker = {
     enable = mkEnableOption "walker application launcher";
@@ -60,6 +109,10 @@ in {
                 prefix = "(";
                 provider = "menus:keybinds";
               }
+              {
+                prefix = "~";
+                provider = "menus:base64";
+              }
             ];
           };
         };
@@ -71,6 +124,14 @@ in {
           provider.menus.lua = {
             # `walker --provider menus:keybinds`
             keybinds = builtins.readFile ./keybinds.lua;
+            # `walker --provider menus:base64`
+            base64 = replaceStrings
+              ["@BASE64_DECODE@" "@BASE64_ENCODE@"]
+              [
+                "${base64Helper}/bin/base64-helper decode"
+                "${base64Helper}/bin/base64-helper encode"
+              ]
+              (builtins.readFile ./base64.lua);
           };
           provider = {
             bitwarden.settings = {
