@@ -472,9 +472,21 @@ require("lazy").setup({
             { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
         },
         keys = {
-            { "<leader><space>", telescope_builtin("oldfiles"), desc = "[ ] Find recently opened files" },
-            { "<leader>?", telescope_builtin("buffers", { sort_mru = true }), desc = "[?] Find existing buffers" },
-            { "<leader>/", telescope_builtin("current_buffer_fuzzy_find"), desc = "[/] Fuzzily search in current buffer" },
+            {
+                "<leader><space>",
+                telescope_builtin("oldfiles"),
+                desc = "[ ] Find recently opened files",
+            },
+            {
+                "<leader>?",
+                telescope_builtin("buffers", { sort_mru = true }),
+                desc = "[?] Find existing buffers",
+            },
+            {
+                "<leader>/",
+                telescope_builtin("current_buffer_fuzzy_find"),
+                desc = "[/] Fuzzily search in current buffer",
+            },
             { "ff", telescope_builtin("find_files"), desc = "[F]ind [F]iles" },
             { "fh", telescope_builtin("help_tags"), desc = "[F]ind [H]elp" },
             { "fv", "<cmd>Telescope ast_grep<cr>", desc = "[F]ind [V]AST" },
@@ -508,7 +520,11 @@ require("lazy").setup({
                 end,
                 desc = "[F]ind [C]urrent dir (Grep)",
             },
-            { "<leader>sv", telescope_builtin("treesitter"), desc = "[S]earch [V]ariables (Treesitter Symbols)" },
+            {
+                "<leader>sv",
+                telescope_builtin("treesitter"),
+                desc = "[S]earch [V]ariables (Treesitter Symbols)",
+            },
             {
                 "<leader>sp",
                 function()
@@ -725,7 +741,6 @@ require("lazy").setup({
             ts.load_extension("egrepify")
             ts.load_extension("ast_grep")
             ts.load_extension("grapple")
-
         end,
     },
 
@@ -1553,6 +1568,12 @@ require("lazy").setup({
         keys = {
             {
                 "<leader>-",
+                mode = { "n", "v" },
+                "<cmd>Yazi<cr>",
+                desc = "Open yazi at the current file",
+            },
+            {
+                "<leader>=",
                 mode = { "n", "v" },
                 "<cmd>Yazi<cr>",
                 desc = "Open yazi at the current file",
