@@ -449,11 +449,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787818370,
-        "narHash": "sha256-vaGbGNixN+TLHMMNX9MzSyHuIqzh0Qa7IKE/Xzvc3Fc=",
+        "lastModified": 1789159844,
+        "narHash": "sha256-WqCOmxjG4wTudr92oflTjF/HW1qhkqJk9khaeHEbic8=",
         "owner": "Sekky61",
         "repo": "Handy",
-        "rev": "73cbce8d00004632e0801cd02f74ce02338d178f",
+        "rev": "68c5a67e8aacc7c0105e13a513e5a2bfcec5b4d9",
         "type": "github"
       },
       "original": {
