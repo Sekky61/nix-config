@@ -45,6 +45,10 @@ in {
           settings = {
             effortLevel = "high";
             defaultMode = "auto";
+            env = {
+              CLAUDE_CODE_NO_FLICKER = 1;
+              CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION = "false";
+            };
             sandbox = {
               enabled = false;
             };
