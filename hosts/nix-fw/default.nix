@@ -113,7 +113,7 @@
           x = 1692; # 2256/1.333, next to laptop monitor
           y = 0;
         };
-        scale = 1;
+        scale = 1.25;
         transform = 0;
       }
     ];
