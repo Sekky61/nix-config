@@ -85,7 +85,7 @@
         scale = 1.333333; # It rejects uneven scales
         transform = 0;
       }
-      # Desktop monitor
+      # Gaming desktop monitor
       {
         # Name is description from `hyprctl monitors`
         id = "GIGA-BYTE TECHNOLOGY CO. LTD. GIGABYTE G24F 22080B010444";
@@ -95,6 +95,22 @@
         position = {
           x =
             1696; # 1920/1.333, next to laptop monitor, visualize with nwg-displays
+          y = 0;
+        };
+        scale = 1;
+        transform = 0;
+      }
+      # Work desktop monitor
+      {
+        # Name is description from `hyprctl monitors`
+        id = "AOC U32G4U ZPYS4JA001734";
+        width = 3840;
+        height = 2160;
+        # 4K 160 Hz needs HDMI 2.1 FRL (48 Gb/s) or DP 1.4 HBR3 with DSC.
+        # The Framework HDMI Expansion Card is HDMI 2.0b and supports 4K 60 Hz.
+        refreshRate = 60;
+        position = {
+          x = 1692; # 2256/1.333, next to laptop monitor
           y = 0;
         };
         scale = 1;
