@@ -16,6 +16,14 @@ hl.window_rule({
     name = "no-blur-all",
     match = { title = ".*" },
     no_blur = true,
+    no_xdg_drags = true,
+})
+
+hl.window_rule({
+    name = "montezuma-game",
+    match = { class = "^montezu,uvpoklad[.]exe$" },
+    float = true,
+    center = true,
 })
 
 for _, title in ipairs({
