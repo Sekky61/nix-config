@@ -16,7 +16,7 @@ hl.window_rule({
     name = "no-blur-all",
     match = { title = ".*" },
     no_blur = true,
-    no_xdg_drags = true,
+    -- no_xdg_drags = true, -- Unsupported by Hyprland 0.56.2; available in main.
 })
 
 hl.window_rule({
