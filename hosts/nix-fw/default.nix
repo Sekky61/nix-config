@@ -26,7 +26,7 @@
           "SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"
           "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/${username}/bin:${pkgs.lib.makeBinPath [pkgs.git pkgs.gh pkgs.openssh pkgs.tailscale pkgs.michal-unstable.codex]}"
         ];
-        ExecStart = "${pkgs.michal-unstable.t3code}/bin/t3 serve --host 127.0.0.1 --port 3773";
+        ExecStart = "${pkgs.michal-unstable.t3code}/bin/t3 serve --host 127.0.0.1 --port 3773 --tailscale-serve";
         Restart = "on-failure";
         RestartSec = "10s";
       };

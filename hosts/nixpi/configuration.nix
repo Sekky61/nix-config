@@ -61,7 +61,7 @@ in {
     serviceConfig = {
       User = "pi";
       WorkingDirectory = "/home/pi";
-      ExecStart = "${pkgs.michal-unstable.t3code}/bin/t3 serve --host 127.0.0.1 --port 3773";
+      ExecStart = "${pkgs.michal-unstable.t3code}/bin/t3 serve --host 127.0.0.1 --port 3773 --tailscale-serve";
       Restart = "on-failure";
     };
   };
