@@ -9,6 +9,16 @@
   # michal.programs.docker.enable = true;
 
   home-manager.users.${username} = {
+    programs.ssh = {
+      enable = true;
+      settings.mikrotik = {
+        HostName = "192.168.88.1";
+        User = "ai-agent";
+        IdentityFile = "/home/${username}/.ssh/mikrotik_agent";
+        IdentitiesOnly = "yes";
+      };
+    };
+
     programs.safe-chain = {
       enable = true;
       integration = "pathShims";
