@@ -200,10 +200,8 @@
 
   services.resolved.enable = true; # Fix for no connection when tailscale is on
 
-  # T3 Code is advertised as the Tailscale Service `svc:t3-code`.
-  # Keep the Service definition in the Tailscale admin console aligned with
-  # these advertised ports: tcp:443 (HTTPS) and tcp:3773 (HTTP).
-  # Both ports proxy to T3's local HTTP server on port 3773.
+  # Tailscale Serve exposes T3 Code over HTTPS on port 443 and proxies it to
+  # the local HTTP server on port 3773.
 
   # bluetooth
   hardware.bluetooth = {
