@@ -1,4 +1,4 @@
-{username, ...}: {
+{username, pkgs, ...}: {
   imports = [
     # HW
     ./hardware-configuration.nix
@@ -8,9 +8,30 @@
   michal.programs.podman.enable = true;
   # michal.programs.docker.enable = true;
 
-  home-manager.users.${username}.programs.safe-chain = {
-    enable = true;
-    integration = "pathShims";
+  home-manager.users.${username} = {
+    programs.safe-chain = {
+      enable = true;
+      integration = "pathShims";
+    };
+
+    systemd.user.services.t3code = {
+      Unit = {
+        Description = "T3 Code remote server";
+        Wants = ["gpg-agent-ssh.socket"];
+        After = ["gpg-agent-ssh.socket"];
+      };
+      Service = {
+        WorkingDirectory = "/home/${username}";
+        Environment = [
+          "SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"
+          "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/${username}/bin:${pkgs.lib.makeBinPath [pkgs.git pkgs.gh pkgs.openssh pkgs.tailscale pkgs.michal-unstable.codex]}"
+        ];
+        ExecStart = "${pkgs.michal-unstable.t3code}/bin/t3 serve --host 127.0.0.1 --port 3773";
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
+      Install.WantedBy = ["default.target"];
+    };
   };
 
   michal = {

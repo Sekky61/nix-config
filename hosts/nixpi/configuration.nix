@@ -69,7 +69,12 @@ in {
       };
     })
   ];
-  environment.systemPackages = [pkgs.git pkgs.gh pkgs.michal-unstable.codex];
+  environment.systemPackages = [
+    pkgs.git
+    pkgs.gh
+    pkgs.michal-unstable.codex
+    pkgs.michal-unstable.t3code
+  ];
 
   system.stateVersion = "25.11";
 }
