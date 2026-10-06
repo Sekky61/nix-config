@@ -23,7 +23,6 @@
   host_colors = {
     nix-yoga = "#61F527"; # Green
     nix-wsl = "green";
-    nixpi = "red";
     nix-fw = "blue";
   };
 

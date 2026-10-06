@@ -32,7 +32,6 @@
       })
       ({lib, ...}: {config.stylix.overlays.enable = lib.mkForce false;})
       ./modules
-      ./services/default.nix
     ];
     specialArgs = {
       inherit inputs pkgs;

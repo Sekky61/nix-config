@@ -10,20 +10,31 @@
       imports = [./flake ./hosts];
     })
     // {
-      deploy = {
+      deploy.nodes.nixpi = {
+        hostname = "nixpi";
         sshUser = "root";
-
-        nodes.nixpi = {
-          hostname = "nixpi";
-          profiles.system = {
-            user = "root";
-            # path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.nixpi;
-
-            # Use deployee system, not the deployer system
-            path =
-              inputs.deploy-rs.lib.aarch64-linux.activate.nixos
+        remoteBuild = false;
+        profiles.system = {
+          user = "root";
+          path =
+            let
+              system = "aarch64-linux";
+              pkgs = import inputs.nixpkgs {inherit system;};
+              deployPkgs = import inputs.nixpkgs {
+                inherit system;
+                overlays = [
+                  inputs.deploy-rs.overlays.default
+                  (_: prev: {
+                    deploy-rs = {
+                      inherit (pkgs) deploy-rs;
+                      lib = prev.deploy-rs.lib;
+                    };
+                  })
+                ];
+              };
+            in
+              deployPkgs.deploy-rs.lib.activate.nixos
               inputs.self.nixosConfigurations.nixpi;
-          };
         };
       };
     };
@@ -70,8 +81,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-
-    # raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master"; # Has no inputs
 

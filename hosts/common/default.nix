@@ -10,7 +10,6 @@
     ../../homes
     # And common stuff
     ../../modules
-    ../../services # each must be enabled
   ];
 
   # SSH

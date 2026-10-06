@@ -26,8 +26,6 @@ Each `nixosSystem` defines arguments like `username` and `hostname`, which are a
 Each [NixOS module](https://nixos.wiki/wiki/NixOS_modules) defines some [configuration options](https://search.nixos.org/options), like [packages](https://search.nixos.org/packages) to install, services to run, or files to include.
 My modules are mixed with home-manager, which I use to manage files in home.
 
-I also define some [services](services/default.nix), which allow me to easily host them.
-
 ## Installation
 
 The flake includes my hardware configuration, so you would need to create your host in `hosts/`.
@@ -41,51 +39,14 @@ sudo nixos-rebuild switch --flake ".#hostname"
 
 Use the prepared `./scripts/update` or `nh os switch .` provided in dev shell.
 
-### Raspberry PI, ISO and Installers
+### Installers
 
-I am not happy with the state of rpi, tbh its not that easy.
-
-Installing on a new machine requires generating `hardware-configuration.nix` and adding it to the flake. You need to get the machine running with Nix, generate the configuration, and then you can use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere) or update via ssh.
-
-**1. Get NixOS on the machine**
-
-Build a minimal ISO (x86) or Raspberry Pi SD card image:
+Build the minimal x86 ISO:
 ```bash
 nix build .#minimal-iso
-# or
-nix build .#minimal-pi-sd-image
 ```
 
-Flash it (you may need to unpack it first: `unzstd -d rpi.img.zst`):
-```bash
-sudo dd if=installer.iso of=/dev/sdX bs=4096 conv=fsync status=progress
-```
-
-Find the IP of the installed device:
-```bash
-sudo nmap -p 22 192.168.0.0/24
-```
-
-**2. Install**
-
-Partition the drives as you wish, then generate the new `hardware-configuration.nix`. Finally, install the system:
-```bash
-sudo nixos-install --flake github:Sekky61/nix-config#nixpi --root /mnt --no-bootloader
-```
-The `--no-bootloader` flag is unverified.
-
-
-### Deployments
-
-Deployments with `deploy-rs` are possible with command such as
-
-```bash
-deploy .#nixpi --skip-checks
-# or with impure due to all the checks of impure hosts
-IMPURITY_PATH=$(pwd) sudo --preserve-env=IMPURITY_PATH deploy .#nixpi -- --impure
-```
-
-This command would copy to the target and confirm all went well.
+For Raspberry Pi 4 installation and updates, see [hosts/nixpi/README.md](hosts/nixpi/README.md).
 
 ## Impurity
 
@@ -211,5 +172,4 @@ I used to have passwords set up with sops, but it was difficult to recover from 
 9. `atuin login` and `atuin sync`. Find the key in sops.
 
 ### General Notes
-- Rpi's service for wlan: `systemctl status wpa_supplicant-wlan0.service`
 - Take a look at [https://github.com/NotAShelf/nyx/tree/main](https://github.com/NotAShelf/nyx/tree/main), a great inspiration.

@@ -45,14 +45,13 @@
     };
 
     nixpi = nixosSystem {
+      system = "aarch64-linux";
       specialArgs = {
         username = "pi";
         hostname = "nixpi";
-        inherit inputs self;
+        inherit inputs self lib;
       };
-      modules = [
-        ./common
-      ];
+      modules = [./nixpi];
     };
 
     homelab-apps = nixosSystem {
@@ -64,7 +63,7 @@
       };
       modules = [
         ../Homelab2/nixos/configuration.nix
-        ({ lib, ... }: {
+        ({lib, ...}: {
           virtualisation.vmVariant.virtualisation.emptyDiskImages = [
             8192
             16384
@@ -88,33 +87,7 @@
         }
       ];
     }))
-  hosts;
+  (lib.removeAttrs hosts ["nixpi" "homelab-apps"]);
 in {
-  flake.nixosConfigurations =
-    hosts
-    // impure-hosts
-    // {
-      # Sleeping
-      #
-      # minimal-pi = nixosSystem {
-      #   specialArgs = {
-      #     username = "pi";
-      #     hostname = "rpi";
-      #     inherit inputs;
-      #   };
-      #   system = "aarch64-linux";
-      #   modules = [
-      #     ../modules/ssh.nix
-      #     ({username, ...}: {
-      #       users.users.root.initialPassword = "root";
-      #       users.users.${username} = {
-      #         initialPassword = "password";
-      #         isNormalUser = true;
-      #         group = "pi";
-      #       };
-      #       users.groups.pi = {};
-      #     })
-      #   ];
-      # };
-    };
+  flake.nixosConfigurations = hosts // impure-hosts;
 }

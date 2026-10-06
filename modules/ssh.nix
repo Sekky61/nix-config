@@ -70,8 +70,6 @@ in {
           }
         ];
         extraKeys = [
-          # nixpi generated key
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFWLVyQyJlHKE7QOMe6Y6A2s87HSOxWl2YYiXE8wK9PS root@nixpi"
           # nix-yoga generated key
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPfacGs1rirkWXU9N7Go7eEdZ/Je5V04h3sPzKkTOKgw root@michalyoga"
         ];
@@ -88,8 +86,6 @@ in {
     };
     # Client
     programs.ssh = {
-      # ControlMaster caused problems with ssh to nixpi - lagging connection
-      #
       # extraConfig = ''
       #   # Reuse ssh connections to the same host
       #   Host *
@@ -110,12 +106,6 @@ in {
 
       # AFAIK not that necessary
       #
-      # knownHosts = {
-      #   nixpi = {
-      #     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBimO7J9WOplF/P1YLgWfx5IFy9nGY+sBfn7xoAdY5hZ root@nixpi";
-      #     hostNames = [ "nixpi-wifi" ];
-      #   };
-      # };
     };
 
     # Keychain section

@@ -4,6 +4,5 @@
     ./cloudflare-warp.nix
     ./network.nix
     ./tailscale.nix
-    ./wifi.nix
   ];
 }
