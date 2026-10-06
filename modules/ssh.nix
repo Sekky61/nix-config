@@ -66,7 +66,7 @@ in {
         remotes = [
           {
             url = "https://github.com/Sekky61.keys";
-            sha256 = "1vbxjnm510fcm3fv63a82i4qf8znjz6hpqi8a6wwhvnv0hqbvhcw";
+            sha256 = "1bd1402pv9mhii4d803ikzlx364ga70jf69z40gzkvwlf9hksw6q";
           }
         ];
         extraKeys = [
