@@ -44,6 +44,14 @@ in {
         # Enable Zen Browser when the module option is enabled
         enable = cfg.enable;
 
+        # Zen maintains its own NSS certificate store. Import Aikido's runtime
+        # proxy CA through Mozilla enterprise policy when endpoint protection is enabled.
+        policies = lib.mkIf config.michal.programs.aikido-endpoint-protection.enable {
+          Certificates.Install = [
+            "/var/lib/aikidosecurity/endpoint-protection/run/endpoint-protection-proxy-ca-crt.pem"
+          ];
+        };
+
         # Configure native messaging hosts for enhanced functionality
         nativeMessagingHosts = [
           # Enable Progressive Web App support

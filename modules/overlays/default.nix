@@ -35,7 +35,7 @@
     inputs.claude-code.overlays.default
 
     (final: _: {
-      safe-chain = final.callPackage ../../pkgs/safe-chain {};
+      aikido-endpoint-protection = final.callPackage ../../pkgs/aikido-endpoint-protection {};
       walker = inputs.walker.packages.${pkgs.stdenv.system}.walker;
     })
 

@@ -20,6 +20,7 @@
       in {
         minimal-iso =
           import ./../pkgs/installer-iso {inherit pkgs system specialArgs;};
+        aikido-endpoint-protection = pkgs.callPackage ../pkgs/aikido-endpoint-protection {};
         nix-yoga-live =
           import ./../pkgs/nix-yoga-live.nix {inherit inputs self lib;};
 

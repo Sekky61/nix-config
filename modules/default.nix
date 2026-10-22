@@ -39,6 +39,7 @@
     ./dev
     ./gui-packages
     ./bitwarden.nix
+    ./aikido-endpoint-protection.nix
     ./ventoy.nix
     ./borg.nix
     ./ollama.nix

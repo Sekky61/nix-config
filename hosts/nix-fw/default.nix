@@ -6,6 +6,7 @@
   ];
 
   michal.programs.podman.enable = true;
+  michal.programs.aikido-endpoint-protection.enable = true;
   # michal.programs.docker.enable = true;
 
   home-manager.users.${username} = {
@@ -30,11 +31,6 @@
         IdentityFile = "/home/${username}/.ssh/mikrotik_agent";
         IdentitiesOnly = "yes";
       };
-    };
-
-    programs.safe-chain = {
-      enable = true;
-      integration = "pathShims";
     };
 
     systemd.user.services.t3code = {

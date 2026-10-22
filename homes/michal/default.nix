@@ -1,10 +1,6 @@
 {username, ...}: let
   homeDirectory = "/home/${username}";
 in {
-  imports = [
-    ../../modules/dev/safe-chain.nix
-  ];
-
   home = {
     inherit username homeDirectory;
     sessionVariables = {
