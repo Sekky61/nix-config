@@ -115,6 +115,14 @@
         libxshmfence
         pkgsi686Linux.glibc
         libpng
+        # t3 code browser
+        glib
+        at-spi2-core
+        dbus
+        libxrandr
+        libgbm
+        libxkbcommon
+        # end: t3 code browser
       ];
     };
   };
