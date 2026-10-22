@@ -4,6 +4,15 @@
   config,
   ...
 }: {
+  # TODO added 2026-10-22; estimate: next nixpkgs refresh, likely days to weeks.
+  # Remove once locked cacert/NSS includes the distrust update; recheck both test hosts first.
+  # Block the two roots used by the compromised eMudhra intermediates.
+  # Browser revocation lists do not cover system TLS clients such as curl/OpenSSL.
+  security.pki.caCertificateBlacklist = [
+    "Comodo AAA Services root"
+    "emSign ECC Root CA - G3"
+  ];
+
   imports = [
     # Truly common, always there
     ./btop.nix
