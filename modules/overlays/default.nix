@@ -44,6 +44,7 @@
       michal-unstable = import inputs.nixpkgs-spicy {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
+        overlays = [(import ../dev/t3code-overlay.nix)];
       };
     })
 
