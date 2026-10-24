@@ -391,66 +391,72 @@ require("lazy").setup({
     -- ╔════════════════════════════════════════════════════════════════════╗
     -- ║                      UI & APPEARANCE                               ║
     -- ╚════════════════════════════════════════════════════════════════════╝
-    -- Color scheme (using macchiato variant - see bottom of file)
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    {
+        -- Dark, low-saturation Japanese-inspired colorscheme
+        "rebelot/kanagawa.nvim",
+        priority = 1000,
+        opts = {
+            theme = "wave",
+        },
+    },
 
     {
-        -- Status line with custom path display and grapple integration
+        -- Compact status line with Git branch, worktree, file path, and grapple tags
         "nvim-lualine/lualine.nvim",
         opts = {
             options = {
-                component_separators = "󰇙",
-                section_separators = { left = "", right = "" },
+                theme = "auto",
+                globalstatus = true,
+                component_separators = { left = "·", right = "·" },
+                section_separators = { left = "", right = "" },
             },
             sections = {
-                lualine_c = {
+                lualine_a = { "mode" },
+                lualine_b = {
+                    { "branch", icon = "" },
                     function()
-                        local full_path = vim.fn.expand("%:p")
-
-                        -- split the path into parts
-                        local parts = {}
-                        for part in full_path:gmatch("[^/]+") do
-                            table.insert(parts, part)
+                        if vim.fn.exists("*FugitiveWorkTree") ~= 1 then
+                            return ""
                         end
 
-                        -- find 'modules' and get the next directory, then append the filename
-                        for i, part in ipairs(parts) do
-                            if part == "modules" and i < #parts then
-                                return " " .. parts[i + 1] .. "" .. parts[#parts] -- prepend the directory after 'modules' to the filename with a fancy separator
-                            end
+                        local worktree = vim.fn.FugitiveWorkTree()
+                        if worktree == "" then
+                            return ""
                         end
 
-                        return "" -- return empty if 'modules' not found or no subdirectory after it
+                        return "󰙅 " .. vim.fn.fnamemodify(worktree, ":t")
                     end,
                 },
-                lualine_x = {
-                    "grapple",
+                lualine_c = {
+                    { "filename", path = 1 },
                 },
+                lualine_x = { "grapple", "filetype" },
+                lualine_y = { "progress" },
+                lualine_z = { "location" },
             },
         },
     },
 
     {
-        -- Indentation guides (scope highlighting disabled)
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
+        -- Highlight line numbers inside the current Treesitter chunk.
+        "shellRaining/hlchunk.nvim",
+        event = { "BufReadPre", "BufNewFile" },
         opts = {
-            indent = {
-                highlight = {
-                    "CursorColumn",
-                    "Whitespace",
-                },
-                char = "",
+            chunk = {
+                enable = false,
+                use_treesitter = true,
             },
-            whitespace = {
-                highlight = {
-                    "CursorColumn",
-                    "Whitespace",
-                },
-                remove_blankline_trail = false,
+            line_num = {
+                enable = true,
+                use_treesitter = true,
+                style = "#7E9CD8",
             },
-            scope = { enabled = false },
+            indent = { enable = false },
+            blank = { enable = false },
         },
+        config = function(_, opts)
+            require("hlchunk").setup(opts)
+        end,
     },
 
     -- ╔════════════════════════════════════════════════════════════════════╗
@@ -2285,13 +2291,6 @@ cmp.setup.cmdline(":", {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
--- indent-blankline
-vim.opt.list = true
-vim.opt.listchars:append("space:⋅")
-
--- color the indent
-vim.cmd([[highlight IndentBlanklineIndent1 guifg=#8a8686 gui=nocombine]])
-
 -- debug/dev
 
 -- Pretty print
@@ -2310,9 +2309,8 @@ R = function(name)
     return require(name)
 end
 
---theme
--- vim.cmd.colorscheme("catppuccin-frappe")
-vim.cmd.colorscheme("catppuccin-macchiato")
+-- Theme
+vim.cmd.colorscheme("kanagawa")
 
 -- Move current line up
 vim.api.nvim_set_keymap("n", "<A-up>", ":m-2<CR>==", { noremap = true, silent = true })
